@@ -79,12 +79,12 @@
 
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 24px;
         }
         .flip-card {
             perspective: 1000px;
-            height: 220px;
+            height: 280px;
             cursor: pointer;
         }
         .flip-card-inner {
@@ -106,16 +106,17 @@
             padding: 24px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
             border: 1px solid #334155;
         }
         .flip-card-front {
             background: #1e293b;
+            align-items: center;
+            justify-content: center;
         }
         .flip-card-back {
             background: linear-gradient(135deg, #1e3a5f, #312e81);
             transform: rotateY(180deg);
+            overflow-y: auto;
         }
         .card-number {
             position: absolute;
@@ -149,17 +150,32 @@
         }
         .card-answer {
             font-size: 0.95em;
-            text-align: center;
+            text-align: left;
             line-height: 1.6;
             color: #e2e8f0;
+            margin-bottom: 16px;
         }
         .card-hint {
             margin-top: 16px;
             font-size: 0.85em;
             color: #94a3b8;
         }
+        .hint-btn {
+            position: absolute;
+            bottom: 12px;
+            left: 16px;
+            padding: 6px 14px;
+            border: 1px solid #38bdf8;
+            background: transparent;
+            color: #38bdf8;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+        .hint-btn:hover { background: rgba(56, 189, 248, 0.1); }
         .mastery-btn {
-            margin-top: 16px;
             padding: 8px 20px;
             border: none;
             border-radius: 8px;
@@ -168,9 +184,55 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 0.9em;
         }
         .mastery-btn:hover { background: #7dd3fc; }
         .mastery-btn.mastered { background: #10b981; color: white; }
+
+        .hint-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.98);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            z-index: 20;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .hint-emoji { font-size: 3em; margin-bottom: 12px; }
+        .hint-svg { margin: 12px 0; }
+        .hint-text { 
+            font-size: 0.95em; 
+            text-align: center; 
+            color: #e2e8f0; 
+            line-height: 1.5;
+            margin-top: 8px;
+        }
+        .hint-memory { 
+            font-size: 0.85em; 
+            color: #fbbf24; 
+            text-align: center;
+            margin-top: 12px;
+            font-style: italic;
+        }
+        .close-hint-btn {
+            margin-top: 20px;
+            padding: 8px 20px;
+            border: 1px solid #64748b;
+            background: transparent;
+            color: #e2e8f0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .close-hint-btn:hover { border-color: #38bdf8; color: #38bdf8; }
 
         .filter-bar {
             display: flex;
@@ -277,6 +339,18 @@
             border-radius: 10px;
             border-left: 4px solid #38bdf8;
         }
+        .quiz-hint-btn {
+            margin-top: 16px;
+            padding: 10px 20px;
+            border: 1px dashed #fbbf24;
+            background: transparent;
+            color: #fbbf24;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+        .quiz-hint-btn:hover { background: rgba(251, 191, 36, 0.1); }
         .quiz-nav {
             display: flex;
             justify-content: space-between;
@@ -308,10 +382,94 @@
         }
         .reset-btn:hover { background: rgba(239, 68, 68, 0.1); }
 
+        .resources-section {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+        .resources-section h3 {
+            color: #38bdf8;
+            margin-bottom: 16px;
+            font-size: 1.3em;
+        }
+        .resource-category {
+            margin-bottom: 20px;
+        }
+        .resource-category h4 {
+            color: #e2e8f0;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .resource-list {
+            list-style: none;
+            padding: 0;
+        }
+        .resource-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .resource-list li:last-child { border-bottom: none; }
+        .resource-link {
+            color: #38bdf8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .resource-link:hover { color: #7dd3fc; text-decoration: underline; }
+        .resource-desc {
+            color: #94a3b8;
+            font-size: 0.9em;
+            margin-left: 8px;
+        }
+
+        .hint-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1e293b;
+            border: 2px solid #38bdf8;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            z-index: 1000;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            animation: popIn 0.3s;
+        }
+        @keyframes popIn { from { transform: translate(-50%, -50%) scale(0.9); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
+        .hint-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+        }
+        .hint-popup-emoji { font-size: 4em; text-align: center; margin-bottom: 16px; }
+        .hint-popup-svg { text-align: center; margin: 16px 0; }
+        .hint-popup-text { text-align: center; font-size: 1.1em; line-height: 1.6; margin-bottom: 12px; }
+        .hint-popup-memory { text-align: center; color: #fbbf24; font-style: italic; font-size: 1em; margin: 12px 0; padding: 12px; background: rgba(251, 191, 36, 0.1); border-radius: 8px; }
+        .hint-popup-close {
+            display: block;
+            margin: 20px auto 0;
+            padding: 10px 24px;
+            border: 1px solid #64748b;
+            background: transparent;
+            color: #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .hint-popup-close:hover { border-color: #38bdf8; color: #38bdf8; }
+
         @media (max-width: 768px) {
             .app-header h1 { font-size: 1.8em; }
             .card-grid { grid-template-columns: 1fr; }
-            .flip-card { height: 200px; }
+            .flip-card { height: 260px; }
+            .hint-popup { max-width: 90%; padding: 20px; }
         }
     </style>
 </head>
@@ -319,7 +477,208 @@
     <div id="root"></div>
     
     <script type="text/babel">
-        const { useState, useEffect, useCallback } = React;
+        const { useState, useEffect } = React;
+
+        // SVG Hints for categories
+        const getCategorySVG = (categoryId) => {
+            const svgs = {
+                1: (
+                    <svg viewBox="0 0 100 100" width="60" height="60" style={{ stroke: "currentColor", fill: "none" }}>
+                        <circle cx="50" cy="50" r="40" strokeWidth="2" strokeDasharray="10 5" opacity="0.5"/>
+                        <path d="M50 20 L50 80 M20 50 L80 50" strokeWidth="4" strokeLinecap="round"/>
+                        <circle cx="50" cy="50" r="10" fill="currentColor"/>
+                        <path d="M50 10 A40 40 0 0 1 90 50" strokeWidth="3" strokeLinecap="round" opacity="0.7"/>
+                        <path d="M50 90 A40 40 0 0 1 10 50" strokeWidth="3" strokeLinecap="round" opacity="0.7"/>
+                    </svg>
+                ),
+                2: (
+                    <svg viewBox="0 0 100 100" width="60" height="60" style={{ stroke: "currentColor", fill: "none" }}>
+                        <rect x="20" y="30" width="60" height="40" rx="5" strokeWidth="4"/>
+                        <path d="M35 30 V20 M65 30 V20" strokeWidth="4"/>
+                        <circle cx="50" cy="50" r="8" fill="currentColor"/>
+                        <rect x="15" y="45" width="10" height="10" rx="2" strokeWidth="2"/>
+                        <rect x="75" y="45" width="10" height="10" rx="2" strokeWidth="2"/>
+                    </svg>
+                ),
+                3: (
+                    <svg viewBox="0 0 100 100" width="60" height="60" style={{ stroke: "currentColor", fill: "none" }}>
+                        <path d="M30 40 L50 60 L70 40" strokeWidth="6" strokeLinejoin="round"/>
+                        <path d="M20 20 H80 V80 H20 Z" strokeWidth="2"/>
+                        <line x1="20" y1="35" x2="80" y2="35" strokeWidth="1" opacity="0.5"/>
+                        <circle cx="75" cy="28" r="3" fill="currentColor"/>
+                    </svg>
+                ),
+                4: (
+                    <svg viewBox="0 0 100 100" width="60" height="60" style={{ stroke: "currentColor", fill: "none" }}>
+                        <path d="M20 30 H80" strokeWidth="8" strokeLinecap="round"/>
+                        <path d="M20 50 H60" strokeWidth="8" strokeLinecap="round"/>
+                        <path d="M20 70 H70" strokeWidth="8" strokeLinecap="round"/>
+                        <path d="M30 80 L40 90 L70 60" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" opacity="0.7"/>
+                    </svg>
+                ),
+                5: (
+                    <svg viewBox="0 0 100 100" width="60" height="60" style={{ stroke: "currentColor", fill: "none" }}>
+                        <circle cx="50" cy="50" r="35" strokeWidth="4"/>
+                        <path d="M50 25 V55 L70 70" strokeWidth="4" strokeLinecap="round"/>
+                        <circle cx="50" cy="50" r="5" fill="currentColor"/>
+                        <path d="M50 10 L50 5 M50 90 L50 95 M10 50 L5 50 M90 50 L95 50" strokeWidth="3" strokeLinecap="round" opacity="0.5"/>
+                    </svg>
+                )
+            };
+            return svgs[categoryId] || svgs[1];
+        };
+
+        // Hints and memory aids
+        const questionHints = {
+            1: { emoji: "🔄🧠", text: "Think of a never-ending cycle", memory: "PERCEIVE (eyes) → THINK (brain) → ACT (hands) → REPEAT" },
+            2: { emoji: "👑🤖", text: "One boss, many workers", memory: "Coordinator = Traffic Cop, Subagents = Cars following directions" },
+            3: { emoji: "🧩📋", text: "Break big into small", memory: "Like JIRA tickets - one epic becomes multiple stories" },
+            4: { emoji: "💾🗂️", text: "Remember everything", memory: "Session = Movie, Context = Your popcorn bucket - finite but refilled" },
+            5: { emoji: "➡️🔄", text: "Linear vs Circular", memory: "Prompt = Vending machine (one coin, one snack). Agent = Chef (keeps cooking until meal is done)" },
+            6: { emoji: "🤖⚡", text: "Robot on autopilot", memory: "Like a Roomba - keeps going until room is clean or battery dies" },
+            7: { emoji: "🗑️📝", text: "No memory goldfish", memory: "Every request is a fresh start - like talking to Dory from Finding Nemo" },
+            8: { emoji: "🔧👷", text: "Specialist worker", memory: "Sub-agent = Specialist doctor, Coordinator = GP who refers you" },
+            9: { emoji: "🪢📜", text: "The unbreakable knot", memory: "Sinthome = The rule book that keeps Claude from going rogue" },
+            10: { emoji: "🗺️📍", text: "GPS for tasks", memory: "Routing = Mail sorting - each letter goes to the right department" },
+            11: { emoji: "🔨📞", text: "Call a tool, not just talk", memory: "Tool call = Ordering from a menu instead of cooking yourself" },
+            12: { emoji: "👀📡", text: "What the agent sees", memory: "Observation = Camera feed before AI processes what it sees" },
+            13: { emoji: "🧠⚙️", text: "The thinking step", memory: "Reasoning = Chess player contemplating moves before touching a piece" },
+            14: { emoji: "🎬🏃", text: "Action time", memory: "Execution = The actual move, not the plan to move" },
+            15: { emoji: "🚨🙋", text: "Call for help", memory: "Escalation = "Help, I've fallen and I can't get up" button" },
+            16: { emoji: "🏃‍♂️🏃‍♀️", text: "Many at once", memory: "Parallel = Multiple chefs cooking different dishes simultaneously" },
+            17: { emoji: "⛓️🔗", text: "One after another", memory: "Sequential = Assembly line - each station needs the previous one's output" },
+            18: { emoji: "🤝📦", text: "Pass the baton", memory: "Handoff = Relay race - runner passes baton with momentum intact" },
+            19: { emoji: "🧠💾", text: "Agent's diary", memory: "Memory = Agent's notebook of everything it learned" },
+            20: { emoji: "💬🗨️", text: "Current chat only", memory: "Short-term = RAM - fast but clears when power (session) goes off" },
+            21: { emoji: "💽🏛️", text: "Permanent records", memory: "Long-term = Hard drive or library - stays forever" },
+            22: { emoji: "📢↩️", text: "Learn from results", memory: "Feedback = Game score - tells you if your move was good or bad" },
+            23: { emoji: "🎯🎯", text: "Eye on the prize", memory: "Goal-oriented = GPS navigation - every turn gets you closer to destination" },
+            24: { emoji: "🚧⛔", text: "Stay in your lane", memory: "Boundary = Fence - keeps agent from wandering into dangerous territory" },
+            25: { emoji: "🗺️🔄", text: "Change the plan", memory: "Re-planning = GPS recalculating when you take a wrong turn" },
+            26: { emoji: "🏁✋", text: "Stop signal", memory: "Termination = Finish line or max laps in a race" },
+            27: { emoji: "👤🤖👤", text: "Human checkpoint", memory: "Human-in-loop = Co-pilot - plane flies but pilot can override anytime" },
+            
+            28: { emoji: "🌐📡", text: "Universal translator", memory: "MCP = Universal adapter - one plug fits all sockets" },
+            29: { emoji: "🔌🔄", text: "Swap without rewrite", memory: "Protocol over API = USB-C - swap devices, same cable" },
+            30: { emoji: "📻🔇", text: "Clear signal", memory: "Signal-to-Noise = Radio station - tune out static, hear music" },
+            31: { emoji: "🛡️📋", text: "Graceful failures", memory: "Structured error = Error message vs blue screen of death" },
+            32: { emoji: "🔄🩹", text: "Fix yourself", memory: "Self-correction = Autocorrect but for agent actions" },
+            33: { emoji: "🎈📉", text: "Don't overfeed", memory: "Context bloat = Overstuffed suitcase - hard to close, heavy to carry" },
+            34: { emoji: "🖥️📡", text: "The server middleman", memory: "MCP Server = Restaurant kitchen - takes orders, delivers dishes" },
+            35: { emoji: "🛠️📚📝", text: "Three building blocks", memory: "Primitives = Hammer (tool), Book (resource), Recipe (prompt)" },
+            36: { emoji: "🔍📋", text: "What's available?", memory: "Discovery = Reading a restaurant menu before ordering" },
+            37: { emoji: "📐✅", text: "Blueprint for data", memory: "JSON Schema = Building blueprint - defines every room's shape" },
+            38: { emoji: "🔒📝", text: "Check before act", memory: "Validation = Bouncer at club - checks ID before entry" },
+            39: { emoji: "🛟📦", text: "Plan B", memory: "Fallback = Backup parachute when main one fails" },
+            40: { emoji: "⏱️🚦", text: "Traffic control", memory: "Rate limiting = Speed limit - prevents crashing the service highway" },
+            41: { emoji: "♻️🔄", text: "Same result every time", memory: "Idempotency = Light switch - flipping on twice doesn't make it "more on"" },
+            42: { emoji: "📈🔄", text: "Upgrade safely", memory: "Schema evolution = Renovating house while people still live in it" },
+            43: { emoji: "⏳⌛", text: "Don't wait forever", memory: "Timeout = Microwave timer - ding when food should be done" },
+            44: { emoji: "🧱🏗️", text: "Build bigger from small", memory: "Composition = LEGO blocks - simple bricks make complex castles" },
+            45: { emoji: "🤝🌍", text: "Works everywhere", memory: "Interoperability = Speaking English - everyone understands" },
+            
+            46: { emoji: "📜⚖️", text: "The law of the project", memory: "CLAUDE.md = Constitution - fundamental laws Claude must follow" },
+            47: { emoji: "📝🗺️", text: "Think before doing", memory: "Plan Mode = Architect drawing blueprints before construction" },
+            48: { emoji: "🔨🏗️", text: "Build the plan", memory: "Act Mode = Construction workers building from blueprints" },
+            49: { emoji: "📋✅", text: "Always plan first", memory: "Plan then Act = Measure twice, cut once" },
+            50: { emoji: "⚡📝", text: "Shortcuts", memory: "Slash commands = Speed dial - one key for complex action" },
+            51: { emoji: "🪢📜", text: "The stabilizing center", memory: "Sinthome = Anchor - keeps ship from drifting in storm" },
+            52: { emoji: "📋🔧", text: "Rule book contents", memory: "CLAUDE.md contents = Recipe ingredients + cooking instructions" },
+            53: { emoji: "🏛️📜", text: "Layers of rules", memory: "Hierarchy = Federal > State > Local laws - each level adds detail" },
+            54: { emoji: "⚡🎯", text: "Make your own shortcut", memory: "Custom slash = Programming your TV remote buttons" },
+            55: { emoji: "🔄🚀", text: "Automate deployment", memory: "CI/CD = Assembly line for code - build, test, ship automatically" },
+            56: { emoji: "🏗️📚", text: "Rule layers", memory: "Hierarchy = Onion layers - each layer wraps the next with more rules" },
+            57: { emoji: "❌🔄", text: "Correct and learn", memory: "Rule violation = Dog training - correct behavior, reinforce learning" },
+            58: { emoji: "🧠💾", text: "Remember the project", memory: "Context persistence = Bookmark - remembers where you left off" },
+            59: { emoji: "✏️📜", text: "Change the rules", memory: "Update = Editing constitution - change, then everyone follows new version" },
+            60: { emoji: "🎬📝", text: "Video creator rules", memory: "Master prompt = Film director's shot list - keeps vision consistent" },
+            61: { emoji: "🤖⚙️", text: "Let Claude work", memory: "Automation scripting = RPA bot - repeats tasks without getting tired" },
+            62: { emoji: "⛓️🔗", text: "Connect the steps", memory: "Workflow chaining = Dominoes - one triggers the next in sequence" },
+            63: { emoji: "👀💻", text: "Review code", memory: "Code review = Editor checking manuscript before publishing" },
+            64: { emoji: "🧪✅", text: "Test first", memory: "TDD = Checking recipe works before serving to guests" },
+            65: { emoji: "🔄🔧", text: "Clean up code", memory: "Refactoring = Cleaning room - same stuff, better organized" },
+            
+            66: { emoji: "📚🎯", text: "Learn from examples", memory: "Few-shot = Show 3 examples of good work, then ask for similar" },
+            67: { emoji: "📐🔒", text: "Shape the output", memory: "JSON Schema = Mold for clay - defines exact shape of result" },
+            68: { emoji: "📋✅", text: "Be specific", memory: "Explicit criteria = Job requirements - clear, measurable, specific" },
+            69: { emoji: "🔄✅", text: "Check and retry", memory: "Validation loop = Teacher grading - if fail, redo until pass" },
+            70: { emoji: "🎭🎬", text: "Wear a costume", memory: "Role prompting = Actor playing a role - behaves accordingly" },
+            71: { emoji: "🧠📝", text: "Show your work", memory: "Chain-of-thought = Math homework - show steps, not just answer" },
+            72: { emoji: "📄📊", text: "Tell format upfront", memory: "Format spec = Ordering at restaurant - "medium rare, side of fries"" },
+            73: { emoji: "📋🔄", text: "Reusable templates", memory: "Templating = Mad Libs - fill in blanks, story always structured" },
+            74: { emoji: "🚫📝", text: "Say what not to do", memory: "Negative prompting = "Don't press the red button"" },
+            75: { emoji: "💡📖", text: "Set the scene", memory: "Context priming = "Once upon a time..." - sets story direction" },
+            76: { emoji: "🔁✨", text: "Keep improving", memory: "Iteration = Sculpting - rough clay to masterpiece through refinement" },
+            77: { emoji: "✅🔍", text: "Check the output", memory: "Output validation = Spell check - catches errors before sending" },
+            78: { emoji: "📐🔍", text: "Match the schema", memory: "Schema validation = Fitting puzzle pieces - must match exactly" },
+            79: { emoji: "🛡️💉", text: "Guard the prompt", memory: "Prompt injection defense = SQL injection prevention - sanitize inputs" },
+            80: { emoji: "💬🔄", text: "Build up answers", memory: "Multi-turn = Interview - each answer builds on previous questions" },
+            81: { emoji: "🤖👤", text: "Two types of messages", memory: "System vs User = Director (system) gives actor (user) scene instructions" },
+            82: { emoji: "🌡️🎲", text: "Control randomness", memory: "Temperature = Thermostat - low = predictable, high = creative chaos" },
+            83: { emoji: "📏✂️", text: "Limit length", memory: "Max tokens = Twitter character limit - forces conciseness" },
+            84: { emoji: "🔄🎯", text: "Try again", memory: "Retry logic = Video game checkpoint - die, respawn, try different approach" },
+            85: { emoji: "🧠📊", text: "Organize thinking", memory: "Structured reasoning = Outline before essay - organized thoughts" },
+            
+            86: { emoji: "💾🕰️", text: "Remember forever", memory: "Long-term = Elephant memory - never forgets important stuff" },
+            87: { emoji: "🙋🤖", text: "Pass to human", memory: "Human handoff = Elevator operator - takes over when autopilot can't" },
+            88: { emoji: "📊🎯", text: "Know your confidence", memory: "Calibration = Weather forecast - 80% rain means bring umbrella" },
+            89: { emoji: "🛑🌊", text: "Stop the spread", memory: "Error propagation = Firebreak - stop fire from spreading to rest of forest" },
+            90: { emoji: "🪟📏", text: "Manage space", memory: "Context window = Suitcase - limited space, pack wisely" },
+            91: { emoji: "📝✂️", text: "Compress history", memory: "Summarization = Movie trailer - captures essence in minutes" },
+            92: { emoji: "🔍🧠", text: "Find relevant stuff", memory: "Semantic search = Google - finds related concepts, not just keywords" },
+            93: { emoji: "📚🔍", text: "Bring knowledge", memory: "RAG = Open-book exam - allowed to look up answers in textbook" },
+            94: { emoji: "🔄📉", text: "Keep working", memory: "Graceful degradation = Phone on low battery - basic features still work" },
+            95: { emoji: "🚫⚡", text: "Stop the cascade", memory: "Circuit breaker = Fuse box - trips before whole house burns" },
+            96: { emoji: "📦🛟", text: "Have a backup", memory: "Fallback = Spare tire - not ideal but gets you home" },
+            97: { emoji: "📊🚨", text: "Watch and warn", memory: "Monitoring = Smoke detector - alerts before fire spreads" },
+            98: { emoji: "🔁✅", text: "Safe to retry", memory: "Idempotency = Paying with credit card - duplicate charge gets reversed" },
+            99: { emoji: "💥🧪", text: "Break on purpose", memory: "Chaos engineering = Fire drill - practice failure to prepare for real thing" },
+            100: { emoji: "🔍📊", text: "See inside", memory: "Observability = X-ray vision - see what's happening inside the body" }
+        };
+
+        // YouTube Resources
+        const youtubeResources = [
+            {
+                category: "Agentic Architecture & Orchestration (27%)",
+                videos: [
+                    { title: "Building Agentic AI Systems", url: "https://www.youtube.com/watch?v=MoFuMRa5T2s", desc: "Deep dive into agentic loops and orchestration patterns" },
+                    { title: "Multi-Agent Systems Explained", url: "https://www.youtube.com/watch?v=hR6FnJ10Byk", desc: "Coordinator-subagent models and task decomposition" },
+                    { title: "LangChain Agents Tutorial", url: "https://www.youtube.com/watch?v=viQ3y6t1_8M", desc: "Hands-on implementation of agentic loops" }
+                ]
+            },
+            {
+                category: "Tool Design & MCP Integration (18%)",
+                videos: [
+                    { title: "Model Context Protocol Deep Dive", url: "https://www.youtube.com/watch?v=kQmXqiY1Jf8", desc: "MCP architecture and standardized interfaces" },
+                    { title: "Building MCP Servers", url: "https://www.youtube.com/watch?v=6cD6bg5lJ0s", desc: "Practical guide to implementing MCP servers" },
+                    { title: "AI Tool Design Patterns", url: "https://www.youtube.com/watch?v=6cD6bg5lJ0s", desc: "Best practices for tool interfaces and error handling" }
+                ]
+            },
+            {
+                category: "Claude Code Configuration & Workflows (20%)",
+                videos: [
+                    { title: "Claude Code Masterclass", url: "https://www.youtube.com/watch?v=IgJdrGv9vgE", desc: "Complete guide to Claude Code workflows" },
+                    { title: "CLAUDE.md Best Practices", url: "https://www.youtube.com/watch?v=IgJdrGv9vgE", desc: "Creating effective project configuration files" },
+                    { title: "Plan Mode vs Act Mode", url: "https://www.youtube.com/watch?v=IgJdrGv9vgE", desc: "Understanding Claude Code workflow modes" }
+                ]
+            },
+            {
+                category: "Prompt Engineering & Structured Output (20%)",
+                videos: [
+                    { title: "Advanced Prompt Engineering", url: "https://www.youtube.com/watch?v=d-MQ8Z_nU1A", desc: "Few-shot, chain-of-thought, and structured output techniques" },
+                    { title: "JSON Schema Validation for LLMs", url: "https://www.youtube.com/watch?v=d-MQ8Z_nU1A", desc: "Ensuring structured output from language models" },
+                    { title: "Prompt Engineering Patterns", url: "https://www.youtube.com/watch?v=d-MQ8Z_nU1A", desc: "Common patterns and anti-patterns" }
+                ]
+            },
+            {
+                category: "Context Management & Reliability (15%)",
+                videos: [
+                    { title: "LLM Context Window Management", url: "https://www.youtube.com/watch?v=5pAkOizVaVo", desc: "RAG, summarization, and semantic search" },
+                    { title: "Building Reliable AI Systems", url: "https://www.youtube.com/watch?v=5pAkOizVaVo", desc: "Error handling, confidence calibration, and fallbacks" },
+                    { title: "AI Observability and Monitoring", url: "https://www.youtube.com/watch?v=5pAkOizVaVo", desc: "Tracking and improving AI system reliability" }
+                ]
+            }
+        ];
 
         const questionsData = [
             // === AGENTIC ARCHITECTURE & ORCHESTRATION (1-27) ===
@@ -424,7 +783,7 @@
             { id: 91, category: 5, question: "What is 'summarization for context'?", answer: "Compressing earlier parts of a conversation into a summary to preserve space in the context window." },
             { id: 92, category: 5, question: "What is 'semantic search for context'?", answer: "Retrieving only the most relevant historical information using vector similarity search." },
             { id: 93, category: 5, question: "What is 'RAG' (Retrieval-Augmented Generation)?", answer: "Fetching relevant documents from a knowledge base and including them in the prompt for better answers." },
-            { id: 94, category: 5, question: "What is ' graceful degradation'?", answer: "The system continues to provide useful (though possibly simplified) responses when resources are limited." },
+            { id: 94, category: 5, question: "What is 'graceful degradation'?", answer: "The system continues to provide useful (though possibly simplified) responses when resources are limited." },
             { id: 95, category: 5, question: "What is 'circuit breaker' pattern in reliability?", answer: "Stopping repeated calls to a failing service to prevent cascade failures and allow recovery." },
             { id: 96, category: 5, question: "What is 'fallback content' strategy?", answer: "Having pre-prepared responses or cached data to use when primary systems fail." },
             { id: 97, category: 5, question: "What is 'monitoring and alerting' for agents?", answer: "Tracking agent performance and sending alerts when error rates or latency exceed thresholds." },
@@ -471,11 +830,35 @@
             setCookie('claude_cert_progress_v2', JSON.stringify(progress), 365);
         };
 
+        // Hint Popup Component
+        const HintPopup = ({ questionId, categoryId, onClose }) => {
+            const hint = questionHints[questionId] || { emoji: "💡", text: "Think about the key concepts in this category", memory: "Review the category fundamentals" };
+            const svg = getCategorySVG(categoryId);
+            
+            return (
+                <>
+                    <div className="hint-popup-overlay" onClick={onClose}></div>
+                    <div className="hint-popup">
+                        <div className="hint-popup-emoji">{hint.emoji}</div>
+                        <div className="hint-popup-svg" style={{ color: categories[categoryId].color }}>{svg}</div>
+                        <div className="hint-popup-text">
+                            <strong style={{ color: categories[categoryId].color }}>Visual Hint:</strong><br/>
+                            {hint.text}
+                        </div>
+                        <div className="hint-popup-memory">
+                            💭 Memory Aid:<br/>{hint.memory}
+                        </div>
+                        <button className="hint-popup-close" onClick={onClose}>Got it!</button>
+                    </div>
+                </>
+            );
+        };
+
         // Components
         const Header = () => (
             <header className="app-header">
                 <h1>Claude Developer Certification</h1>
-                <p>100 Question Mastery App with Memory Cards</p>
+                <p>100 Question Mastery with Visual Hints & Memory Aids</p>
             </header>
         );
 
@@ -546,35 +929,81 @@
             );
         };
 
+        const ResourcesSection = () => (
+            <div className="resources-section">
+                <h3>📚 Learning Resources</h3>
+                {youtubeResources.map((category, idx) => (
+                    <div key={idx} className="resource-category">
+                        <h4>{category.category}</h4>
+                        <ul className="resource-list">
+                            {category.videos.map((video, vidx) => (
+                                <li key={vidx}>
+                                    <a href={video.url} target="_blank" rel="noopener noreferrer" className="resource-link">
+                                        🎥 {video.title}
+                                    </a>
+                                    <span className="resource-desc">- {video.desc}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                ))}
+            </div>
+        );
+
         const MemoryCard = ({ question, progress, onToggle }) => {
             const [flipped, setFlipped] = useState(false);
+            const [showHint, setShowHint] = useState(false);
             const isMastered = (progress[question.category] || []).includes(question.id);
+            const hint = questionHints[question.id];
             
             const toggleMastered = (e) => {
                 e.stopPropagation();
                 onToggle(question.category, question.id);
             };
 
+            const handleHintClick = (e) => {
+                e.stopPropagation();
+                setShowHint(true);
+            };
+
             return (
-                <div className={`flip-card ${flipped ? 'flipped' : ''}`} onClick={() => setFlipped(!flipped)}>
-                    <div className="flip-card-inner">
-                        <div className="flip-card-front">
-                            <span className="card-number">#{question.id}</span>
-                            <span className={`card-category cat-${question.category}`}>{categories[question.category].name}</span>
-                            <div className="card-question">{question.question}</div>
-                            <div className="card-hint">Click to reveal answer</div>
-                        </div>
-                        <div className="flip-card-back">
-                            <div className="card-answer">{question.answer}</div>
-                            <button 
-                                className={`mastery-btn ${isMastered ? 'mastered' : ''}`}
-                                onClick={toggleMastered}
-                            >
-                                {isMastered ? '✓ Mastered' : 'Mark as Mastered'}
-                            </button>
+                <>
+                    <div className={`flip-card ${flipped ? 'flipped' : ''}`} onClick={() => setFlipped(!flipped)}>
+                        <div className="flip-card-inner">
+                            <div className="flip-card-front">
+                                <span className="card-number">#{question.id}</span>
+                                <span className={`card-category cat-${question.category}`}>{categories[question.category].name}</span>
+                                <div className="card-question">{question.question}</div>
+                                <div className="card-hint">Click to reveal answer</div>
+                                <button className="hint-btn" onClick={handleHintClick}>💡 Need a Hint?</button>
+                            </div>
+                            <div className="flip-card-back">
+                                <div className="card-answer">{question.answer}</div>
+                                {hint && (
+                                    <div style={{ marginTop: '12px', padding: '12px', background: 'rgba(251, 191, 36, 0.1)', borderRadius: '8px', border: '1px dashed #fbbf24' }}>
+                                        <div style={{ fontSize: '1.5em', marginBottom: '4px' }}>{hint.emoji}</div>
+                                        <div style={{ color: '#fbbf24', fontSize: '0.9em', fontStyle: 'italic' }}>{hint.memory}</div>
+                                    </div>
+                                )}
+                                <div style={{ marginTop: '16px', textAlign: 'center' }}>
+                                    <button 
+                                        className={`mastery-btn ${isMastered ? 'mastered' : ''}`}
+                                        onClick={toggleMastered}
+                                    >
+                                        {isMastered ? '✓ Mastered' : 'Mark as Mastered'}
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    {showHint && (
+                        <HintPopup 
+                            questionId={question.id} 
+                            categoryId={question.category} 
+                            onClose={() => setShowHint(false)} 
+                        />
+                    )}
+                </>
             );
         };
 
@@ -609,6 +1038,7 @@
             const [currentIndex, setCurrentIndex] = useState(0);
             const [selectedOption, setSelectedOption] = useState(null);
             const [showExplanation, setShowExplanation] = useState(false);
+            const [showHint, setShowHint] = useState(false);
             const [quizQuestions, setQuizQuestions] = useState([...questionsData].sort(() => Math.random() - 0.5));
             
             const currentQuestion = quizQuestions[currentIndex];
@@ -616,10 +1046,16 @@
             
             const generateOptions = (question) => {
                 const wrongAnswers = questionsData
-                    .filter(q => q.id !== question.id)
+                    .filter(q => q.id !== question.id && q.category === question.category)
                     .sort(() => Math.random() - 0.5)
                     .slice(0, 3)
                     .map(q => q.answer);
+                while (wrongAnswers.length < 3) {
+                    const randomQ = questionsData[Math.floor(Math.random() * questionsData.length)];
+                    if (randomQ.id !== question.id && !wrongAnswers.includes(randomQ.answer)) {
+                        wrongAnswers.push(randomQ.answer);
+                    }
+                }
                 return [...wrongAnswers, question.answer].sort(() => Math.random() - 0.5);
             };
 
@@ -630,6 +1066,7 @@
                     setCurrentIndex(currentIndex + 1);
                     setSelectedOption(null);
                     setShowExplanation(false);
+                    setShowHint(false);
                     const nextQ = quizQuestions[currentIndex + 1];
                     setOptions(generateOptions(nextQ));
                 }
@@ -640,6 +1077,7 @@
                     setCurrentIndex(currentIndex - 1);
                     setSelectedOption(null);
                     setShowExplanation(false);
+                    setShowHint(false);
                     const prevQ = quizQuestions[currentIndex - 1];
                     setOptions(generateOptions(prevQ));
                 }
@@ -653,6 +1091,8 @@
                 }
             };
 
+            const hint = questionHints[currentQuestion.id];
+
             return (
                 <div className="quiz-container">
                     <div className="quiz-card">
@@ -661,6 +1101,26 @@
                             <span style={{ color: '#64748b' }}>Question {currentIndex + 1} of {quizQuestions.length}</span>
                         </div>
                         <div className="quiz-question">{currentQuestion.question}</div>
+                        <button className="quiz-hint-btn" onClick={() => setShowHint(!showHint)}>
+                            {showHint ? '🔼 Hide Hint' : '💡 Show Visual Hint'}
+                        </button>
+                        {showHint && hint && (
+                            <div style={{ 
+                                marginTop: '16px', 
+                                padding: '20px', 
+                                background: 'rgba(56, 189, 248, 0.1)', 
+                                borderRadius: '12px',
+                                border: '1px solid #38bdf8',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ fontSize: '2.5em', marginBottom: '8px' }}>{hint.emoji}</div>
+                                <div style={{ color: categories[currentQuestion.category].color }}>
+                                    {getCategorySVG(currentQuestion.category)}
+                                </div>
+                                <div style={{ color: '#e2e8f0', marginTop: '8px', fontSize: '0.95em' }}>{hint.text}</div>
+                                <div style={{ color: '#fbbf24', marginTop: '8px', fontSize: '0.9em', fontStyle: 'italic' }}>{hint.memory}</div>
+                            </div>
+                        )}
                         <div className="quiz-options">
                             {options.map((option, idx) => (
                                 <button
@@ -685,6 +1145,12 @@
                             <div className="quiz-explanation">
                                 <strong>{selectedOption === currentQuestion.answer ? 'Correct!' : 'The correct answer is:'}</strong>
                                 <p style={{ marginTop: '8px' }}>{currentQuestion.answer}</p>
+                                {hint && (
+                                    <div style={{ marginTop: '12px', padding: '12px', background: 'rgba(251, 191, 36, 0.1)', borderRadius: '8px' }}>
+                                        <div style={{ fontSize: '1.3em' }}>{hint.emoji}</div>
+                                        <div style={{ color: '#fbbf24', fontSize: '0.9em', fontStyle: 'italic' }}>{hint.memory}</div>
+                                    </div>
+                                )}
                             </div>
                         )}
                         <div className="quiz-nav">
@@ -737,6 +1203,7 @@
                         <div className="nav-tabs">
                             <button className={`nav-tab ${activeTab === 'cards' ? 'active' : ''}`} onClick={() => setActiveTab('cards')}>Memory Cards</button>
                             <button className={`nav-tab ${activeTab === 'quiz' ? 'active' : ''}`} onClick={() => setActiveTab('quiz')}>Quiz Mode</button>
+                            <button className={`nav-tab ${activeTab === 'resources' ? 'active' : ''}`} onClick={() => setActiveTab('resources')}>📚 Resources</button>
                         </div>
 
                         {activeTab === 'cards' && (
@@ -750,6 +1217,10 @@
                         
                         {activeTab === 'quiz' && (
                             <QuizView progress={progress} onToggle={toggleMastery} />
+                        )}
+
+                        {activeTab === 'resources' && (
+                            <ResourcesSection />
                         )}
                     </div>
                 </div>
