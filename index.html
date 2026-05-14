@@ -4,94 +4,213 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claude Developer Certification - 100 Question Mastery</title>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --border: #334155;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444;
+            --accent-orange: #f59e0b;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
-            font-family: 'Inter', sans-serif;
-            background: #0f172a;
-            color: #e2e8f0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
+            line-height: 1.6;
         }
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        
+
+        /* Header */
         .app-header {
             text-align: center;
-            padding: 40px 20px;
+            padding: 30px 16px;
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border-bottom: 1px solid #334155;
-            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
         }
         .app-header h1 {
-            font-size: 2.5em;
-            background: linear-gradient(135deg, #38bdf8, #a855f7);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+            background-clip: text;
+            margin-bottom: 8px;
+            font-weight: 700;
         }
-        .app-header p { color: #94a3b8; font-size: 1.1em; }
+        .app-header p { color: var(--text-secondary); font-size: 1em; }
 
-        .nav-tabs {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-        .nav-tab {
-            padding: 12px 24px;
-            border: 1px solid #334155;
-            background: #1e293b;
-            color: #cbd5e1;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 1em;
-            font-weight: 500;
-        }
-        .nav-tab:hover { background: #334155; }
-        .nav-tab.active { background: #38bdf8; color: #0f172a; border-color: #38bdf8; }
-
+        /* Stats */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        @media (min-width: 640px) {
+            .stats-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
         }
         .stat-card {
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 24px;
+            padding: 16px;
             text-align: center;
         }
         .stat-number {
-            font-size: 2.5em;
-            font-weight: bold;
-            background: linear-gradient(135deg, #38bdf8, #a855f7);
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        .stat-label { color: #94a3b8; margin-top: 8px; }
+        .stat-label { color: var(--text-secondary); margin-top: 4px; font-size: 0.85em; }
 
+        /* Progress */
+        .progress-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        .progress-section h2 {
+            font-size: 1.2em;
+            margin-bottom: 12px;
+            text-align: center;
+            color: var(--text-primary);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: var(--border);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        .category-progress { margin: 14px 0; }
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            font-size: 0.85em;
+        }
+        .category-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .category-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        .progress-text { text-align: center; color: var(--text-secondary); font-size: 0.9em; margin-bottom: 12px; }
+
+        /* Buttons */
+        .btn-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .nav-tab {
+            padding: 10px 18px;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95em;
+            font-weight: 500;
+            font-family: inherit;
+        }
+        .nav-tab:hover { background: var(--border); }
+        .nav-tab.active { background: var(--accent-blue); color: var(--bg-primary); border-color: var(--accent-blue); }
+        .reset-btn {
+            padding: 10px 18px;
+            border: 1px solid var(--accent-red);
+            background: transparent;
+            color: var(--accent-red);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+            font-family: inherit;
+        }
+        .reset-btn:hover { background: rgba(239, 68, 68, 0.1); }
+
+        /* Filters */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .filter-bar span { color: var(--text-secondary); font-size: 0.85em; }
+        .filter-btn {
+            padding: 6px 14px;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85em;
+            font-family: inherit;
+        }
+        .filter-btn:hover { background: var(--border); }
+        .filter-btn.active { background: var(--accent-blue); color: var(--bg-primary); border-color: var(--accent-blue); }
+
+        /* Cards */
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 24px;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        @media (min-width: 640px) {
+            .card-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        }
+        @media (min-width: 1024px) {
+            .card-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
         }
         .flip-card {
             perspective: 1000px;
-            height: 280px;
+            height: 240px;
             cursor: pointer;
+        }
+        @media (min-width: 640px) {
+            .flip-card { height: 260px; }
         }
         .flip-card-inner {
             position: relative;
             width: 100%;
             height: 100%;
-            transition: transform 0.6s;
+            transition: transform 0.5s ease;
             transform-style: preserve-3d;
         }
         .flip-card.flipped .flip-card-inner {
@@ -103,13 +222,14 @@
             height: 100%;
             backface-visibility: hidden;
             border-radius: 12px;
-            padding: 24px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            border: 1px solid #334155;
+            border: 1px solid var(--border);
+            overflow: hidden;
         }
         .flip-card-front {
-            background: #1e293b;
+            background: var(--bg-card);
             align-items: center;
             justify-content: center;
         }
@@ -120,19 +240,19 @@
         }
         .card-number {
             position: absolute;
-            top: 12px;
-            left: 16px;
-            font-size: 0.85em;
-            color: #64748b;
+            top: 10px;
+            left: 12px;
+            font-size: 0.8em;
+            color: var(--text-muted);
             font-weight: 600;
         }
         .card-category {
             position: absolute;
-            top: 12px;
-            right: 16px;
-            padding: 4px 10px;
+            top: 10px;
+            right: 12px;
+            padding: 3px 10px;
             border-radius: 12px;
-            font-size: 0.75em;
+            font-size: 0.7em;
             font-weight: 500;
         }
         .cat-1 { background: rgba(239, 68, 68, 0.2); color: #f87171; }
@@ -142,546 +262,281 @@
         .cat-5 { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
 
         .card-question {
-            font-size: 1.05em;
+            font-size: 0.95em;
             text-align: center;
             line-height: 1.5;
-            color: #e2e8f0;
-            padding-top: 20px;
+            color: var(--text-primary);
+            padding-top: 24px;
+            word-break: break-word;
         }
         .card-answer {
-            font-size: 0.95em;
+            font-size: 0.9em;
             text-align: left;
-            line-height: 1.6;
-            color: #e2e8f0;
-            margin-bottom: 16px;
+            line-height: 1.5;
+            color: var(--text-primary);
+            margin-bottom: 12px;
         }
-        .card-hint {
-            margin-top: 16px;
-            font-size: 0.85em;
-            color: #94a3b8;
+        .card-hint-text {
+            margin-top: 12px;
+            font-size: 0.8em;
+            color: var(--text-secondary);
         }
         .hint-btn {
             position: absolute;
-            bottom: 12px;
-            left: 16px;
-            padding: 6px 14px;
-            border: 1px solid #38bdf8;
+            bottom: 10px;
+            left: 12px;
+            padding: 5px 12px;
+            border: 1px solid var(--accent-blue);
             background: transparent;
-            color: #38bdf8;
+            color: var(--accent-blue);
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.85em;
+            font-size: 0.8em;
             transition: all 0.3s;
-            z-index: 10;
+            font-family: inherit;
         }
         .hint-btn:hover { background: rgba(56, 189, 248, 0.1); }
         .mastery-btn {
-            padding: 8px 20px;
+            padding: 8px 18px;
             border: none;
             border-radius: 8px;
-            background: #38bdf8;
-            color: #0f172a;
+            background: var(--accent-blue);
+            color: var(--bg-primary);
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            font-size: 0.9em;
+            font-size: 0.85em;
+            font-family: inherit;
         }
         .mastery-btn:hover { background: #7dd3fc; }
-        .mastery-btn.mastered { background: #10b981; color: white; }
+        .mastery-btn.mastered { background: var(--accent-green); color: #fff; }
+        .memory-aid {
+            margin-top: 8px;
+            padding: 10px;
+            background: rgba(251, 191, 36, 0.1);
+            border-radius: 8px;
+            border: 1px dashed var(--accent-yellow);
+        }
+        .memory-aid .emoji { font-size: 1.3em; margin-bottom: 4px; }
+        .memory-aid .text { color: var(--accent-yellow); font-size: 0.85em; font-style: italic; }
 
+        /* Hint Popup */
         .hint-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(15, 23, 42, 0.98);
-            border-radius: 12px;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 16px;
+        }
+        .hint-popup {
+            background: var(--bg-secondary);
+            border: 2px solid var(--accent-blue);
+            border-radius: 16px;
             padding: 24px;
-            z-index: 20;
-            animation: fadeIn 0.3s;
-        }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .hint-emoji { font-size: 3em; margin-bottom: 12px; }
-        .hint-svg { margin: 12px 0; }
-        .hint-text { 
-            font-size: 0.95em; 
-            text-align: center; 
-            color: #e2e8f0; 
-            line-height: 1.5;
-            margin-top: 8px;
-        }
-        .hint-memory { 
-            font-size: 0.85em; 
-            color: #fbbf24; 
-            text-align: center;
-            margin-top: 12px;
-            font-style: italic;
-        }
-        .close-hint-btn {
-            margin-top: 20px;
-            padding: 8px 20px;
-            border: 1px solid #64748b;
-            background: transparent;
-            color: #e2e8f0;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9em;
-        }
-        .close-hint-btn:hover { border-color: #38bdf8; color: #38bdf8; }
-
-        .filter-bar {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .filter-btn {
-            padding: 8px 16px;
-            border: 1px solid #334155;
-            background: #1e293b;
-            color: #cbd5e1;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.9em;
-        }
-        .filter-btn:hover { background: #334155; }
-        .filter-btn.active { background: #38bdf8; color: #0f172a; border-color: #38bdf8; }
-
-        .progress-section {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 30px;
-        }
-        .progress-bar {
+            max-width: 420px;
             width: 100%;
-            height: 10px;
-            background: #334155;
-            border-radius: 5px;
-            overflow: hidden;
-            margin: 10px 0;
+            text-align: center;
+            animation: popIn 0.3s;
         }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #38bdf8, #a855f7);
-            border-radius: 5px;
-            transition: width 0.5s;
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
-        .category-progress {
-            margin: 16px 0;
+        .hint-popup .emoji { font-size: 3em; margin-bottom: 12px; }
+        .hint-popup .svg-wrap { margin: 12px 0; }
+        .hint-popup .hint-text { font-size: 1em; line-height: 1.5; margin-bottom: 12px; }
+        .hint-popup .memory { color: var(--accent-yellow); font-style: italic; font-size: 0.95em; margin: 12px 0; padding: 12px; background: rgba(251, 191, 36, 0.1); border-radius: 8px; }
+        .hint-popup .close-btn {
+            margin-top: 16px;
+            padding: 10px 24px;
+            border: 1px solid var(--text-muted);
+            background: transparent;
+            color: var(--text-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-family: inherit;
         }
-        .category-header {
+        .hint-popup .close-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+
+        /* Quiz */
+        .quiz-container { max-width: 700px; margin: 0 auto; }
+        .quiz-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        @media (min-width: 640px) {
+            .quiz-card { padding: 32px; }
+        }
+        .quiz-meta {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 6px;
-            font-size: 0.9em;
-        }
-        .category-bar {
-            width: 100%;
-            height: 6px;
-            background: #334155;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-        .category-fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.5s;
-        }
-
-        .quiz-container {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-        .quiz-card {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 16px;
-            padding: 40px;
-            margin-bottom: 24px;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         .quiz-question {
-            font-size: 1.3em;
-            margin-bottom: 24px;
-            line-height: 1.6;
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            margin-bottom: 20px;
+            line-height: 1.5;
+            word-break: break-word;
         }
-        .quiz-options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .quiz-options { display: flex; flex-direction: column; gap: 10px; }
         .quiz-option {
-            padding: 16px 20px;
-            border: 1px solid #334155;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
             border-radius: 10px;
-            background: #0f172a;
-            color: #e2e8f0;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             cursor: pointer;
             transition: all 0.3s;
             text-align: left;
-            font-size: 1em;
+            font-size: 0.95em;
+            font-family: inherit;
+            line-height: 1.4;
+            word-break: break-word;
         }
-        .quiz-option:hover { border-color: #38bdf8; }
-        .quiz-option.correct { border-color: #10b981; background: rgba(16, 185, 129, 0.1); }
-        .quiz-option.incorrect { border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
-        .quiz-explanation {
-            margin-top: 20px;
-            padding: 20px;
-            background: #0f172a;
-            border-radius: 10px;
-            border-left: 4px solid #38bdf8;
-        }
+        .quiz-option:hover { border-color: var(--accent-blue); }
+        .quiz-option.correct { border-color: var(--accent-green); background: rgba(16, 185, 129, 0.1); }
+        .quiz-option.incorrect { border-color: var(--accent-red); background: rgba(239, 68, 68, 0.1); }
+        .quiz-option:disabled { cursor: default; opacity: 0.8; }
         .quiz-hint-btn {
-            margin-top: 16px;
+            margin: 16px 0;
             padding: 10px 20px;
-            border: 1px dashed #fbbf24;
+            border: 1px dashed var(--accent-yellow);
             background: transparent;
-            color: #fbbf24;
+            color: var(--accent-yellow);
             border-radius: 8px;
             cursor: pointer;
             font-size: 0.9em;
             transition: all 0.3s;
+            font-family: inherit;
+            display: inline-block;
         }
         .quiz-hint-btn:hover { background: rgba(251, 191, 36, 0.1); }
+        .quiz-hint-box {
+            margin-top: 16px;
+            padding: 20px;
+            background: rgba(56, 189, 248, 0.1);
+            border-radius: 12px;
+            border: 1px solid var(--accent-blue);
+            text-align: center;
+        }
+        .quiz-hint-box .emoji { font-size: 2.5em; margin-bottom: 8px; }
+        .quiz-hint-box .hint-text { color: var(--text-primary); font-size: 0.95em; }
+        .quiz-hint-box .memory { color: var(--accent-yellow); margin-top: 8px; font-style: italic; font-size: 0.9em; }
+        .quiz-explanation {
+            margin-top: 16px;
+            padding: 16px;
+            background: var(--bg-primary);
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-blue);
+        }
+        .quiz-explanation strong { color: var(--accent-blue); }
+        .quiz-explanation p { margin-top: 8px; }
         .quiz-nav {
             display: flex;
             justify-content: space-between;
-            margin-top: 24px;
+            margin-top: 20px;
+            gap: 12px;
         }
-        .quiz-btn {
-            padding: 12px 28px;
+        .quiz-nav button {
+            padding: 12px 24px;
             border: none;
             border-radius: 8px;
-            background: #38bdf8;
-            color: #0f172a;
+            background: var(--accent-blue);
+            color: var(--bg-primary);
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            font-size: 1em;
+            font-size: 0.95em;
+            font-family: inherit;
         }
-        .quiz-btn:hover { background: #7dd3fc; }
-        .quiz-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .quiz-nav button:hover { background: #7dd3fc; }
+        .quiz-nav button:disabled { opacity: 0.4; cursor: not-allowed; }
 
-        .reset-btn {
-            padding: 10px 20px;
-            border: 1px solid #ef4444;
-            background: transparent;
-            color: #ef4444;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.9em;
-        }
-        .reset-btn:hover { background: rgba(239, 68, 68, 0.1); }
-
+        /* Resources */
         .resources-section {
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 30px;
+            padding: 20px;
+            margin-bottom: 24px;
         }
         .resources-section h3 {
-            color: #38bdf8;
+            color: var(--accent-blue);
             margin-bottom: 16px;
-            font-size: 1.3em;
+            font-size: 1.2em;
         }
-        .resource-category {
-            margin-bottom: 20px;
-        }
-        .resource-category h4 {
-            color: #e2e8f0;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-        }
-        .resource-list {
-            list-style: none;
-            padding: 0;
-        }
-        .resource-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
+        .resource-category { margin-bottom: 20px; }
+        .resource-category h4 { color: var(--text-primary); margin-bottom: 10px; font-size: 1em; }
+        .resource-list { list-style: none; }
+        .resource-list li { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .resource-list li:last-child { border-bottom: none; }
         .resource-link {
-            color: #38bdf8;
+            color: var(--accent-blue);
+            text-decoration: none;
+            transition: color 0.3s;
+            word-break: break-all;
+        }
+        .resource-link:hover { color: #7dd3fc; text-decoration: underline; }
+        .resource-desc { color: var(--text-secondary); font-size: 0.9em; margin-left: 8px; }
+
+        /* Footer */
+        .app-footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px 20px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+        .app-footer a {
+            color: var(--accent-blue);
             text-decoration: none;
             transition: color 0.3s;
         }
-        .resource-link:hover { color: #7dd3fc; text-decoration: underline; }
-        .resource-desc {
-            color: #94a3b8;
-            font-size: 0.9em;
-            margin-left: 8px;
+        .app-footer a:hover { color: #7dd3fc; text-decoration: underline; }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 12px;
+            flex-wrap: wrap;
         }
+        .footer-links a { display: inline-flex; align-items: center; gap: 6px; }
 
-        .hint-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #1e293b;
-            border: 2px solid #38bdf8;
-            border-radius: 16px;
-            padding: 32px;
-            max-width: 500px;
-            width: 90%;
-            z-index: 1000;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            animation: popIn 0.3s;
-        }
-        @keyframes popIn { from { transform: translate(-50%, -50%) scale(0.9); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
-        .hint-popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 999;
-        }
-        .hint-popup-emoji { font-size: 4em; text-align: center; margin-bottom: 16px; }
-        .hint-popup-svg { text-align: center; margin: 16px 0; }
-        .hint-popup-text { text-align: center; font-size: 1.1em; line-height: 1.6; margin-bottom: 12px; }
-        .hint-popup-memory { text-align: center; color: #fbbf24; font-style: italic; font-size: 1em; margin: 12px 0; padding: 12px; background: rgba(251, 191, 36, 0.1); border-radius: 8px; }
-        .hint-popup-close {
-            display: block;
-            margin: 20px auto 0;
-            padding: 10px 24px;
-            border: 1px solid #64748b;
-            background: transparent;
-            color: #e2e8f0;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-        .hint-popup-close:hover { border-color: #38bdf8; color: #38bdf8; }
+        /* SVG Colors */
+        .svg-agentic { stroke: var(--accent-red); }
+        .svg-mcp { stroke: var(--accent-blue); }
+        .svg-claude { stroke: var(--accent-green); }
+        .svg-prompt { stroke: var(--accent-orange); }
+        .svg-reliability { stroke: var(--accent-purple); }
 
-        @media (max-width: 768px) {
-            .app-header h1 { font-size: 1.8em; }
-            .card-grid { grid-template-columns: 1fr; }
-            .flip-card { height: 260px; }
-            .hint-popup { max-width: 90%; padding: 20px; }
-        }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.3s ease; }
     </style>
 </head>
 <body>
-    <div id="root"></div>
-    
-    <script type="text/babel">
-        const { useState, useEffect } = React;
+    <div id="app"></div>
 
-        // SVG Hints for categories
-        const getCategorySVG = (categoryId) => {
-            const svgs = {
-                1: (
-                    <svg viewBox="0 0 100 100" width="60" height="60" style={{ stroke: "currentColor", fill: "none" }}>
-                        <circle cx="50" cy="50" r="40" strokeWidth="2" strokeDasharray="10 5" opacity="0.5"/>
-                        <path d="M50 20 L50 80 M20 50 L80 50" strokeWidth="4" strokeLinecap="round"/>
-                        <circle cx="50" cy="50" r="10" fill="currentColor"/>
-                        <path d="M50 10 A40 40 0 0 1 90 50" strokeWidth="3" strokeLinecap="round" opacity="0.7"/>
-                        <path d="M50 90 A40 40 0 0 1 10 50" strokeWidth="3" strokeLinecap="round" opacity="0.7"/>
-                    </svg>
-                ),
-                2: (
-                    <svg viewBox="0 0 100 100" width="60" height="60" style={{ stroke: "currentColor", fill: "none" }}>
-                        <rect x="20" y="30" width="60" height="40" rx="5" strokeWidth="4"/>
-                        <path d="M35 30 V20 M65 30 V20" strokeWidth="4"/>
-                        <circle cx="50" cy="50" r="8" fill="currentColor"/>
-                        <rect x="15" y="45" width="10" height="10" rx="2" strokeWidth="2"/>
-                        <rect x="75" y="45" width="10" height="10" rx="2" strokeWidth="2"/>
-                    </svg>
-                ),
-                3: (
-                    <svg viewBox="0 0 100 100" width="60" height="60" style={{ stroke: "currentColor", fill: "none" }}>
-                        <path d="M30 40 L50 60 L70 40" strokeWidth="6" strokeLinejoin="round"/>
-                        <path d="M20 20 H80 V80 H20 Z" strokeWidth="2"/>
-                        <line x1="20" y1="35" x2="80" y2="35" strokeWidth="1" opacity="0.5"/>
-                        <circle cx="75" cy="28" r="3" fill="currentColor"/>
-                    </svg>
-                ),
-                4: (
-                    <svg viewBox="0 0 100 100" width="60" height="60" style={{ stroke: "currentColor", fill: "none" }}>
-                        <path d="M20 30 H80" strokeWidth="8" strokeLinecap="round"/>
-                        <path d="M20 50 H60" strokeWidth="8" strokeLinecap="round"/>
-                        <path d="M20 70 H70" strokeWidth="8" strokeLinecap="round"/>
-                        <path d="M30 80 L40 90 L70 60" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" opacity="0.7"/>
-                    </svg>
-                ),
-                5: (
-                    <svg viewBox="0 0 100 100" width="60" height="60" style={{ stroke: "currentColor", fill: "none" }}>
-                        <circle cx="50" cy="50" r="35" strokeWidth="4"/>
-                        <path d="M50 25 V55 L70 70" strokeWidth="4" strokeLinecap="round"/>
-                        <circle cx="50" cy="50" r="5" fill="currentColor"/>
-                        <path d="M50 10 L50 5 M50 90 L50 95 M10 50 L5 50 M90 50 L95 50" strokeWidth="3" strokeLinecap="round" opacity="0.5"/>
-                    </svg>
-                )
-            };
-            return svgs[categoryId] || svgs[1];
-        };
-
-        // Hints and memory aids
-        const questionHints = {
-            1: { emoji: "🔄🧠", text: "Think of a never-ending cycle", memory: "PERCEIVE (eyes) → THINK (brain) → ACT (hands) → REPEAT" },
-            2: { emoji: "👑🤖", text: "One boss, many workers", memory: "Coordinator = Traffic Cop, Subagents = Cars following directions" },
-            3: { emoji: "🧩📋", text: "Break big into small", memory: "Like JIRA tickets - one epic becomes multiple stories" },
-            4: { emoji: "💾🗂️", text: "Remember everything", memory: "Session = Movie, Context = Your popcorn bucket - finite but refilled" },
-            5: { emoji: "➡️🔄", text: "Linear vs Circular", memory: "Prompt = Vending machine (one coin, one snack). Agent = Chef (keeps cooking until meal is done)" },
-            6: { emoji: "🤖⚡", text: "Robot on autopilot", memory: "Like a Roomba - keeps going until room is clean or battery dies" },
-            7: { emoji: "🗑️📝", text: "No memory goldfish", memory: "Every request is a fresh start - like talking to Dory from Finding Nemo" },
-            8: { emoji: "🔧👷", text: "Specialist worker", memory: "Sub-agent = Specialist doctor, Coordinator = GP who refers you" },
-            9: { emoji: "🪢📜", text: "The unbreakable knot", memory: "Sinthome = The rule book that keeps Claude from going rogue" },
-            10: { emoji: "🗺️📍", text: "GPS for tasks", memory: "Routing = Mail sorting - each letter goes to the right department" },
-            11: { emoji: "🔨📞", text: "Call a tool, not just talk", memory: "Tool call = Ordering from a menu instead of cooking yourself" },
-            12: { emoji: "👀📡", text: "What the agent sees", memory: "Observation = Camera feed before AI processes what it sees" },
-            13: { emoji: "🧠⚙️", text: "The thinking step", memory: "Reasoning = Chess player contemplating moves before touching a piece" },
-            14: { emoji: "🎬🏃", text: "Action time", memory: "Execution = The actual move, not the plan to move" },
-            15: { emoji: "🚨🙋", text: "Call for help", memory: "Escalation = "Help, I've fallen and I can't get up" button" },
-            16: { emoji: "🏃‍♂️🏃‍♀️", text: "Many at once", memory: "Parallel = Multiple chefs cooking different dishes simultaneously" },
-            17: { emoji: "⛓️🔗", text: "One after another", memory: "Sequential = Assembly line - each station needs the previous one's output" },
-            18: { emoji: "🤝📦", text: "Pass the baton", memory: "Handoff = Relay race - runner passes baton with momentum intact" },
-            19: { emoji: "🧠💾", text: "Agent's diary", memory: "Memory = Agent's notebook of everything it learned" },
-            20: { emoji: "💬🗨️", text: "Current chat only", memory: "Short-term = RAM - fast but clears when power (session) goes off" },
-            21: { emoji: "💽🏛️", text: "Permanent records", memory: "Long-term = Hard drive or library - stays forever" },
-            22: { emoji: "📢↩️", text: "Learn from results", memory: "Feedback = Game score - tells you if your move was good or bad" },
-            23: { emoji: "🎯🎯", text: "Eye on the prize", memory: "Goal-oriented = GPS navigation - every turn gets you closer to destination" },
-            24: { emoji: "🚧⛔", text: "Stay in your lane", memory: "Boundary = Fence - keeps agent from wandering into dangerous territory" },
-            25: { emoji: "🗺️🔄", text: "Change the plan", memory: "Re-planning = GPS recalculating when you take a wrong turn" },
-            26: { emoji: "🏁✋", text: "Stop signal", memory: "Termination = Finish line or max laps in a race" },
-            27: { emoji: "👤🤖👤", text: "Human checkpoint", memory: "Human-in-loop = Co-pilot - plane flies but pilot can override anytime" },
-            
-            28: { emoji: "🌐📡", text: "Universal translator", memory: "MCP = Universal adapter - one plug fits all sockets" },
-            29: { emoji: "🔌🔄", text: "Swap without rewrite", memory: "Protocol over API = USB-C - swap devices, same cable" },
-            30: { emoji: "📻🔇", text: "Clear signal", memory: "Signal-to-Noise = Radio station - tune out static, hear music" },
-            31: { emoji: "🛡️📋", text: "Graceful failures", memory: "Structured error = Error message vs blue screen of death" },
-            32: { emoji: "🔄🩹", text: "Fix yourself", memory: "Self-correction = Autocorrect but for agent actions" },
-            33: { emoji: "🎈📉", text: "Don't overfeed", memory: "Context bloat = Overstuffed suitcase - hard to close, heavy to carry" },
-            34: { emoji: "🖥️📡", text: "The server middleman", memory: "MCP Server = Restaurant kitchen - takes orders, delivers dishes" },
-            35: { emoji: "🛠️📚📝", text: "Three building blocks", memory: "Primitives = Hammer (tool), Book (resource), Recipe (prompt)" },
-            36: { emoji: "🔍📋", text: "What's available?", memory: "Discovery = Reading a restaurant menu before ordering" },
-            37: { emoji: "📐✅", text: "Blueprint for data", memory: "JSON Schema = Building blueprint - defines every room's shape" },
-            38: { emoji: "🔒📝", text: "Check before act", memory: "Validation = Bouncer at club - checks ID before entry" },
-            39: { emoji: "🛟📦", text: "Plan B", memory: "Fallback = Backup parachute when main one fails" },
-            40: { emoji: "⏱️🚦", text: "Traffic control", memory: "Rate limiting = Speed limit - prevents crashing the service highway" },
-            41: { emoji: "♻️🔄", text: "Same result every time", memory: "Idempotency = Light switch - flipping on twice doesn't make it "more on"" },
-            42: { emoji: "📈🔄", text: "Upgrade safely", memory: "Schema evolution = Renovating house while people still live in it" },
-            43: { emoji: "⏳⌛", text: "Don't wait forever", memory: "Timeout = Microwave timer - ding when food should be done" },
-            44: { emoji: "🧱🏗️", text: "Build bigger from small", memory: "Composition = LEGO blocks - simple bricks make complex castles" },
-            45: { emoji: "🤝🌍", text: "Works everywhere", memory: "Interoperability = Speaking English - everyone understands" },
-            
-            46: { emoji: "📜⚖️", text: "The law of the project", memory: "CLAUDE.md = Constitution - fundamental laws Claude must follow" },
-            47: { emoji: "📝🗺️", text: "Think before doing", memory: "Plan Mode = Architect drawing blueprints before construction" },
-            48: { emoji: "🔨🏗️", text: "Build the plan", memory: "Act Mode = Construction workers building from blueprints" },
-            49: { emoji: "📋✅", text: "Always plan first", memory: "Plan then Act = Measure twice, cut once" },
-            50: { emoji: "⚡📝", text: "Shortcuts", memory: "Slash commands = Speed dial - one key for complex action" },
-            51: { emoji: "🪢📜", text: "The stabilizing center", memory: "Sinthome = Anchor - keeps ship from drifting in storm" },
-            52: { emoji: "📋🔧", text: "Rule book contents", memory: "CLAUDE.md contents = Recipe ingredients + cooking instructions" },
-            53: { emoji: "🏛️📜", text: "Layers of rules", memory: "Hierarchy = Federal > State > Local laws - each level adds detail" },
-            54: { emoji: "⚡🎯", text: "Make your own shortcut", memory: "Custom slash = Programming your TV remote buttons" },
-            55: { emoji: "🔄🚀", text: "Automate deployment", memory: "CI/CD = Assembly line for code - build, test, ship automatically" },
-            56: { emoji: "🏗️📚", text: "Rule layers", memory: "Hierarchy = Onion layers - each layer wraps the next with more rules" },
-            57: { emoji: "❌🔄", text: "Correct and learn", memory: "Rule violation = Dog training - correct behavior, reinforce learning" },
-            58: { emoji: "🧠💾", text: "Remember the project", memory: "Context persistence = Bookmark - remembers where you left off" },
-            59: { emoji: "✏️📜", text: "Change the rules", memory: "Update = Editing constitution - change, then everyone follows new version" },
-            60: { emoji: "🎬📝", text: "Video creator rules", memory: "Master prompt = Film director's shot list - keeps vision consistent" },
-            61: { emoji: "🤖⚙️", text: "Let Claude work", memory: "Automation scripting = RPA bot - repeats tasks without getting tired" },
-            62: { emoji: "⛓️🔗", text: "Connect the steps", memory: "Workflow chaining = Dominoes - one triggers the next in sequence" },
-            63: { emoji: "👀💻", text: "Review code", memory: "Code review = Editor checking manuscript before publishing" },
-            64: { emoji: "🧪✅", text: "Test first", memory: "TDD = Checking recipe works before serving to guests" },
-            65: { emoji: "🔄🔧", text: "Clean up code", memory: "Refactoring = Cleaning room - same stuff, better organized" },
-            
-            66: { emoji: "📚🎯", text: "Learn from examples", memory: "Few-shot = Show 3 examples of good work, then ask for similar" },
-            67: { emoji: "📐🔒", text: "Shape the output", memory: "JSON Schema = Mold for clay - defines exact shape of result" },
-            68: { emoji: "📋✅", text: "Be specific", memory: "Explicit criteria = Job requirements - clear, measurable, specific" },
-            69: { emoji: "🔄✅", text: "Check and retry", memory: "Validation loop = Teacher grading - if fail, redo until pass" },
-            70: { emoji: "🎭🎬", text: "Wear a costume", memory: "Role prompting = Actor playing a role - behaves accordingly" },
-            71: { emoji: "🧠📝", text: "Show your work", memory: "Chain-of-thought = Math homework - show steps, not just answer" },
-            72: { emoji: "📄📊", text: "Tell format upfront", memory: "Format spec = Ordering at restaurant - "medium rare, side of fries"" },
-            73: { emoji: "📋🔄", text: "Reusable templates", memory: "Templating = Mad Libs - fill in blanks, story always structured" },
-            74: { emoji: "🚫📝", text: "Say what not to do", memory: "Negative prompting = "Don't press the red button"" },
-            75: { emoji: "💡📖", text: "Set the scene", memory: "Context priming = "Once upon a time..." - sets story direction" },
-            76: { emoji: "🔁✨", text: "Keep improving", memory: "Iteration = Sculpting - rough clay to masterpiece through refinement" },
-            77: { emoji: "✅🔍", text: "Check the output", memory: "Output validation = Spell check - catches errors before sending" },
-            78: { emoji: "📐🔍", text: "Match the schema", memory: "Schema validation = Fitting puzzle pieces - must match exactly" },
-            79: { emoji: "🛡️💉", text: "Guard the prompt", memory: "Prompt injection defense = SQL injection prevention - sanitize inputs" },
-            80: { emoji: "💬🔄", text: "Build up answers", memory: "Multi-turn = Interview - each answer builds on previous questions" },
-            81: { emoji: "🤖👤", text: "Two types of messages", memory: "System vs User = Director (system) gives actor (user) scene instructions" },
-            82: { emoji: "🌡️🎲", text: "Control randomness", memory: "Temperature = Thermostat - low = predictable, high = creative chaos" },
-            83: { emoji: "📏✂️", text: "Limit length", memory: "Max tokens = Twitter character limit - forces conciseness" },
-            84: { emoji: "🔄🎯", text: "Try again", memory: "Retry logic = Video game checkpoint - die, respawn, try different approach" },
-            85: { emoji: "🧠📊", text: "Organize thinking", memory: "Structured reasoning = Outline before essay - organized thoughts" },
-            
-            86: { emoji: "💾🕰️", text: "Remember forever", memory: "Long-term = Elephant memory - never forgets important stuff" },
-            87: { emoji: "🙋🤖", text: "Pass to human", memory: "Human handoff = Elevator operator - takes over when autopilot can't" },
-            88: { emoji: "📊🎯", text: "Know your confidence", memory: "Calibration = Weather forecast - 80% rain means bring umbrella" },
-            89: { emoji: "🛑🌊", text: "Stop the spread", memory: "Error propagation = Firebreak - stop fire from spreading to rest of forest" },
-            90: { emoji: "🪟📏", text: "Manage space", memory: "Context window = Suitcase - limited space, pack wisely" },
-            91: { emoji: "📝✂️", text: "Compress history", memory: "Summarization = Movie trailer - captures essence in minutes" },
-            92: { emoji: "🔍🧠", text: "Find relevant stuff", memory: "Semantic search = Google - finds related concepts, not just keywords" },
-            93: { emoji: "📚🔍", text: "Bring knowledge", memory: "RAG = Open-book exam - allowed to look up answers in textbook" },
-            94: { emoji: "🔄📉", text: "Keep working", memory: "Graceful degradation = Phone on low battery - basic features still work" },
-            95: { emoji: "🚫⚡", text: "Stop the cascade", memory: "Circuit breaker = Fuse box - trips before whole house burns" },
-            96: { emoji: "📦🛟", text: "Have a backup", memory: "Fallback = Spare tire - not ideal but gets you home" },
-            97: { emoji: "📊🚨", text: "Watch and warn", memory: "Monitoring = Smoke detector - alerts before fire spreads" },
-            98: { emoji: "🔁✅", text: "Safe to retry", memory: "Idempotency = Paying with credit card - duplicate charge gets reversed" },
-            99: { emoji: "💥🧪", text: "Break on purpose", memory: "Chaos engineering = Fire drill - practice failure to prepare for real thing" },
-            100: { emoji: "🔍📊", text: "See inside", memory: "Observability = X-ray vision - see what's happening inside the body" }
-        };
-
-        // YouTube Resources
-        const youtubeResources = [
-            {
-                category: "Agentic Architecture & Orchestration (27%)",
-                videos: [
-                    { title: "Building Agentic AI Systems", url: "https://www.youtube.com/watch?v=MoFuMRa5T2s", desc: "Deep dive into agentic loops and orchestration patterns" },
-                    { title: "Multi-Agent Systems Explained", url: "https://www.youtube.com/watch?v=hR6FnJ10Byk", desc: "Coordinator-subagent models and task decomposition" },
-                    { title: "LangChain Agents Tutorial", url: "https://www.youtube.com/watch?v=viQ3y6t1_8M", desc: "Hands-on implementation of agentic loops" }
-                ]
-            },
-            {
-                category: "Tool Design & MCP Integration (18%)",
-                videos: [
-                    { title: "Model Context Protocol Deep Dive", url: "https://www.youtube.com/watch?v=kQmXqiY1Jf8", desc: "MCP architecture and standardized interfaces" },
-                    { title: "Building MCP Servers", url: "https://www.youtube.com/watch?v=6cD6bg5lJ0s", desc: "Practical guide to implementing MCP servers" },
-                    { title: "AI Tool Design Patterns", url: "https://www.youtube.com/watch?v=6cD6bg5lJ0s", desc: "Best practices for tool interfaces and error handling" }
-                ]
-            },
-            {
-                category: "Claude Code Configuration & Workflows (20%)",
-                videos: [
-                    { title: "Claude Code Masterclass", url: "https://www.youtube.com/watch?v=IgJdrGv9vgE", desc: "Complete guide to Claude Code workflows" },
-                    { title: "CLAUDE.md Best Practices", url: "https://www.youtube.com/watch?v=IgJdrGv9vgE", desc: "Creating effective project configuration files" },
-                    { title: "Plan Mode vs Act Mode", url: "https://www.youtube.com/watch?v=IgJdrGv9vgE", desc: "Understanding Claude Code workflow modes" }
-                ]
-            },
-            {
-                category: "Prompt Engineering & Structured Output (20%)",
-                videos: [
-                    { title: "Advanced Prompt Engineering", url: "https://www.youtube.com/watch?v=d-MQ8Z_nU1A", desc: "Few-shot, chain-of-thought, and structured output techniques" },
-                    { title: "JSON Schema Validation for LLMs", url: "https://www.youtube.com/watch?v=d-MQ8Z_nU1A", desc: "Ensuring structured output from language models" },
-                    { title: "Prompt Engineering Patterns", url: "https://www.youtube.com/watch?v=d-MQ8Z_nU1A", desc: "Common patterns and anti-patterns" }
-                ]
-            },
-            {
-                category: "Context Management & Reliability (15%)",
-                videos: [
-                    { title: "LLM Context Window Management", url: "https://www.youtube.com/watch?v=5pAkOizVaVo", desc: "RAG, summarization, and semantic search" },
-                    { title: "Building Reliable AI Systems", url: "https://www.youtube.com/watch?v=5pAkOizVaVo", desc: "Error handling, confidence calibration, and fallbacks" },
-                    { title: "AI Observability and Monitoring", url: "https://www.youtube.com/watch?v=5pAkOizVaVo", desc: "Tracking and improving AI system reliability" }
-                ]
-            }
-        ];
-
+    <script>
+        // ================== DATA ==================
         const questionsData = [
-            // === AGENTIC ARCHITECTURE & ORCHESTRATION (1-27) ===
             { id: 1, category: 1, question: "What are the three stages of an Agentic Loop?", answer: "Perceive, Think, and Act. The agent observes its environment, reasons about the observation, and takes action." },
             { id: 2, category: 1, question: "What is the Coordinator-Subagent model?", answer: "A pattern where a central coordinator agent routes tasks to specialized sub-agents rather than using one massive prompt." },
             { id: 3, category: 1, question: "What is Task Decomposition in agentic systems?", answer: "Breaking complex tasks into smaller, manageable subtasks that can be assigned to different agents or executed sequentially." },
@@ -709,8 +564,6 @@
             { id: 25, category: 1, question: "What is 're-planning' in an agentic loop?", answer: "When an agent adjusts its plan mid-execution based on new observations or failed actions." },
             { id: 26, category: 1, question: "What is a 'termination condition' for an agent?", answer: "The criteria that signal the agent should stop its loop, such as task completion or max iterations." },
             { id: 27, category: 1, question: "What is 'human-in-the-loop' orchestration?", answer: "A design where humans review, approve, or provide input at critical decision points in the agent workflow." },
-            
-            // === TOOL DESIGN & MCP INTEGRATION (28-45) ===
             { id: 28, category: 2, question: "What does MCP stand for?", answer: "Model Context Protocol - a standard for connecting AI models to external data sources and tools." },
             { id: 29, category: 2, question: "What is the key principle of MCP as 'Protocol over API'?", answer: "MCP standardizes how tools expose capabilities, allowing you to swap data sources without rewriting agent logic." },
             { id: 30, category: 2, question: "What is 'Signal-to-Noise' ratio in tool interfaces?", answer: "Designing tools to return highly relevant, structured data rather than overwhelming the agent with irrelevant information." },
@@ -729,8 +582,6 @@
             { id: 43, category: 2, question: "What is 'timeout handling' for tools?", answer: "Setting maximum wait times for tool responses and defining what happens when a timeout occurs." },
             { id: 44, category: 2, question: "What is 'tool composition'?", answer: "Combining multiple simple tools to create complex workflows or higher-level operations." },
             { id: 45, category: 2, question: "What is the benefit of MCP standardization?", answer: "Interoperability - any MCP client can work with any MCP server without custom integration code." },
-            
-            // === CLAUDE CODE CONFIGURATION & WORKFLOWS (46-65) ===
             { id: 46, category: 3, question: "What is the purpose of CLAUDE.md?", answer: "It defines coding style, test commands, and architectural constraints that Claude must follow." },
             { id: 47, category: 3, question: "What is 'Plan Mode' in Claude Code?", answer: "A workflow where Claude first generates a markdown plan before executing any file changes." },
             { id: 48, category: 3, question: "What is 'Act Mode' in Claude Code?", answer: "The execution phase where Claude implements the changes defined in the plan." },
@@ -751,8 +602,6 @@
             { id: 63, category: 3, question: "What is 'code review mode' in Claude Code?", answer: "A workflow where Claude analyzes code changes and provides feedback before merge." },
             { id: 64, category: 3, question: "What is 'test-driven development' with Claude?", answer: "Using Claude to write tests first, then implement the code to make those tests pass." },
             { id: 65, category: 3, question: "What is 'refactoring mode' in Claude Code?", answer: "A focused workflow for restructuring existing code without changing its external behavior." },
-            
-            // === PROMPT ENGINEERING & STRUCTURED OUTPUT (66-85) ===
             { id: 66, category: 4, question: "What is Few-Shot Learning in prompting?", answer: "Providing a few examples of desired input-output pairs to guide the model's responses." },
             { id: 67, category: 4, question: "What is a JSON Schema in structured output?", answer: "A formal definition of the expected output structure, enabling validation and predictable parsing." },
             { id: 68, category: 4, question: "What are 'Explicit Criteria' in prompt engineering?", answer: "Clearly defined requirements and constraints that the model output must satisfy." },
@@ -773,8 +622,6 @@
             { id: 83, category: 4, question: "What is 'max tokens' configuration?", answer: "Limiting the maximum length of the model's response to control output size." },
             { id: 84, category: 4, question: "What is 'retry logic' in prompt engineering?", answer: "Automatically re-prompting with modified instructions when output doesn't meet quality criteria." },
             { id: 85, category: 4, question: "What is 'structured reasoning'?", answer: "Forcing the model to organize its thinking into clear steps or categories before responding." },
-            
-            // === CONTEXT MANAGEMENT & RELIABILITY (86-100) ===
             { id: 86, category: 5, question: "What is 'Long-Term Context Preservation'?", answer: "Techniques to maintain important information across long conversations or sessions." },
             { id: 87, category: 5, question: "What is a 'Human Handoff' pattern?", answer: "Transferring control from the AI to a human operator when the AI reaches its capability limits." },
             { id: 88, category: 5, question: "What is 'Confidence Calibration'?", answer: "Training or prompting the model to accurately express how certain it is about its answers." },
@@ -800,14 +647,144 @@
             5: { name: "Context & Reliability", color: "#a855f7", weight: "15%" }
         };
 
-        // Cookie utilities
-        const setCookie = (name, value, days) => {
+        const questionHints = {
+            1: { emoji: "🔄🧠", text: "Think of a never-ending cycle", memory: "PERCEIVE (eyes) → THINK (brain) → ACT (hands) → REPEAT" },
+            2: { emoji: "👑🤖", text: "One boss, many workers", memory: "Coordinator = Traffic Cop, Subagents = Cars following directions" },
+            3: { emoji: "🧩📋", text: "Break big into small", memory: "Like JIRA tickets - one epic becomes multiple stories" },
+            4: { emoji: "💾🗂️", text: "Remember everything", memory: "Session = Movie, Context = Your popcorn bucket - finite but refilled" },
+            5: { emoji: "➡️🔄", text: "Linear vs Circular", memory: "Prompt = Vending machine (one coin, one snack). Agent = Chef (keeps cooking until meal is done)" },
+            6: { emoji: "🤖⚡", text: "Robot on autopilot", memory: "Like a Roomba - keeps going until room is clean or battery dies" },
+            7: { emoji: "🗑️📝", text: "No memory goldfish", memory: "Every request is a fresh start - like talking to Dory from Finding Nemo" },
+            8: { emoji: "🔧👷", text: "Specialist worker", memory: "Sub-agent = Specialist doctor, Coordinator = GP who refers you" },
+            9: { emoji: "🪢📜", text: "The unbreakable knot", memory: "Sinthome = The rule book that keeps Claude from going rogue" },
+            10: { emoji: "🗺️📍", text: "GPS for tasks", memory: "Routing = Mail sorting - each letter goes to the right department" },
+            11: { emoji: "🔨📞", text: "Call a tool, not just talk", memory: "Tool call = Ordering from a menu instead of cooking yourself" },
+            12: { emoji: "👀📡", text: "What the agent sees", memory: "Observation = Camera feed before AI processes what it sees" },
+            13: { emoji: "🧠⚙️", text: "The thinking step", memory: "Reasoning = Chess player contemplating moves before touching a piece" },
+            14: { emoji: "🎬🏃", text: "Action time", memory: "Execution = The actual move, not the plan to move" },
+            15: { emoji: "🚨🙋", text: "Call for help", memory: "Escalation = 'Help, I've fallen and I can't get up' button" },
+            16: { emoji: "🏃‍♂️🏃‍♀️", text: "Many at once", memory: "Parallel = Multiple chefs cooking different dishes simultaneously" },
+            17: { emoji: "⛓️🔗", text: "One after another", memory: "Sequential = Assembly line - each station needs the previous one's output" },
+            18: { emoji: "🤝📦", text: "Pass the baton", memory: "Handoff = Relay race - runner passes baton with momentum intact" },
+            19: { emoji: "🧠💾", text: "Agent's diary", memory: "Memory = Agent's notebook of everything it learned" },
+            20: { emoji: "💬🗨️", text: "Current chat only", memory: "Short-term = RAM - fast but clears when power (session) goes off" },
+            21: { emoji: "💽🏛️", text: "Permanent records", memory: "Long-term = Hard drive or library - stays forever" },
+            22: { emoji: "📢↩️", text: "Learn from results", memory: "Feedback = Game score - tells you if your move was good or bad" },
+            23: { emoji: "🎯🎯", text: "Eye on the prize", memory: "Goal-oriented = GPS navigation - every turn gets you closer to destination" },
+            24: { emoji: "🚧⛔", text: "Stay in your lane", memory: "Boundary = Fence - keeps agent from wandering into dangerous territory" },
+            25: { emoji: "🗺️🔄", text: "Change the plan", memory: "Re-planning = GPS recalculating when you take a wrong turn" },
+            26: { emoji: "🏁✋", text: "Stop signal", memory: "Termination = Finish line or max laps in a race" },
+            27: { emoji: "👤🤖👤", text: "Human checkpoint", memory: "Human-in-loop = Co-pilot - plane flies but pilot can override anytime" },
+            28: { emoji: "🌐📡", text: "Universal translator", memory: "MCP = Universal adapter - one plug fits all sockets" },
+            29: { emoji: "🔌🔄", text: "Swap without rewrite", memory: "Protocol over API = USB-C - swap devices, same cable" },
+            30: { emoji: "📻🔇", text: "Clear signal", memory: "Signal-to-Noise = Radio station - tune out static, hear music" },
+            31: { emoji: "🛡️📋", text: "Graceful failures", memory: "Structured error = Error message vs blue screen of death" },
+            32: { emoji: "🔄🩹", text: "Fix yourself", memory: "Self-correction = Autocorrect but for agent actions" },
+            33: { emoji: "🎈📉", text: "Don't overfeed", memory: "Context bloat = Overstuffed suitcase - hard to close, heavy to carry" },
+            34: { emoji: "🖥️📡", text: "The server middleman", memory: "MCP Server = Restaurant kitchen - takes orders, delivers dishes" },
+            35: { emoji: "🛠️📚📝", text: "Three building blocks", memory: "Primitives = Hammer (tool), Book (resource), Recipe (prompt)" },
+            36: { emoji: "🔍📋", text: "What's available?", memory: "Discovery = Reading a restaurant menu before ordering" },
+            37: { emoji: "📐✅", text: "Blueprint for data", memory: "JSON Schema = Building blueprint - defines every room's shape" },
+            38: { emoji: "🔒📝", text: "Check before act", memory: "Validation = Bouncer at club - checks ID before entry" },
+            39: { emoji: "🛟📦", text: "Plan B", memory: "Fallback = Backup parachute when main one fails" },
+            40: { emoji: "⏱️🚦", text: "Traffic control", memory: "Rate limiting = Speed limit - prevents crashing the service highway" },
+            41: { emoji: "♻️🔄", text: "Same result every time", memory: "Idempotency = Light switch - flipping on twice doesn't make it 'more on'" },
+            42: { emoji: "📈🔄", text: "Upgrade safely", memory: "Schema evolution = Renovating house while people still live in it" },
+            43: { emoji: "⏳⌛", text: "Don't wait forever", memory: "Timeout = Microwave timer - ding when food should be done" },
+            44: { emoji: "🧱🏗️", text: "Build bigger from small", memory: "Composition = LEGO blocks - simple bricks make complex castles" },
+            45: { emoji: "🤝🌍", text: "Works everywhere", memory: "Interoperability = Speaking English - everyone understands" },
+            46: { emoji: "📜⚖️", text: "The law of the project", memory: "CLAUDE.md = Constitution - fundamental laws Claude must follow" },
+            47: { emoji: "📝🗺️", text: "Think before doing", memory: "Plan Mode = Architect drawing blueprints before construction" },
+            48: { emoji: "🔨🏗️", text: "Build the plan", memory: "Act Mode = Construction workers building from blueprints" },
+            49: { emoji: "📋✅", text: "Always plan first", memory: "Plan then Act = Measure twice, cut once" },
+            50: { emoji: "⚡📝", text: "Shortcuts", memory: "Slash commands = Speed dial - one key for complex action" },
+            51: { emoji: "🪢📜", text: "The stabilizing center", memory: "Sinthome = Anchor - keeps ship from drifting in storm" },
+            52: { emoji: "📋🔧", text: "Rule book contents", memory: "CLAUDE.md contents = Recipe ingredients + cooking instructions" },
+            53: { emoji: "🏛️📜", text: "Layers of rules", memory: "Hierarchy = Federal > State > Local laws - each level adds detail" },
+            54: { emoji: "⚡🎯", text: "Make your own shortcut", memory: "Custom slash = Programming your TV remote buttons" },
+            55: { emoji: "🔄🚀", text: "Automate deployment", memory: "CI/CD = Assembly line for code - build, test, ship automatically" },
+            56: { emoji: "🏗️📚", text: "Rule layers", memory: "Hierarchy = Onion layers - each layer wraps the next with more rules" },
+            57: { emoji: "❌🔄", text: "Correct and learn", memory: "Rule violation = Dog training - correct behavior, reinforce learning" },
+            58: { emoji: "🧠💾", text: "Remember the project", memory: "Context persistence = Bookmark - remembers where you left off" },
+            59: { emoji: "✏️📜", text: "Change the rules", memory: "Update = Editing constitution - change, then everyone follows new version" },
+            60: { emoji: "🎬📝", text: "Video creator rules", memory: "Master prompt = Film director's shot list - keeps vision consistent" },
+            61: { emoji: "🤖⚙️", text: "Let Claude work", memory: "Automation scripting = RPA bot - repeats tasks without getting tired" },
+            62: { emoji: "⛓️🔗", text: "Connect the steps", memory: "Workflow chaining = Dominoes - one triggers the next in sequence" },
+            63: { emoji: "👀💻", text: "Review code", memory: "Code review = Editor checking manuscript before publishing" },
+            64: { emoji: "🧪✅", text: "Test first", memory: "TDD = Checking recipe works before serving to guests" },
+            65: { emoji: "🔄🔧", text: "Clean up code", memory: "Refactoring = Cleaning room - same stuff, better organized" },
+            66: { emoji: "📚🎯", text: "Learn from examples", memory: "Few-shot = Show 3 examples of good work, then ask for similar" },
+            67: { emoji: "📐🔒", text: "Shape the output", memory: "JSON Schema = Mold for clay - defines exact shape of result" },
+            68: { emoji: "📋✅", text: "Be specific", memory: "Explicit criteria = Job requirements - clear, measurable, specific" },
+            69: { emoji: "🔄✅", text: "Check and retry", memory: "Validation loop = Teacher grading - if fail, redo until pass" },
+            70: { emoji: "🎭🎬", text: "Wear a costume", memory: "Role prompting = Actor playing a role - behaves accordingly" },
+            71: { emoji: "🧠📝", text: "Show your work", memory: "Chain-of-thought = Math homework - show steps, not just answer" },
+            72: { emoji: "📄📊", text: "Tell format upfront", memory: "Format spec = Ordering at restaurant - 'medium rare, side of fries'" },
+            73: { emoji: "📋🔄", text: "Reusable templates", memory: "Templating = Mad Libs - fill in blanks, story always structured" },
+            74: { emoji: "🚫📝", text: "Say what not to do", memory: "Negative prompting = 'Don't press the red button'" },
+            75: { emoji: "💡📖", text: "Set the scene", memory: "Context priming = 'Once upon a time...' - sets story direction" },
+            76: { emoji: "🔁✨", text: "Keep improving", memory: "Iteration = Sculpting - rough clay to masterpiece through refinement" },
+            77: { emoji: "✅🔍", text: "Check the output", memory: "Output validation = Spell check - catches errors before sending" },
+            78: { emoji: "📐🔍", text: "Match the schema", memory: "Schema validation = Fitting puzzle pieces - must match exactly" },
+            79: { emoji: "🛡️💉", text: "Guard the prompt", memory: "Prompt injection defense = SQL injection prevention - sanitize inputs" },
+            80: { emoji: "💬🔄", text: "Build up answers", memory: "Multi-turn = Interview - each answer builds on previous questions" },
+            81: { emoji: "🤖👤", text: "Two types of messages", memory: "System vs User = Director (system) gives actor (user) scene instructions" },
+            82: { emoji: "🌡️🎲", text: "Control randomness", memory: "Temperature = Thermostat - low = predictable, high = creative chaos" },
+            83: { emoji: "📏✂️", text: "Limit length", memory: "Max tokens = Twitter character limit - forces conciseness" },
+            84: { emoji: "🔄🎯", text: "Try again", memory: "Retry logic = Video game checkpoint - die, respawn, try different approach" },
+            85: { emoji: "🧠📊", text: "Organize thinking", memory: "Structured reasoning = Outline before essay - organized thoughts" },
+            86: { emoji: "💾🕰️", text: "Remember forever", memory: "Long-term = Elephant memory - never forgets important stuff" },
+            87: { emoji: "🙋🤖", text: "Pass to human", memory: "Human handoff = Elevator operator - takes over when autopilot can't" },
+            88: { emoji: "📊🎯", text: "Know your confidence", memory: "Calibration = Weather forecast - 80% rain means bring umbrella" },
+            89: { emoji: "🛑🌊", text: "Stop the spread", memory: "Error propagation = Firebreak - stop fire from spreading to rest of forest" },
+            90: { emoji: "🪟📏", text: "Manage space", memory: "Context window = Suitcase - limited space, pack wisely" },
+            91: { emoji: "📝✂️", text: "Compress history", memory: "Summarization = Movie trailer - captures essence in minutes" },
+            92: { emoji: "🔍🧠", text: "Find relevant stuff", memory: "Semantic search = Google - finds related concepts, not just keywords" },
+            93: { emoji: "📚🔍", text: "Bring knowledge", memory: "RAG = Open-book exam - allowed to look up answers in textbook" },
+            94: { emoji: "🔄📉", text: "Keep working", memory: "Graceful degradation = Phone on low battery - basic features still work" },
+            95: { emoji: "🚫⚡", text: "Stop the cascade", memory: "Circuit breaker = Fuse box - trips before whole house burns" },
+            96: { emoji: "📦🛟", text: "Have a backup", memory: "Fallback = Spare tire - not ideal but gets you home" },
+            97: { emoji: "📊🚨", text: "Watch and warn", memory: "Monitoring = Smoke detector - alerts before fire spreads" },
+            98: { emoji: "🔁✅", text: "Safe to retry", memory: "Idempotency = Paying with credit card - duplicate charge gets reversed" },
+            99: { emoji: "💥🧪", text: "Break on purpose", memory: "Chaos engineering = Fire drill - practice failure to prepare for real thing" },
+            100: { emoji: "🔍📊", text: "See inside", memory: "Observability = X-ray vision - see what's happening inside the body" }
+        };
+
+        const youtubeResources = [
+            { category: "Agentic Architecture & Orchestration (27%)", videos: [
+                { title: "Building Agentic AI Systems", url: "https://www.youtube.com/watch?v=MoFuMRa5T2s", desc: "Deep dive into agentic loops and orchestration patterns" },
+                { title: "Multi-Agent Systems Explained", url: "https://www.youtube.com/watch?v=hR6FnJ10Byk", desc: "Coordinator-subagent models and task decomposition" },
+                { title: "LangChain Agents Tutorial", url: "https://www.youtube.com/watch?v=viQ3y6t1_8M", desc: "Hands-on implementation of agentic loops" }
+            ]},
+            { category: "Tool Design & MCP Integration (18%)", videos: [
+                { title: "Model Context Protocol Deep Dive", url: "https://www.youtube.com/watch?v=kQmXqiY1Jf8", desc: "MCP architecture and standardized interfaces" },
+                { title: "Building MCP Servers", url: "https://www.youtube.com/watch?v=6cD6bg5lJ0s", desc: "Practical guide to implementing MCP servers" },
+                { title: "AI Tool Design Patterns", url: "https://www.youtube.com/watch?v=6cD6bg5lJ0s", desc: "Best practices for tool interfaces and error handling" }
+            ]},
+            { category: "Claude Code Configuration & Workflows (20%)", videos: [
+                { title: "Claude Code Masterclass", url: "https://www.youtube.com/watch?v=IgJdrGv9vgE", desc: "Complete guide to Claude Code workflows" },
+                { title: "CLAUDE.md Best Practices", url: "https://www.youtube.com/watch?v=IgJdrGv9vgE", desc: "Creating effective project configuration files" },
+                { title: "Plan Mode vs Act Mode", url: "https://www.youtube.com/watch?v=IgJdrGv9vgE", desc: "Understanding Claude Code workflow modes" }
+            ]},
+            { category: "Prompt Engineering & Structured Output (20%)", videos: [
+                { title: "Advanced Prompt Engineering", url: "https://www.youtube.com/watch?v=d-MQ8Z_nU1A", desc: "Few-shot, chain-of-thought, and structured output techniques" },
+                { title: "JSON Schema Validation for LLMs", url: "https://www.youtube.com/watch?v=d-MQ8Z_nU1A", desc: "Ensuring structured output from language models" },
+                { title: "Prompt Engineering Patterns", url: "https://www.youtube.com/watch?v=d-MQ8Z_nU1A", desc: "Common patterns and anti-patterns" }
+            ]},
+            { category: "Context Management & Reliability (15%)", videos: [
+                { title: "LLM Context Window Management", url: "https://www.youtube.com/watch?v=5pAkOizVaVo", desc: "RAG, summarization, and semantic search" },
+                { title: "Building Reliable AI Systems", url: "https://www.youtube.com/watch?v=5pAkOizVaVo", desc: "Error handling, confidence calibration, and fallbacks" },
+                { title: "AI Observability and Monitoring", url: "https://www.youtube.com/watch?v=5pAkOizVaVo", desc: "Tracking and improving AI system reliability" }
+            ]}
+        ];
+
+        // ================== COOKIES ==================
+        function setCookie(name, value, days) {
             const expires = new Date();
             expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
             document.cookie = name + '=' + encodeURIComponent(value) + ';expires=' + expires.toUTCString() + ';path=/;SameSite=Strict';
-        };
-
-        const getCookie = (name) => {
+        }
+        function getCookie(name) {
             const nameEQ = name + "=";
             const ca = document.cookie.split(';');
             for(let i = 0; i < ca.length; i++) {
@@ -816,420 +793,373 @@
                 if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
             }
             return null;
-        };
-
-        const getProgress = () => {
+        }
+        function getProgress() {
             const progress = getCookie('claude_cert_progress_v2');
-            if (progress) {
-                try { return JSON.parse(progress); } catch(e) { return {}; }
-            }
+            if (progress) { try { return JSON.parse(progress); } catch(e) { return {}; } }
             return {};
-        };
-
-        const saveProgress = (progress) => {
+        }
+        function saveProgress(progress) {
             setCookie('claude_cert_progress_v2', JSON.stringify(progress), 365);
+        }
+
+        // ================== STATE ==================
+        let state = {
+            activeTab: 'cards',
+            filter: 'all',
+            progress: getProgress(),
+            quizIndex: 0,
+            quizQuestions: [...questionsData].sort(() => Math.random() - 0.5),
+            quizSelected: null,
+            quizShowExplanation: false,
+            quizShowHint: false
         };
 
-        // Hint Popup Component
-        const HintPopup = ({ questionId, categoryId, onClose }) => {
-            const hint = questionHints[questionId] || { emoji: "💡", text: "Think about the key concepts in this category", memory: "Review the category fundamentals" };
-            const svg = getCategorySVG(categoryId);
-            
-            return (
-                <>
-                    <div className="hint-popup-overlay" onClick={onClose}></div>
-                    <div className="hint-popup">
-                        <div className="hint-popup-emoji">{hint.emoji}</div>
-                        <div className="hint-popup-svg" style={{ color: categories[categoryId].color }}>{svg}</div>
-                        <div className="hint-popup-text">
-                            <strong style={{ color: categories[categoryId].color }}>Visual Hint:</strong><br/>
-                            {hint.text}
-                        </div>
-                        <div className="hint-popup-memory">
-                            💭 Memory Aid:<br/>{hint.memory}
-                        </div>
-                        <button className="hint-popup-close" onClick={onClose}>Got it!</button>
-                    </div>
-                </>
-            );
-        };
+        // ================== RENDER HELPERS ==================
+        function getCategorySVG(categoryId) {
+            const colors = {
+                1: '#ef4444', 2: '#3b82f6', 3: '#10b981', 4: '#f59e0b', 5: '#a855f7'
+            };
+            const c = colors[categoryId] || colors[1];
+            const svgs = {
+                1: `<svg viewBox="0 0 100 100" width="50" height="50" style="stroke:${c};fill:none"><circle cx="50" cy="50" r="40" stroke-width="2" stroke-dasharray="10 5" opacity="0.5"/><path d="M50 20 L50 80 M20 50 L80 50" stroke-width="4" stroke-linecap="round"/><circle cx="50" cy="50" r="10" fill="currentColor" style="color:${c}"/></svg>`,
+                2: `<svg viewBox="0 0 100 100" width="50" height="50" style="stroke:${c};fill:none"><rect x="20" y="30" width="60" height="40" rx="5" stroke-width="4"/><path d="M35 30 V20 M65 30 V20" stroke-width="4"/><circle cx="50" cy="50" r="8" fill="currentColor" style="color:${c}"/></svg>`,
+                3: `<svg viewBox="0 0 100 100" width="50" height="50" style="stroke:${c};fill:none"><path d="M30 40 L50 60 L70 40" stroke-width="6" stroke-linejoin="round"/><path d="M20 20 H80 V80 H20 Z" stroke-width="2"/></svg>`,
+                4: `<svg viewBox="0 0 100 100" width="50" height="50" style="stroke:${c};fill:none"><path d="M20 30 H80" stroke-width="8" stroke-linecap="round"/><path d="M20 50 H60" stroke-width="8" stroke-linecap="round"/><path d="M20 70 H50" stroke-width="8" stroke-linecap="round"/></svg>`,
+                5: `<svg viewBox="0 0 100 100" width="50" height="50" style="stroke:${c};fill:none"><circle cx="50" cy="50" r="35" stroke-width="4"/><path d="M50 25 V55 L70 70" stroke-width="4" stroke-linecap="round"/></svg>`
+            };
+            return svgs[categoryId] || svgs[1];
+        }
 
-        // Components
-        const Header = () => (
-            <header className="app-header">
-                <h1>Claude Developer Certification</h1>
-                <p>100 Question Mastery with Visual Hints & Memory Aids</p>
-            </header>
-        );
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
 
-        const StatsBar = ({ progress }) => {
-            const totalMastered = Object.values(progress).flat().length;
-            const totalQuestions = questionsData.length;
-            const percentage = Math.round((totalMastered / totalQuestions) * 100);
-            
-            return (
-                <div className="stats-grid">
-                    <div className="stat-card">
-                        <div className="stat-number">{totalQuestions}</div>
-                        <div className="stat-label">Total Questions</div>
-                    </div>
-                    <div className="stat-card">
-                        <div className="stat-number">{totalMastered}</div>
-                        <div className="stat-label">Mastered</div>
-                    </div>
-                    <div className="stat-card">
-                        <div className="stat-number">{percentage}%</div>
-                        <div className="stat-label">Completion</div>
-                    </div>
-                    <div className="stat-card">
-                        <div className="stat-number">{questionsData.length - totalMastered}</div>
-                        <div className="stat-label">Remaining</div>
-                    </div>
-                </div>
-            );
-        };
+        // ================== VIEWS ==================
+        function renderHeader() {
+            return `
+                <header class="app-header">
+                    <h1>Claude Developer Certification</h1>
+                    <p>100 Question Mastery with Visual Hints & Memory Aids</p>
+                </header>`;
+        }
 
-        const ProgressSection = ({ progress }) => {
-            const totalMastered = Object.values(progress).flat().length;
-            const overallPercentage = (totalMastered / questionsData.length) * 100;
-            
-            const categoryProgress = {};
+        function renderStats() {
+            const totalMastered = Object.values(state.progress).flat().length;
+            const total = questionsData.length;
+            const percentage = Math.round((totalMastered / total) * 100);
+            return `
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-number">${total}</div><div class="stat-label">Total Questions</div></div>
+                    <div class="stat-card"><div class="stat-number">${totalMastered}</div><div class="stat-label">Mastered</div></div>
+                    <div class="stat-card"><div class="stat-number">${percentage}%</div><div class="stat-label">Completion</div></div>
+                    <div class="stat-card"><div class="stat-number">${total - totalMastered}</div><div class="stat-label">Remaining</div></div>
+                </div>`;
+        }
+
+        function renderProgress() {
+            const totalMastered = Object.values(state.progress).flat().length;
+            const overallPct = (totalMastered / questionsData.length) * 100;
+            const catProg = {};
             questionsData.forEach(q => {
-                if (!categoryProgress[q.category]) categoryProgress[q.category] = { total: 0, mastered: 0 };
-                categoryProgress[q.category].total++;
-                if ((progress[q.category] || []).includes(q.id)) {
-                    categoryProgress[q.category].mastered++;
-                }
+                if (!catProg[q.category]) catProg[q.category] = { total: 0, mastered: 0 };
+                catProg[q.category].total++;
+                if ((state.progress[q.category] || []).includes(q.id)) catProg[q.category].mastered++;
             });
+            let catHtml = '';
+            Object.entries(catProg).forEach(([catId, stats]) => {
+                const pct = (stats.mastered / stats.total) * 100;
+                catHtml += `
+                    <div class="category-progress">
+                        <div class="category-header">
+                            <span style="color:${categories[catId].color}">${categories[catId].name} (${categories[catId].weight})</span>
+                            <span>${stats.mastered}/${stats.total}</span>
+                        </div>
+                        <div class="category-bar"><div class="category-fill" style="width:${pct}%;background:${categories[catId].color}"></div></div>
+                    </div>`;
+            });
+            return `
+                <div class="progress-section">
+                    <h2>Study Progress</h2>
+                    <div class="progress-bar"><div class="progress-fill" style="width:${overallPct}%"></div></div>
+                    <div class="progress-text">${totalMastered} of ${questionsData.length} questions mastered (${Math.round(overallPct)}%)</div>
+                    ${catHtml}
+                </div>`;
+        }
 
-            return (
-                <div className="progress-section">
-                    <h2 style={{ marginBottom: '16px', textAlign: 'center' }}>Study Progress</h2>
-                    <div className="progress-bar">
-                        <div className="progress-fill" style={{ width: overallPercentage + '%' }}></div>
-                    </div>
-                    <div style={{ textAlign: 'center', color: '#94a3b8', marginBottom: '20px' }}>
-                        {totalMastered} of {questionsData.length} questions mastered ({Math.round(overallPercentage)}%)
-                    </div>
-                    {Object.entries(categoryProgress).map(([catId, stats]) => {
-                        const pct = (stats.mastered / stats.total) * 100;
-                        return (
-                            <div key={catId} className="category-progress">
-                                <div className="category-header">
-                                    <span style={{ color: categories[catId].color }}>{categories[catId].name} ({categories[catId].weight})</span>
-                                    <span>{stats.mastered}/{stats.total}</span>
-                                </div>
-                                <div className="category-bar">
-                                    <div className="category-fill" style={{ width: pct + '%', background: categories[catId].color }}></div>
-                                </div>
-                            </div>
-                        );
-                    })}
+        function renderNav() {
+            return `
+                <div class="btn-row">
+                    <button class="reset-btn" onclick="resetProgress()">Reset Progress</button>
                 </div>
-            );
-        };
+                <div class="nav-tabs">
+                    <button class="nav-tab ${state.activeTab === 'cards' ? 'active' : ''}" onclick="setTab('cards')">Memory Cards</button>
+                    <button class="nav-tab ${state.activeTab === 'quiz' ? 'active' : ''}" onclick="setTab('quiz')">Quiz Mode</button>
+                    <button class="nav-tab ${state.activeTab === 'resources' ? 'active' : ''}" onclick="setTab('resources')">Resources</button>
+                </div>`;
+        }
 
-        const ResourcesSection = () => (
-            <div className="resources-section">
-                <h3>📚 Learning Resources</h3>
-                {youtubeResources.map((category, idx) => (
-                    <div key={idx} className="resource-category">
-                        <h4>{category.category}</h4>
-                        <ul className="resource-list">
-                            {category.videos.map((video, vidx) => (
-                                <li key={vidx}>
-                                    <a href={video.url} target="_blank" rel="noopener noreferrer" className="resource-link">
-                                        🎥 {video.title}
-                                    </a>
-                                    <span className="resource-desc">- {video.desc}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                ))}
-            </div>
-        );
+        function renderMemoryCards() {
+            const filtered = state.filter === 'all' ? questionsData
+                : state.filter === 'mastered' ? questionsData.filter(q => (state.progress[q.category] || []).includes(q.id))
+                : state.filter === 'unmastered' ? questionsData.filter(q => !(state.progress[q.category] || []).includes(q.id))
+                : questionsData.filter(q => q.category === parseInt(state.filter));
 
-        const MemoryCard = ({ question, progress, onToggle }) => {
-            const [flipped, setFlipped] = useState(false);
-            const [showHint, setShowHint] = useState(false);
-            const isMastered = (progress[question.category] || []).includes(question.id);
-            const hint = questionHints[question.id];
-            
-            const toggleMastered = (e) => {
-                e.stopPropagation();
-                onToggle(question.category, question.id);
-            };
+            const filterButtons = `
+                <div class="filter-bar">
+                    <span>Filter:</span>
+                    <button class="filter-btn ${state.filter === 'all' ? 'active' : ''}" onclick="setFilter('all')">All</button>
+                    <button class="filter-btn ${state.filter === 'unmastered' ? 'active' : ''}" onclick="setFilter('unmastered')">Unmastered</button>
+                    <button class="filter-btn ${state.filter === 'mastered' ? 'active' : ''}" onclick="setFilter('mastered')">Mastered</button>
+                    ${Object.entries(categories).map(([id, cat]) => `<button class="filter-btn ${state.filter === id ? 'active' : ''}" onclick="setFilter('${id}')">${cat.name}</button>`).join('')}
+                </div>`;
 
-            const handleHintClick = (e) => {
-                e.stopPropagation();
-                setShowHint(true);
-            };
-
-            return (
-                <>
-                    <div className={`flip-card ${flipped ? 'flipped' : ''}`} onClick={() => setFlipped(!flipped)}>
-                        <div className="flip-card-inner">
-                            <div className="flip-card-front">
-                                <span className="card-number">#{question.id}</span>
-                                <span className={`card-category cat-${question.category}`}>{categories[question.category].name}</span>
-                                <div className="card-question">{question.question}</div>
-                                <div className="card-hint">Click to reveal answer</div>
-                                <button className="hint-btn" onClick={handleHintClick}>💡 Need a Hint?</button>
+            const cards = filtered.map(q => {
+                const isMastered = (state.progress[q.category] || []).includes(q.id);
+                const hint = questionHints[q.id];
+                return `
+                    <div class="flip-card" id="card-${q.id}" onclick="flipCard(${q.id})">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <span class="card-number">#${q.id}</span>
+                                <span class="card-category cat-${q.category}">${categories[q.category].name}</span>
+                                <div class="card-question">${escapeHtml(q.question)}</div>
+                                <div class="card-hint-text">Click to reveal answer</div>
+                                <button class="hint-btn" onclick="event.stopPropagation(); showHint(${q.id})">Need a Hint?</button>
                             </div>
-                            <div className="flip-card-back">
-                                <div className="card-answer">{question.answer}</div>
-                                {hint && (
-                                    <div style={{ marginTop: '12px', padding: '12px', background: 'rgba(251, 191, 36, 0.1)', borderRadius: '8px', border: '1px dashed #fbbf24' }}>
-                                        <div style={{ fontSize: '1.5em', marginBottom: '4px' }}>{hint.emoji}</div>
-                                        <div style={{ color: '#fbbf24', fontSize: '0.9em', fontStyle: 'italic' }}>{hint.memory}</div>
-                                    </div>
-                                )}
-                                <div style={{ marginTop: '16px', textAlign: 'center' }}>
-                                    <button 
-                                        className={`mastery-btn ${isMastered ? 'mastered' : ''}`}
-                                        onClick={toggleMastered}
-                                    >
-                                        {isMastered ? '✓ Mastered' : 'Mark as Mastered'}
+                            <div class="flip-card-back">
+                                <div class="card-answer">${escapeHtml(q.answer)}</div>
+                                ${hint ? `<div class="memory-aid"><div class="emoji">${hint.emoji}</div><div class="text">${escapeHtml(hint.memory)}</div></div>` : ''}
+                                <div style="margin-top:12px;text-align:center;">
+                                    <button class="mastery-btn ${isMastered ? 'mastered' : ''}" onclick="event.stopPropagation(); toggleMastery(${q.category}, ${q.id})">
+                                        ${isMastered ? 'Mastered' : 'Mark as Mastered'}
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    {showHint && (
-                        <HintPopup 
-                            questionId={question.id} 
-                            categoryId={question.category} 
-                            onClose={() => setShowHint(false)} 
-                        />
-                    )}
-                </>
-            );
-        };
+                    </div>`;
+            }).join('');
 
-        const MemoryCardsView = ({ progress, onToggle, filter, setFilter }) => {
-            const filteredQuestions = filter === 'all' 
-                ? questionsData 
-                : filter === 'mastered'
-                    ? questionsData.filter(q => (progress[q.category] || []).includes(q.id))
-                    : questionsData.filter(q => !(progress[q.category] || []).includes(q.id));
+            return filterButtons + `<div class="card-grid">${cards}</div>`;
+        }
 
-            return (
-                <div>
-                    <div className="filter-bar">
-                        <span style={{ color: '#94a3b8', fontSize: '0.9em' }}>Filter:</span>
-                        <button className={`filter-btn ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>All Questions</button>
-                        <button className={`filter-btn ${filter === 'unmastered' ? 'active' : ''}`} onClick={() => setFilter('unmastered')}>Unmastered</button>
-                        <button className={`filter-btn ${filter === 'mastered' ? 'active' : ''}`} onClick={() => setFilter('mastered')}>Mastered</button>
-                        {Object.entries(categories).map(([id, cat]) => (
-                            <button key={id} className={`filter-btn ${filter === id ? 'active' : ''}`} onClick={() => setFilter(id)}>{cat.name}</button>
-                        ))}
+        function renderQuiz() {
+            const q = state.quizQuestions[state.quizIndex];
+            const isMastered = (state.progress[q.category] || []).includes(q.id);
+            const hint = questionHints[q.id];
+
+            // Generate options
+            const wrong = questionsData
+                .filter(x => x.id !== q.id && x.category === q.category)
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 3)
+                .map(x => x.answer);
+            while (wrong.length < 3) {
+                const r = questionsData[Math.floor(Math.random() * questionsData.length)];
+                if (r.id !== q.id && !wrong.includes(r.answer)) wrong.push(r.answer);
+            }
+            const opts = [...wrong, q.answer].sort(() => Math.random() - 0.5);
+
+            let optionsHtml = opts.map((opt, idx) => {
+                let cls = 'quiz-option';
+                if (state.quizShowExplanation) {
+                    if (opt === q.answer) cls += ' correct';
+                    else if (opt === state.quizSelected) cls += ' incorrect';
+                }
+                return `<button class="${cls}" onclick="selectQuizOption(${idx}, '${escapeHtml(opt).replace(/'/g, "\\'")}')" ${state.quizShowExplanation ? 'disabled' : ''}>${escapeHtml(opt)}</button>`;
+            }).join('');
+
+            let hintHtml = '';
+            if (state.quizShowHint && hint) {
+                hintHtml = `
+                    <div class="quiz-hint-box">
+                        <div class="emoji">${hint.emoji}</div>
+                        <div class="hint-text">${escapeHtml(hint.text)}</div>
+                        <div class="memory">${escapeHtml(hint.memory)}</div>
+                    </div>`;
+            }
+
+            let explanationHtml = '';
+            if (state.quizShowExplanation) {
+                explanationHtml = `
+                    <div class="quiz-explanation">
+                        <strong>${state.quizSelected === q.answer ? 'Correct!' : 'The correct answer is:'}</strong>
+                        <p>${escapeHtml(q.answer)}</p>
+                        ${hint ? `<div class="memory-aid" style="margin-top:12px"><div class="emoji">${hint.emoji}</div><div class="text">${escapeHtml(hint.memory)}</div></div>` : ''}
+                    </div>`;
+            }
+
+            return `
+                <div class="quiz-container">
+                    <div class="quiz-card">
+                        <div class="quiz-meta">
+                            <span class="card-category cat-${q.category}">${categories[q.category].name}</span>
+                            <span style="color:#64748b">Question ${state.quizIndex + 1} of ${state.quizQuestions.length}</span>
+                        </div>
+                        <div class="quiz-question">${escapeHtml(q.question)}</div>
+                        <button class="quiz-hint-btn" onclick="toggleQuizHint()">${state.quizShowHint ? 'Hide Hint' : 'Show Visual Hint'}</button>
+                        ${hintHtml}
+                        <div class="quiz-options">${optionsHtml}</div>
+                        ${explanationHtml}
+                        <div class="quiz-nav">
+                            <button onclick="prevQuiz()" ${state.quizIndex === 0 ? 'disabled' : ''}>Previous</button>
+                            <button onclick="nextQuiz()" ${state.quizIndex === state.quizQuestions.length - 1 ? 'disabled' : ''}>Next</button>
+                        </div>
                     </div>
-                    <div className="card-grid">
-                        {filteredQuestions.map(q => (
-                            <MemoryCard key={q.id} question={q} progress={progress} onToggle={onToggle} />
-                        ))}
-                    </div>
+                </div>`;
+        }
+
+        function renderResources() {
+            return youtubeResources.map(cat => `
+                <div class="resources-section fade-in">
+                    <h3>${escapeHtml(cat.category)}</h3>
+                    <ul class="resource-list">
+                        ${cat.videos.map(v => `
+                            <li>
+                                <a href="${v.url}" target="_blank" rel="noopener noreferrer" class="resource-link">${escapeHtml(v.title)}</a>
+                                <span class="resource-desc">- ${escapeHtml(v.desc)}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
                 </div>
-            );
-        };
+            `).join('');
+        }
 
-        const QuizView = ({ progress, onToggle }) => {
-            const [currentIndex, setCurrentIndex] = useState(0);
-            const [selectedOption, setSelectedOption] = useState(null);
-            const [showExplanation, setShowExplanation] = useState(false);
-            const [showHint, setShowHint] = useState(false);
-            const [quizQuestions, setQuizQuestions] = useState([...questionsData].sort(() => Math.random() - 0.5));
-            
-            const currentQuestion = quizQuestions[currentIndex];
-            const isMastered = (progress[currentQuestion.category] || []).includes(currentQuestion.id);
-            
-            const generateOptions = (question) => {
-                const wrongAnswers = questionsData
-                    .filter(q => q.id !== question.id && q.category === question.category)
-                    .sort(() => Math.random() - 0.5)
-                    .slice(0, 3)
-                    .map(q => q.answer);
-                while (wrongAnswers.length < 3) {
-                    const randomQ = questionsData[Math.floor(Math.random() * questionsData.length)];
-                    if (randomQ.id !== question.id && !wrongAnswers.includes(randomQ.answer)) {
-                        wrongAnswers.push(randomQ.answer);
-                    }
-                }
-                return [...wrongAnswers, question.answer].sort(() => Math.random() - 0.5);
-            };
-
-            const [options, setOptions] = useState(generateOptions(currentQuestion));
-
-            const handleNext = () => {
-                if (currentIndex < quizQuestions.length - 1) {
-                    setCurrentIndex(currentIndex + 1);
-                    setSelectedOption(null);
-                    setShowExplanation(false);
-                    setShowHint(false);
-                    const nextQ = quizQuestions[currentIndex + 1];
-                    setOptions(generateOptions(nextQ));
-                }
-            };
-
-            const handlePrev = () => {
-                if (currentIndex > 0) {
-                    setCurrentIndex(currentIndex - 1);
-                    setSelectedOption(null);
-                    setShowExplanation(false);
-                    setShowHint(false);
-                    const prevQ = quizQuestions[currentIndex - 1];
-                    setOptions(generateOptions(prevQ));
-                }
-            };
-
-            const handleAnswer = (option) => {
-                setSelectedOption(option);
-                setShowExplanation(true);
-                if (option === currentQuestion.answer && !isMastered) {
-                    onToggle(currentQuestion.category, currentQuestion.id);
-                }
-            };
-
-            const hint = questionHints[currentQuestion.id];
-
-            return (
-                <div className="quiz-container">
-                    <div className="quiz-card">
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', alignItems: 'center' }}>
-                            <span className={`card-category cat-${currentQuestion.category}`}>{categories[currentQuestion.category].name}</span>
-                            <span style={{ color: '#64748b' }}>Question {currentIndex + 1} of {quizQuestions.length}</span>
-                        </div>
-                        <div className="quiz-question">{currentQuestion.question}</div>
-                        <button className="quiz-hint-btn" onClick={() => setShowHint(!showHint)}>
-                            {showHint ? '🔼 Hide Hint' : '💡 Show Visual Hint'}
-                        </button>
-                        {showHint && hint && (
-                            <div style={{ 
-                                marginTop: '16px', 
-                                padding: '20px', 
-                                background: 'rgba(56, 189, 248, 0.1)', 
-                                borderRadius: '12px',
-                                border: '1px solid #38bdf8',
-                                textAlign: 'center'
-                            }}>
-                                <div style={{ fontSize: '2.5em', marginBottom: '8px' }}>{hint.emoji}</div>
-                                <div style={{ color: categories[currentQuestion.category].color }}>
-                                    {getCategorySVG(currentQuestion.category)}
-                                </div>
-                                <div style={{ color: '#e2e8f0', marginTop: '8px', fontSize: '0.95em' }}>{hint.text}</div>
-                                <div style={{ color: '#fbbf24', marginTop: '8px', fontSize: '0.9em', fontStyle: 'italic' }}>{hint.memory}</div>
-                            </div>
-                        )}
-                        <div className="quiz-options">
-                            {options.map((option, idx) => (
-                                <button
-                                    key={idx}
-                                    className={`quiz-option ${
-                                        showExplanation 
-                                            ? option === currentQuestion.answer 
-                                                ? 'correct' 
-                                                : option === selectedOption 
-                                                    ? 'incorrect' 
-                                                    : '' 
-                                            : ''
-                                    }`}
-                                    onClick={() => !showExplanation && handleAnswer(option)}
-                                    disabled={showExplanation}
-                                >
-                                    {option}
-                                </button>
-                            ))}
-                        </div>
-                        {showExplanation && (
-                            <div className="quiz-explanation">
-                                <strong>{selectedOption === currentQuestion.answer ? 'Correct!' : 'The correct answer is:'}</strong>
-                                <p style={{ marginTop: '8px' }}>{currentQuestion.answer}</p>
-                                {hint && (
-                                    <div style={{ marginTop: '12px', padding: '12px', background: 'rgba(251, 191, 36, 0.1)', borderRadius: '8px' }}>
-                                        <div style={{ fontSize: '1.3em' }}>{hint.emoji}</div>
-                                        <div style={{ color: '#fbbf24', fontSize: '0.9em', fontStyle: 'italic' }}>{hint.memory}</div>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                        <div className="quiz-nav">
-                            <button className="quiz-btn" onClick={handlePrev} disabled={currentIndex === 0}>Previous</button>
-                            <button className="quiz-btn" onClick={handleNext} disabled={currentIndex === quizQuestions.length - 1}>Next</button>
-                        </div>
+        function renderFooter() {
+            return `
+                <footer class="app-footer">
+                    <p>Built for the Claude Developer Certification Exam</p>
+                    <div class="footer-links">
+                        <a href="https://www.linkedin.com/in/rifaterdemsahin/" target="_blank" rel="noopener noreferrer">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                            Rifat Erdem Sahin on LinkedIn
+                        </a>
+                        <a href="https://rifaterdemsahin.github.io/claude_certification_exam/" target="_blank">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            View on GitHub
+                        </a>
                     </div>
-                </div>
-            );
-        };
+                </footer>`;
+        }
 
-        const App = () => {
-            const [activeTab, setActiveTab] = useState('cards');
-            const [filter, setFilter] = useState('all');
-            const [progress, setProgress] = useState(getProgress);
+        // ================== ACTIONS ==================
+        function setTab(tab) {
+            state.activeTab = tab;
+            if (tab === 'quiz') {
+                state.quizIndex = 0;
+                state.quizQuestions = [...questionsData].sort(() => Math.random() - 0.5);
+                state.quizSelected = null;
+                state.quizShowExplanation = false;
+                state.quizShowHint = false;
+            }
+            render();
+        }
 
-            const toggleMastery = (category, questionId) => {
-                const newProgress = { ...progress };
-                if (!newProgress[category]) newProgress[category] = [];
-                
-                const index = newProgress[category].indexOf(questionId);
-                if (index > -1) {
-                    newProgress[category].splice(index, 1);
-                } else {
-                    newProgress[category].push(questionId);
-                }
-                
-                setProgress(newProgress);
-                saveProgress(newProgress);
-            };
+        function setFilter(filter) {
+            state.filter = filter;
+            render();
+        }
 
-            const resetProgress = () => {
-                if (confirm('Are you sure you want to reset all progress?')) {
-                    setProgress({});
-                    saveProgress({});
-                }
-            };
+        function flipCard(id) {
+            const card = document.getElementById('card-' + id);
+            if (card) card.classList.toggle('flipped');
+        }
 
-            return (
-                <div>
-                    <Header />
-                    <div className="container">
-                        <StatsBar progress={progress} />
-                        <ProgressSection progress={progress} />
-                        
-                        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '30px' }}>
-                            <button className="reset-btn" onClick={resetProgress}>Reset Progress</button>
-                        </div>
+        function toggleMastery(category, questionId) {
+            const prog = { ...state.progress };
+            if (!prog[category]) prog[category] = [];
+            const idx = prog[category].indexOf(questionId);
+            if (idx > -1) prog[category].splice(idx, 1);
+            else prog[category].push(questionId);
+            state.progress = prog;
+            saveProgress(prog);
+            render();
+        }
 
-                        <div className="nav-tabs">
-                            <button className={`nav-tab ${activeTab === 'cards' ? 'active' : ''}`} onClick={() => setActiveTab('cards')}>Memory Cards</button>
-                            <button className={`nav-tab ${activeTab === 'quiz' ? 'active' : ''}`} onClick={() => setActiveTab('quiz')}>Quiz Mode</button>
-                            <button className={`nav-tab ${activeTab === 'resources' ? 'active' : ''}`} onClick={() => setActiveTab('resources')}>📚 Resources</button>
-                        </div>
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all progress?')) {
+                state.progress = {};
+                saveProgress({});
+                render();
+            }
+        }
 
-                        {activeTab === 'cards' && (
-                            <MemoryCardsView 
-                                progress={progress} 
-                                onToggle={toggleMastery} 
-                                filter={filter} 
-                                setFilter={setFilter} 
-                            />
-                        )}
-                        
-                        {activeTab === 'quiz' && (
-                            <QuizView progress={progress} onToggle={toggleMastery} />
-                        )}
+        function showHint(questionId) {
+            const q = questionsData.find(x => x.id === questionId);
+            const hint = questionHints[questionId];
+            if (!hint) return;
+            const popup = document.createElement('div');
+            popup.className = 'hint-overlay';
+            popup.innerHTML = `
+                <div class="hint-popup">
+                    <div class="emoji">${hint.emoji}</div>
+                    <div class="svg-wrap" style="color:${categories[q.category].color}">${getCategorySVG(q.category)}</div>
+                    <div class="hint-text"><strong style="color:${categories[q.category].color}">Visual Hint:</strong><br/>${escapeHtml(hint.text)}</div>
+                    <div class="memory">Memory Aid:<br/>${escapeHtml(hint.memory)}</div>
+                    <button class="close-btn" onclick="this.closest('.hint-overlay').remove()">Got it!</button>
+                </div>`;
+            popup.addEventListener('click', e => {
+                if (e.target === popup) popup.remove();
+            });
+            document.body.appendChild(popup);
+        }
 
-                        {activeTab === 'resources' && (
-                            <ResourcesSection />
-                        )}
-                        <Footer />
-                    </div>
-                </div>
-            );
-        };
+        function selectQuizOption(idx, option) {
+            const q = state.quizQuestions[state.quizIndex];
+            state.quizSelected = option;
+            state.quizShowExplanation = true;
+            if (option === q.answer && !(state.progress[q.category] || []).includes(q.id)) {
+                toggleMastery(q.category, q.id);
+                return; // toggleMastery calls render
+            }
+            render();
+        }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        function toggleQuizHint() {
+            state.quizShowHint = !state.quizShowHint;
+            render();
+        }
+
+        function nextQuiz() {
+            if (state.quizIndex < state.quizQuestions.length - 1) {
+                state.quizIndex++;
+                state.quizSelected = null;
+                state.quizShowExplanation = false;
+                state.quizShowHint = false;
+                render();
+            }
+        }
+
+        function prevQuiz() {
+            if (state.quizIndex > 0) {
+                state.quizIndex--;
+                state.quizSelected = null;
+                state.quizShowExplanation = false;
+                state.quizShowHint = false;
+                render();
+            }
+        }
+
+        // ================== MAIN RENDER ==================
+        function render() {
+            const app = document.getElementById('app');
+            let content = renderHeader() + '<div class="container">';
+            content += renderStats();
+            content += renderProgress();
+            content += renderNav();
+
+            if (state.activeTab === 'cards') content += renderMemoryCards();
+            else if (state.activeTab === 'quiz') content += renderQuiz();
+            else if (state.activeTab === 'resources') content += renderResources();
+
+            content += '</div>' + renderFooter();
+            app.innerHTML = content;
+        }
+
+        // ================== INIT ==================
+        document.addEventListener('DOMContentLoaded', render);
     </script>
 </body>
 </html>
