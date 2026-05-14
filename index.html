@@ -809,10 +809,11 @@
             filter: 'all',
             progress: getProgress(),
             quizIndex: 0,
-            quizQuestions: [...questionsData].sort(() => Math.random() - 0.5),
+            quizQuestions: [],
             quizSelected: null,
             quizShowExplanation: false,
-            quizShowHint: false
+            quizShowHint: false,
+            quizOptions: []
         };
 
         // ================== RENDER HELPERS ==================
@@ -946,23 +947,22 @@
         }
 
         function renderQuiz() {
+            if (state.quizQuestions.length === 0) {
+                return `
+                    <div class="quiz-container">
+                        <div class="quiz-card" style="text-align:center">
+                            <h2 style="margin-bottom:16px">Quiz Complete! 🎉</h2>
+                            <p style="margin-bottom:20px;color:var(--text-secondary)">You have mastered all the selected questions in this pool.</p>
+                            <button class="nav-tab active" onclick="setTab('quiz')">Restart Quiz</button>
+                        </div>
+                    </div>`;
+            }
+
             const q = state.quizQuestions[state.quizIndex];
             const isMastered = (state.progress[q.category] || []).includes(q.id);
             const hint = questionHints[q.id];
 
-            // Generate options
-            const wrong = questionsData
-                .filter(x => x.id !== q.id && x.category === q.category)
-                .sort(() => Math.random() - 0.5)
-                .slice(0, 3)
-                .map(x => x.answer);
-            while (wrong.length < 3) {
-                const r = questionsData[Math.floor(Math.random() * questionsData.length)];
-                if (r.id !== q.id && !wrong.includes(r.answer)) wrong.push(r.answer);
-            }
-            const opts = [...wrong, q.answer].sort(() => Math.random() - 0.5);
-
-            let optionsHtml = opts.map((opt, idx) => {
+            let optionsHtml = state.quizOptions.map((opt, idx) => {
                 let cls = 'quiz-option';
                 if (state.quizShowExplanation) {
                     if (opt === q.answer) cls += ' correct';
@@ -985,7 +985,8 @@
             if (state.quizShowExplanation) {
                 explanationHtml = `
                     <div class="quiz-explanation">
-                        <strong>${state.quizSelected === q.answer ? 'Correct!' : 'The correct answer is:'}</strong>
+                        <strong>${state.quizSelected === q.answer ? 'Correct!' : 'Incorrect'}</strong>
+                        ${state.quizSelected !== q.answer ? `<p style="margin-top:4px">The correct answer was:</p>` : ''}
                         <p>${escapeHtml(q.answer)}</p>
                         ${hint ? `<div class="memory-aid" style="margin-top:12px"><div class="emoji">${hint.emoji}</div><div class="text">${escapeHtml(hint.memory)}</div></div>` : ''}
                     </div>`;
@@ -1048,13 +1049,31 @@
         function setTab(tab) {
             state.activeTab = tab;
             if (tab === 'quiz') {
+                const unmastered = questionsData.filter(q => !(state.progress[q.category] || []).includes(q.id));
+                // If everything is mastered, allow re-quizzing everything
+                state.quizQuestions = (unmastered.length > 0 ? unmastered : [...questionsData]).sort(() => Math.random() - 0.5);
                 state.quizIndex = 0;
-                state.quizQuestions = [...questionsData].sort(() => Math.random() - 0.5);
                 state.quizSelected = null;
                 state.quizShowExplanation = false;
                 state.quizShowHint = false;
+                generateQuizOptions();
             }
             render();
+        }
+
+        function generateQuizOptions() {
+            if (state.quizQuestions.length === 0) return;
+            const q = state.quizQuestions[state.quizIndex];
+            const wrong = questionsData
+                .filter(x => x.id !== q.id && x.category === q.category)
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 3)
+                .map(x => x.answer);
+            while (wrong.length < 3) {
+                const r = questionsData[Math.floor(Math.random() * questionsData.length)];
+                if (r.id !== q.id && !wrong.includes(r.answer)) wrong.push(r.answer);
+            }
+            state.quizOptions = [...wrong, q.answer].sort(() => Math.random() - 0.5);
         }
 
         function setFilter(filter) {
@@ -1079,10 +1098,11 @@
         }
 
         function resetProgress() {
-            if (confirm('Are you sure you want to reset all progress?')) {
+            if (confirm('Are you sure you want to reset all progress? This will clear all mastered questions.')) {
                 state.progress = {};
                 saveProgress({});
-                render();
+                if (state.activeTab === 'quiz') setTab('quiz');
+                else render();
             }
         }
 
@@ -1110,9 +1130,11 @@
             const q = state.quizQuestions[state.quizIndex];
             state.quizSelected = option;
             state.quizShowExplanation = true;
-            if (option === q.answer && !(state.progress[q.category] || []).includes(q.id)) {
-                toggleMastery(q.category, q.id);
-                return; // toggleMastery calls render
+            if (option === q.answer) {
+                if (!(state.progress[q.category] || []).includes(q.id)) {
+                    toggleMastery(q.category, q.id);
+                    return; // toggleMastery calls render
+                }
             }
             render();
         }
@@ -1128,6 +1150,7 @@
                 state.quizSelected = null;
                 state.quizShowExplanation = false;
                 state.quizShowHint = false;
+                generateQuizOptions();
                 render();
             }
         }
@@ -1138,6 +1161,7 @@
                 state.quizSelected = null;
                 state.quizShowExplanation = false;
                 state.quizShowHint = false;
+                generateQuizOptions();
                 render();
             }
         }
