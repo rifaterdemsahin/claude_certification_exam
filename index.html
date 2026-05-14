@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Developer Certification - 100 Question Mastery</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        .app-header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid #334155;
+            margin-bottom: 30px;
+        }
+        .app-header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #38bdf8, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .app-header p { color: #94a3b8; font-size: 1.1em; }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .nav-tab {
+            padding: 12px 24px;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: #cbd5e1;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1em;
+            font-weight: 500;
+        }
+        .nav-tab:hover { background: #334155; }
+        .nav-tab.active { background: #38bdf8; color: #0f172a; border-color: #38bdf8; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #38bdf8, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-label { color: #94a3b8; margin-top: 8px; }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        .flip-card {
+            perspective: 1000px;
+            height: 220px;
+            cursor: pointer;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #334155;
+        }
+        .flip-card-front {
+            background: #1e293b;
+        }
+        .flip-card-back {
+            background: linear-gradient(135deg, #1e3a5f, #312e81);
+            transform: rotateY(180deg);
+        }
+        .card-number {
+            position: absolute;
+            top: 12px;
+            left: 16px;
+            font-size: 0.85em;
+            color: #64748b;
+            font-weight: 600;
+        }
+        .card-category {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 500;
+        }
+        .cat-1 { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+        .cat-2 { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .cat-3 { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .cat-4 { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .cat-5 { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
+
+        .card-question {
+            font-size: 1.05em;
+            text-align: center;
+            line-height: 1.5;
+            color: #e2e8f0;
+            padding-top: 20px;
+        }
+        .card-answer {
+            font-size: 0.95em;
+            text-align: center;
+            line-height: 1.6;
+            color: #e2e8f0;
+        }
+        .card-hint {
+            margin-top: 16px;
+            font-size: 0.85em;
+            color: #94a3b8;
+        }
+        .mastery-btn {
+            margin-top: 16px;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #38bdf8;
+            color: #0f172a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .mastery-btn:hover { background: #7dd3fc; }
+        .mastery-btn.mastered { background: #10b981; color: white; }
+
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: #cbd5e1;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        .filter-btn:hover { background: #334155; }
+        .filter-btn.active { background: #38bdf8; color: #0f172a; border-color: #38bdf8; }
+
+        .progress-section {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #334155;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8, #a855f7);
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+        .category-progress {
+            margin: 16px 0;
+        }
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 0.9em;
+        }
+        .category-bar {
+            width: 100%;
+            height: 6px;
+            background: #334155;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .category-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s;
+        }
+
+        .quiz-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .quiz-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 24px;
+        }
+        .quiz-question {
+            font-size: 1.3em;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .quiz-option {
+            padding: 16px 20px;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            background: #0f172a;
+            color: #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            font-size: 1em;
+        }
+        .quiz-option:hover { border-color: #38bdf8; }
+        .quiz-option.correct { border-color: #10b981; background: rgba(16, 185, 129, 0.1); }
+        .quiz-option.incorrect { border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+        .quiz-explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #0f172a;
+            border-radius: 10px;
+            border-left: 4px solid #38bdf8;
+        }
+        .quiz-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+        }
+        .quiz-btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            background: #38bdf8;
+            color: #0f172a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+        .quiz-btn:hover { background: #7dd3fc; }
+        .quiz-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .reset-btn {
+            padding: 10px 20px;
+            border: 1px solid #ef4444;
+            background: transparent;
+            color: #ef4444;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        .reset-btn:hover { background: rgba(239, 68, 68, 0.1); }
+
+        @media (max-width: 768px) {
+            .app-header h1 { font-size: 1.8em; }
+            .card-grid { grid-template-columns: 1fr; }
+            .flip-card { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect, useCallback } = React;
+
+        const questionsData = [
+            // === AGENTIC ARCHITECTURE & ORCHESTRATION (1-27) ===
+            { id: 1, category: 1, question: "What are the three stages of an Agentic Loop?", answer: "Perceive, Think, and Act. The agent observes its environment, reasons about the observation, and takes action." },
+            { id: 2, category: 1, question: "What is the Coordinator-Subagent model?", answer: "A pattern where a central coordinator agent routes tasks to specialized sub-agents rather than using one massive prompt." },
+            { id: 3, category: 1, question: "What is Task Decomposition in agentic systems?", answer: "Breaking complex tasks into smaller, manageable subtasks that can be assigned to different agents or executed sequentially." },
+            { id: 4, category: 1, question: "What is Session Management in agentic architecture?", answer: "Maintaining state and context across multiple interactions or task executions within a single user session." },
+            { id: 5, category: 1, question: "What is the difference between a simple prompt and an agentic loop?", answer: "A simple prompt is linear (input → output), while an agentic loop is cyclic (observe → reason → act → observe)." },
+            { id: 6, category: 1, question: "What is an autonomous cycle in agent architecture?", answer: "A self-running loop where the agent continuously perceives, thinks, and acts without human intervention until completion." },
+            { id: 7, category: 1, question: "What does 'stateless' mean in agent design?", answer: "Each request is independent with no memory of previous interactions; state must be explicitly passed or stored." },
+            { id: 8, category: 1, question: "What is a sub-agent?", answer: "A specialized agent that handles a specific domain or task type, orchestrated by a coordinator agent." },
+            { id: 9, category: 1, question: "What is the 'Sinthome' concept in Claude projects?", answer: "The stabilizing knot of the project - the CLAUDE.md file that defines constraints the agent must never violate." },
+            { id: 10, category: 1, question: "What is the purpose of routing logic in the Coordinator pattern?", answer: "To determine which sub-agent is best suited to handle a specific task or query." },
+            { id: 11, category: 1, question: "What is a 'tool call' in an agentic loop?", answer: "When the agent decides to invoke an external function or tool rather than responding with text." },
+            { id: 12, category: 1, question: "What is 'observation' in the Perceive stage?", answer: "The raw input or environmental data the agent receives before processing." },
+            { id: 13, category: 1, question: "What is 'reasoning' in the Think stage?", answer: "The cognitive processing where the agent analyzes observations, plans actions, and decides what to do." },
+            { id: 14, category: 1, question: "What is 'execution' in the Act stage?", answer: "The actual performance of the decided action, such as calling a tool or generating a response." },
+            { id: 15, category: 1, question: "What is an 'escalation pattern' in agent systems?", answer: "A mechanism to transfer control to a human or higher-level agent when the system cannot handle a situation." },
+            { id: 16, category: 1, question: "What is 'parallel sub-agent execution'?", answer: "Running multiple sub-agents simultaneously to handle different parts of a decomposed task." },
+            { id: 17, category: 1, question: "What is 'sequential sub-agent execution'?", answer: "Running sub-agents one after another, where each step's output feeds into the next step's input." },
+            { id: 18, category: 1, question: "What is 'task handoff' between agents?", answer: "Transferring responsibility for a task from one agent to another with proper context passing." },
+            { id: 19, category: 1, question: "What is 'agent memory'?", answer: "The storage and retrieval of past interactions, learnings, or context to inform future decisions." },
+            { id: 20, category: 1, question: "What is 'short-term memory' in agents?", answer: "Context maintained within a single conversation or session, typically in the prompt window." },
+            { id: 21, category: 1, question: "What is 'long-term memory' in agents?", answer: "Persistent storage of knowledge across sessions, often using databases, vector stores, or files." },
+            { id: 22, category: 1, question: "What is a 'feedback loop' in agentic systems?", answer: "The mechanism by which the agent receives feedback on its actions and adjusts future behavior." },
+            { id: 23, category: 1, question: "What is 'goal-oriented behavior' in agents?", answer: "Actions taken by the agent are directed toward achieving a specific objective or task completion." },
+            { id: 24, category: 1, question: "What is an 'agentic boundary'?", answer: "The limit of what an agent can do autonomously vs. what requires human approval or intervention." },
+            { id: 25, category: 1, question: "What is 're-planning' in an agentic loop?", answer: "When an agent adjusts its plan mid-execution based on new observations or failed actions." },
+            { id: 26, category: 1, question: "What is a 'termination condition' for an agent?", answer: "The criteria that signal the agent should stop its loop, such as task completion or max iterations." },
+            { id: 27, category: 1, question: "What is 'human-in-the-loop' orchestration?", answer: "A design where humans review, approve, or provide input at critical decision points in the agent workflow." },
+            
+            // === TOOL DESIGN & MCP INTEGRATION (28-45) ===
+            { id: 28, category: 2, question: "What does MCP stand for?", answer: "Model Context Protocol - a standard for connecting AI models to external data sources and tools." },
+            { id: 29, category: 2, question: "What is the key principle of MCP as 'Protocol over API'?", answer: "MCP standardizes how tools expose capabilities, allowing you to swap data sources without rewriting agent logic." },
+            { id: 30, category: 2, question: "What is 'Signal-to-Noise' ratio in tool interfaces?", answer: "Designing tools to return highly relevant, structured data rather than overwhelming the agent with irrelevant information." },
+            { id: 31, category: 2, question: "What is 'structured error handling' for tools?", answer: "Returning errors in a consistent JSON format that the agent can parse and decide how to handle." },
+            { id: 32, category: 2, question: "What is 'self-correction' in tool usage?", answer: "When a tool fails, the agent catches the error and attempts an alternative approach or asks for clarification." },
+            { id: 33, category: 2, question: "What is 'context bloat prevention' in tool design?", answer: "Limiting the amount of data returned by tools to prevent overwhelming the agent's context window." },
+            { id: 34, category: 2, question: "What is an MCP server?", answer: "A standardized server that exposes tools, resources, and prompts to AI clients through the Model Context Protocol." },
+            { id: 35, category: 2, question: "What are the three core primitives of MCP?", answer: "Tools (actions), Resources (data), and Prompts (templates)." },
+            { id: 36, category: 2, question: "What is 'tool discovery' in MCP?", answer: "The process by which an AI client learns what tools are available and their schemas from an MCP server." },
+            { id: 37, category: 2, question: "Why is JSON schema important for tool interfaces?", answer: "It defines the exact shape of inputs and outputs, enabling validation and predictable behavior." },
+            { id: 38, category: 2, question: "What is 'parameter validation' in tool design?", answer: "Checking that inputs match expected types and constraints before executing the tool logic." },
+            { id: 39, category: 2, question: "What is a 'tool fallback strategy'?", answer: "Having a backup plan when a primary tool fails, such as using cached data or an alternative service." },
+            { id: 40, category: 2, question: "What is 'rate limiting' in tool integration?", answer: "Controlling how frequently a tool is called to prevent overwhelming external services." },
+            { id: 41, category: 2, question: "What is 'tool idempotency'?", answer: "A property where calling a tool multiple times with the same input produces the same result without side effects." },
+            { id: 42, category: 2, question: "What is 'schema evolution' in tool design?", answer: "Managing changes to tool input/output schemas without breaking existing agent integrations." },
+            { id: 43, category: 2, question: "What is 'timeout handling' for tools?", answer: "Setting maximum wait times for tool responses and defining what happens when a timeout occurs." },
+            { id: 44, category: 2, question: "What is 'tool composition'?", answer: "Combining multiple simple tools to create complex workflows or higher-level operations." },
+            { id: 45, category: 2, question: "What is the benefit of MCP standardization?", answer: "Interoperability - any MCP client can work with any MCP server without custom integration code." },
+            
+            // === CLAUDE CODE CONFIGURATION & WORKFLOWS (46-65) ===
+            { id: 46, category: 3, question: "What is the purpose of CLAUDE.md?", answer: "It defines coding style, test commands, and architectural constraints that Claude must follow." },
+            { id: 47, category: 3, question: "What is 'Plan Mode' in Claude Code?", answer: "A workflow where Claude first generates a markdown plan before executing any file changes." },
+            { id: 48, category: 3, question: "What is 'Act Mode' in Claude Code?", answer: "The execution phase where Claude implements the changes defined in the plan." },
+            { id: 49, category: 3, question: "When should you use Plan Mode vs. Act Mode?", answer: "Always start with Plan Mode for complex tasks, then switch to Act Mode to execute the approved plan." },
+            { id: 50, category: 3, question: "What are custom slash commands in Claude Code?", answer: "User-defined commands (like /deploy, /test) that trigger specific workflows or scripts." },
+            { id: 51, category: 3, question: "How does CLAUDE.md act as a 'Sinthome'?", answer: "It serves as the stabilizing center that prevents Claude from deviating from project conventions." },
+            { id: 52, category: 3, question: "What should be included in a CLAUDE.md file?", answer: "Coding style, test commands, architecture constraints, and any rules Claude should never violate." },
+            { id: 53, category: 3, question: "What is the hierarchy of CLAUDE.md files?", answer: "Project root CLAUDE.md is primary; subdirectory CLAUDE.md files can provide additional or overriding rules." },
+            { id: 54, category: 3, question: "How do you create a custom slash command?", answer: "By defining a command in the CLAUDE.md or project configuration that maps to a specific action or script." },
+            { id: 55, category: 3, question: "What is CI/CD integration with Claude Code?", answer: "Using Claude to help write, review, or manage continuous integration and deployment pipelines." },
+            { id: 56, category: 3, question: "What is the 'CLAUDE.md hierarchy' concept?", answer: "A layered approach where different levels of the project can have different rules, with root-level being the most general." },
+            { id: 57, category: 3, question: "What happens if Claude violates a CLAUDE.md rule?", answer: "The developer should correct Claude and reinforce the rule; Claude will learn from the correction." },
+            { id: 58, category: 3, question: "What is 'context persistence' in Claude Code?", answer: "Maintaining project context across sessions through files like CLAUDE.md and project documentation." },
+            { id: 59, category: 3, question: "How do you update CLAUDE.md?", answer: "Edit the file directly; Claude will read the updated version on the next interaction." },
+            { id: 60, category: 3, question: "What is a 'Video Creator Master Prompt' file?", answer: "A specialized prompt file for maintaining consistency in video creation workflows." },
+            { id: 61, category: 3, question: "What is 'automation scripting' in Claude Code?", answer: "Creating scripts that Claude can run to automate repetitive development tasks." },
+            { id: 62, category: 3, question: "What is 'workflow chaining'?", answer: "Linking multiple Claude Code operations together to create complex, multi-step development workflows." },
+            { id: 63, category: 3, question: "What is 'code review mode' in Claude Code?", answer: "A workflow where Claude analyzes code changes and provides feedback before merge." },
+            { id: 64, category: 3, question: "What is 'test-driven development' with Claude?", answer: "Using Claude to write tests first, then implement the code to make those tests pass." },
+            { id: 65, category: 3, question: "What is 'refactoring mode' in Claude Code?", answer: "A focused workflow for restructuring existing code without changing its external behavior." },
+            
+            // === PROMPT ENGINEERING & STRUCTURED OUTPUT (66-85) ===
+            { id: 66, category: 4, question: "What is Few-Shot Learning in prompting?", answer: "Providing a few examples of desired input-output pairs to guide the model's responses." },
+            { id: 67, category: 4, question: "What is a JSON Schema in structured output?", answer: "A formal definition of the expected output structure, enabling validation and predictable parsing." },
+            { id: 68, category: 4, question: "What are 'Explicit Criteria' in prompt engineering?", answer: "Clearly defined requirements and constraints that the model output must satisfy." },
+            { id: 69, category: 4, question: "What is a 'Validation Loop'?", answer: "Checking model output against criteria and re-prompting if the output doesn't meet requirements." },
+            { id: 70, category: 4, question: "What is 'role prompting'?", answer: "Assigning a specific persona or role to the AI to shape its responses (e.g., 'You are an expert DevOps engineer')." },
+            { id: 71, category: 4, question: "What is 'chain-of-thought prompting'?", answer: "Prompting the model to show its reasoning step-by-step before giving the final answer." },
+            { id: 72, category: 4, question: "What is 'output format specification'?", answer: "Explicitly telling the model how to structure its response (bullet points, JSON, table, etc.)." },
+            { id: 73, category: 4, question: "What is 'prompt templating'?", answer: "Creating reusable prompt structures with variables that can be filled in for different scenarios." },
+            { id: 74, category: 4, question: "What is 'negative prompting'?", answer: "Explicitly stating what the model should NOT include or do in its response." },
+            { id: 75, category: 4, question: "What is 'context priming'?", answer: "Providing relevant background information at the beginning of a prompt to set the stage." },
+            { id: 76, category: 4, question: "What is 'prompt iteration'?", answer: "The process of refining and testing prompts to improve output quality over time." },
+            { id: 77, category: 4, question: "What is 'output validation'?", answer: "Programmatically checking that model outputs conform to expected structure and constraints." },
+            { id: 78, category: 4, question: "What is 'schema validation' with JSON?", answer: "Using libraries like Zod or JSON Schema to verify that outputs match defined types and formats." },
+            { id: 79, category: 4, question: "What is 'prompt injection defense'?", answer: "Techniques to prevent malicious user input from overriding system instructions." },
+            { id: 80, category: 4, question: "What is 'multi-turn prompting'?", answer: "Using a conversation with multiple exchanges to progressively refine or build up a response." },
+            { id: 81, category: 4, question: "What is 'system vs. user prompts'?", answer: "System prompts set global behavior; user prompts contain specific queries or tasks." },
+            { id: 82, category: 4, question: "What is 'temperature' in prompting?", answer: "A parameter controlling randomness: lower values for deterministic outputs, higher for creative ones." },
+            { id: 83, category: 4, question: "What is 'max tokens' configuration?", answer: "Limiting the maximum length of the model's response to control output size." },
+            { id: 84, category: 4, question: "What is 'retry logic' in prompt engineering?", answer: "Automatically re-prompting with modified instructions when output doesn't meet quality criteria." },
+            { id: 85, category: 4, question: "What is 'structured reasoning'?", answer: "Forcing the model to organize its thinking into clear steps or categories before responding." },
+            
+            // === CONTEXT MANAGEMENT & RELIABILITY (86-100) ===
+            { id: 86, category: 5, question: "What is 'Long-Term Context Preservation'?", answer: "Techniques to maintain important information across long conversations or sessions." },
+            { id: 87, category: 5, question: "What is a 'Human Handoff' pattern?", answer: "Transferring control from the AI to a human operator when the AI reaches its capability limits." },
+            { id: 88, category: 5, question: "What is 'Confidence Calibration'?", answer: "Training or prompting the model to accurately express how certain it is about its answers." },
+            { id: 89, category: 5, question: "What is 'Error Propagation Prevention'?", answer: "Stopping errors from cascading through a multi-step system by containing failures at their source." },
+            { id: 90, category: 5, question: "What is 'context window management'?", answer: "Strategies to fit relevant information within the model's token limit while maintaining coherence." },
+            { id: 91, category: 5, question: "What is 'summarization for context'?", answer: "Compressing earlier parts of a conversation into a summary to preserve space in the context window." },
+            { id: 92, category: 5, question: "What is 'semantic search for context'?", answer: "Retrieving only the most relevant historical information using vector similarity search." },
+            { id: 93, category: 5, question: "What is 'RAG' (Retrieval-Augmented Generation)?", answer: "Fetching relevant documents from a knowledge base and including them in the prompt for better answers." },
+            { id: 94, category: 5, question: "What is ' graceful degradation'?", answer: "The system continues to provide useful (though possibly simplified) responses when resources are limited." },
+            { id: 95, category: 5, question: "What is 'circuit breaker' pattern in reliability?", answer: "Stopping repeated calls to a failing service to prevent cascade failures and allow recovery." },
+            { id: 96, category: 5, question: "What is 'fallback content' strategy?", answer: "Having pre-prepared responses or cached data to use when primary systems fail." },
+            { id: 97, category: 5, question: "What is 'monitoring and alerting' for agents?", answer: "Tracking agent performance and sending alerts when error rates or latency exceed thresholds." },
+            { id: 98, category: 5, question: "What is 'request idempotency' in reliability?", answer: "Ensuring that retrying a failed request doesn't cause duplicate or conflicting actions." },
+            { id: 99, category: 5, question: "What is 'chaos engineering' for AI systems?", answer: "Intentionally introducing failures to test and improve system resilience." },
+            { id: 100, category: 5, question: "What is 'observability' in agent systems?", answer: "The ability to understand internal system states through logs, metrics, and traces." }
+        ];
+
+        const categories = {
+            1: { name: "Agentic Architecture", color: "#ef4444", weight: "27%" },
+            2: { name: "Tool Design & MCP", color: "#3b82f6", weight: "18%" },
+            3: { name: "Claude Code Workflows", color: "#10b981", weight: "20%" },
+            4: { name: "Prompt Engineering", color: "#f59e0b", weight: "20%" },
+            5: { name: "Context & Reliability", color: "#a855f7", weight: "15%" }
+        };
+
+        // Cookie utilities
+        const setCookie = (name, value, days) => {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = name + '=' + encodeURIComponent(value) + ';expires=' + expires.toUTCString() + ';path=/;SameSite=Strict';
+        };
+
+        const getCookie = (name) => {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+            }
+            return null;
+        };
+
+        const getProgress = () => {
+            const progress = getCookie('claude_cert_progress_v2');
+            if (progress) {
+                try { return JSON.parse(progress); } catch(e) { return {}; }
+            }
+            return {};
+        };
+
+        const saveProgress = (progress) => {
+            setCookie('claude_cert_progress_v2', JSON.stringify(progress), 365);
+        };
+
+        // Components
+        const Header = () => (
+            <header className="app-header">
+                <h1>Claude Developer Certification</h1>
+                <p>100 Question Mastery App with Memory Cards</p>
+            </header>
+        );
+
+        const StatsBar = ({ progress }) => {
+            const totalMastered = Object.values(progress).flat().length;
+            const totalQuestions = questionsData.length;
+            const percentage = Math.round((totalMastered / totalQuestions) * 100);
+            
+            return (
+                <div className="stats-grid">
+                    <div className="stat-card">
+                        <div className="stat-number">{totalQuestions}</div>
+                        <div className="stat-label">Total Questions</div>
+                    </div>
+                    <div className="stat-card">
+                        <div className="stat-number">{totalMastered}</div>
+                        <div className="stat-label">Mastered</div>
+                    </div>
+                    <div className="stat-card">
+                        <div className="stat-number">{percentage}%</div>
+                        <div className="stat-label">Completion</div>
+                    </div>
+                    <div className="stat-card">
+                        <div className="stat-number">{questionsData.length - totalMastered}</div>
+                        <div className="stat-label">Remaining</div>
+                    </div>
+                </div>
+            );
+        };
+
+        const ProgressSection = ({ progress }) => {
+            const totalMastered = Object.values(progress).flat().length;
+            const overallPercentage = (totalMastered / questionsData.length) * 100;
+            
+            const categoryProgress = {};
+            questionsData.forEach(q => {
+                if (!categoryProgress[q.category]) categoryProgress[q.category] = { total: 0, mastered: 0 };
+                categoryProgress[q.category].total++;
+                if ((progress[q.category] || []).includes(q.id)) {
+                    categoryProgress[q.category].mastered++;
+                }
+            });
+
+            return (
+                <div className="progress-section">
+                    <h2 style={{ marginBottom: '16px', textAlign: 'center' }}>Study Progress</h2>
+                    <div className="progress-bar">
+                        <div className="progress-fill" style={{ width: overallPercentage + '%' }}></div>
+                    </div>
+                    <div style={{ textAlign: 'center', color: '#94a3b8', marginBottom: '20px' }}>
+                        {totalMastered} of {questionsData.length} questions mastered ({Math.round(overallPercentage)}%)
+                    </div>
+                    {Object.entries(categoryProgress).map(([catId, stats]) => {
+                        const pct = (stats.mastered / stats.total) * 100;
+                        return (
+                            <div key={catId} className="category-progress">
+                                <div className="category-header">
+                                    <span style={{ color: categories[catId].color }}>{categories[catId].name} ({categories[catId].weight})</span>
+                                    <span>{stats.mastered}/{stats.total}</span>
+                                </div>
+                                <div className="category-bar">
+                                    <div className="category-fill" style={{ width: pct + '%', background: categories[catId].color }}></div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            );
+        };
+
+        const MemoryCard = ({ question, progress, onToggle }) => {
+            const [flipped, setFlipped] = useState(false);
+            const isMastered = (progress[question.category] || []).includes(question.id);
+            
+            const toggleMastered = (e) => {
+                e.stopPropagation();
+                onToggle(question.category, question.id);
+            };
+
+            return (
+                <div className={`flip-card ${flipped ? 'flipped' : ''}`} onClick={() => setFlipped(!flipped)}>
+                    <div className="flip-card-inner">
+                        <div className="flip-card-front">
+                            <span className="card-number">#{question.id}</span>
+                            <span className={`card-category cat-${question.category}`}>{categories[question.category].name}</span>
+                            <div className="card-question">{question.question}</div>
+                            <div className="card-hint">Click to reveal answer</div>
+                        </div>
+                        <div className="flip-card-back">
+                            <div className="card-answer">{question.answer}</div>
+                            <button 
+                                className={`mastery-btn ${isMastered ? 'mastered' : ''}`}
+                                onClick={toggleMastered}
+                            >
+                                {isMastered ? '✓ Mastered' : 'Mark as Mastered'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const MemoryCardsView = ({ progress, onToggle, filter, setFilter }) => {
+            const filteredQuestions = filter === 'all' 
+                ? questionsData 
+                : filter === 'mastered'
+                    ? questionsData.filter(q => (progress[q.category] || []).includes(q.id))
+                    : questionsData.filter(q => !(progress[q.category] || []).includes(q.id));
+
+            return (
+                <div>
+                    <div className="filter-bar">
+                        <span style={{ color: '#94a3b8', fontSize: '0.9em' }}>Filter:</span>
+                        <button className={`filter-btn ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>All Questions</button>
+                        <button className={`filter-btn ${filter === 'unmastered' ? 'active' : ''}`} onClick={() => setFilter('unmastered')}>Unmastered</button>
+                        <button className={`filter-btn ${filter === 'mastered' ? 'active' : ''}`} onClick={() => setFilter('mastered')}>Mastered</button>
+                        {Object.entries(categories).map(([id, cat]) => (
+                            <button key={id} className={`filter-btn ${filter === id ? 'active' : ''}`} onClick={() => setFilter(id)}>{cat.name}</button>
+                        ))}
+                    </div>
+                    <div className="card-grid">
+                        {filteredQuestions.map(q => (
+                            <MemoryCard key={q.id} question={q} progress={progress} onToggle={onToggle} />
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const QuizView = ({ progress, onToggle }) => {
+            const [currentIndex, setCurrentIndex] = useState(0);
+            const [selectedOption, setSelectedOption] = useState(null);
+            const [showExplanation, setShowExplanation] = useState(false);
+            const [quizQuestions, setQuizQuestions] = useState([...questionsData].sort(() => Math.random() - 0.5));
+            
+            const currentQuestion = quizQuestions[currentIndex];
+            const isMastered = (progress[currentQuestion.category] || []).includes(currentQuestion.id);
+            
+            const generateOptions = (question) => {
+                const wrongAnswers = questionsData
+                    .filter(q => q.id !== question.id)
+                    .sort(() => Math.random() - 0.5)
+                    .slice(0, 3)
+                    .map(q => q.answer);
+                return [...wrongAnswers, question.answer].sort(() => Math.random() - 0.5);
+            };
+
+            const [options, setOptions] = useState(generateOptions(currentQuestion));
+
+            const handleNext = () => {
+                if (currentIndex < quizQuestions.length - 1) {
+                    setCurrentIndex(currentIndex + 1);
+                    setSelectedOption(null);
+                    setShowExplanation(false);
+                    const nextQ = quizQuestions[currentIndex + 1];
+                    setOptions(generateOptions(nextQ));
+                }
+            };
+
+            const handlePrev = () => {
+                if (currentIndex > 0) {
+                    setCurrentIndex(currentIndex - 1);
+                    setSelectedOption(null);
+                    setShowExplanation(false);
+                    const prevQ = quizQuestions[currentIndex - 1];
+                    setOptions(generateOptions(prevQ));
+                }
+            };
+
+            const handleAnswer = (option) => {
+                setSelectedOption(option);
+                setShowExplanation(true);
+                if (option === currentQuestion.answer && !isMastered) {
+                    onToggle(currentQuestion.category, currentQuestion.id);
+                }
+            };
+
+            return (
+                <div className="quiz-container">
+                    <div className="quiz-card">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', alignItems: 'center' }}>
+                            <span className={`card-category cat-${currentQuestion.category}`}>{categories[currentQuestion.category].name}</span>
+                            <span style={{ color: '#64748b' }}>Question {currentIndex + 1} of {quizQuestions.length}</span>
+                        </div>
+                        <div className="quiz-question">{currentQuestion.question}</div>
+                        <div className="quiz-options">
+                            {options.map((option, idx) => (
+                                <button
+                                    key={idx}
+                                    className={`quiz-option ${
+                                        showExplanation 
+                                            ? option === currentQuestion.answer 
+                                                ? 'correct' 
+                                                : option === selectedOption 
+                                                    ? 'incorrect' 
+                                                    : '' 
+                                            : ''
+                                    }`}
+                                    onClick={() => !showExplanation && handleAnswer(option)}
+                                    disabled={showExplanation}
+                                >
+                                    {option}
+                                </button>
+                            ))}
+                        </div>
+                        {showExplanation && (
+                            <div className="quiz-explanation">
+                                <strong>{selectedOption === currentQuestion.answer ? 'Correct!' : 'The correct answer is:'}</strong>
+                                <p style={{ marginTop: '8px' }}>{currentQuestion.answer}</p>
+                            </div>
+                        )}
+                        <div className="quiz-nav">
+                            <button className="quiz-btn" onClick={handlePrev} disabled={currentIndex === 0}>Previous</button>
+                            <button className="quiz-btn" onClick={handleNext} disabled={currentIndex === quizQuestions.length - 1}>Next</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('cards');
+            const [filter, setFilter] = useState('all');
+            const [progress, setProgress] = useState(getProgress);
+
+            const toggleMastery = (category, questionId) => {
+                const newProgress = { ...progress };
+                if (!newProgress[category]) newProgress[category] = [];
+                
+                const index = newProgress[category].indexOf(questionId);
+                if (index > -1) {
+                    newProgress[category].splice(index, 1);
+                } else {
+                    newProgress[category].push(questionId);
+                }
+                
+                setProgress(newProgress);
+                saveProgress(newProgress);
+            };
+
+            const resetProgress = () => {
+                if (confirm('Are you sure you want to reset all progress?')) {
+                    setProgress({});
+                    saveProgress({});
+                }
+            };
+
+            return (
+                <div>
+                    <Header />
+                    <div className="container">
+                        <StatsBar progress={progress} />
+                        <ProgressSection progress={progress} />
+                        
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '30px' }}>
+                            <button className="reset-btn" onClick={resetProgress}>Reset Progress</button>
+                        </div>
+
+                        <div className="nav-tabs">
+                            <button className={`nav-tab ${activeTab === 'cards' ? 'active' : ''}`} onClick={() => setActiveTab('cards')}>Memory Cards</button>
+                            <button className={`nav-tab ${activeTab === 'quiz' ? 'active' : ''}`} onClick={() => setActiveTab('quiz')}>Quiz Mode</button>
+                        </div>
+
+                        {activeTab === 'cards' && (
+                            <MemoryCardsView 
+                                progress={progress} 
+                                onToggle={toggleMastery} 
+                                filter={filter} 
+                                setFilter={setFilter} 
+                            />
+                        )}
+                        
+                        {activeTab === 'quiz' && (
+                            <QuizView progress={progress} onToggle={toggleMastery} />
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
