@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claude Developer Certification - 100 Question Mastery</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({ startOnLoad: true, theme: 'dark' });</script>
     <style>
         :root {
             --bg-primary: #0f172a;
@@ -878,7 +881,9 @@
             quizSelected: null,
             quizShowExplanation: false,
             quizShowHint: false,
-            quizOptions: []
+            quizOptions: [],
+            rememberIndex: 0,
+            showRememberAnswer: false
         };
 
         // ================== RENDER HELPERS ==================
@@ -960,9 +965,13 @@
                 <div class="btn-row">
                     <button class="reset-btn" onclick="resetProgress()">Reset Progress</button>
                 </div>
-                <div class="nav-tabs">
+                <div class="nav-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px;">
                     <button class="nav-tab ${state.activeTab === 'cards' ? 'active' : ''}" onclick="setTab('cards')">Memory Cards</button>
                     <button class="nav-tab ${state.activeTab === 'quiz' ? 'active' : ''}" onclick="setTab('quiz')">Quiz Mode</button>
+                    <button class="nav-tab ${state.activeTab === 'remember' ? 'active' : ''}" onclick="setTab('remember')">Remember (Slideshow)</button>
+                    <button class="nav-tab ${state.activeTab === 'analyse' ? 'active' : ''}" onclick="setTab('analyse')">Analyse (Concepts)</button>
+                    <button class="nav-tab ${state.activeTab === 'evaluate' ? 'active' : ''}" onclick="setTab('evaluate')">Evaluate (Relationships)</button>
+                    <button class="nav-tab ${state.activeTab === 'create' ? 'active' : ''}" onclick="setTab('create')">Create (AGI Path)</button>
                     <button class="nav-tab ${state.activeTab === 'resources' ? 'active' : ''}" onclick="setTab('resources')">Resources</button>
                 </div>`;
         }
