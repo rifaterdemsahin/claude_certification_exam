@@ -529,6 +529,71 @@
         /* Animations */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.3s ease; }
+
+        /* Slideshow */
+        .slideshow-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .slide-progress {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+        .slide-content h2 { margin-bottom: 24px; color: var(--accent-blue); }
+        .slide-hint { margin: 20px 0; padding: 20px; background: rgba(56, 189, 248, 0.1); border-radius: 12px; border: 1px dashed var(--accent-blue); }
+        .slide-answer { margin-top: 24px; padding: 20px; background: rgba(16, 185, 129, 0.1); border-radius: 12px; border: 1px solid var(--accent-green); display: none; }
+        .slide-answer.show { display: block; animation: fadeIn 0.3s ease; }
+        .slideshow-nav { display: flex; gap: 20px; margin-top: 30px; }
+
+        /* Analyse & Evaluate */
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 24px; }
+        .concept-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: transform 0.3s ease;
+        }
+        .concept-card:hover { transform: translateY(-5px); border-color: var(--accent-blue); }
+        .concept-card h3 { color: var(--accent-blue); margin-bottom: 12px; }
+        .concept-card p { color: var(--text-secondary); font-size: 0.95em; }
+        .relationship-line {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+        }
+        .rel-icon { font-size: 1.5em; }
+        .rel-text strong { color: var(--accent-purple); display: block; margin-bottom: 4px; }
+
+        /* Mermaid */
+        .mermaid-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 24px;
+            overflow-x: auto;
+        }
+        .mermaid-section h3 { margin-bottom: 20px; text-align: center; color: var(--accent-green); }
+        .phase-desc { margin-top: 20px; padding: 16px; background: rgba(16, 185, 129, 0.05); border-radius: 8px; border-left: 4px solid var(--accent-green); }
     </style>
 </head>
 <body>
@@ -1012,6 +1077,178 @@
                 </div>`;
         }
 
+        function renderRemember() {
+            const q = questionsData[state.rememberIndex];
+            const hint = questionHints[q.id];
+            return `
+                <div class="slideshow-container fade-in">
+                    <div class="slide-progress">Question ${state.rememberIndex + 1} of ${questionsData.length}</div>
+                    <div class="slide-content">
+                        <span class="card-category cat-${q.category}">${categories[q.category].name}</span>
+                        <h2 style="margin-top:20px">${escapeHtml(q.question)}</h2>
+                        ${hint ? `
+                            <div class="slide-hint">
+                                <div style="font-size: 2.5em; margin-bottom: 10px;">${hint.emoji}</div>
+                                <div style="color:var(--text-primary)">${escapeHtml(hint.text)}</div>
+                            </div>
+                        ` : ''}
+                        <div class="slide-answer ${state.showRememberAnswer ? 'show' : ''}">
+                            <strong>Answer:</strong>
+                            <p style="margin-top:10px">${escapeHtml(q.answer)}</p>
+                            ${hint ? `<div class="memory-aid" style="margin-top:15px"><div class="text">${escapeHtml(hint.memory)}</div></div>` : ''}
+                        </div>
+                    </div>
+                    <div class="slideshow-nav">
+                        <button class="nav-tab" onclick="prevRemember()" ${state.rememberIndex === 0 ? 'disabled' : ''}>Previous</button>
+                        <button class="nav-tab active" onclick="toggleRememberAnswer()">${state.showRememberAnswer ? 'Hide Answer' : 'Show Answer'}</button>
+                        <button class="nav-tab" onclick="nextRemember()" ${state.rememberIndex === questionsData.length - 1 ? 'disabled' : ''}>Next</button>
+                    </div>
+                </div>`;
+        }
+
+        function renderAnalyse() {
+            const concepts = [
+                { title: "Agentic Loops", desc: "Iterative cycles of Perceive, Think, and Act that allow models to self-correct and reason through complex tasks." },
+                { title: "Coordinator-Subagent", desc: "An architectural pattern where a central 'brain' delegates specialized tasks to focused sub-agents." },
+                { title: "MCP (Model Context Protocol)", desc: "A standardized protocol that decouples AI models from their tools and data sources, enabling universal integration." },
+                { title: "Chain-of-Thought", desc: "A prompting technique that forces models to output their reasoning steps before providing a final answer." },
+                { title: "Validation Loops", desc: "Automated checks that verify model output against schemas or criteria, triggering re-prompts on failure." },
+                { title: "Long-Term Memory", desc: "The use of external storage (RAG, Vector DBs) to maintain context beyond the model's immediate window." }
+            ];
+            return `
+                <div class="fade-in">
+                    <h2 style="text-align:center; margin-bottom:20px;">Key Concepts Analysis</h2>
+                    <p style="text-align:center; color:var(--text-secondary); max-width:600px; margin: 0 auto 30px;">Breaking down the core components of the Claude Developer Certification.</p>
+                    <div class="concept-grid">
+                        ${concepts.map(c => `
+                            <div class="concept-card">
+                                <h3>${c.title}</h3>
+                                <p>${c.desc}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>`;
+        }
+
+        function renderEvaluate() {
+            const relations = [
+                { icon: "🔗", title: "Loops + Tools", desc: "Agentic loops rely on MCP tools to interact with the real world, turning passive models into active agents." },
+                { icon: "🧠", title: "Prompts + Reasoning", desc: "Advanced prompt engineering (Few-Shot, CoT) directly scales the quality of 'Thinking' in the Perceive-Think-Act cycle." },
+                { icon: "🛡️", title: "Reliability + Context", desc: "Circuit breakers and fallback strategies are essential when managing large context windows and external RAG lookups." },
+                { icon: "⚙️", title: "Claude Code + Workflow", desc: "CLAUDE.md acts as the 'Sinthome' or stabilizing force that ensures agents adhere to project-specific constraints." }
+            ];
+            return `
+                <div class="fade-in">
+                    <h2 style="text-align:center; margin-bottom:20px;">Conceptual Relationships</h2>
+                    <p style="text-align:center; color:var(--text-secondary); max-width:600px; margin: 0 auto 30px;">Evaluating how different architectural components interact to create robust AI systems.</p>
+                    <div style="max-width:800px; margin: 0 auto;">
+                        ${relations.map(r => `
+                            <div class="relationship-line">
+                                <div class="rel-icon">${r.icon}</div>
+                                <div class="rel-text">
+                                    <strong>${r.title}</strong>
+                                    <p>${r.desc}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>`;
+        }
+
+        function renderCreate() {
+            return `
+                <div class="fade-in">
+                    <h2 style="text-align:center; margin-bottom:20px;">The Path to AGI</h2>
+                    <p style="text-align:center; color:var(--text-secondary); max-width:600px; margin: 0 auto 30px;">Synthesizing certification concepts to visualize the evolution toward Artificial General Intelligence.</p>
+                    
+                    <div class="mermaid-section">
+                        <h3>Phase 1: Static Intelligence</h3>
+                        <pre class="mermaid">
+                        graph LR
+                            A[Input Prompt] --> B(LLM)
+                            B --> C[Static Output]
+                        </pre>
+                        <div class="phase-desc">Basic request-response pattern. The model is a passive knowledge engine.</div>
+                    </div>
+
+                    <div class="mermaid-section">
+                        <h3>Phase 2: Tool-Augmented Agency</h3>
+                        <pre class="mermaid">
+                        graph LR
+                            A[User Goal] --> B(LLM)
+                            B --> C{Tool Call?}
+                            C -- Yes --> D[MCP Server]
+                            D --> E[Execution]
+                            E --> B
+                            C -- No --> F[Final Answer]
+                        </pre>
+                        <div class="phase-desc">Models gain 'hands' through MCP, allowing them to fetch data and perform actions.</div>
+                    </div>
+
+                    <div class="mermaid-section">
+                        <h3>Phase 3: Autonomous Loops</h3>
+                        <pre class="mermaid">
+                        graph TD
+                            A[Complex Task] --> B[Perceive]
+                            B --> C[Think/Reason]
+                            C --> D[Act/Tool]
+                            D --> E{Goal Met?}
+                            E -- No --> B
+                            E -- Yes --> F[Done]
+                        </pre>
+                        <div class="phase-desc">Iterative reasoning cycles allow for self-correction and complex problem solving.</div>
+                    </div>
+
+                    <div class="mermaid-section">
+                        <h3>Phase 4: Multi-Agent Swarms</h3>
+                        <pre class="mermaid">
+                        graph TD
+                            A[Project Goal] --> B[Coordinator]
+                            B --> C[Agent: Code]
+                            B --> D[Agent: Test]
+                            B --> E[Agent: Doc]
+                            C & D & E --> B
+                            B --> F[Validated Solution]
+                        </pre>
+                        <div class="phase-desc">Specialized agents collaborate under a coordinator, mimicking human organizational structures.</div>
+                    </div>
+
+                    <div class="mermaid-section">
+                        <h3>Phase 5: Self-Evolving AGI</h3>
+                        <pre class="mermaid">
+                        graph TD
+                            A[Existence] --> B[Continuous Learning]
+                            B --> C[Goal Synthesis]
+                            C --> D[System Modification]
+                            D --> E[Improved Base]
+                            E --> B
+                        </pre>
+                        <div class="phase-desc">Autonomous systems that define their own goals and improve their own architecture iteratively.</div>
+                    </div>
+                </div>`;
+        }
+
+        function prevRemember() {
+            if (state.rememberIndex > 0) {
+                state.rememberIndex--;
+                state.showRememberAnswer = false;
+                render();
+            }
+        }
+
+        function nextRemember() {
+            if (state.rememberIndex < questionsData.length - 1) {
+                state.rememberIndex++;
+                state.showRememberAnswer = false;
+                render();
+            }
+        }
+
+        function toggleRememberAnswer() {
+            state.showRememberAnswer = !state.showRememberAnswer;
+            render();
+        }
+
         function renderResources() {
             return youtubeResources.map(cat => `
                 <div class="resources-section fade-in">
@@ -1176,10 +1413,19 @@
 
             if (state.activeTab === 'cards') content += renderMemoryCards();
             else if (state.activeTab === 'quiz') content += renderQuiz();
+            else if (state.activeTab === 'remember') content += renderRemember();
+            else if (state.activeTab === 'analyse') content += renderAnalyse();
+            else if (state.activeTab === 'evaluate') content += renderEvaluate();
+            else if (state.activeTab === 'create') content += renderCreate();
             else if (state.activeTab === 'resources') content += renderResources();
 
             content += '</div>' + renderFooter();
             app.innerHTML = content;
+
+            // Re-run mermaid if we are on the create tab
+            if (state.activeTab === 'create' && typeof mermaid !== 'undefined') {
+                mermaid.init(undefined, ".mermaid");
+            }
         }
 
         // ================== INIT ==================
