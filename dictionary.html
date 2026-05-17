@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Dev Cert — Dictionary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --border: #334155;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444;
+            --accent-orange: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        header {
+            text-align: center;
+            padding: 30px 16px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        header h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+        header p { color: var(--text-secondary); font-size: 1em; margin-top: 8px; }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-size: 0.9em;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .back-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+        .search-bar {
+            margin-bottom: 24px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .search-bar input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1em;
+            font-family: inherit;
+        }
+        .search-bar input::placeholder { color: var(--text-muted); }
+        .dict-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        @media (min-width: 640px) {
+            .dict-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        .dict-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.2s, border-color 0.3s;
+        }
+        .dict-card:hover { transform: translateY(-3px); border-color: var(--accent-blue); }
+        .dict-term {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .dict-cat {
+            font-size: 0.7em;
+            font-weight: 500;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .dict-def {
+            color: var(--text-secondary);
+            font-size: 0.95em;
+            margin-bottom: 12px;
+        }
+        .dict-example {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: rgba(251, 191, 36, 0.1);
+            color: var(--accent-yellow);
+            font-size: 0.85em;
+            text-decoration: none;
+            border: 1px dashed var(--accent-yellow);
+            transition: all 0.3s;
+        }
+        .dict-example:hover { background: rgba(251, 191, 36, 0.2); }
+        .cat-agentic { color: #f87171; background: rgba(239, 68, 68, 0.1); }
+        .cat-mcp { color: #60a5fa; background: rgba(59, 130, 246, 0.1); }
+        .cat-claude { color: #34d399; background: rgba(16, 185, 129, 0.1); }
+        .cat-prompt { color: #fbbf24; background: rgba(245, 158, 11, 0.1); }
+        .cat-reliability { color: #c084fc; background: rgba(168, 85, 247, 0.1); }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📖 Certification Dictionary</h1>
+        <p>Key terms & concepts explained in under 16 words with video examples</p>
+    </header>
+    <div class="container">
+        <a href="index.html" class="back-btn">← Back to App</a>
+        <div class="search-bar">
+            <input type="text" id="dictSearch" placeholder="🔍 Search terms..." oninput="filterTerms()">
+        </div>
+        <div class="dict-grid" id="dictGrid"></div>
+    </div>
+
+    <script>
+        const terms = [
+            { term: "Agentic Loop", cat: "agentic", catName: "Architecture", def: "Cyclic observe-reason-act pattern enabling autonomous AI behavior.", example: "https://youtu.be/Dpmegqh23nY" },
+            { term: "Perceive", cat: "agentic", catName: "Architecture", def: "The observation stage where an agent senses its environment.", example: "" },
+            { term: "Think", cat: "agentic", catName: "Architecture", def: "The reasoning stage where an agent plans its next action.", example: "" },
+            { term: "Act", cat: "agentic", catName: "Architecture", def: "The execution stage where an agent performs a decided action.", example: "" },
+            { term: "Coordinator-Subagent", cat: "agentic", catName: "Architecture", def: "A boss agent routing tasks to specialized worker agents.", example: "https://www.youtube.com/results?search_query=coordinator+subagent+ai" },
+            { term: "Task Decomposition", cat: "agentic", catName: "Architecture", def: "Breaking complex tasks into smaller subtasks for agents.", example: "https://www.youtube.com/results?search_query=task+decomposition+ai+agents" },
+            { term: "Session Management", cat: "agentic", catName: "Architecture", def: "Maintaining state across multiple interactions in one session.", example: "" },
+            { term: "Tool Call", cat: "agentic", catName: "Architecture", def: "When an agent invokes an external function instead of chatting.", example: "" },
+            { term: "Human-in-the-Loop", cat: "agentic", catName: "Architecture", def: "Humans approve critical decisions within an agent workflow.", example: "" },
+            { term: "MCP", cat: "mcp", catName: "MCP", def: "Model Context Protocol standardizes AI tool and data interfaces.", example: "https://www.youtube.com/results?search_query=model+context+protocol+mcp" },
+            { term: "Signal-to-Noise Ratio", cat: "mcp", catName: "MCP", def: "Designing tools to return only highly relevant structured data.", example: "" },
+            { term: "Structured Error Handling", cat: "mcp", catName: "MCP", def: "Returning errors in consistent JSON for agent parsing.", example: "" },
+            { term: "Self-Correction", cat: "mcp", catName: "MCP", def: "Agent catches tool failures and tries alternative approaches.", example: "" },
+            { term: "Context Bloat Prevention", cat: "mcp", catName: "MCP", def: "Limiting tool output size to preserve the context window.", example: "" },
+            { term: "Tool Idempotency", cat: "mcp", catName: "MCP", def: "Repeated identical calls produce the same safe result.", example: "" },
+            { term: "Schema Evolution", cat: "mcp", catName: "MCP", def: "Updating tool schemas without breaking existing agent code.", example: "" },
+            { term: "CLAUDE.md", cat: "claude", catName: "Claude", def: "Project constitution defining coding style and constraints for Claude.", example: "" },
+            { term: "Plan Mode", cat: "claude", catName: "Claude", def: "Claude first generates a markdown plan before file changes.", example: "https://www.youtube.com/results?search_query=claude+code+plan+mode" },
+            { term: "Act Mode", cat: "claude", catName: "Claude", def: "The execution phase implementing the approved plan.", example: "" },
+            { term: "Sinthome", cat: "claude", catName: "Claude", def: "The stabilizing knot; CLAUDE.md preventing Claude from deviation.", example: "" },
+            { term: "Slash Commands", cat: "claude", catName: "Claude", def: "Custom user-defined commands triggering specific Claude Code workflows.", example: "" },
+            { term: "Few-Shot Learning", cat: "prompt", catName: "Prompt", def: "Providing examples to guide the model's desired output format.", example: "https://www.youtube.com/results?search_query=few+shot+learning+prompt+engineering" },
+            { term: "JSON Schema", cat: "prompt", catName: "Prompt", def: "Formal output structure definition enabling validation and parsing.", example: "" },
+            { term: "Chain-of-Thought", cat: "prompt", catName: "Prompt", def: "Forcing the model to show reasoning steps before answering.", example: "https://www.youtube.com/results?search_query=chain+of+thought+prompting" },
+            { term: "Role Prompting", cat: "prompt", catName: "Prompt", def: "Assigning a persona to shape the AI's response style.", example: "" },
+            { term: "Negative Prompting", cat: "prompt", catName: "Prompt", def: "Explicitly stating what the model should not include.", example: "" },
+            { term: "Output Validation", cat: "prompt", catName: "Prompt", def: "Programmatically checking model outputs against expected structure.", example: "" },
+            { term: "RAG", cat: "reliability", catName: "Reliability", def: "Retrieval-Augmented Generation fetches relevant docs for better answers.", example: "https://www.youtube.com/results?search_query=retrieval+augmented+generation+rag" },
+            { term: "Circuit Breaker", cat: "reliability", catName: "Reliability", def: "Stopping repeated calls to a failing service to prevent cascades.", example: "https://www.youtube.com/results?search_query=circuit+breaker+pattern" },
+            { term: "Graceful Degradation", cat: "reliability", catName: "Reliability", def: "System continues simplified useful responses when resources are limited.", example: "" },
+            { term: "Long-Term Memory", cat: "reliability", catName: "Reliability", def: "Persistent knowledge storage across sessions via databases or vectors.", example: "" },
+            { term: "Short-Term Memory", cat: "agentic", catName: "Architecture", def: "Conversation context maintained within a single prompt window.", example: "" },
+            { term: "Feedback Loop", cat: "agentic", catName: "Architecture", def: "Agent receives results and adjusts future behavior accordingly.", example: "" },
+            { term: "Re-Planning", cat: "agentic", catName: "Architecture", def: "Agent adjusts its plan mid-execution based on new observations.", example: "" },
+            { term: "Termination Condition", cat: "agentic", catName: "Architecture", def: "Criteria signaling the agent should stop its loop.", example: "" },
+            { term: "Confidence Calibration", cat: "reliability", catName: "Reliability", def: "Training the model to accurately express certainty about answers.", example: "" },
+            { term: "Error Propagation Prevention", cat: "reliability", catName: "Reliability", def: "Containing failures at their source to stop cascading errors.", example: "" },
+            { term: "Context Window Management", cat: "reliability", catName: "Reliability", def: "Strategies to fit relevant info within the model's token limit.", example: "" },
+            { term: "Summarization", cat: "reliability", catName: "Reliability", def: "Compressing conversation history to preserve context window space.", example: "" },
+            { term: "Semantic Search", cat: "reliability", catName: "Reliability", def: "Retrieving relevant info using vector similarity, not just keywords.", example: "" },
+            { term: "Fallback Content", cat: "reliability", catName: "Reliability", def: "Pre-prepared cached responses used when primary systems fail.", example: "" },
+            { term: "Observability", cat: "reliability", catName: "Reliability", def: "Understanding internal system states through logs, metrics, traces.", example: "" },
+            { term: "Chaos Engineering", cat: "reliability", catName: "Reliability", def: "Intentionally introducing failures to test and improve resilience.", example: "" },
+            { term: "Request Idempotency", cat: "reliability", catName: "Reliability", def: "Retrying a failed request without causing duplicate actions.", example: "" }
+        ];
+
+        function renderTerms(filter = '') {
+            const grid = document.getElementById('dictGrid');
+            const filtered = filter
+                ? terms.filter(t => t.term.toLowerCase().includes(filter.toLowerCase()) || t.def.toLowerCase().includes(filter.toLowerCase()))
+                : terms;
+            grid.innerHTML = filtered.map(t => `
+                <div class="dict-card">
+                    <div class="dict-term">
+                        ${escapeHtml(t.term)}
+                        <span class="dict-cat cat-${t.cat}">${t.catName}</span>
+                    </div>
+                    <div class="dict-def">${escapeHtml(t.def)}</div>
+                    ${t.example ? `<a href="${escapeHtml(t.example)}" target="_blank" rel="noopener noreferrer" class="dict-example">▶️ Example</a>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function filterTerms() {
+            renderTerms(document.getElementById('dictSearch').value.trim());
+        }
+
+        document.addEventListener('DOMContentLoaded', () => renderTerms());
+    </script>
+</body>
+</html>
