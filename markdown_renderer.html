@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Notes Renderer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --border: #334155;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        header {
+            text-align: center;
+            padding: 24px 16px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        header h1 {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+        header p { color: var(--text-secondary); font-size: 0.9em; margin-top: 6px; }
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        .error {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--accent-red);
+            background: rgba(239, 68, 68, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        .error a { color: var(--accent-blue); }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-size: 0.9em;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .back-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+        .markdown-body {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            font-size: 1em;
+            line-height: 1.7;
+        }
+        .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 {
+            margin-top: 28px;
+            margin-bottom: 12px;
+            color: var(--accent-blue);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+        .markdown-body h1 { font-size: 1.8em; }
+        .markdown-body h2 { font-size: 1.5em; }
+        .markdown-body h3 { font-size: 1.25em; }
+        .markdown-body p { margin-bottom: 16px; color: var(--text-primary); }
+        .markdown-body ul, .markdown-body ol { margin-bottom: 16px; padding-left: 24px; color: var(--text-secondary); }
+        .markdown-body li { margin-bottom: 6px; }
+        .markdown-body a { color: var(--accent-blue); text-decoration: none; }
+        .markdown-body a:hover { text-decoration: underline; }
+        .markdown-body code {
+            background: rgba(56, 189, 248, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SFMono-Regular', Consolas, monospace;
+            font-size: 0.9em;
+            color: var(--accent-yellow);
+        }
+        .markdown-body pre {
+            background: var(--bg-primary);
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+        .markdown-body pre code {
+            background: transparent;
+            padding: 0;
+            color: var(--text-primary);
+        }
+        .markdown-body blockquote {
+            border-left: 4px solid var(--accent-purple);
+            padding-left: 16px;
+            margin: 16px 0;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        .markdown-body img { max-width: 100%; border-radius: 8px; }
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+        }
+        .markdown-body th, .markdown-body td {
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .markdown-body th {
+            background: var(--bg-primary);
+            color: var(--accent-blue);
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>📝 Markdown Notes</h1>
+        <p id="subtitle">Loading notes...</p>
+    </header>
+    <div class="container">
+        <button class="back-btn" onclick="history.back()">← Back</button>
+        <div id="content" class="loading">Fetching notes...</div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const url = params.get('url');
+        const title = params.get('title') || 'Notes';
+        document.getElementById('subtitle').textContent = title;
+
+        function showError(msg) {
+            document.getElementById('content').innerHTML = `
+                <div class="error">
+                    <p><strong>⚠️ Could not load notes</strong></p>
+                    <p style="margin-top:8px">${msg}</p>
+                    <p style="margin-top:12px;font-size:0.9em">
+                        <a href="${url || '#'}">Try opening raw file</a> | 
+                        <a href="index.html">Go to app</a>
+                    </p>
+                </div>`;
+        }
+
+        async function loadMarkdown() {
+            if (!url) {
+                showError('No URL provided. Use <code>?url=...</code>');
+                return;
+            }
+
+            let rawUrl = url;
+            // Convert GitHub blob URL to raw URL
+            if (url.includes('github.com') && url.includes('/blob/')) {
+                rawUrl = url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+            }
+
+            try {
+                const response = await fetch(rawUrl, { mode: 'cors' });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const text = await response.text();
+                const html = marked.parse(text);
+                document.getElementById('content').className = 'markdown-body';
+                document.getElementById('content').innerHTML = html;
+            } catch (e) {
+                // Fallback: try via GitHub raw if not already raw
+                if (rawUrl !== url) {
+                    try {
+                        const response2 = await fetch(rawUrl);
+                        if (!response2.ok) throw new Error(`HTTP ${response2.status}`);
+                        const text2 = await response2.text();
+                        const html2 = marked.parse(text2);
+                        document.getElementById('content').className = 'markdown-body';
+                        document.getElementById('content').innerHTML = html2;
+                        return;
+                    } catch (e2) {
+                        showError(`${e.message}<br/><br/>GitHub raw URL tried: <code>${rawUrl}</code>`);
+                    }
+                } else {
+                    showError(`${e.message}<br/><br/>URL tried: <code>${url}</code>`);
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadMarkdown);
+    </script>
+</body>
+</html>

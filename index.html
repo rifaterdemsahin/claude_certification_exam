@@ -901,6 +901,7 @@
             q.imageUrl = q.imageUrl || `https://raw.githubusercontent.com/rifaterdemsahin/claude_certification_exam/main/imaginary/${q.uid}.jpeg`;
             q.googleImageUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q.question)}`;
             q.relatedVideoUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(q.question + ' tutorial')}`;
+            q.notesUrl = q.notesUrl || `https://github.com/rifaterdemsahin/claude_certification_exam/blob/main/formula/${q.uid}.md`;
             q.claudePrompt = q.claudePrompt || `As a Claude Developer Certification teaching assistant, explain this concept in depth: "${q.question}". Include analogies, why it matters for the exam, and 2 quiz questions to check my understanding.`;
         });
         const categories = {
@@ -1561,6 +1562,10 @@
                     <h4 style="color:var(--text-secondary);margin-bottom:8px;">🎧 Audio Explanation</h4>
                     <audio controls src="${escapeHtml(q.audioUrl)}" style="width:100%;"></audio>
                 </div>` : '';
+            const notesHtml = q.notesUrl ? `
+                <div style="margin-top:12px;">
+                    <a href="markdown_renderer.html?url=${encodeURIComponent(q.notesUrl)}&title=${encodeURIComponent(q.uid)}" target="_blank" rel="noopener noreferrer" class="claude-btn" style="background:linear-gradient(135deg, var(--accent-green), #059669);">📝 Open Notes</a>
+                </div>` : '';
             popup.innerHTML = `
                 <div class="card-modal">
                     <span class="card-category cat-${q.category}" style="position:static;display:inline-block;margin-bottom:12px;">${categories[q.category].name}</span>
@@ -1571,6 +1576,7 @@
                         <a href="${escapeHtml(q.relatedVideoUrl)}" target="_blank" rel="noopener noreferrer">📹 Related Videos</a>
                         <a href="https://claude.ai/new?q=${encodeURIComponent(q.claudePrompt || '')}" target="_blank" rel="noopener noreferrer">🎓 Ask Claude</a>
                     </div>
+                    ${notesHtml}
                     <div class="card-answer">${escapeHtml(q.answer)}</div>
                     ${hint ? `<div class="memory-aid"><div class="emoji">${hint.emoji}</div><div class="text">${escapeHtml(hint.memory)}</div></div>` : ''}
                     ${videoHtml}
@@ -1641,6 +1647,10 @@
                     <h4 style="color:var(--text-secondary);margin-bottom:8px;margin-top:12px;">🎧 Audio Explanation</h4>
                     <audio controls src="${escapeHtml(q.audioUrl)}" style="width:100%;"></audio>
                 </div>` : '';
+            const notesHtml = q.notesUrl ? `
+                <div style="margin-top:16px;">
+                    <a href="markdown_renderer.html?url=${encodeURIComponent(q.notesUrl)}&title=${encodeURIComponent(q.uid)}" target="_blank" rel="noopener noreferrer" class="claude-btn" style="background:linear-gradient(135deg, var(--accent-green), #059669);" onclick="event.stopPropagation()">📝 Open Notes</a>
+                </div>` : '';
             const popup = document.createElement('div');
             popup.className = 'hint-overlay';
             popup.innerHTML = `
@@ -1652,6 +1662,7 @@
                     <div style="margin-top:16px;">
                         <a href="https://claude.ai/new?q=${encodeURIComponent(q.claudePrompt || '')}" target="_blank" rel="noopener noreferrer" class="claude-btn" onclick="event.stopPropagation()">🎓 Ask Claude TA</a>
                     </div>
+                    ${notesHtml}
                     ${videoHtml}
                     ${audioHtml}
                     <button class="close-btn" onclick="this.closest('.hint-overlay').remove()">Got it!</button>
