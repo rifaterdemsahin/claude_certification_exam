@@ -238,6 +238,21 @@
             background: var(--bg-card);
             align-items: center;
             justify-content: center;
+            position: relative;
+        }
+        .card-image-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+            animation: fadeOutAfter4s 4.5s forwards;
+            z-index: 5;
+            pointer-events: none;
+        }
+        @keyframes fadeOutAfter4s {
+            0%, 88.8% { opacity: 1; visibility: visible; }
+            100% { opacity: 0; visibility: hidden; }
         }
         .flip-card-back {
             background: linear-gradient(135deg, #1e3a5f, #312e81);
@@ -814,6 +829,7 @@
             q.uid = `CAT0${q.category}-Q${String(q.id).padStart(3, '0')}`;
             q.youtubeShortUrl = q.youtubeShortUrl || 'https://www.youtube.com/embed/PLACEHOLDER_' + q.id;
             q.audioUrl = q.audioUrl || 'audio/question_' + q.id + '.mp3';
+            q.imageUrl = q.imageUrl || `https://raw.githubusercontent.com/rifaterdemsahin/claude_certification_exam/main/imaginary/${q.uid}.jpeg`;
             q.claudePrompt = q.claudePrompt || `As a Claude Developer Certification teaching assistant, explain this concept in depth: "${q.question}". Include analogies, why it matters for the exam, and 2 quiz questions to check my understanding.`;
         });
         const categories = {
@@ -1110,6 +1126,7 @@
                     <div class="flip-card" id="card-${q.id}" onclick="flipCard(${q.id})">
                         <div class="flip-card-inner">
                             <div class="flip-card-front">
+                                <img class="card-image-overlay" src="${escapeHtml(q.imageUrl || '')}" alt="Visual cue" loading="lazy" onerror="this.style.display='none'" />
                                 <span class="card-number">#${q.id}</span>
                                 <span class="card-category cat-${q.category}">${categories[q.category].name}</span>
                                 <div class="card-question">${escapeHtml(q.question)}</div>
