@@ -173,6 +173,12 @@
             margin-bottom: 20px;
             flex-wrap: wrap;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-primary);
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
         }
         .filter-bar span { color: var(--text-secondary); font-size: 0.85em; }
         .filter-btn {
@@ -1071,7 +1077,7 @@
         // ================== STATE ==================
         let state = {
             activeTab: 'cards',
-            filter: 'all',
+            filter: 'unmastered',
             progress: getProgress(),
             quizIndex: 0,
             quizQuestions: [],
@@ -1166,15 +1172,19 @@
                     <button class="reset-btn" onclick="resetProgress()">🗑️ Reset Progress</button>
                     <button class="nav-tab" onclick="shuffleCards()" title="Toggle random order" style="border-left:4px solid var(--accent-purple);">🔀 ${state.shuffledIds ? 'Shuffled' : 'Shuffle'}</button>
                 </div>
-                <div class="nav-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px;">
+                <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:8px;">
+                    <a href="dictionary.html" class="nav-tab" style="text-decoration:none;border-left:4px solid var(--accent-green);">📖 Dictionary</a>
+                    <button class="nav-tab ${state.activeTab === 'resources' ? 'active' : ''}" onclick="setTab('resources')" style="border-left:4px solid #7dd3fc;">📚 Resources</button>
+                </div>
+                <div class="nav-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 8px;">
                     <button class="nav-tab ${state.activeTab === 'cards' ? 'active' : ''}" onclick="setTab('cards')" style="border-left:4px solid var(--accent-blue);">🧠 Memory Cards</button>
                     <button class="nav-tab ${state.activeTab === 'quiz' ? 'active' : ''}" onclick="setTab('quiz')" style="border-left:4px solid var(--accent-purple);">🎯 Quiz Mode</button>
                     <button class="nav-tab ${state.activeTab === 'remember' ? 'active' : ''}" onclick="setTab('remember')" style="border-left:4px solid var(--accent-green);">🎬 Remember (Slideshow)</button>
+                </div>
+                <div class="nav-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px;opacity:0.85;">
                     <button class="nav-tab ${state.activeTab === 'analyse' ? 'active' : ''}" onclick="setTab('analyse')" style="border-left:4px solid var(--accent-orange);">🔍 Analyse (Concepts)</button>
                     <button class="nav-tab ${state.activeTab === 'evaluate' ? 'active' : ''}" onclick="setTab('evaluate')" style="border-left:4px solid var(--accent-red);">🔗 Evaluate (Relationships)</button>
                     <button class="nav-tab ${state.activeTab === 'create' ? 'active' : ''}" onclick="setTab('create')" style="border-left:4px solid var(--accent-yellow);">🚀 Create (AGI Path)</button>
-                    <button class="nav-tab ${state.activeTab === 'resources' ? 'active' : ''}" onclick="setTab('resources')" style="border-left:4px solid #7dd3fc;">📚 Resources</button>
-                    <button class="nav-tab" onclick="window.location.href='dictionary.html'" style="border-left:4px solid var(--accent-green);">📖 Dictionary</button>
                     <button class="nav-tab debug-nav ${state.activeTab === 'json' ? 'active' : ''}" onclick="setTab('json')">📄 JSON Source</button>
                     <button class="nav-tab debug-nav ${state.activeTab === 'footerlinks' ? 'active' : ''}" onclick="setTab('footerlinks')">🔗 Footer Links</button>
                 </div>`;
