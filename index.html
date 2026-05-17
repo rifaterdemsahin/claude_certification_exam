@@ -1087,7 +1087,7 @@
             quizOptions: [],
             rememberIndex: 0,
             showRememberAnswer: false,
-            shuffledIds: null
+            shuffled: false
         };
 
         // ================== RENDER HELPERS ==================
@@ -1170,7 +1170,7 @@
             return `
                 <div class="btn-row">
                     <button class="reset-btn" onclick="resetProgress()">🗑️ Reset Progress</button>
-                    <button class="nav-tab" onclick="shuffleCards()" title="Toggle random order" style="border-left:4px solid var(--accent-purple);">🔀 ${state.shuffledIds ? 'Shuffled' : 'Shuffle'}</button>
+                    <button class="nav-tab ${state.shuffled ? 'active' : ''}" onclick="shuffleCards()" title="Toggle random order" style="border-left:4px solid var(--accent-purple);">🔀 ${state.shuffled ? 'Shuffled' : 'Shuffle'}</button>
                 </div>
                 <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:8px;">
                     <a href="dictionary.html" class="nav-tab" style="text-decoration:none;border-left:4px solid var(--accent-green);">📖 Dictionary</a>
@@ -1191,7 +1191,7 @@
         }
 
         function renderMemoryCards() {
-            const filtered = state.filter === 'all' ? questionsData
+            let filtered = state.filter === 'all' ? questionsData
                 : state.filter === 'mastered' ? questionsData.filter(q => (state.progress[q.category] || []).includes(q.id))
                 : state.filter === 'unmastered' ? questionsData.filter(q => !(state.progress[q.category] || []).includes(q.id))
                 : questionsData.filter(q => q.category === parseInt(state.filter));
@@ -1205,9 +1205,8 @@
                     ${Object.entries(categories).map(([id, cat]) => `<button class="filter-btn ${state.filter === id ? 'active' : ''}" onclick="setFilter('${id}')">${cat.name}</button>`).join('')}
                 </div>`;
 
-            if (state.shuffledIds) {
-                const orderMap = new Map(state.shuffledIds.map((id, idx) => [id, idx]));
-                filtered = [...filtered].sort((a, b) => (orderMap.get(a.id) ?? 0) - (orderMap.get(b.id) ?? 0));
+            if (state.shuffled) {
+                filtered = [...filtered].sort(() => Math.random() - 0.5);
             }
 
             const cards = filtered.map(q => {
@@ -1548,11 +1547,7 @@
         }
 
         function shuffleCards() {
-            if (state.shuffledIds) {
-                state.shuffledIds = null;
-            } else {
-                state.shuffledIds = [...questionsData].sort(() => Math.random() - 0.5).map(q => q.id);
-            }
+            state.shuffled = !state.shuffled;
             render();
         }
 
