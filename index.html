@@ -654,6 +654,71 @@
         }
         body.debug-mode .debug-toggle { color: var(--accent-yellow); border-color: var(--accent-yellow); }
 
+        /* Card Modal */
+        .card-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            overflow-y: auto;
+        }
+        .card-modal {
+            background: linear-gradient(135deg, #1e3a5f, #312e81);
+            border: 2px solid var(--accent-blue);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            text-align: center;
+            animation: popIn 0.3s;
+            position: relative;
+        }
+        .card-modal .card-question {
+            font-size: 1.2em;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            text-align: center;
+        }
+        .card-modal .card-answer {
+            font-size: 1em;
+            text-align: left;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+        .card-modal .card-image {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .card-modal .card-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin: 12px 0;
+        }
+        .card-modal .card-links a {
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--accent-blue);
+            font-size: 0.8em;
+            text-decoration: none;
+            border: 1px solid var(--border);
+        }
+        .card-modal .card-links a:hover {
+            background: var(--border);
+        }
+
         /* Slideshow */
         .slideshow-container {
             max-width: 800px;
@@ -828,12 +893,14 @@
             { id: 100, category: 5, question: "What is 'observability' in agent systems?", answer: "The ability to understand internal system states through logs, metrics, and traces." }
         ];
 
-        // Enrich data with UIDs, media links, and prompts
+        // Enrich data with UIDs, media links, prompts, and related content
         questionsData.forEach(q => {
             q.uid = `CAT0${q.category}-Q${String(q.id).padStart(3, '0')}`;
-            q.youtubeShortUrl = q.youtubeShortUrl || 'https://www.youtube.com/embed/PLACEHOLDER_' + q.id;
-            q.audioUrl = q.audioUrl || 'audio/question_' + q.id + '.mp3';
+            q.youtubeShortUrl = q.youtubeShortUrl || '';
+            q.audioUrl = q.audioUrl || '';
             q.imageUrl = q.imageUrl || `https://raw.githubusercontent.com/rifaterdemsahin/claude_certification_exam/main/imaginary/${q.uid}.jpeg`;
+            q.googleImageUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q.question)}`;
+            q.relatedVideoUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(q.question + ' tutorial')}`;
             q.claudePrompt = q.claudePrompt || `As a Claude Developer Certification teaching assistant, explain this concept in depth: "${q.question}". Include analogies, why it matters for the exam, and 2 quiz questions to check my understanding.`;
         });
         const categories = {
@@ -1095,7 +1162,8 @@
         function renderNav() {
             return `
                 <div class="btn-row">
-                    <button class="reset-btn" onclick="resetProgress()">Reset Progress</button>
+                    <button class="reset-btn" onclick="resetProgress()">🗑️ Reset Progress</button>
+                    <button class="nav-tab" onclick="shuffleCards()" title="Toggle random order" style="border-left:4px solid var(--accent-purple);">🔀 ${state.shuffledIds ? 'Shuffled' : 'Shuffle'}</button>
                 </div>
                 <div class="nav-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px;">
                     <button class="nav-tab ${state.activeTab === 'cards' ? 'active' : ''}" onclick="setTab('cards')" style="border-left:4px solid var(--accent-blue);">🧠 Memory Cards</button>
@@ -1123,7 +1191,6 @@
                     <button class="filter-btn ${state.filter === 'unmastered' ? 'active' : ''}" onclick="setFilter('unmastered')">Unmastered</button>
                     <button class="filter-btn ${state.filter === 'mastered' ? 'active' : ''}" onclick="setFilter('mastered')">Mastered</button>
                     ${Object.entries(categories).map(([id, cat]) => `<button class="filter-btn ${state.filter === id ? 'active' : ''}" onclick="setFilter('${id}')">${cat.name}</button>`).join('')}
-                    <button class="filter-btn ${state.shuffledIds ? 'active' : ''}" onclick="shuffleCards()" title="Toggle random order">🔀 ${state.shuffledIds ? 'Shuffled' : 'Shuffle'}</button>
                 </div>`;
 
             if (state.shuffledIds) {
@@ -1135,25 +1202,14 @@
                 const isMastered = (state.progress[q.category] || []).includes(q.id);
                 const hint = questionHints[q.id];
                 return `
-                    <div class="flip-card" id="card-${q.id}" onclick="flipCard(${q.id})">
+                    <div class="flip-card" id="card-${q.id}" onclick="showCardModal(${q.id})">
                         <div class="flip-card-inner">
                             <div class="flip-card-front">
                                 <img class="card-image-overlay" src="${escapeHtml(q.imageUrl || '')}" alt="Visual cue" loading="lazy" onerror="this.style.display='none'" />
                                 <span class="card-number">#${q.id}</span>
                                 <span class="card-category cat-${q.category}">${categories[q.category].name}</span>
                                 <div class="card-question">${escapeHtml(q.question)}</div>
-                                <div class="card-hint-text">Click to reveal answer</div>
-                                <button class="hint-btn" onclick="event.stopPropagation(); showHint(${q.id})">Need a Hint?</button>
-                            </div>
-                            <div class="flip-card-back">
-                                <div class="card-answer">${escapeHtml(q.answer)}</div>
-                                ${hint ? `<div class="memory-aid"><div class="emoji">${hint.emoji}</div><div class="text">${escapeHtml(hint.memory)}</div></div>` : ''}
-                                <div style="margin-top:12px;text-align:center;">
-                                    <button class="mastery-btn ${isMastered ? 'mastered' : ''}" onclick="event.stopPropagation(); toggleMastery(${q.category}, ${q.id})">
-                                        ${isMastered ? 'Mastered' : 'Mark as Mastered'}
-                                    </button>
-                                </div>
-                                <span class="card-footnote" onclick="event.stopPropagation(); showJSON(${q.id})">${escapeHtml(q.uid || 'Q' + q.id)}</span>
+                                <div class="card-hint-text">Click to open</div>
                             </div>
                         </div>
                     </div>`;
@@ -1488,9 +1544,65 @@
             render();
         }
 
-        function flipCard(id) {
-            const card = document.getElementById('card-' + id);
-            if (card) card.classList.toggle('flipped');
+        function showCardModal(id) {
+            const q = questionsData.find(x => x.id === id);
+            if (!q) return;
+            const hint = questionHints[id];
+            const isMastered = (state.progress[q.category] || []).includes(q.id);
+            const popup = document.createElement('div');
+            popup.className = 'card-modal-overlay';
+            const videoHtml = q.youtubeShortUrl ? `
+                <div style="margin-top:16px;">
+                    <h4 style="color:var(--text-secondary);margin-bottom:8px;">🎬 Video Explanation</h4>
+                    <iframe src="${escapeHtml(q.youtubeShortUrl)}" style="width:100%;height:240px;border:none;border-radius:12px;" allowfullscreen></iframe>
+                </div>` : '';
+            const audioHtml = q.audioUrl ? `
+                <div style="margin-top:16px;">
+                    <h4 style="color:var(--text-secondary);margin-bottom:8px;">🎧 Audio Explanation</h4>
+                    <audio controls src="${escapeHtml(q.audioUrl)}" style="width:100%;"></audio>
+                </div>` : '';
+            popup.innerHTML = `
+                <div class="card-modal">
+                    <span class="card-category cat-${q.category}" style="position:static;display:inline-block;margin-bottom:12px;">${categories[q.category].name}</span>
+                    <div class="card-question">${escapeHtml(q.question)}</div>
+                    <img class="card-image" src="${escapeHtml(q.imageUrl || '')}" alt="Visual cue" loading="lazy" onerror="this.style.display='none'" />
+                    <div class="card-links">
+                        <a href="${escapeHtml(q.googleImageUrl)}" target="_blank" rel="noopener noreferrer">🖼️ Google Images</a>
+                        <a href="${escapeHtml(q.relatedVideoUrl)}" target="_blank" rel="noopener noreferrer">📹 Related Videos</a>
+                        <a href="https://claude.ai/new?q=${encodeURIComponent(q.claudePrompt || '')}" target="_blank" rel="noopener noreferrer">🎓 Ask Claude</a>
+                    </div>
+                    <div class="card-answer">${escapeHtml(q.answer)}</div>
+                    ${hint ? `<div class="memory-aid"><div class="emoji">${hint.emoji}</div><div class="text">${escapeHtml(hint.memory)}</div></div>` : ''}
+                    ${videoHtml}
+                    ${audioHtml}
+                    <div style="margin-top:16px;text-align:center;">
+                        <button class="mastery-btn ${isMastered ? 'mastered' : ''}" onclick="toggleMasteryFromModal(${q.category}, ${q.id}, this)">
+                            ${isMastered ? '✅ Mastered' : 'Mark as Mastered'}
+                        </button>
+                    </div>
+                    <span class="card-footnote" style="position:static;display:inline-block;margin-top:12px;" onclick="showJSON(${q.id})">${escapeHtml(q.uid || 'Q' + q.id)}</span>
+                    <div style="margin-top:12px;">
+                        <button class="close-btn" onclick="this.closest('.card-modal-overlay').remove()">Close</button>
+                    </div>
+                </div>`;
+            popup.addEventListener('click', e => {
+                if (e.target === popup) popup.remove();
+            });
+            document.body.appendChild(popup);
+        }
+
+        function toggleMasteryFromModal(category, questionId, btn) {
+            event.stopPropagation();
+            const prog = { ...state.progress };
+            if (!prog[category]) prog[category] = [];
+            const idx = prog[category].indexOf(questionId);
+            if (idx > -1) prog[category].splice(idx, 1);
+            else prog[category].push(questionId);
+            state.progress = prog;
+            saveProgress(prog);
+            btn.textContent = (idx > -1) ? 'Mark as Mastered' : '✅ Mastered';
+            btn.classList.toggle('mastered');
+            render();
         }
 
         function toggleMastery(category, questionId) {
@@ -1517,6 +1629,18 @@
             const q = questionsData.find(x => x.id === questionId);
             const hint = questionHints[questionId];
             if (!hint) return;
+            const hasVideo = q.youtubeShortUrl && !q.youtubeShortUrl.includes('PLACEHOLDER');
+            const hasAudio = q.audioUrl && !q.audioUrl.startsWith('audio/question_');
+            const videoHtml = hasVideo ? `
+                <div class="media-section" style="margin-top:16px;text-align:left;">
+                    <h4 style="color:var(--text-secondary);margin-bottom:8px;">🎬 Video Explanation</h4>
+                    <iframe src="${escapeHtml(q.youtubeShortUrl)}" style="width:100%;height:240px;border:none;border-radius:12px;" allowfullscreen></iframe>
+                </div>` : '';
+            const audioHtml = hasAudio ? `
+                <div class="media-section" style="margin-top:16px;text-align:left;">
+                    <h4 style="color:var(--text-secondary);margin-bottom:8px;margin-top:12px;">🎧 Audio Explanation</h4>
+                    <audio controls src="${escapeHtml(q.audioUrl)}" style="width:100%;"></audio>
+                </div>` : '';
             const popup = document.createElement('div');
             popup.className = 'hint-overlay';
             popup.innerHTML = `
@@ -1528,12 +1652,8 @@
                     <div style="margin-top:16px;">
                         <a href="https://claude.ai/new?q=${encodeURIComponent(q.claudePrompt || '')}" target="_blank" rel="noopener noreferrer" class="claude-btn" onclick="event.stopPropagation()">🎓 Ask Claude TA</a>
                     </div>
-                    <div class="media-section" style="margin-top:16px;text-align:left;">
-                        <h4 style="color:var(--text-secondary);margin-bottom:8px;">🎬 Video Explanation</h4>
-                        <iframe src="${escapeHtml(q.youtubeShortUrl || '')}" style="width:100%;height:240px;border:none;border-radius:12px;" allowfullscreen></iframe>
-                        <h4 style="color:var(--text-secondary);margin-bottom:8px;margin-top:12px;">🎧 Audio Explanation</h4>
-                        <audio controls src="${escapeHtml(q.audioUrl || '')}" style="width:100%;"></audio>
-                    </div>
+                    ${videoHtml}
+                    ${audioHtml}
                     <button class="close-btn" onclick="this.closest('.hint-overlay').remove()">Got it!</button>
                 </div>`;
             popup.addEventListener('click', e => {
