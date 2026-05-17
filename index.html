@@ -203,11 +203,14 @@
         }
         .flip-card {
             perspective: 1000px;
-            height: 240px;
+            height: 300px;
             cursor: pointer;
         }
         @media (min-width: 640px) {
-            .flip-card { height: 260px; }
+            .flip-card { height: 340px; }
+        }
+        @media (min-width: 1024px) {
+            .flip-card { height: 360px; }
         }
         .flip-card-inner {
             position: relative;
@@ -225,7 +228,7 @@
             height: 100%;
             backface-visibility: hidden;
             border-radius: 12px;
-            padding: 16px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             border: 1px solid var(--border);
@@ -341,7 +344,7 @@
             border: 2px solid var(--accent-blue);
             border-radius: 16px;
             padding: 24px;
-            max-width: 420px;
+            max-width: 600px;
             width: 100%;
             text-align: center;
             animation: popIn 0.3s;
@@ -1122,7 +1125,6 @@
                                     </button>
                                 </div>
                                 <span class="card-footnote" onclick="event.stopPropagation(); showJSON(${q.id})">${escapeHtml(q.uid || 'Q' + q.id)}</span>
-                                <a href="https://claude.ai/new?q=${encodeURIComponent(q.claudePrompt || '')}" target="_blank" rel="noopener noreferrer" class="claude-btn card-claude-btn" onclick="event.stopPropagation()">🎓 Ask Claude</a>
                             </div>
                         </div>
                     </div>`;
@@ -1485,6 +1487,15 @@
                     <div class="svg-wrap" style="color:${categories[q.category].color}">${getCategorySVG(q.category)}</div>
                     <div class="hint-text"><strong style="color:${categories[q.category].color}">Visual Hint:</strong><br/>${escapeHtml(hint.text)}</div>
                     <div class="memory">Memory Aid:<br/>${escapeHtml(hint.memory)}</div>
+                    <div style="margin-top:16px;">
+                        <a href="https://claude.ai/new?q=${encodeURIComponent(q.claudePrompt || '')}" target="_blank" rel="noopener noreferrer" class="claude-btn" onclick="event.stopPropagation()">🎓 Ask Claude TA</a>
+                    </div>
+                    <div class="media-section" style="margin-top:16px;text-align:left;">
+                        <h4 style="color:var(--text-secondary);margin-bottom:8px;">🎬 Video Explanation</h4>
+                        <iframe src="${escapeHtml(q.youtubeShortUrl || '')}" style="width:100%;height:240px;border:none;border-radius:12px;" allowfullscreen></iframe>
+                        <h4 style="color:var(--text-secondary);margin-bottom:8px;margin-top:12px;">🎧 Audio Explanation</h4>
+                        <audio controls src="${escapeHtml(q.audioUrl || '')}" style="width:100%;"></audio>
+                    </div>
                     <button class="close-btn" onclick="this.closest('.hint-overlay').remove()">Got it!</button>
                 </div>`;
             popup.addEventListener('click', e => {
