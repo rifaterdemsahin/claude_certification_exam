@@ -240,6 +240,8 @@
             background: linear-gradient(135deg, #1e3a5f, #312e81);
             transform: rotateY(180deg);
             overflow-y: auto;
+            position: relative;
+            padding-bottom: 50px;
         }
         .card-number {
             position: absolute;
@@ -533,6 +535,103 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.3s ease; }
 
+/* Footnote & JSON Viewer */
+        .card-footnote {
+            position: absolute;
+            bottom: 10px;
+            right: 12px;
+            font-size: 0.7em;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-decoration: underline;
+            transition: color 0.3s;
+        }
+        .card-footnote:hover { color: var(--accent-blue); }
+        .json-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .json-popup {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: popIn 0.3s;
+        }
+        .json-popup h3 { margin-bottom: 12px; color: var(--accent-blue); }
+        .json-popup pre {
+            background: var(--bg-primary);
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.85em;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        .json-popup .media-section { margin-top: 16px; }
+        .json-popup iframe {
+            width: 100%;
+            height: 360px;
+            border-radius: 12px;
+            border: none;
+            margin-bottom: 12px;
+        }
+        .json-popup audio { width: 100%; margin-top: 8px; }
+        .claude-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #d97757, #c45b3a);
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-decoration: none;
+            transition: opacity 0.3s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .claude-btn:hover { opacity: 0.9; }
+        .card-claude-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 80px;
+            padding: 5px 10px;
+            font-size: 0.75em;
+        }
+
+        /* Debug Mode */
+        .debug-nav { display: none; }
+        body.debug-mode .debug-nav { display: inline-flex; }
+        .debug-toggle {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            padding: 6px 12px;
+            font-size: 0.75em;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 6px;
+            cursor: pointer;
+            z-index: 50;
+            font-family: inherit;
+        }
+        body.debug-mode .debug-toggle { color: var(--accent-yellow); border-color: var(--accent-yellow); }
+
         /* Slideshow */
         .slideshow-container {
             max-width: 800px;
@@ -707,6 +806,13 @@
             { id: 100, category: 5, question: "What is 'observability' in agent systems?", answer: "The ability to understand internal system states through logs, metrics, and traces." }
         ];
 
+        // Enrich data with UIDs, media links, and prompts
+        questionsData.forEach(q => {
+            q.uid = `CAT0${q.category}-Q${String(q.id).padStart(3, '0')}`;
+            q.youtubeShortUrl = q.youtubeShortUrl || 'https://www.youtube.com/embed/PLACEHOLDER_' + q.id;
+            q.audioUrl = q.audioUrl || 'audio/question_' + q.id + '.mp3';
+            q.claudePrompt = q.claudePrompt || `As a Claude Developer Certification teaching assistant, explain this concept in depth: "${q.question}". Include analogies, why it matters for the exam, and 2 quiz questions to check my understanding.`;
+        });
         const categories = {
             1: { name: "Agentic Architecture", color: "#ef4444", weight: "27%" },
             2: { name: "Tool Design & MCP", color: "#3b82f6", weight: "18%" },
@@ -914,7 +1020,8 @@
                 <header class="app-header">
                     <h1>Claude Developer Certification</h1>
                     <p>100 Question Mastery with Visual Hints & Memory Aids</p>
-                </header>`;
+                </header>
+                <button class="debug-toggle" onclick="toggleDebug()" title="Toggle Debug Mode">🐛 Debug</button>`;
         }
 
         function renderStats() {
@@ -973,6 +1080,8 @@
                     <button class="nav-tab ${state.activeTab === 'evaluate' ? 'active' : ''}" onclick="setTab('evaluate')">Evaluate (Relationships)</button>
                     <button class="nav-tab ${state.activeTab === 'create' ? 'active' : ''}" onclick="setTab('create')">Create (AGI Path)</button>
                     <button class="nav-tab ${state.activeTab === 'resources' ? 'active' : ''}" onclick="setTab('resources')">Resources</button>
+                    <button class="nav-tab debug-nav ${state.activeTab === 'json' ? 'active' : ''}" onclick="setTab('json')">📄 JSON Source</button>
+                    <button class="nav-tab debug-nav ${state.activeTab === 'footerlinks' ? 'active' : ''}" onclick="setTab('footerlinks')">🔗 Footer Links</button>
                 </div>`;
         }
 
@@ -1012,6 +1121,8 @@
                                         ${isMastered ? 'Mastered' : 'Mark as Mastered'}
                                     </button>
                                 </div>
+                                <span class="card-footnote" onclick="event.stopPropagation(); showJSON(${q.id})">${escapeHtml(q.uid || 'Q' + q.id)}</span>
+                                <a href="https://claude.ai/new?q=${encodeURIComponent(q.claudePrompt || '')}" target="_blank" rel="noopener noreferrer" class="claude-btn card-claude-btn" onclick="event.stopPropagation()">🎓 Ask Claude</a>
                             </div>
                         </div>
                     </div>`;
@@ -1073,6 +1184,10 @@
                             <span class="card-category cat-${q.category}">${categories[q.category].name}</span>
                             <span style="color:#64748b">Question ${state.quizIndex + 1} of ${state.quizQuestions.length}</span>
                         </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                            <span class="card-footnote" style="position:static;" onclick="showJSON(${q.id})">${escapeHtml(q.uid || 'Q' + q.id)}</span>
+                            <a href="https://claude.ai/new?q=${encodeURIComponent(q.claudePrompt || '')}" target="_blank" rel="noopener noreferrer" class="claude-btn" style="margin-top:0;">🎓 Ask Claude</a>
+                        </div>
                         <div class="quiz-question">${escapeHtml(q.question)}</div>
                         <button class="quiz-hint-btn" onclick="toggleQuizHint()">${state.quizShowHint ? 'Hide Hint' : 'Show Visual Hint'}</button>
                         ${hintHtml}
@@ -1093,7 +1208,13 @@
                 <div class="slideshow-container fade-in">
                     <div class="slide-progress">Question ${state.rememberIndex + 1} of ${questionsData.length}</div>
                     <div class="slide-content">
-                        <span class="card-category cat-${q.category}">${categories[q.category].name}</span>
+                        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                            <span class="card-category cat-${q.category}">${categories[q.category].name}</span>
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                <span class="card-footnote" style="position:static;" onclick="showJSON(${q.id})">${escapeHtml(q.uid || 'Q' + q.id)}</span>
+                                <a href="https://claude.ai/new?q=${encodeURIComponent(q.claudePrompt || '')}" target="_blank" rel="noopener noreferrer" class="claude-btn" style="margin-top:0;">🎓 Ask Claude</a>
+                            </div>
+                        </div>
                         <h2 style="margin-top:20px">${escapeHtml(q.question)}</h2>
                         ${hint ? `
                             <div class="slide-hint">
@@ -1412,6 +1533,62 @@
             }
         }
 
+// ================== JSON & DEBUG ==================
+        function showJSON(questionId) {
+            const q = questionsData.find(x => x.id === questionId);
+            if (!q) return;
+            const popup = document.createElement('div');
+            popup.className = 'json-overlay';
+            const jsonStr = JSON.stringify(q, null, 2);
+            popup.innerHTML = `
+                <div class="json-popup">
+                    <h3>📄 JSON Source for ${escapeHtml(q.uid || 'Q'+q.id)}</h3>
+                    <pre>${escapeHtml(jsonStr)}</pre>
+                    <div class="media-section">
+                        <h4 style="color:var(--text-secondary);margin-bottom:8px;">🎬 Video Explanation</h4>
+                        <iframe src="${escapeHtml(q.youtubeShortUrl || '')}" allowfullscreen></iframe>
+                        <h4 style="color:var(--text-secondary);margin-bottom:8px;">🎧 Audio Explanation</h4>
+                        <audio controls src="${escapeHtml(q.audioUrl || '')}"></audio>
+                    </div>
+                    <div style="text-align:center;margin-top:16px;">
+                        <a href="https://claude.ai/new?q=${encodeURIComponent(q.claudePrompt || '')}" target="_blank" rel="noopener noreferrer" class="claude-btn">🎓 Ask Claude TA</a>
+                    </div>
+                    <div style="text-align:center;margin-top:12px;">
+                        <button class="close-btn" onclick="this.closest('.json-overlay').remove()">Close</button>
+                    </div>
+                </div>`;
+            popup.addEventListener('click', e => {
+                if (e.target === popup) popup.remove();
+            });
+            document.body.appendChild(popup);
+        }
+
+        function renderJSONSource() {
+            return `
+                <div class="fade-in" style="max-width:900px;margin:0 auto;">
+                    <h2 style="text-align:center;margin-bottom:20px;">📄 Questions JSON Source</h2>
+                    <pre style="background:var(--bg-primary);padding:20px;border-radius:12px;border:1px solid var(--border);overflow-x:auto;font-size:0.8em;">${escapeHtml(JSON.stringify(questionsData, null, 2))}</pre>
+                </div>`;
+        }
+
+        function renderFooterLinks() {
+            return `
+                <div class="fade-in" style="max-width:700px;margin:0 auto;">
+                    <h2 style="text-align:center;margin-bottom:20px;">🔗 Footer Links</h2>
+                    <div class="resources-section">
+                        <ul class="resource-list">
+                            <li><a href="https://www.linkedin.com/in/rifaterdemsahin/" target="_blank" rel="noopener noreferrer" class="resource-link">Rifat Erdem Sahin on LinkedIn</a></li>
+                            <li><a href="https://rifaterdemsahin.github.io/claude_certification_exam/" target="_blank" rel="noopener noreferrer" class="resource-link">View on GitHub</a></li>
+                        </ul>
+                    </div>
+                </div>`;
+        }
+
+        function toggleDebug() {
+            document.body.classList.toggle('debug-mode');
+            setCookie('claude_cert_debug', document.body.classList.contains('debug-mode') ? '1' : '0', 365);
+            render();
+        }
         // ================== MAIN RENDER ==================
         function render() {
             const app = document.getElementById('app');
@@ -1427,6 +1604,8 @@
             else if (state.activeTab === 'evaluate') content += renderEvaluate();
             else if (state.activeTab === 'create') content += renderCreate();
             else if (state.activeTab === 'resources') content += renderResources();
+            else if (state.activeTab === 'json') content += renderJSONSource();
+            else if (state.activeTab === 'footerlinks') content += renderFooterLinks();
 
             content += '</div>' + renderFooter();
             app.innerHTML = content;
@@ -1438,7 +1617,10 @@
         }
 
         // ================== INIT ==================
-        document.addEventListener('DOMContentLoaded', render);
+        document.addEventListener('DOMContentLoaded', () => {
+            if (getCookie('claude_cert_debug') === '1') document.body.classList.add('debug-mode');
+            render();
+        });
     </script>
 </body>
 </html>
