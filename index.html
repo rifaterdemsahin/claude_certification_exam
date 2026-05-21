@@ -8,6 +8,7 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({ startOnLoad: true, theme: 'dark' });</script>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
     <style>
         :root {
             --bg-primary: #0f172a;
@@ -553,6 +554,178 @@
         .svg-prompt { stroke: var(--accent-orange); }
         .svg-reliability { stroke: var(--accent-purple); }
 
+        /* Multiplayer */
+        .mp-container { max-width: 900px; margin: 0 auto; }
+        .mp-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .mp-room-code {
+            font-size: 2em;
+            font-weight: 700;
+            letter-spacing: 4px;
+            background: var(--bg-primary);
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 2px dashed var(--accent-blue);
+            color: var(--accent-blue);
+            display: inline-block;
+            margin: 8px 0;
+        }
+        .mp-link-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 12px 0;
+        }
+        .mp-link-row input {
+            flex: 1;
+            min-width: 240px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+        .mp-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        @media (min-width: 768px) {
+            .mp-grid { grid-template-columns: 1.2fr 0.8fr; }
+        }
+        .mp-options { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+        .mp-option {
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            font-size: 0.95em;
+            font-family: inherit;
+            line-height: 1.4;
+        }
+        .mp-option:hover { border-color: var(--accent-blue); }
+        .mp-option.selected { border-color: var(--accent-purple); background: rgba(168, 85, 247, 0.1); }
+        .mp-option.correct { border-color: var(--accent-green); background: rgba(16, 185, 129, 0.15); }
+        .mp-option.wrong { border-color: var(--accent-red); background: rgba(239, 68, 68, 0.15); }
+        .mp-option:disabled { cursor: default; opacity: 0.7; }
+        .mp-participants { display: flex; flex-direction: column; gap: 8px; }
+        .mp-participant {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .mp-status { font-size: 0.85em; }
+        .mp-status.answered { color: var(--accent-green); }
+        .mp-status.waiting { color: var(--text-muted); }
+        .mp-chat {
+            display: flex;
+            flex-direction: column;
+            height: 320px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .mp-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .mp-chat-bubble {
+            max-width: 85%;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        .mp-chat-bubble.me { align-self: flex-end; background: rgba(56, 189, 248, 0.15); border: 1px solid var(--accent-blue); }
+        .mp-chat-bubble.other { align-self: flex-start; background: rgba(255,255,255,0.05); border: 1px solid var(--border); }
+        .mp-chat-name { font-size: 0.75em; color: var(--accent-yellow); margin-bottom: 2px; font-weight: 600; }
+        .mp-chat-input-row {
+            display: flex;
+            gap: 8px;
+            padding: 10px;
+            border-top: 1px solid var(--border);
+        }
+        .mp-chat-input-row input {
+            flex: 1;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+        .mp-answer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+        .mp-answer-badge.right { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); }
+        .mp-answer-badge.wrong { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); }
+        .mp-reveal-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 16px; }
+        @media (min-width: 768px) { .mp-reveal-grid { grid-template-columns: 1fr 1fr; } }
+        .mp-reveal-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .mp-meta { color: var(--text-muted); font-size: 0.85em; margin-bottom: 12px; }
+        .mp-form { display: flex; flex-direction: column; gap: 12px; max-width: 400px; margin: 0 auto; }
+        .mp-form input, .mp-form select {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95em;
+        }
+        .mp-form button {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: var(--accent-blue);
+            color: var(--bg-primary);
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .mp-form button:hover { background: #7dd3fc; }
+        .mp-center { text-align: center; }
+        .mp-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 500;
+            background: rgba(56, 189, 248, 0.2);
+            color: var(--accent-blue);
+        }
+
         /* Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-primary); }
@@ -1090,6 +1263,24 @@
             shuffled: false
         };
 
+        // ================== MULTIPLAYER STATE ==================
+        const mpState = {
+            client: null,
+            roomId: null,
+            role: null,
+            myName: '',
+            myClientId: Math.random().toString(36).slice(2, 10),
+            phase: 'none',
+            participants: [],
+            questions: [],
+            currentQuestionIndex: 0,
+            answers: {},
+            chat: [],
+            myAnswer: null,
+            connected: false,
+            error: null
+        };
+
         // ================== RENDER HELPERS ==================
         function getCategorySVG(categoryId) {
             const colors = {
@@ -1180,6 +1371,7 @@
                     <button class="nav-tab ${state.activeTab === 'cards' ? 'active' : ''}" onclick="setTab('cards')" style="border-left:4px solid var(--accent-blue);">🧠 Memory Cards</button>
                     <button class="nav-tab ${state.activeTab === 'quiz' ? 'active' : ''}" onclick="setTab('quiz')" style="border-left:4px solid var(--accent-purple);">🎯 Quiz Mode</button>
                     <button class="nav-tab ${state.activeTab === 'remember' ? 'active' : ''}" onclick="setTab('remember')" style="border-left:4px solid var(--accent-green);">🎬 Remember (Slideshow)</button>
+                    <button class="nav-tab ${state.activeTab === 'multiplayer' ? 'active' : ''}" onclick="setTab('multiplayer')" style="border-left:4px solid var(--accent-red);">🎮 Multiplayer</button>
                 </div>
                 <div class="nav-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px;opacity:0.85;">
                     <button class="nav-tab ${state.activeTab === 'analyse' ? 'active' : ''}" onclick="setTab('analyse')" style="border-left:4px solid var(--accent-orange);">🔍 Analyse (Concepts)</button>
@@ -1506,6 +1698,10 @@
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                             View on GitHub
                         </a>
+                        <a href="markdown_renderer.html?url=https://raw.githubusercontent.com/rifaterdemsahin/claude_certification_exam/main/docs/multiplayer_report.md&title=Multiplayer%20Report" target="_blank" rel="noopener noreferrer">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
+                            Multiplayer Report
+                        </a>
                     </div>
                 </footer>`;
         }
@@ -1770,6 +1966,515 @@
                 </div>`;
         }
 
+        // ================== MULTIPLAYER ==================
+        function generateOptionsForQuestion(q) {
+            const wrong = questionsData
+                .filter(x => x.id !== q.id && x.category === q.category)
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 3)
+                .map(x => x.answer);
+            while (wrong.length < 3) {
+                const r = questionsData[Math.floor(Math.random() * questionsData.length)];
+                if (r.id !== q.id && !wrong.includes(r.answer)) wrong.push(r.answer);
+            }
+            return [...wrong, q.answer].sort(() => Math.random() - 0.5);
+        }
+
+        function connectMqtt(roomId, role, name) {
+            if (mpState.client) { try { mpState.client.end(); } catch(e){} }
+            mpState.roomId = roomId;
+            mpState.role = role;
+            mpState.myName = name;
+            mpState.connected = false;
+            mpState.error = null;
+
+            const client = mqtt.connect('wss://broker.hivemq.com:8884/mqtt', {
+                clientId: 'claude_cert_' + mpState.myClientId + '_' + Date.now(),
+                reconnectPeriod: 5000,
+                connectTimeout: 30000
+            });
+
+            mpState.client = client;
+
+            client.on('connect', () => {
+                mpState.connected = true;
+                client.subscribe('claude_cert_v1/' + roomId + '/broadcast', (err) => {
+                    if (!err && role === 'participant') {
+                        client.publish('claude_cert_v1/' + roomId + '/broadcast', JSON.stringify({
+                            type: 'join', clientId: mpState.myClientId, name: name, role: 'participant'
+                        }));
+                    }
+                    render();
+                });
+            });
+
+            client.on('message', (topic, payload) => {
+                try {
+                    const msg = JSON.parse(payload.toString());
+                    if (msg.clientId === mpState.myClientId) return;
+                    handleMqttMessage(msg);
+                } catch(e) {}
+            });
+
+            client.on('error', (err) => {
+                mpState.error = err.message;
+                render();
+            });
+
+            client.on('offline', () => {
+                mpState.connected = false;
+                render();
+            });
+        }
+
+        function handleMqttMessage(msg) {
+            if (msg.type === 'chat') {
+                if (!mpState.chat.find(c => c.timestamp === msg.timestamp && c.name === msg.name && c.text === msg.text)) {
+                    mpState.chat.push({ name: msg.name, text: msg.text, timestamp: msg.timestamp });
+                    render();
+                }
+                return;
+            }
+            if (mpState.role === 'director') {
+                if (msg.type === 'join') {
+                    if (!mpState.participants.find(p => p.clientId === msg.clientId)) {
+                        mpState.participants.push({ clientId: msg.clientId, name: msg.name, role: 'participant' });
+                        broadcastState();
+                        render();
+                    }
+                } else if (msg.type === 'answer') {
+                    if (!mpState.answers[msg.questionIndex]) mpState.answers[msg.questionIndex] = {};
+                    mpState.answers[msg.questionIndex][msg.clientId] = { name: msg.name, answer: msg.answer };
+                    broadcastState();
+                    render();
+                } else if (msg.type === 'request_sync') {
+                    broadcastState();
+                }
+            } else {
+                if (msg.type === 'state') {
+                    mpState.phase = msg.phase;
+                    mpState.currentQuestionIndex = msg.currentQuestionIndex;
+                    mpState.questions = msg.questions || mpState.questions;
+                    mpState.participants = msg.participants || mpState.participants;
+                    mpState.answers = msg.answers || mpState.answers;
+                    mpState.currentOptions = msg.options || mpState.currentOptions;
+                    if (msg.phase === 'question') mpState.myAnswer = null;
+                    render();
+                }
+            }
+        }
+
+        function broadcastState() {
+            if (!mpState.client || !mpState.connected) return;
+            const q = mpState.questions[mpState.currentQuestionIndex];
+            let options = mpState.currentOptions;
+            if (q && (!options || options.length === 0)) {
+                options = generateOptionsForQuestion(q);
+                mpState.currentOptions = options;
+            }
+            mpState.client.publish('claude_cert_v1/' + mpState.roomId + '/broadcast', JSON.stringify({
+                type: 'state',
+                clientId: mpState.myClientId,
+                phase: mpState.phase,
+                currentQuestionIndex: mpState.currentQuestionIndex,
+                questions: mpState.questions.map(x => ({ id: x.id, category: x.category, question: x.question, answer: x.answer })),
+                participants: mpState.participants,
+                answers: mpState.answers,
+                options: options || []
+            }));
+        }
+
+        function createRoom() {
+            const roomId = Math.random().toString(36).slice(2, 8).toUpperCase();
+            const name = (document.getElementById('mp-name') && document.getElementById('mp-name').value.trim()) || 'Director';
+            const count = parseInt(document.getElementById('mp-count') && document.getElementById('mp-count').value) || 20;
+            const catFilter = document.getElementById('mp-cat') && document.getElementById('mp-cat').value;
+            let pool = catFilter === 'all' ? [...questionsData] : questionsData.filter(q => q.category == catFilter);
+            if (pool.length === 0) pool = [...questionsData];
+            pool.sort(() => Math.random() - 0.5);
+            mpState.participants = [{ clientId: mpState.myClientId, name, role: 'director' }];
+            mpState.phase = 'lobby';
+            mpState.questions = pool.slice(0, Math.min(count, pool.length));
+            mpState.currentQuestionIndex = 0;
+            mpState.answers = {};
+            mpState.chat = [];
+            mpState.myAnswer = null;
+            mpState.currentOptions = null;
+            connectMqtt(roomId, 'director', name);
+            updateUrlWithRoom(roomId);
+            render();
+        }
+
+        function joinRoom() {
+            const roomId = (document.getElementById('mp-join-room') && document.getElementById('mp-join-room').value.trim().toUpperCase());
+            const name = (document.getElementById('mp-join-name') && document.getElementById('mp-join-name').value.trim()) || 'Player';
+            if (!roomId) { alert('Please enter a room code'); return; }
+            mpState.participants = [];
+            mpState.phase = 'lobby';
+            mpState.questions = [];
+            mpState.currentQuestionIndex = 0;
+            mpState.answers = {};
+            mpState.chat = [];
+            mpState.myAnswer = null;
+            mpState.currentOptions = null;
+            connectMqtt(roomId, 'participant', name);
+            updateUrlWithRoom(roomId);
+            render();
+        }
+
+        function updateUrlWithRoom(roomId) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('room', roomId);
+            window.history.replaceState({}, '', url);
+        }
+
+        function startGameMp() {
+            if (mpState.role !== 'director' || mpState.questions.length === 0) return;
+            mpState.phase = 'question';
+            mpState.currentQuestionIndex = 0;
+            mpState.answers = {};
+            mpState.currentOptions = null;
+            broadcastState();
+            render();
+        }
+
+        function nextQuestionMp() {
+            if (mpState.role !== 'director') return;
+            if (mpState.currentQuestionIndex < mpState.questions.length - 1) {
+                mpState.currentQuestionIndex++;
+                mpState.phase = 'question';
+                mpState.currentOptions = null;
+                broadcastState();
+                render();
+            } else {
+                mpState.phase = 'ended';
+                broadcastState();
+                render();
+            }
+        }
+
+        function revealAnswerMp() {
+            if (mpState.role !== 'director') return;
+            mpState.phase = 'reveal';
+            broadcastState();
+            render();
+        }
+
+        function submitAnswerMp(idx) {
+            if (mpState.role !== 'participant' || mpState.phase !== 'question') return;
+            const options = mpState.currentOptions || [];
+            const answer = options[idx];
+            if (!answer) return;
+            mpState.myAnswer = answer;
+            mpState.client.publish('claude_cert_v1/' + mpState.roomId + '/broadcast', JSON.stringify({
+                type: 'answer',
+                clientId: mpState.myClientId,
+                name: mpState.myName,
+                questionIndex: mpState.currentQuestionIndex,
+                answer: answer
+            }));
+            render();
+        }
+
+        function sendChatMp() {
+            const input = document.getElementById('mp-chat-input');
+            if (!input || !mpState.client) return;
+            const text = input.value.trim();
+            if (!text) return;
+            const msg = { type: 'chat', name: mpState.myName, text, timestamp: Date.now() };
+            if (!mpState.chat.find(c => c.timestamp === msg.timestamp && c.name === msg.name && c.text === msg.text)) {
+                mpState.chat.push(msg);
+            }
+            mpState.client.publish('claude_cert_v1/' + mpState.roomId + '/broadcast', JSON.stringify(msg));
+            input.value = '';
+            render();
+        }
+
+        function copyRoomLink() {
+            const url = new URL(window.location.href);
+            url.searchParams.set('room', mpState.roomId);
+            navigator.clipboard.writeText(url.toString()).then(() => alert('Link copied to clipboard!'));
+        }
+
+        function leaveRoom() {
+            if (mpState.client) { try { mpState.client.end(); } catch(e){} }
+            mpState.client = null;
+            mpState.roomId = null;
+            mpState.role = null;
+            mpState.phase = 'none';
+            mpState.participants = [];
+            mpState.questions = [];
+            mpState.answers = {};
+            mpState.chat = [];
+            mpState.myAnswer = null;
+            mpState.currentOptions = null;
+            const url = new URL(window.location.href);
+            url.searchParams.delete('room');
+            window.history.replaceState({}, '', url);
+            render();
+        }
+
+        function renderMultiplayer() {
+            if (!mpState.roomId) return renderMultiplayerLobby();
+            if (mpState.phase === 'lobby') return renderMultiplayerLobbyActive();
+            if (mpState.phase === 'ended') return renderMultiplayerEnded();
+            return renderMultiplayerGame();
+        }
+
+        function renderMultiplayerLobby() {
+            return `
+                <div class="mp-container fade-in">
+                    <h2 style="text-align:center;margin-bottom:20px;">🎮 Multiplayer Exam Game</h2>
+                    <p style="text-align:center;color:var(--text-secondary);max-width:600px;margin:0 auto 24px;">
+                        One director controls the flow. Participants join via link, answer questions, and review together.
+                    </p>
+                    <div class="mp-panel">
+                        <h3 style="text-align:center;margin-bottom:16px;">Create Room (Director)</h3>
+                        <div class="mp-form">
+                            <input type="text" id="mp-name" placeholder="Your name" value="Director" />
+                            <select id="mp-cat">
+                                <option value="all">All Categories</option>
+                                <option value="1">Agentic Architecture</option>
+                                <option value="2">Tool Design & MCP</option>
+                                <option value="3">Claude Code Workflows</option>
+                                <option value="4">Prompt Engineering</option>
+                                <option value="5">Context & Reliability</option>
+                            </select>
+                            <input type="number" id="mp-count" placeholder="Number of questions" value="20" min="1" max="100" />
+                            <button onclick="createRoom()">Create Room</button>
+                        </div>
+                    </div>
+                    <div class="mp-panel">
+                        <h3 style="text-align:center;margin-bottom:16px;">Join Room (Participant)</h3>
+                        <div class="mp-form">
+                            <input type="text" id="mp-join-name" placeholder="Your name" value="Player" />
+                            <input type="text" id="mp-join-room" placeholder="Room code (e.g. AB12CD)" />
+                            <button onclick="joinRoom()">Join Room</button>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        function renderMultiplayerLobbyActive() {
+            const isDir = mpState.role === 'director';
+            const roomLink = new URL(window.location.href);
+            roomLink.searchParams.set('room', mpState.roomId);
+            return `
+                <div class="mp-container fade-in">
+                    <div class="mp-panel mp-center">
+                        <div class="mp-meta">Room Code</div>
+                        <div class="mp-room-code">${mpState.roomId}</div>
+                        <div class="mp-link-row">
+                            <input type="text" readonly value="${roomLink.toString()}" />
+                            <button class="nav-tab active" onclick="copyRoomLink()">Copy Link</button>
+                        </div>
+                        <div style="margin-top:8px;">
+                            <span class="mp-badge">${mpState.connected ? '🟢 Connected' : '🔴 Disconnected'}</span>
+                        </div>
+                    </div>
+                    <div class="mp-grid">
+                        <div class="mp-panel">
+                            <h3 style="margin-bottom:12px;">Participants (${mpState.participants.length})</h3>
+                            <div class="mp-participants">
+                                ${mpState.participants.map(p => `
+                                    <div class="mp-participant">
+                                        <span>${escapeHtml(p.name)} ${p.clientId === mpState.myClientId ? '(You)' : ''}</span>
+                                        <span class="mp-badge">${p.role}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            ${isDir ? `
+                                <div style="margin-top:20px;">
+                                    <div class="mp-meta">Question set: ${mpState.questions.length} questions</div>
+                                    <button class="nav-tab active" onclick="startGameMp()">Start Game</button>
+                                </div>
+                            ` : `<p style="margin-top:16px;color:var(--text-secondary);text-align:center;">Waiting for director to start...</p>`}
+                        </div>
+                        <div class="mp-panel">
+                            <h3 style="margin-bottom:12px;">Discussion</h3>
+                            ${renderChat()}
+                        </div>
+                    </div>
+                    <div style="text-align:center;margin-top:12px;">
+                        <button class="reset-btn" onclick="leaveRoom()">Leave Room</button>
+                    </div>
+                </div>`;
+        }
+
+        function renderMultiplayerGame() {
+            const q = mpState.questions[mpState.currentQuestionIndex];
+            if (!q) return '<div class="mp-container">No question loaded.</div>';
+            const isDir = mpState.role === 'director';
+            let options = mpState.currentOptions;
+            if (!options || options.length === 0) {
+                options = generateOptionsForQuestion(q);
+                mpState.currentOptions = options;
+            }
+
+            const currentAnswers = mpState.answers[mpState.currentQuestionIndex] || {};
+            const totalParticipants = mpState.participants.filter(p => p.role === 'participant').length;
+            const answeredCount = Object.keys(currentAnswers).length;
+
+            let optionsHtml = '';
+            if (mpState.phase === 'question') {
+                const alreadyAnswered = mpState.myAnswer !== null;
+                optionsHtml = `<div class="mp-options">
+                    ${options.map((opt, idx) => {
+                        let cls = 'mp-option';
+                        if (alreadyAnswered && opt === mpState.myAnswer) cls += ' selected';
+                        return `<button class="${cls}" onclick="submitAnswerMp(${idx})" ${alreadyAnswered ? 'disabled' : ''}>${escapeHtml(opt)}</button>`;
+                    }).join('')}
+                </div>`;
+            } else {
+                optionsHtml = `<div class="mp-options">
+                    ${options.map(opt => {
+                        let cls = 'mp-option';
+                        if (opt === q.answer) cls += ' correct';
+                        else cls += ' wrong';
+                        return `<div class="${cls}" style="cursor:default">${escapeHtml(opt)} ${opt === q.answer ? '✅ Correct' : ''}</div>`;
+                    }).join('')}
+                </div>`;
+            }
+
+            const questionHeader = `
+                <div class="mp-meta" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+                    <span class="card-category cat-${q.category}">${categories[q.category].name}</span>
+                    <span>Question ${mpState.currentQuestionIndex + 1} of ${mpState.questions.length}</span>
+                </div>
+                <h2 style="margin:12px 0;font-size:1.2em;">${escapeHtml(q.question)}</h2>
+            `;
+
+            let controlHtml = '';
+            if (isDir) {
+                if (mpState.phase === 'question') {
+                    controlHtml = `
+                        <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                            <span class="mp-meta">${answeredCount}/${totalParticipants} answered</span>
+                            <button class="nav-tab active" onclick="revealAnswerMp()">Reveal Answer</button>
+                        </div>`;
+                } else {
+                    controlHtml = `
+                        <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+                            <button class="nav-tab active" onclick="nextQuestionMp()">${mpState.currentQuestionIndex < mpState.questions.length - 1 ? 'Next Question' : 'Finish Game'}</button>
+                        </div>`;
+                }
+            } else {
+                if (mpState.phase === 'question') {
+                    controlHtml = `<p style="margin-top:12px;color:var(--text-secondary);">${mpState.myAnswer !== null ? 'Answer submitted. Waiting for director...' : 'Select an answer'}</p>`;
+                } else {
+                    controlHtml = `<p style="margin-top:12px;color:var(--accent-yellow);">Director revealed the answer. Review below.</p>`;
+                }
+            }
+
+            let revealHtml = '';
+            if (mpState.phase === 'reveal') {
+                revealHtml = `
+                    <div class="mp-reveal-grid" style="margin-top:20px;">
+                        ${mpState.participants.filter(p => p.role === 'participant').map(p => {
+                            const ansObj = currentAnswers[p.clientId];
+                            const ans = ansObj ? ansObj.answer : 'No answer';
+                            const isRight = ans === q.answer;
+                            return `
+                                <div class="mp-reveal-card">
+                                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                                        <strong>${escapeHtml(p.name)}</strong>
+                                        <span class="mp-answer-badge ${isRight ? 'right' : 'wrong'}">${isRight ? '✅ Right' : '❌ Wrong'}</span>
+                                    </div>
+                                    <div style="font-size:0.9em;color:var(--text-secondary);">Answer: ${escapeHtml(ans)}</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>`;
+            }
+
+            return `
+                <div class="mp-container fade-in">
+                    <div class="mp-panel">
+                        ${questionHeader}
+                        ${optionsHtml}
+                        ${controlHtml}
+                        ${revealHtml}
+                    </div>
+                    <div class="mp-panel">
+                        <h3 style="margin-bottom:12px;">Discussion</h3>
+                        ${renderChat()}
+                    </div>
+                    <div style="text-align:center;margin-top:12px;">
+                        <button class="reset-btn" onclick="leaveRoom()">Leave Room</button>
+                    </div>
+                </div>`;
+        }
+
+        function renderMultiplayerEnded() {
+            const total = mpState.questions.length;
+            const participantResults = mpState.participants
+                .filter(p => p.role === 'participant')
+                .map(p => {
+                    let correct = 0;
+                    for (let i = 0; i < total; i++) {
+                        const ans = mpState.answers[i] && mpState.answers[i][p.clientId];
+                        if (ans && ans.answer === mpState.questions[i].answer) correct++;
+                    }
+                    return { name: p.name, correct, total };
+                });
+            return `
+                <div class="mp-container fade-in">
+                    <div class="mp-panel mp-center">
+                        <h2>Game Over 🎉</h2>
+                        <p style="color:var(--text-secondary);margin-top:8px;">${total} questions completed</p>
+                    </div>
+                    <div class="mp-panel">
+                        <h3 style="margin-bottom:12px;">Final Scores</h3>
+                        <div class="mp-participants">
+                            ${participantResults.map(r => `
+                                <div class="mp-participant">
+                                    <span>${escapeHtml(r.name)}</span>
+                                    <span class="mp-answer-badge right">${r.correct} / ${r.total}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="mp-panel">
+                        <h3 style="margin-bottom:12px;">Discussion</h3>
+                        ${renderChat()}
+                    </div>
+                    <div style="text-align:center;margin-top:12px;">
+                        <button class="nav-tab active" onclick="startGameMp()">Play Again</button>
+                        <button class="reset-btn" onclick="leaveRoom()">Leave Room</button>
+                    </div>
+                </div>`;
+        }
+
+        function renderChat() {
+            return `
+                <div class="mp-chat">
+                    <div class="mp-chat-messages" id="mp-chat-messages">
+                        ${mpState.chat.length === 0 ? '<div style="color:var(--text-muted);font-size:0.85em;text-align:center;margin-top:40px;">No messages yet. Start the discussion!</div>' : mpState.chat.map(c => `
+                            <div class="mp-chat-bubble ${c.name === mpState.myName ? 'me' : 'other'}">
+                                <div class="mp-chat-name">${escapeHtml(c.name)}</div>
+                                <div>${escapeHtml(c.text)}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="mp-chat-input-row">
+                        <input type="text" id="mp-chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendChatMp()" />
+                        <button class="nav-tab active" onclick="sendChatMp()">Send</button>
+                    </div>
+                </div>`;
+        }
+
+        function checkUrlForRoom() {
+            const url = new URL(window.location.href);
+            const room = url.searchParams.get('room');
+            if (room) {
+                setTab('multiplayer');
+                setTimeout(() => {
+                    const el = document.getElementById('mp-join-room');
+                    if (el) el.value = room;
+                }, 50);
+            }
+        }
+
         function toggleDebug() {
             document.body.classList.toggle('debug-mode');
             setCookie('claude_cert_debug', document.body.classList.contains('debug-mode') ? '1' : '0', 365);
@@ -1790,6 +2495,7 @@
             else if (state.activeTab === 'evaluate') content += renderEvaluate();
             else if (state.activeTab === 'create') content += renderCreate();
             else if (state.activeTab === 'resources') content += renderResources();
+            else if (state.activeTab === 'multiplayer') content += renderMultiplayer();
             else if (state.activeTab === 'json') content += renderJSONSource();
             else if (state.activeTab === 'footerlinks') content += renderFooterLinks();
 
@@ -1800,11 +2506,16 @@
             if (state.activeTab === 'create' && typeof mermaid !== 'undefined') {
                 mermaid.init(undefined, ".mermaid");
             }
+
+            // Scroll chat to bottom
+            const chatMessages = document.getElementById('mp-chat-messages');
+            if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         // ================== INIT ==================
         document.addEventListener('DOMContentLoaded', () => {
             if (getCookie('claude_cert_debug') === '1') document.body.classList.add('debug-mode');
+            checkUrlForRoom();
             render();
         });
     </script>
