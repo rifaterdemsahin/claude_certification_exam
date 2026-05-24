@@ -1002,6 +1002,55 @@
         }
         .mermaid-section h3 { margin-bottom: 20px; text-align: center; color: var(--accent-green); }
         .phase-desc { margin-top: 20px; padding: 16px; background: rgba(16, 185, 129, 0.05); border-radius: 8px; border-left: 4px solid var(--accent-green); }
+
+        /* Bloom's Taxonomy Nav */
+        .bloom-nav {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin: 30px 0;
+            perspective: 1000px;
+        }
+        .bloom-tier {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            padding: 10px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 800px;
+            transition: transform 0.3s ease;
+        }
+        .bloom-tier:hover {
+            background: rgba(255,255,255,0.03);
+            transform: scale(1.02);
+        }
+        .bloom-tier-label {
+            width: 100%;
+            text-align: center;
+            font-size: 0.7em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        .tier-create { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-top: 4px solid var(--accent-yellow); max-width: 400px; }
+        .tier-evaluate { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-top: 4px solid var(--accent-red); max-width: 500px; }
+        .tier-analyse { background: rgba(249, 115, 22, 0.1); border: 1px solid rgba(249, 115, 22, 0.3); border-top: 4px solid var(--accent-orange); max-width: 600px; }
+        .tier-apply { background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); border-top: 4px solid var(--accent-purple); max-width: 700px; }
+        .tier-remember { background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-top: 4px solid var(--accent-blue); max-width: 800px; }
+        
+        .global-tools {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
     </style>
 </head>
 <body>
@@ -1405,26 +1454,50 @@
 
         function renderNav() {
             return `
-                <div class="btn-row">
+                <div class="global-tools">
                     <button class="reset-btn" onclick="resetProgress()">🗑️ Reset Progress</button>
-                    <button class="nav-tab ${state.shuffled ? 'active' : ''}" onclick="shuffleCards()" title="Toggle random order" style="border-left:4px solid var(--accent-purple);">🔀 ${state.shuffled ? 'Shuffled' : 'Shuffle'}</button>
+                    <button class="nav-tab ${state.shuffled ? 'active' : ''}" onclick="shuffleCards()" title="Toggle random order">🔀 ${state.shuffled ? 'Shuffled' : 'Shuffle'}</button>
                 </div>
-                <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:8px;">
-                    <a href="dictionary.html" class="nav-tab" style="text-decoration:none;border-left:4px solid var(--accent-green);">📖 Dictionary</a>
-                    <button class="nav-tab ${state.activeTab === 'resources' ? 'active' : ''}" onclick="setTab('resources')" style="border-left:4px solid #7dd3fc;">📚 Resources</button>
-                </div>
-                <div class="nav-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 8px;">
-                    <button class="nav-tab ${state.activeTab === 'cards' ? 'active' : ''}" onclick="setTab('cards')" style="border-left:4px solid var(--accent-blue);">🧠 Memory Cards</button>
-                    <button class="nav-tab ${state.activeTab === 'quiz' ? 'active' : ''}" onclick="setTab('quiz')" style="border-left:4px solid var(--accent-purple);">🎯 Quiz Mode</button>
-                    <button class="nav-tab ${state.activeTab === 'remember' ? 'active' : ''}" onclick="setTab('remember')" style="border-left:4px solid var(--accent-green);">🎬 Remember (Slideshow)</button>
-                    <button class="nav-tab ${state.activeTab === 'exam' ? 'active' : ''}" onclick="setTab('exam')" style="border-left:4px solid var(--accent-yellow);">📝 Mock Exam</button>
-                    <button class="nav-tab ${state.activeTab === 'mastery' ? 'active' : ''}" onclick="setTab('mastery')" style="border-left:4px solid var(--accent-green);">🚀 Mastery Path</button>
-                    <button class="nav-tab ${state.activeTab === 'multiplayer' ? 'active' : ''}" onclick="setTab('multiplayer')" style="border-left:4px solid var(--accent-red);">🎮 Multiplayer</button>
-                </div>
-                <div class="nav-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px;opacity:0.85;">
-                    <button class="nav-tab ${state.activeTab === 'analyse' ? 'active' : ''}" onclick="setTab('analyse')" style="border-left:4px solid var(--accent-orange);">🔍 Analyse (Concepts)</button>
-                    <button class="nav-tab ${state.activeTab === 'evaluate' ? 'active' : ''}" onclick="setTab('evaluate')" style="border-left:4px solid var(--accent-red);">🔗 Evaluate (Relationships)</button>
-                    <button class="nav-tab ${state.activeTab === 'create' ? 'active' : ''}" onclick="setTab('create')" style="border-left:4px solid var(--accent-yellow);">🚀 Create (AGI Path)</button>
+
+                <nav class="bloom-nav">
+                    <!-- Create -->
+                    <div class="bloom-tier tier-create">
+                        <div class="bloom-tier-label">Create</div>
+                        <button class="nav-tab ${state.activeTab === 'create' ? 'active' : ''}" onclick="setTab('create')">🚀 Create (AGI Path)</button>
+                        <button class="nav-tab ${state.activeTab === 'mastery' ? 'active' : ''}" onclick="setTab('mastery')">🚀 Mastery Path</button>
+                    </div>
+
+                    <!-- Evaluate -->
+                    <div class="bloom-tier tier-evaluate">
+                        <div class="bloom-tier-label">Evaluate</div>
+                        <button class="nav-tab ${state.activeTab === 'evaluate' ? 'active' : ''}" onclick="setTab('evaluate')">🔗 Evaluate (Relationships)</button>
+                        <button class="nav-tab ${state.activeTab === 'multiplayer' ? 'active' : ''}" onclick="setTab('multiplayer')">🎮 Multiplayer</button>
+                    </div>
+
+                    <!-- Analyse -->
+                    <div class="bloom-tier tier-analyse">
+                        <div class="bloom-tier-label">Analyse</div>
+                        <button class="nav-tab ${state.activeTab === 'analyse' ? 'active' : ''}" onclick="setTab('analyse')">🔍 Analyse (Concepts)</button>
+                    </div>
+
+                    <!-- Apply -->
+                    <div class="bloom-tier tier-apply">
+                        <div class="bloom-tier-label">Apply</div>
+                        <button class="nav-tab ${state.activeTab === 'quiz' ? 'active' : ''}" onclick="setTab('quiz')">🎯 Quiz Mode</button>
+                        <button class="nav-tab ${state.activeTab === 'exam' ? 'active' : ''}" onclick="setTab('exam')">📝 Mock Exam</button>
+                        <button class="nav-tab ${state.activeTab === 'resources' ? 'active' : ''}" onclick="setTab('resources')">📚 Resources</button>
+                    </div>
+
+                    <!-- Remember -->
+                    <div class="bloom-tier tier-remember">
+                        <div class="bloom-tier-label">Remember</div>
+                        <button class="nav-tab ${state.activeTab === 'cards' ? 'active' : ''}" onclick="setTab('cards')">🧠 Memory Cards</button>
+                        <button class="nav-tab ${state.activeTab === 'remember' ? 'active' : ''}" onclick="setTab('remember')">🎬 Remember (Slideshow)</button>
+                        <a href="dictionary.html" class="nav-tab" style="text-decoration:none;">📖 Dictionary</a>
+                    </div>
+                </nav>
+
+                <div style="text-align:center; opacity:0.5; margin-bottom:24px;">
                     <button class="nav-tab debug-nav ${state.activeTab === 'json' ? 'active' : ''}" onclick="setTab('json')">📄 JSON Source</button>
                     <button class="nav-tab debug-nav ${state.activeTab === 'footerlinks' ? 'active' : ''}" onclick="setTab('footerlinks')">🔗 Footer Links</button>
                 </div>`;
