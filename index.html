@@ -1753,6 +1753,11 @@
                             </div>
                         </div>
                         <h2 style="margin-top:20px">${escapeHtml(q.question)}</h2>
+                        ${q.imageUrl ? `
+                            <div style="text-align:center; margin: 20px 0;">
+                                <img src="${escapeHtml(q.imageUrl)}" style="max-width:100%; max-height:300px; border-radius:12px; border: 1px solid var(--border);" alt="Visual cue" onerror="this.style.display='none'">
+                            </div>
+                        ` : ''}
                         ${hint ? `
                             <div class="slide-hint">
                                 <div style="font-size: 2.5em; margin-bottom: 10px;">${hint.emoji}</div>
@@ -2115,6 +2120,7 @@
                     <div class="card-links">
                         <a href="${escapeHtml(q.googleImageUrl)}" target="_blank" rel="noopener noreferrer">🖼️ Google Images</a>
                         <a href="${escapeHtml(q.relatedVideoUrl)}" target="_blank" rel="noopener noreferrer">📹 Related Videos</a>
+                        <a href="https://github.com/rifaterdemsahin/claude_certification_exam/blob/main/imaginary/memory/MEM-Q${String(q.id).padStart(3, '0')}_v1.png" target="_blank" rel="noopener noreferrer">🖼️ Image on GitHub</a>
                         <a href="https://claude.ai/new?q=${encodeURIComponent(q.claudePrompt || '')}" target="_blank" rel="noopener noreferrer">🎓 Ask Claude</a>
                     </div>
                     <div style="margin-top:12px;">
