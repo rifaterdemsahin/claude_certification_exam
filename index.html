@@ -436,6 +436,23 @@
         }
         .hint-popup .close-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
 
+        .concept-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            border-radius: 12px;
+            font-size: 0.75em;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            margin: 4px;
+        }
+        .concept-tag:hover {
+            background: var(--accent-blue);
+            color: var(--bg-primary);
+        }
+
         /* Quiz */
         .quiz-container { max-width: 700px; margin: 0 auto; }
         .quiz-card {
@@ -1743,13 +1760,14 @@
 
         function renderAnalyse() {
             const concepts = [
-                { title: "Agentic AI", desc: "The evolution from passive AI agents to autonomous systems that use agentic loops (Perceive-Think-Act) to solve open-ended goals.", img: "https://miro.medium.com/1*7bH-lUKE22j8aYxP_RXSUA.jpeg" },
-                { title: "Agentic Loop", desc: "The iterative cycle of Perceive-Think-Act. Managing these loops efficiently (e.g., via prompt compression) is key to building cost-effective and low-latency agents.", img: "https://machinelearningmastery.com/wp-content/uploads/2026/03/mlm-implementing-prompt-compression-to-reduce-agentic-loop-costs.png" },
-                { title: "Coordinator-Subagent", desc: "An architectural pattern where a central 'brain' delegates specialized tasks to focused sub-agents." },
-                { title: "MCP (Model Context Protocol)", desc: "A standardized protocol that decouples AI models from their tools and data sources, enabling universal integration." },
-                { title: "Chain-of-Thought", desc: "A prompting technique that forces models to output their reasoning steps before providing a final answer." },
-                { title: "Validation Loops", desc: "Automated checks that verify model output against schemas or criteria, triggering re-prompts on failure." },
-                { title: "Long-Term Memory", desc: "The use of external storage (RAG, Vector DBs) to maintain context beyond the model's immediate window." }
+                { slug: "agentic-ai", title: "Agentic AI", desc: "The evolution from passive AI agents to autonomous systems that use agentic loops (Perceive-Think-Act) to solve open-ended goals.", img: "https://miro.medium.com/1*7bH-lUKE22j8aYxP_RXSUA.jpeg" },
+                { slug: "agentic-loop", title: "Agentic Loop", desc: "The iterative cycle of Perceive-Think-Act. Managing these loops efficiently (e.g., via prompt compression) is key to building cost-effective and low-latency agents.", img: "https://machinelearningmastery.com/wp-content/uploads/2026/03/mlm-implementing-prompt-compression-to-reduce-agentic-loop-costs.png" },
+                { slug: "coordinator-subagent", title: "Coordinator-Subagent", desc: "An architectural pattern where a central 'brain' delegates specialized tasks to focused sub-agents." },
+                { slug: "mcp", title: "MCP (Model Context Protocol)", desc: "A standardized protocol that decouples AI models from their tools and data sources, enabling universal integration." },
+                { slug: "claude-code", title: "Claude Code", desc: "A specialized agentic workflow for software engineering, utilizing project-level memory and local tool execution." },
+                { slug: "chain-of-thought", title: "Chain-of-Thought", desc: "A prompting technique that forces models to output their reasoning steps before providing a final answer." },
+                { slug: "validation-loops", title: "Validation Loops", desc: "Automated checks that verify model output against schemas or criteria, triggering re-prompts on failure." },
+                { slug: "long-term-memory", title: "Long-Term Memory", desc: "The use of external storage (RAG, Vector DBs) to maintain context beyond the model's immediate window." }
             ];
             return `
                 <div class="fade-in">
@@ -1757,8 +1775,11 @@
                     <p style="text-align:center; color:var(--text-secondary); max-width:600px; margin: 0 auto 30px;">Breaking down the core components of the Claude Developer Certification.</p>
                     <div class="concept-grid">
                         ${concepts.map(c => `
-                            <div class="concept-card">
-                                <h3>${c.title}</h3>
+                            <div class="concept-card" onclick="window.open('https://github.com/rifaterdemsahin/claude_certification_exam/blob/main/formula/concepts/${c.slug}.md', '_blank')" style="cursor:pointer;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                                    <h3 style="margin-bottom:0;">${c.title}</h3>
+                                    <span style="font-size:0.8em;color:var(--accent-blue);">Open Note ↗</span>
+                                </div>
                                 ${c.img ? `<img src="${c.img}" style="width:100%; border-radius:8px; margin-bottom:15px; border:1px solid var(--border);" alt="${c.title}">` : ''}
                                 <p>${c.desc}</p>
                             </div>
@@ -2053,6 +2074,11 @@
             const padId = String(id).padStart(3, '0');
             const githubEditUrl = `https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/formula/memory/MEM-Q${padId}.md`;
 
+            const conceptsHtml = (q.concepts || []).map(slug => {
+                const name = categorySlugs[slug] || slug;
+                return `<a href="https://github.com/rifaterdemsahin/claude_certification_exam/blob/main/formula/concepts/${slug}.md" target="_blank" class="concept-tag">${escapeHtml(name)}</a>`;
+            }).join('');
+
             const popup = document.createElement('div');
             popup.className = 'card-modal-overlay';
             const videoHtml = q.youtubeShortUrl ? `
@@ -2080,6 +2106,7 @@
                         <a href="${githubEditUrl}" target="_blank" rel="noopener noreferrer" class="claude-btn" style="background:linear-gradient(135deg, var(--accent-green), #059669);">📝 Open Deep Dive (Edit)</a>
                     </div>
                     <div class="card-answer">${escapeHtml(q.answer)}</div>
+                    ${conceptsHtml ? `<div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">${conceptsHtml}</div>` : ''}
                     ${hint ? `<div class="memory-aid"><div class="emoji">${hint.emoji}</div><div class="text">${escapeHtml(hint.memory)}</div></div>` : ''}
                     ${videoHtml}
                     ${audioHtml}
