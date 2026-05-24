@@ -21,9 +21,14 @@ This file serves as a foundational mandate for Gemini CLI and other AI tools wor
   4. Prompt Engineering & Structured Output (20%)
   5. Context Management & Reliability (15%)
 - **Directory Usage:**
+  - `assets/`: Visual media — `assets/exam/` for question images, `assets/memory/` for memory card visuals.
+  - `data/`: Raw data — `data/exam.json`, `data/exam_source.pdf`.
   - `docs/`: Markdown files for detailed study content.
   - `exercises/`: Hands-on coding challenges.
+  - `formula/`: Concepts (`concepts/`), exam questions (`exam/`), and memory card notes (`memory/`).
+  - `pages/`: Auxiliary HTML pages (`dictionary.html`, `markdown_renderer.html`).
   - `scripts/`: Utility scripts.
+  - `.kilo/agent/`: AI-specific guideline files (`claude.md`, `gemini.md`, `opencode.md`).
 
 ## 🤖 AI Interaction Rules
 - **Surgical Edits:** Use targeted `replace` calls when modifying `index.html`.

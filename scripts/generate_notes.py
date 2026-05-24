@@ -3,7 +3,7 @@ import json
 import os
 
 # Load exam data
-with open('exam.json', 'r') as f:
+with open('data/exam.json', 'r') as f:
     exam_data = json.load(f)
 
 # Task 1: Generate Exam Question Notes

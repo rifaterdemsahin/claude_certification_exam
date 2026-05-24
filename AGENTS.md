@@ -40,24 +40,60 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
   - CAT03: Claude Code Configuration & Workflows (20%)
   - CAT04: Prompt Engineering & Structured Output (20%)
   - CAT05: Context Management & Reliability (15%)
+- **Assets:** All visual media lives in `assets/`.
+  - `assets/exam/` — Exam question images.
+  - `assets/memory/` — Memory card visual aids (PNG/SVG).
+- **Data:** Raw data and source material in `data/`.
+  - `data/exam.json` — Question data source.
+  - `data/exam_source.pdf` — Exam source material.
 - **Docs Directory:** Keep study materials in `docs/` organized by competency.
 - **Exercises:** Add hands-on challenges to the `exercises/` folder.
 - **Formula:** Concept explanations and exam questions live in `formula/`.
+  - `formula/concepts/`
+  - `formula/exam/`
+  - `formula/memory/`
+- **Pages:** Auxiliary HTML pages in `pages/`.
+  - `pages/dictionary.html`
+  - `pages/markdown_renderer.html`
+- **Scripts:** Automation scripts in `scripts/`.
+- **AI Guidelines:** Agent-specific instructions live in `.kilo/agent/`.
 
 ## File Layout
 
 ```
 .
-├── index.html          # Main application (single-file React app)
-├── exam.json           # Question data source
-├── docs/               # Study documentation by competency
-├── exercises/          # Hands-on coding challenges
-├── formula/            # Concepts and exam questions
+├── index.html              # Main application (single-file React app)
+├── AGENTS.md               # This file
+├── README.md               # Human-facing project overview
+├── .kilo/
+│   └── agent/
+│       ├── claude.md       # Claude-specific guidelines
+│       ├── gemini.md       # Gemini-specific guidelines
+│       └── opencode.md     # OpenCode-specific guidelines
+├── assets/                 # All visual media
+│   ├── exam/               # Exam question images
+│   └── memory/             # Memory card visual aids (PNG/SVG)
+├── data/                   # Raw data & source material
+│   ├── exam.json           # Question data source
+│   └── exam_source.pdf     # Exam source material
+├── docs/                   # Study documentation by competency
+│   ├── 01_agentic_loops/
+│   ├── 02_tool_mcp/
+│   ├── 03_workflows/
+│   ├── 04_prompt_eng/
+│   └── 05_reliability/
+├── exercises/              # Hands-on coding challenges
+├── formula/                # Concepts and exam questions
 │   ├── concepts/
-│   └── exam/
-├── scripts/            # Automation scripts
-├── exam_source.pdf     # Exam source material
-└── AGENTS.md           # This file
+│   ├── exam/
+│   └── memory/
+├── pages/                  # Auxiliary HTML pages
+│   ├── dictionary.html
+│   └── markdown_renderer.html
+├── scripts/                # Automation scripts
+│   └── generate_notes.py
+├── robots.txt
+└── sitemap.xml
 ```
 
 ## AI Interaction Rules

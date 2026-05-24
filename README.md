@@ -39,6 +39,8 @@ An interactive study guide for the **Claude Developer Certification** exam with 
 ```
 .
 ├── index.html          # Main application (single-file React app)
+├── assets/             # Visual media (exam & memory card images)
+├── data/               # Question data and exam source material
 ├── docs/               # Study documentation
 │   ├── 01_agentic_loops/
 │   ├── 02_tool_mcp/
@@ -46,8 +48,10 @@ An interactive study guide for the **Claude Developer Certification** exam with 
 │   ├── 04_prompt_eng/
 │   └── 05_reliability/
 ├── exercises/          # Hands-on coding challenges
+├── formula/            # Concepts, exam questions, and memory card notes
+├── pages/              # Auxiliary HTML pages
 ├── scripts/            # Automation scripts
-└── exam_source.pdf     # Exam source material
+└── .kilo/agent/        # AI tool guidelines
 ```
 
 ## 🎯 Study Strategy
