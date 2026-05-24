@@ -1193,7 +1193,7 @@
             const ext = (q.id >= 16) ? 'svg' : 'png';
             q.imageUrl = q.imageUrl || `https://raw.githubusercontent.com/rifaterdemsahin/claude_certification_exam/main/assets/memory/${memId}_v1.${ext}`;
             
-            q.googleImageUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q.question)}`;
+            q.googleImageUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q.question + ' claude llm')}`;
             q.relatedVideoUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(q.question + ' tutorial')}`;
             
             // GitHub link logic - updated to refer to the correct extension
