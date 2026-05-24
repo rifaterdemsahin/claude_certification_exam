@@ -1668,7 +1668,7 @@
 
         function renderAnalyse() {
             const concepts = [
-                { title: "Agentic Loops", desc: "Iterative cycles of Perceive, Think, and Act that allow models to self-correct and reason through complex tasks." },
+                { title: "Agentic AI", desc: "The evolution from passive AI agents to autonomous systems that use agentic loops (Perceive-Think-Act) to solve open-ended goals.", img: "https://miro.medium.com/1*7bH-lUKE22j8aYxP_RXSUA.jpeg" },
                 { title: "Coordinator-Subagent", desc: "An architectural pattern where a central 'brain' delegates specialized tasks to focused sub-agents." },
                 { title: "MCP (Model Context Protocol)", desc: "A standardized protocol that decouples AI models from their tools and data sources, enabling universal integration." },
                 { title: "Chain-of-Thought", desc: "A prompting technique that forces models to output their reasoning steps before providing a final answer." },
@@ -1683,6 +1683,7 @@
                         ${concepts.map(c => `
                             <div class="concept-card">
                                 <h3>${c.title}</h3>
+                                ${c.img ? `<img src="${c.img}" style="width:100%; border-radius:8px; margin-bottom:15px; border:1px solid var(--border);" alt="${c.title}">` : ''}
                                 <p>${c.desc}</p>
                             </div>
                         `).join('')}
