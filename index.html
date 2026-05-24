@@ -1751,11 +1751,15 @@
         }
 
         function renderRemember() {
-            const q = questionsData[state.rememberIndex];
+            const pool = questionsData.filter(q => !(state.progress[q.category] || []).includes(q.id));
+            const effectivePool = pool.length > 0 ? pool : questionsData;
+            const idx = Math.min(state.rememberIndex, effectivePool.length - 1);
+            const q = effectivePool[idx];
+            if (!q) return '<div class="slideshow-container"><h2>No cards available</h2></div>';
             const hint = questionHints[q.id];
             return `
                 <div class="slideshow-container fade-in">
-                    <div class="slide-progress">Question ${state.rememberIndex + 1} of ${questionsData.length}</div>
+                    <div class="slide-progress">Question ${idx + 1} of ${effectivePool.length}${pool.length === 0 ? ' (all mastered — reset to review)' : ''}</div>
                     <div class="slide-content">
                         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
                             <span class="card-category cat-${q.category}">${categories[q.category].name}</span>
@@ -1783,9 +1787,9 @@
                         </div>
                     </div>
                     <div class="slideshow-nav">
-                        <button class="nav-tab" onclick="prevRemember()" ${state.rememberIndex === 0 ? 'disabled' : ''}>Previous</button>
+                        <button class="nav-tab" onclick="prevRemember()" ${idx === 0 ? 'disabled' : ''}>Previous</button>
                         <button class="nav-tab active" onclick="toggleRememberAnswer()">${state.showRememberAnswer ? 'Hide Answer' : 'Show Answer'}</button>
-                        <button class="nav-tab" onclick="nextRemember()" ${state.rememberIndex === questionsData.length - 1 ? 'disabled' : ''}>Next</button>
+                        <button class="nav-tab" onclick="nextRemember()" ${idx === effectivePool.length - 1 ? 'disabled' : ''}>Next</button>
                     </div>
                 </div>`;
         }
@@ -1919,11 +1923,23 @@
         }
 
         function prevRemember() {
+            const pool = questionsData.filter(q => !(state.progress[q.category] || []).includes(q.id));
+            const effectivePool = pool.length > 0 ? pool : questionsData;
             if (state.rememberIndex > 0) {
                 state.rememberIndex--;
                 state.showRememberAnswer = false;
                 render();
             }
+        }
+        function nextRemember() {
+            const pool = questionsData.filter(q => !(state.progress[q.category] || []).includes(q.id));
+            const effectivePool = pool.length > 0 ? pool : questionsData;
+            if (state.rememberIndex < effectivePool.length - 1) {
+                state.rememberIndex++;
+                state.showRememberAnswer = false;
+                render();
+            }
+        }
         }
 
         function nextRemember() {
@@ -1996,6 +2012,10 @@
                         render();
                     })
                     .catch(err => console.error('Error loading exam data:', err));
+            } else if (tab === 'remember') {
+                // Reset slideshow index when entering so we start at first unmastered
+                state.rememberIndex = 0;
+                state.showRememberAnswer = false;
             }
             render();
         }
