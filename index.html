@@ -1185,9 +1185,16 @@
             const memId = `MEM-Q${padId}`;
             q.youtubeShortUrl = q.youtubeShortUrl || '';
             q.audioUrl = q.audioUrl || '';
-            q.imageUrl = q.imageUrl || `https://raw.githubusercontent.com/rifaterdemsahin/claude_certification_exam/main/imaginary/memory/${memId}_v1.png`;
+            
+            // Logic to handle image formats: SVG for new ones, PNG for existing ones
+            const ext = (q.id >= 16) ? 'svg' : 'png';
+            q.imageUrl = q.imageUrl || `https://raw.githubusercontent.com/rifaterdemsahin/claude_certification_exam/main/imaginary/memory/${memId}_v1.${ext}`;
+            
             q.googleImageUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q.question)}`;
             q.relatedVideoUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(q.question + ' tutorial')}`;
+            
+            // GitHub link logic - updated to refer to the correct extension
+            q.githubImageUrl = `https://github.com/rifaterdemsahin/claude_certification_exam/blob/main/imaginary/memory/${memId}_v1.${ext}`;
             q.notesUrl = q.notesUrl || `https://github.com/rifaterdemsahin/claude_certification_exam/blob/main/formula/${q.uid}.md`;
             q.claudePrompt = q.claudePrompt || `As a Claude Developer Certification teaching assistant, explain this concept in depth: "${q.question}". Include analogies, why it matters for the exam, and 2 quiz questions to check my understanding.`;
         });
@@ -2120,7 +2127,7 @@
                     <div class="card-links">
                         <a href="${escapeHtml(q.googleImageUrl)}" target="_blank" rel="noopener noreferrer">🖼️ Google Images</a>
                         <a href="${escapeHtml(q.relatedVideoUrl)}" target="_blank" rel="noopener noreferrer">📹 Related Videos</a>
-                        <a href="https://github.com/rifaterdemsahin/claude_certification_exam/blob/main/imaginary/memory/MEM-Q${String(q.id).padStart(3, '0')}_v1.png" target="_blank" rel="noopener noreferrer">🖼️ Image on GitHub</a>
+                        <a href="${escapeHtml(q.githubImageUrl)}" target="_blank" rel="noopener noreferrer">🖼️ Image on GitHub</a>
                         <a href="https://claude.ai/new?q=${encodeURIComponent(q.claudePrompt || '')}" target="_blank" rel="noopener noreferrer">🎓 Ask Claude</a>
                     </div>
                     <div style="margin-top:12px;">
