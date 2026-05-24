@@ -1,0 +1,522 @@
+[
+  {
+    "id": 1,
+    "question": "What is the primary function of a \"tool\" in the context of Claude’s API?",
+    "options": [
+      "A) To automatically compress conversation history to save tokens.",
+      "B) To provide a configuration file that dictates Claude's persona.",
+      "C) A plain function executed when Claude needs external data or to perform an action.",
+      "D) An internal Anthropic database query for user preferences."
+    ],
+    "answer": "C",
+    "relatedCards": [28, 35],
+    "explanation": "Tools (also known as function calling) allow Claude to interact with external systems by defining functions it can request to execute."
+  },
+  {
+    "id": 2,
+    "question": "You are building a tutoring application and want Claude to provide guided hints rather than direct answers. What is the best architectural approach?",
+    "options": [
+      "A) Use a system prompt to define Claude's role and behavioral constraints.",
+      "B) Set the temperature to 1.0 to ensure the answers are unpredictable.",
+      "C) Programmatically truncate any response that looks like a final answer.",
+      "D) Use a few-shot prompt with examples of direct answers only."
+    ],
+    "answer": "A",
+    "relatedCards": [70, 81],
+    "explanation": "System prompts are the primary way to define the model's persona, constraints, and behavior throughout a session."
+  },
+  {
+    "id": 3,
+    "question": "Which field in the API response indicates that Claude is waiting for a tool’s output before continuing?",
+    "options": [
+      "A) finish_reason: \"end_turn\"",
+      "B) stop_reason: \"tool_use\"",
+      "C) status: \"pending_tool\"",
+      "D) action: \"call_external\""
+    ],
+    "answer": "B",
+    "relatedCards": [11, 24],
+    "explanation": "When Claude decides to use a tool, the API response's stop_reason will be 'tool_use'."
+  },
+  {
+    "id": 4,
+    "question": "In a production environment, where is the most secure place to store your Anthropic API key?",
+    "options": [
+      "A) Within the client-side JavaScript of your web application.",
+      "B) In a public repository’s .env.example file.",
+      "C) On a server-side environment variable, hidden from the end-user.",
+      "D) Within the local storage of the user's web browser."
+    ],
+    "answer": "C",
+    "relatedCards": [79, 89],
+    "explanation": "API keys should never be exposed on the client side. They should be stored in secure server-side environment variables."
+  },
+  {
+    "id": 5,
+    "question": "You notice a prompt is failing on edge cases in production. What is the most effective next step?",
+    "options": [
+      "A) Increase the temperature to 1.0 to bypass logic errors.",
+      "B) Implement a prompt evaluation workflow with a diverse dataset.",
+      "C) Manually rewrite the prompt until it feels more comprehensive.",
+      "D) Switch to a smaller model like Claude 3 Haiku to save costs."
+    ],
+    "answer": "B",
+    "relatedCards": [69, 76, 77],
+    "explanation": "Prompt evaluation with a test suite/dataset is the standard engineering approach to ensure reliability and handle edge cases."
+  },
+  {
+    "id": 6,
+    "question": "What does \"transport agnostic\" mean regarding the Model Context Protocol (MCP)?",
+    "options": [
+      "A) MCP only functions over encrypted HTTPS connections.",
+      "B) Clients and servers can connect via different methods like stdio or HTTP.",
+      "C) MCP requires a specific hardware acceleration chip to function.",
+      "D) The protocol automatically switches to the fastest available network."
+    ],
+    "answer": "B",
+    "relatedCards": [28, 45],
+    "explanation": "Transport agnostic means the protocol defines how messages are structured, but can work over various communication channels like stdio, HTTP, or WebSockets."
+  },
+  {
+    "id": 7,
+    "question": "Which Claude Code customization feature is best for a team-wide PR review checklist that should be shared via Git?",
+    "options": [
+      "A) A personal skill in ~/.claude/skills.",
+      "B) A project-specific skill in .claude/skills.",
+      "C) A global alias in the user's .zshrc.",
+      "D) A custom slash command defined only in the local terminal."
+    ],
+    "answer": "B",
+    "relatedCards": [46, 53, 56],
+    "explanation": "Project-specific skills are stored in the project directory, making them easy to share with team members via version control."
+  },
+  {
+    "id": 8,
+    "question": "You need Claude to return a valid JSON object without any conversational \"filler\" text. Which technique is most reliable?",
+    "options": [
+      "A) Use high temperature and ask \"Please be brief.\"",
+      "B) Use a system prompt and XML tags for the output.",
+      "C) Use a prefilled assistant message and stop sequences.",
+      "D) Use a few-shot prompt with 10 examples of text-heavy JSON."
+    ],
+    "answer": "C",
+    "relatedCards": [67, 72, 85],
+    "explanation": "Prefilling the assistant's response with '{' forces the model to start the JSON object immediately, minimizing conversational filler."
+  },
+  {
+    "id": 9,
+    "question": "When using the Model Context Protocol (MCP), what is the role of an MCP Server?",
+    "options": [
+      "A) To manage user authentication and billing for the end application.",
+      "B) To host tools, prompts, and resources that Claude can access.",
+      "C) To act as the primary user interface for the AI chat.",
+      "D) To route messages between different LLM providers."
+    ],
+    "answer": "B",
+    "relatedCards": [34, 35],
+    "explanation": "MCP Servers expose capabilities (Tools), data (Resources), and templates (Prompts) to AI clients."
+  },
+  {
+    "id": 10,
+    "question": "What is the minimum token count required for a content block to be eligible for Prompt Caching?",
+    "options": [
+      "A) 512 tokens",
+      "B) 1024 tokens",
+      "C) 2048 tokens",
+      "D) 4096 tokens"
+    ],
+    "answer": "B",
+    "relatedCards": [83, 90],
+    "explanation": "Anthropic's Prompt Caching requires blocks to be at least 1024 tokens to be eligible for caching (on supported models)."
+  },
+  {
+    "id": 11,
+    "question": "You want Claude to analyze multiple distinct datasets (e.g., sales records and customer feedback). How should you structure this in the prompt?",
+    "options": [
+      "A) Paste all data into a single long paragraph.",
+      "B) Use XML tags like <sales> and <feedback> to separate the data.",
+      "C) Put the sales data in the system prompt and feedback in the user prompt.",
+      "D) Provide the data as a series of comma-separated values (CSV) without headers."
+    ],
+    "answer": "B",
+    "relatedCards": [68, 75],
+    "explanation": "XML tags provide clear boundaries for different parts of the prompt, making it easier for Claude to distinguish and reference specific data sets."
+  },
+  {
+    "id": 12,
+    "question": "When developing an MCP server using the Python SDK, what is the most efficient way to define a tool?",
+    "options": [
+      "A) Manually writing a JSON schema for every tool function.",
+      "B) Using the @mcp.tool() decorator on a Python function.",
+      "C) Registering the tool via a separate YAML configuration file.",
+      "D) Using a POST request to the MCP discovery endpoint."
+    ],
+    "answer": "B",
+    "relatedCards": [35, 37],
+    "explanation": "The MCP Python SDK provides decorators like @mcp.tool() to automatically generate the necessary JSON schemas from Python function signatures."
+  },
+  {
+    "id": 13,
+    "question": "Which scenario describes a \"Workflow\" pattern rather than an \"Agent\" pattern?",
+    "options": [
+      "A) Claude is given a set of tools and decides which ones to use to solve an open-ended goal.",
+      "B) Claude follows a predefined, rigid sequence of steps to process an invoice.",
+      "C) Claude manages a long-running project by assigning tasks to sub-agents.",
+      "D) Claude proactively monitors a database and alerts users of anomalies."
+    ],
+    "answer": "B",
+    "relatedCards": [17, 62],
+    "explanation": "Workflows are structured, predefined sequences, whereas agents are more autonomous and decide their own path toward a goal."
+  },
+  {
+    "id": 14,
+    "question": "A user reports that a chat bot \"forgets\" what was said three messages ago. What is the likely technical cause?",
+    "options": [
+      "A) The model’s temperature is too low.",
+      "B) The API is not being sent the full conversation history with each new request.",
+      "C) The prompt needs more XML tags.",
+      "D) The model has reached its maximum training data limit."
+    ],
+    "answer": "B",
+    "relatedCards": [86, 90],
+    "explanation": "LLMs are stateless; developers must include the relevant conversation history in each API call to maintain context."
+  },
+  {
+    "id": 15,
+    "question": "In Claude Code, what is the primary difference between CLAUDE.md and a Skill?",
+    "options": [
+      "A) CLAUDE.md is for personal use, while Skills are for teams.",
+      "B) CLAUDE.md loads into every conversation, while Skills load on-demand based on the task.",
+      "C) Skills require a paid subscription, while CLAUDE.md is free.",
+      "D) CLAUDE.md defines tools, while Skills only define system prompts."
+    ],
+    "answer": "B",
+    "relatedCards": [46, 51, 58],
+    "explanation": "CLAUDE.md provides base context for every session, while Skills are specialized and activated when needed."
+  },
+  {
+    "id": 16,
+    "question": "What is a \"Model Grader\" in the context of prompt evaluation?",
+    "options": [
+      "A) A human expert who manually scores the accuracy of AI responses.",
+      "B) A programmatic script that checks for the presence of specific keywords.",
+      "C) A second, often more capable AI model used to evaluate the primary model’s output.",
+      "D) A leaderboard that ranks models based on their inference speed."
+    ],
+    "answer": "C",
+    "relatedCards": [69, 77, 88],
+    "explanation": "Model graders use a more powerful model (e.g., Claude 3.5 Opus) to score the outputs of a model under test."
+  },
+  {
+    "id": 17,
+    "question": "You are building an app that summarizes legal documents. Users must be able to verify which paragraph a summary came from. Which feature should you use?",
+    "options": [
+      "A) Prompt Caching",
+      "B) Citations",
+      "C) Extended Thinking",
+      "D) Batch Tooling"
+    ],
+    "answer": "B",
+    "relatedCards": [86, 93],
+    "explanation": "Citations allow the model to provide specific references to the source material provided in the context."
+  },
+  {
+    "id": 18,
+    "question": "What does the \"Batch Tool\" (or computer_use style multi-calls) primarily solve in orchestration?",
+    "options": [
+      "A) It allows Claude to run code in an un-sandboxed environment.",
+      "B) It reduces latency by allowing Claude to issue multiple tool calls in a single turn.",
+      "C) It increases the accuracy of mathematical calculations.",
+      "D) It encrypts tool parameters before they are sent to the server."
+    ],
+    "answer": "B",
+    "relatedCards": [16, 44],
+    "explanation": "Batching tool calls allows the model to request several actions at once, reducing the number of round-trips needed."
+  },
+  {
+    "id": 19,
+    "question": "Why is \"Environment Inspection\" critical for an autonomous agent?",
+    "options": [
+      "A) It allows the agent to see the results of its previous actions and adjust its plan.",
+      "B) It helps the agent identify the hardware specifications of the host machine.",
+      "C) It reduces the cost of the API calls by caching local state.",
+      "D) It prevents the agent from making tool calls that are too expensive."
+    ],
+    "answer": "A",
+    "relatedCards": [1, 12, 25],
+    "explanation": "Agents need to 'Perceive' the effects of their 'Acts' to correctly 'Think' about the next step in the loop."
+  },
+  {
+    "id": 20,
+    "question": "You want to use Claude 3.7 Sonnet’s \"Extended Thinking\" feature. What should you expect in the API response?",
+    "options": [
+      "A) A hidden internal log that is only accessible via the Anthropic Console.",
+      "B) A response containing both the reasoning process and the final answer.",
+      "C) A significant reduction in token usage for complex math problems.",
+      "D) A set of Python code blocks that the model executed internally."
+    ],
+    "answer": "B",
+    "relatedCards": [71, 85],
+    "explanation": "Extended Thinking allows the model to output its internal reasoning process alongside the final response."
+  },
+  {
+    "id": 21,
+    "question": "When designing an MCP resource for a documentation system, what is the best way to handle dynamic paths like docs://manual/chapter-1?",
+    "options": [
+      "A) Create a unique static resource for every possible chapter.",
+      "B) Use a templated resource with parameters in the URI.",
+      "C) Use a Tool instead of a Resource for all document access.",
+      "D) Hardcode the documents into the MCP server's prompt."
+    ],
+    "answer": "B",
+    "relatedCards": [35, 42],
+    "explanation": "MCP resource templates allow for dynamic URI schemes that can map to various data points based on parameters."
+  },
+  {
+    "id": 22,
+    "question": "Which prompt engineering technique is specifically designed to provide Claude with \"gold standard\" examples of the desired output?",
+    "options": [
+      "A) Chain of Thought",
+      "B) Being clear and direct",
+      "C) Few-shot (one-shot or multi-shot) prompting",
+      "D) XML Tagging"
+    ],
+    "answer": "C",
+    "relatedCards": [66, 73],
+    "explanation": "Few-shot prompting involves providing example input-output pairs to guide the model toward the correct format and quality."
+  },
+  {
+    "id": 23,
+    "question": "You are building a high-volume support bot. You use the same 5,000-token instruction set for every customer query. Which feature provides the most cost optimization?",
+    "options": [
+      "A) PDF processing",
+      "B) Prompt Caching",
+      "C) Response Streaming",
+      "D) Model Grading"
+    ],
+    "answer": "B",
+    "relatedCards": [90, 93],
+    "explanation": "Prompt Caching allows you to reuse large blocks of text (like system instructions) across many requests at a significantly reduced cost."
+  },
+  {
+    "id": 24,
+    "question": "In the tool use workflow, what happens immediately after Claude provides a tool_use block in its response?",
+    "options": [
+      "A) Claude provides the final answer to the user.",
+      "B) The client-side application executes the code/tool and sends the result back to Claude.",
+      "C) Claude automatically retries the tool if it detects an error.",
+      "D) The API connection is terminated to save tokens."
+    ],
+    "answer": "B",
+    "relatedCards": [11, 14, 32],
+    "explanation": "The API client is responsible for executing the requested tool and sending the output back to the model as a 'tool_result' message."
+  },
+  {
+    "id": 25,
+    "question": "Which of the following is a key security limitation of the built-in Code Execution tool?",
+    "options": [
+      "A) It can only execute Python 2.7 code.",
+      "B) It runs in a sandbox with no network access.",
+      "C) It cannot perform basic mathematical operations.",
+      "D) It requires the user to manually approve every line of code."
+    ],
+    "answer": "B",
+    "relatedCards": [11, 24, 79],
+    "explanation": "The built-in code execution environment is sandboxed and isolated from the network to prevent malicious use."
+  },
+  {
+    "id": 26,
+    "question": "You are designing a complex orchestration involving a \"Planner\" model and several \"Worker\" models. Which pattern is this?",
+    "options": [
+      "A) Single-prompt chain",
+      "B) Parallel sub-agents (Orchestrator-Workers)",
+      "C) Simple linear workflow",
+      "D) Prompt Caching hierarchy"
+    ],
+    "answer": "B",
+    "relatedCards": [2, 8, 16],
+    "explanation": "The Orchestrator-Workers pattern uses a central planner to delegate tasks to multiple specialized sub-agents."
+  },
+  {
+    "id": 27,
+    "question": "An MCP Client needs to discover which tools an MCP Server supports. Which message type is used?",
+    "options": [
+      "A) CallToolRequest",
+      "B) ListToolsRequest",
+      "C) InitializeRequest",
+      "D) GetResourceRequest"
+    ],
+    "answer": "B",
+    "relatedCards": [34, 36],
+    "explanation": "MCP clients use 'list/tools' to discover the available capabilities of an MCP server."
+  },
+  {
+    "id": 28,
+    "question": "If you want Claude to be as deterministic and predictable as possible for a data extraction task, what temperature should you set?",
+    "options": [
+      "A) 1.0",
+      "B) 0.5",
+      "C) 0.0",
+      "D) -1.0"
+    ],
+    "answer": "C",
+    "relatedCards": [82, 98],
+    "explanation": "Setting temperature to 0.0 minimizes randomness, making the model's outputs more deterministic."
+  },
+  {
+    "id": 29,
+    "question": "What is the recommended way to test an MCP server’s tools locally before deploying to an app?",
+    "options": [
+      "A) Connect it to the production Claude API immediately.",
+      "B) Use the MCP Inspector (e.g., via mcp dev).",
+      "C) Manually type the JSON tool calls in a terminal.",
+      "D) Send the server code to Claude and ask if it looks correct."
+    ],
+    "answer": "B",
+    "relatedCards": [34, 43, 45],
+    "explanation": "The MCP Inspector is a developer tool used to interact with and debug MCP servers in a controlled environment."
+  },
+  {
+    "id": 30,
+    "question": "You are using Claude Code and want it to follow specific brand guidelines (colors, fonts) only when you are working on the \"frontend\" directory. Where should you put these instructions?",
+    "options": [
+      "A) In a global skill in ~/.claude/skills.",
+      "B) In a project skill in .claude/skills/brand-style/SKILL.md.",
+      "C) In the root CLAUDE.md.",
+      "D) In the .gitignore file."
+    ],
+    "answer": "B",
+    "relatedCards": [53, 56],
+    "explanation": "Project-specific skills allow for directory-scoped instructions and tools."
+  },
+  {
+    "id": 31,
+    "question": "When evaluating prompt performance, why is it better to ask a Model Grader for \"Reasoning\" before the \"Score\"?",
+    "options": [
+      "A) It makes the API call cheaper.",
+      "B) It forces the grader model to \"think\" through the evaluation, leading to more accurate scoring.",
+      "C) It allows the grader to skip the scoring step if the reasoning is long enough.",
+      "D) Reasoning is required by the Anthropic terms of service for all evaluations."
+    ],
+    "answer": "B",
+    "relatedCards": [71, 85, 88],
+    "explanation": "Just like standard chain-of-thought, asking for reasoning first improves the quality of the final evaluation."
+  },
+  {
+    "id": 32,
+    "question": "Which of these is a required parameter for a successful messages API call?",
+    "options": [
+      "A) user_id",
+      "B) max_tokens",
+      "C) temperature",
+      "D) stop_sequences"
+    ],
+    "answer": "B",
+    "relatedCards": [83, 90],
+    "explanation": "The Anthropic Messages API requires 'model', 'messages', and 'max_tokens' for every request."
+  },
+  {
+    "id": 33,
+    "question": "You want Claude to reference a specific local file in a conversation without uploading it every time. Which feature (currently in preview) allows this?",
+    "options": [
+      "A) Tool Use",
+      "B) Files API",
+      "C) Prompt Caching",
+      "D) MCP Resources"
+    ],
+    "answer": "D",
+    "relatedCards": [35, 93],
+    "explanation": "MCP Resources allow an AI client to access external data points (like local files) through a standardized interface."
+  },
+  {
+    "id": 34,
+    "question": "In an Agentic system, \"Escalation\" usually occurs when:",
+    "options": [
+      "A) The model’s confidence score falls below a certain threshold.",
+      "B) The user types in all capital letters.",
+      "C) The conversation reaches the maximum token limit.",
+      "D) The model suggests a tool that the client has not implemented."
+    ],
+    "answer": "A",
+    "relatedCards": [15, 87, 88],
+    "explanation": "Escalation to a human or higher-level agent is triggered when the primary agent cannot determine a high-confidence solution."
+  },
+  {
+    "id": 35,
+    "question": "When structuring a Tool's JSON schema, what is the purpose of the description field for each property?",
+    "options": [
+      "A) To show the user what the tool is doing.",
+      "B) To help Claude understand exactly what data to provide for that argument.",
+      "C) To provide a legal disclaimer for the tool's use.",
+      "D) To define the CSS styling for the tool's output in the UI."
+    ],
+    "answer": "B",
+    "relatedCards": [35, 37, 68],
+    "explanation": "Descriptions in the tool schema are crucial 'prompts' that tell the LLM what each parameter does and how to use it."
+  },
+  {
+    "id": 36,
+    "question": "A prompt that works for \"Summarize this\" fails when the input text is a 50-page PDF. What is the most likely architectural fix?",
+    "options": [
+      "A) Increase the temperature to handle the complexity.",
+      "B) Use XML tags to wrap the long document and provide specific extraction instructions.",
+      "C) Switch to a smaller model to process the text faster.",
+      "D) Remove all few-shot examples to save space."
+    ],
+    "answer": "B",
+    "relatedCards": [68, 75, 90],
+    "explanation": "Clear structural formatting and specific instructions help the model manage large context windows without getting lost."
+  },
+  {
+    "id": 37,
+    "question": "Which MCP feature is specifically designed to provide high-quality, pre-tested instructions for a common task?",
+    "options": [
+      "A) Resources",
+      "B) Tools",
+      "C) Prompts",
+      "D) Context Blocks"
+    ],
+    "answer": "C",
+    "relatedCards": [35, 73],
+    "explanation": "MCP Prompts are server-side templates that provide a standard way to interact with tools and resources."
+  },
+  {
+    "id": 38,
+    "question": "When using Claude Code, what happens if a request matches the description in a skill's frontmatter?",
+    "options": [
+      "A) Claude asks the user for permission to use the skill.",
+      "B) The skill is automatically loaded into the conversation context.",
+      "C) The skill replaces the CLAUDE.md file temporarily.",
+      "D) Claude ignores the skill if a slash command is also available."
+    ],
+    "answer": "B",
+    "relatedCards": [46, 54, 58],
+    "explanation": "Claude Code uses a routing mechanism that identifies and loads the most relevant skills based on their descriptions."
+  },
+  {
+    "id": 39,
+    "question": "You are building a RAG (Retrieval-Augmented Generation) pipeline. Where does Claude fit in?",
+    "options": [
+      "A) Claude is the vector database where documents are stored.",
+      "B) Claude is the reasoner that uses retrieved text (provided via prompt or tool) to answer questions.",
+      "C) Claude is the embedding model that converts text to numbers.",
+      "D) Claude is the web crawler that finds the documents."
+    ],
+    "answer": "B",
+    "relatedCards": [92, 93],
+    "explanation": "In RAG, Claude acts as the cognitive engine that processes the retrieved information to generate a grounded response."
+  },
+  {
+    "id": 40,
+    "question": "You want to reduce the \"time to first token\" for a user-facing chat app so it feels more responsive. What should you implement?",
+    "options": [
+      "A) Prompt Caching",
+      "B) Response Streaming",
+      "C) Batch Tooling",
+      "D) Model Grading"
+    ],
+    "answer": "B",
+    "relatedCards": [90, 97],
+    "explanation": "Streaming allows you to display parts of the model's response as they are generated, rather than waiting for the entire block."
+  }
+]

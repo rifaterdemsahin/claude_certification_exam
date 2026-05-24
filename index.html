@@ -196,6 +196,46 @@
         .filter-btn:hover { background: var(--border); }
         .filter-btn.active { background: var(--accent-blue); color: var(--bg-primary); border-color: var(--accent-blue); }
 
+        .search-input {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-family: inherit;
+            min-width: 200px;
+            flex-grow: 1;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .search-input:focus {
+            border-color: var(--accent-blue);
+        }
+        .search-container {
+            position: relative;
+            flex-grow: 1;
+            min-width: 250px;
+        }
+        .search-clear {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.2em;
+            display: none;
+        }
+        .search-clear.visible {
+            display: block;
+        }
+        .search-clear:hover {
+            color: var(--accent-red);
+        }
+
         /* Cards */
         .card-grid {
             display: grid;
@@ -1251,6 +1291,7 @@
         let state = {
             activeTab: 'cards',
             filter: 'unmastered',
+            searchQuery: '',
             progress: getProgress(),
             quizIndex: 0,
             quizQuestions: [],
@@ -1260,7 +1301,11 @@
             quizOptions: [],
             rememberIndex: 0,
             showRememberAnswer: false,
-            shuffled: false
+            shuffled: false,
+            examData: [],
+            examIndex: 0,
+            examSelected: null,
+            examShowExplanation: false
         };
 
         // ================== MULTIPLAYER STATE ==================
@@ -1371,6 +1416,7 @@
                     <button class="nav-tab ${state.activeTab === 'cards' ? 'active' : ''}" onclick="setTab('cards')" style="border-left:4px solid var(--accent-blue);">🧠 Memory Cards</button>
                     <button class="nav-tab ${state.activeTab === 'quiz' ? 'active' : ''}" onclick="setTab('quiz')" style="border-left:4px solid var(--accent-purple);">🎯 Quiz Mode</button>
                     <button class="nav-tab ${state.activeTab === 'remember' ? 'active' : ''}" onclick="setTab('remember')" style="border-left:4px solid var(--accent-green);">🎬 Remember (Slideshow)</button>
+                    <button class="nav-tab ${state.activeTab === 'exam' ? 'active' : ''}" onclick="setTab('exam')" style="border-left:4px solid var(--accent-yellow);">📝 Mock Exam</button>
                     <button class="nav-tab ${state.activeTab === 'multiplayer' ? 'active' : ''}" onclick="setTab('multiplayer')" style="border-left:4px solid var(--accent-red);">🎮 Multiplayer</button>
                 </div>
                 <div class="nav-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px;opacity:0.85;">
@@ -1388,13 +1434,26 @@
                 : state.filter === 'unmastered' ? questionsData.filter(q => !(state.progress[q.category] || []).includes(q.id))
                 : questionsData.filter(q => q.category === parseInt(state.filter));
 
+            if (state.searchQuery) {
+                filtered = filtered.filter(q => 
+                    q.question.toLowerCase().includes(state.searchQuery) || 
+                    q.answer.toLowerCase().includes(state.searchQuery)
+                );
+            }
+
             const filterButtons = `
                 <div class="filter-bar">
-                    <span>Filter:</span>
-                    <button class="filter-btn ${state.filter === 'all' ? 'active' : ''}" onclick="setFilter('all')">All</button>
-                    <button class="filter-btn ${state.filter === 'unmastered' ? 'active' : ''}" onclick="setFilter('unmastered')">Unmastered</button>
-                    <button class="filter-btn ${state.filter === 'mastered' ? 'active' : ''}" onclick="setFilter('mastered')">Mastered</button>
-                    ${Object.entries(categories).map(([id, cat]) => `<button class="filter-btn ${state.filter === id ? 'active' : ''}" onclick="setFilter('${id}')">${cat.name}</button>`).join('')}
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;flex-grow:1;">
+                        <span>Filter:</span>
+                        <button class="filter-btn ${state.filter === 'all' ? 'active' : ''}" onclick="setFilter('all')">All</button>
+                        <button class="filter-btn ${state.filter === 'unmastered' ? 'active' : ''}" onclick="setFilter('unmastered')">Unmastered</button>
+                        <button class="filter-btn ${state.filter === 'mastered' ? 'active' : ''}" onclick="setFilter('mastered')">Mastered</button>
+                        ${Object.entries(categories).map(([id, cat]) => `<button class="filter-btn ${state.filter === id ? 'active' : ''}" onclick="setFilter('${id}')">${cat.name}</button>`).join('')}
+                    </div>
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search questions..." value="${escapeHtml(state.searchQuery)}" oninput="handleSearch(this.value)">
+                        <button class="search-clear ${state.searchQuery ? 'visible' : ''}" onclick="handleSearch('')" title="Clear search">&times;</button>
+                    </div>
                 </div>`;
 
             if (state.shuffled) {
@@ -1489,6 +1548,87 @@
                         </div>
                     </div>
                 </div>`;
+        }
+
+        function renderExam() {
+            if (state.examData.length === 0) {
+                return `
+                    <div class="quiz-container">
+                        <div class="quiz-card" style="text-align:center">
+                            <h2 style="margin-bottom:16px">Loading Exam Data...</h2>
+                            <p style="color:var(--text-secondary)">Please wait while we fetch the questions.</p>
+                        </div>
+                    </div>`;
+            }
+
+            const q = state.examData[state.examIndex];
+            
+            let optionsHtml = q.options.map((opt) => {
+                const optLetter = opt.charAt(0);
+                let cls = 'quiz-option';
+                if (state.examShowExplanation) {
+                    if (optLetter === q.answer) cls += ' correct';
+                    else if (optLetter === state.examSelected) cls += ' incorrect';
+                }
+                return `<button class="${cls}" onclick="selectExamOption('${optLetter}')" ${state.examShowExplanation ? 'disabled' : ''}>${escapeHtml(opt)}</button>`;
+            }).join('');
+
+            let explanationHtml = '';
+            if (state.examShowExplanation) {
+                const isCorrect = state.examSelected === q.answer;
+                explanationHtml = `
+                    <div class="quiz-explanation" style="border-left-color: ${isCorrect ? 'var(--accent-green)' : 'var(--accent-red)'}">
+                        <strong>${isCorrect ? 'Correct!' : 'Incorrect'}</strong>
+                        <p style="margin-top:8px">${escapeHtml(q.explanation)}</p>
+                        ${q.relatedCards && q.relatedCards.length > 0 ? `
+                            <div style="margin-top:12px; font-size: 0.85em; color: var(--text-secondary);">
+                                <strong>Related Memory Cards:</strong> 
+                                ${q.relatedCards.map(cardId => `<span class="card-footnote" style="position:static;margin-left:8px;" onclick="showCardModal(${cardId})">#${cardId}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                    </div>`;
+            }
+
+            return `
+                <div class="quiz-container">
+                    <div class="quiz-card">
+                        <div class="quiz-meta">
+                            <span class="card-category cat-1">CCA-F Master Mock Exam</span>
+                            <span style="color:#64748b">Question ${state.examIndex + 1} of ${state.examData.length}</span>
+                        </div>
+                        <div class="quiz-question">${escapeHtml(q.question)}</div>
+                        <div class="quiz-options">${optionsHtml}</div>
+                        ${explanationHtml}
+                        <div class="quiz-nav">
+                            <button onclick="prevExam()" ${state.examIndex === 0 ? 'disabled' : ''}>Previous</button>
+                            <button onclick="nextExam()" ${state.examIndex === state.examData.length - 1 ? 'disabled' : ''}>Next</button>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        function selectExamOption(letter) {
+            state.examSelected = letter;
+            state.examShowExplanation = true;
+            render();
+        }
+
+        function nextExam() {
+            if (state.examIndex < state.examData.length - 1) {
+                state.examIndex++;
+                state.examSelected = null;
+                state.examShowExplanation = false;
+                render();
+            }
+        }
+
+        function prevExam() {
+            if (state.examIndex > 0) {
+                state.examIndex--;
+                state.examSelected = null;
+                state.examShowExplanation = false;
+                render();
+            }
         }
 
         function renderRemember() {
@@ -1718,6 +1858,14 @@
                 state.quizShowExplanation = false;
                 state.quizShowHint = false;
                 generateQuizOptions();
+            } else if (tab === 'exam' && state.examData.length === 0) {
+                fetch('exam.json')
+                    .then(res => res.json())
+                    .then(data => {
+                        state.examData = data;
+                        render();
+                    })
+                    .catch(err => console.error('Error loading exam data:', err));
             }
             render();
         }
@@ -1735,6 +1883,11 @@
                 if (r.id !== q.id && !wrong.includes(r.answer)) wrong.push(r.answer);
             }
             state.quizOptions = [...wrong, q.answer].sort(() => Math.random() - 0.5);
+        }
+
+        function handleSearch(query) {
+            state.searchQuery = query.toLowerCase();
+            render();
         }
 
         function setFilter(filter) {
@@ -2482,6 +2635,8 @@
         }
         // ================== MAIN RENDER ==================
         function render() {
+            const searchVal = document.activeElement && document.activeElement.classList.contains('search-input') ? document.activeElement.value : null;
+
             const app = document.getElementById('app');
             let content = renderHeader() + '<div class="container">';
             content += renderStats();
@@ -2491,6 +2646,7 @@
             if (state.activeTab === 'cards') content += renderMemoryCards();
             else if (state.activeTab === 'quiz') content += renderQuiz();
             else if (state.activeTab === 'remember') content += renderRemember();
+            else if (state.activeTab === 'exam') content += renderExam();
             else if (state.activeTab === 'analyse') content += renderAnalyse();
             else if (state.activeTab === 'evaluate') content += renderEvaluate();
             else if (state.activeTab === 'create') content += renderCreate();
@@ -2501,6 +2657,15 @@
 
             content += '</div>' + renderFooter();
             app.innerHTML = content;
+
+            // Restore search focus
+            if (searchVal !== null) {
+                const searchInput = document.querySelector('.search-input');
+                if (searchInput) {
+                    searchInput.focus();
+                    searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+                }
+            }
 
             // Re-run mermaid if we are on the create tab
             if (state.activeTab === 'create' && typeof mermaid !== 'undefined') {
