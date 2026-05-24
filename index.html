@@ -291,11 +291,13 @@
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             width: 100%; height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            background: var(--bg-card);
             border-radius: 12px;
             animation: fadeOutAfter4s 4.5s forwards;
             z-index: 5;
             pointer-events: none;
+            padding: 8px;
         }
         @keyframes fadeOutAfter4s {
             0%, 88.8% { opacity: 1; visibility: visible; }
@@ -930,10 +932,11 @@
         }
         .card-modal .card-image {
             width: 100%;
-            max-height: 200px;
-            object-fit: cover;
+            max-height: 400px;
+            object-fit: contain;
             border-radius: 12px;
             margin-bottom: 16px;
+            background: var(--bg-primary);
         }
         .card-modal .card-links {
             display: flex;
@@ -1517,6 +1520,7 @@
                     <div class="bloom-tier tier-analyse">
                         <div class="bloom-tier-label">Analyse</div>
                         <button class="nav-tab ${state.activeTab === 'analyse' ? 'active' : ''}" onclick="setTab('analyse')">🔍 Analyse (Concepts)</button>
+                        <a href="pages/mindmap.html" class="nav-tab" style="text-decoration:none;">🗺️ Memory Palace (Mindmap)</a>
                     </div>
 
                     <!-- Apply -->
@@ -1533,6 +1537,7 @@
                         <button class="nav-tab ${state.activeTab === 'cards' ? 'active' : ''}" onclick="setTab('cards')">🧠 Memory Cards</button>
                         <button class="nav-tab ${state.activeTab === 'remember' ? 'active' : ''}" onclick="setTab('remember')">🎬 Remember (Slideshow)</button>
                         <a href="pages/dictionary.html" class="nav-tab" style="text-decoration:none;">📖 Dictionary</a>
+                        <a href="pages/mindmap.html" class="nav-tab" style="text-decoration:none;">🗺️ Mindmap</a>
                     </div>
                 </nav>
 
@@ -2123,7 +2128,12 @@
                 <div class="card-modal">
                     <span class="card-category cat-${q.category}" style="position:static;display:inline-block;margin-bottom:12px;">${categories[q.category].name}</span>
                     <div class="card-question">${escapeHtml(q.question)}</div>
-                    <img class="card-image" src="${escapeHtml(q.imageUrl || '')}" alt="Visual cue" loading="lazy" onerror="this.style.display='none'" />
+                    <div style="position:relative;display:inline-block;width:100%;">
+                        <a href="${escapeHtml(q.imageUrl || '')}" target="_blank" rel="noopener noreferrer" style="display:block;width:100%;" title="Click to open full image">
+                            <img class="card-image" src="${escapeHtml(q.imageUrl || '')}" alt="Visual cue" loading="lazy" onerror="this.style.display='none'" style="cursor:zoom-in;" />
+                        </a>
+                        <a href="${escapeHtml(q.imageUrl || '')}" target="_blank" rel="noopener noreferrer" style="position:absolute;top:8px;right:8px;background:rgba(15,23,42,0.8);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:0.75em;color:var(--accent-blue);text-decoration:none;z-index:10;">↗ Open</a>
+                    </div>
                     <div class="card-links">
                         <a href="${escapeHtml(q.googleImageUrl)}" target="_blank" rel="noopener noreferrer">🖼️ Google Images</a>
                         <a href="${escapeHtml(q.relatedVideoUrl)}" target="_blank" rel="noopener noreferrer">📹 Related Videos</a>

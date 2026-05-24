@@ -55,6 +55,7 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
 - **Pages:** Auxiliary HTML pages in `pages/`.
   - `pages/dictionary.html`
   - `pages/markdown_renderer.html`
+  - `pages/mindmap.html`
 - **Scripts:** Automation scripts in `scripts/`.
 - **AI Guidelines:** Agent-specific instructions live in `.kilo/agent/`.
 

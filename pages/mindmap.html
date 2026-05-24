@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Card Mindmap — Claude Dev Cert</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --border: #334155;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444;
+            --accent-orange: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        header {
+            text-align: center;
+            padding: 24px 16px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        header h1 {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+        header p { color: var(--text-secondary); font-size: 0.9em; margin-top: 4px; }
+        .back-btn {
+            display: inline-block;
+            margin: 16px auto 0;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 16px 40px; }
+        .category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        .cat-tab {
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .cat-tab:hover { border-color: var(--accent-blue); color: var(--text-primary); }
+        .cat-tab.active { background: var(--accent-blue); color: #0f172a; border-color: var(--accent-blue); }
+        .mermaid {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            overflow: auto;
+            min-height: 500px;
+        }
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .legend-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 0.85em;
+        }
+        .legend-item strong { color: var(--accent-blue); }
+        .legend-item .emoji { font-size: 1.2em; margin-right: 6px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🧠 Memory Card Mindmap</h1>
+        <p>Visual relationship map of all 100 memory cards grouped by competency</p>
+        <a href="../index.html" class="back-btn">← Back to App</a>
+    </header>
+
+    <div class="container">
+        <div class="category-tabs">
+            <button class="cat-tab active" onclick="showMap('all')">All Cards</button>
+            <button class="cat-tab" onclick="showMap('cat1')">Agentic Architecture</button>
+            <button class="cat-tab" onclick="showMap('cat2')">Tool Design & MCP</button>
+            <button class="cat-tab" onclick="showMap('cat3')">Claude Code Workflows</button>
+            <button class="cat-tab" onclick="showMap('cat4')">Prompt Engineering</button>
+            <button class="cat-tab" onclick="showMap('cat5')">Context & Reliability</button>
+        </div>
+
+        <div id="mindmap-container" class="mermaid"></div>
+
+        <div class="legend" id="legend"></div>
+    </div>
+
+    <script>
+        mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+
+        const categories = {
+            1: { name: "Agentic Architecture", color: "#ef4444" },
+            2: { name: "Tool Design & MCP", color: "#3b82f6" },
+            3: { name: "Claude Code Workflows", color: "#10b981" },
+            4: { name: "Prompt Engineering", color: "#f59e0b" },
+            5: { name: "Context & Reliability", color: "#a855f7" }
+        };
+
+        const cards = [
+            {id:1, cat:1, emoji:"🔄🧠", text:"Agentic Loop", rel:"foundation→2,3,5,6,10,11,12,13,14"},
+            {id:2, cat:1, emoji:"👑🤖", text:"Coordinator-Subagent", rel:"routes→3,8,10,16,17,18"},
+            {id:3, cat:1, emoji:"🧩📋", text:"Task Decomposition", rel:"feeds→16,17,18,44"},
+            {id:4, cat:1, emoji:"💾🗂️", text:"Session Management", rel:"enables→19,20,21,86,90"},
+            {id:5, cat:1, emoji:"➡️🔄", text:"Prompt vs Agent", rel:"contrasts→1,7"},
+            {id:6, cat:1, emoji:"🤖⚡", text:"Autonomous Cycle", rel:"runs→1,26,27"},
+            {id:7, cat:1, emoji:"🗑️📝", text:"Stateless", rel:"opposite→4,19,21,58,86"},
+            {id:8, cat:1, emoji:"🔧👷", text:"Sub-agent", rel:"works under→2,10"},
+            {id:9, cat:1, emoji:"🪢📜", text:"Sinthome", rel:"stabilizes→46,51,52,56"},
+            {id:10, cat:1, emoji:"🗺️📍", text:"Routing Logic", rel:"directs→2,8,11,34"},
+            {id:11, cat:1, emoji:"🔨📞", text:"Tool Call", rel:"uses→28,34,35,36"},
+            {id:12, cat:1, emoji:"👀📡", text:"Observation", rel:"starts→1,13"},
+            {id:13, cat:1, emoji:"🧠⚙️", text:"Reasoning", rel:"processes→12,14,71,85"},
+            {id:14, cat:1, emoji:"🎬🏃", text:"Execution", rel:"ends→1,13,26"},
+            {id:15, cat:1, emoji:"🚨🙋", text:"Escalation", rel:"triggers→27,87"},
+            {id:16, cat:1, emoji:"🏃‍♂️🏃‍♀️", text:"Parallel Execution", rel:"speeds→3,18,44"},
+            {id:17, cat:1, emoji:"⛓️🔗", text:"Sequential Execution", rel:"orders→3,18,62"},
+            {id:18, cat:1, emoji:"🤝📦", text:"Task Handoff", rel:"passes→3,16,17"},
+            {id:19, cat:1, emoji:"🧠💾", text:"Agent Memory", rel:"stores→20,21,22,86"},
+            {id:20, cat:1, emoji:"💬🗨️", text:"Short-term Memory", rel:"session→4,19,86,90"},
+            {id:21, cat:1, emoji:"💽🏛️", text:"Long-term Memory", rel:"persists→19,86,91,92,93"},
+            {id:22, cat:1, emoji:"📢↩️", text:"Feedback Loop", rel:"improves→1,19,32,69,76"},
+            {id:23, cat:1, emoji:"🎯🎯", text:"Goal-oriented", rel:"drives→1,6,24,25"},
+            {id:24, cat:1, emoji:"🚧⛔", text:"Agentic Boundary", rel:"limits→23,27,39,95"},
+            {id:25, cat:1, emoji:"🗺️🔄", text:"Re-planning", rel:"adjusts→1,6,23,26"},
+            {id:26, cat:1, emoji:"🏁✋", text:"Termination", rel:"stops→6,14,23,25"},
+            {id:27, cat:1, emoji:"👤🤖👤", text:"Human-in-the-loop", rel:"overrides→15,24,87"},
+            {id:28, cat:2, emoji:"🌐📡", text:"MCP", rel:"standardizes→29,34,35,45"},
+            {id:29, cat:2, emoji:"🔌🔄", text:"Protocol over API", rel:"abstracts→28,34,44,45"},
+            {id:30, cat:2, emoji:"📻🔇", text:"Signal-to-Noise", rel:"filters→33,37,68,77"},
+            {id:31, cat:2, emoji:"🛡️📋", text:"Structured Error", rel:"handles→32,38,39,43,89"},
+            {id:32, cat:2, emoji:"🔄🩹", text:"Self-correction", rel:"fixes→22,31,69,84"},
+            {id:33, cat:2, emoji:"🎈📉", text:"Context Bloat Prevention", rel:"optimizes→30,40,83,90,91"},
+            {id:34, cat:2, emoji:"🖥️📡", text:"MCP Server", rel:"serves→28,35,36"},
+            {id:35, cat:2, emoji:"🛠️📚📝", text:"MCP Primitives", rel:"composes→28,34,37,44"},
+            {id:36, cat:2, emoji:"🔍📋", text:"Tool Discovery", rel:"finds→28,34,35"},
+            {id:37, cat:2, emoji:"📐✅", text:"JSON Schema", rel:"defines→35,38,42,67,78"},
+            {id:38, cat:2, emoji:"🔒📝", text:"Parameter Validation", rel:"checks→31,37,69,77,78"},
+            {id:39, cat:2, emoji:"🛟📦", text:"Tool Fallback", rel:"recovers→31,43,89,96"},
+            {id:40, cat:2, emoji:"⏱️🚦", text:"Rate Limiting", rel:"protects→43,95,97"},
+            {id:41, cat:2, emoji:"♻️🔄", text:"Idempotency", rel:"safety→39,98"},
+            {id:42, cat:2, emoji:"📈🔄", text:"Schema Evolution", rel:"versions→37,44"},
+            {id:43, cat:2, emoji:"⏳⌛", text:"Timeout Handling", rel:"limits→31,39,40,95"},
+            {id:44, cat:2, emoji:"🧱🏗️", text:"Tool Composition", rel:"builds→3,16,35,42"},
+            {id:45, cat:2, emoji:"🤝🌍", text:"Interoperability", rel:"universal→28,29"},
+            {id:46, cat:3, emoji:"📜⚖️", text:"CLAUDE.md", rel:"governs→47,48,49,52,53,56,57,58,59"},
+            {id:47, cat:3, emoji:"📝🗺️", text:"Plan Mode", rel:"plans→46,48,49,62"},
+            {id:48, cat:3, emoji:"🔨🏗️", text:"Act Mode", rel:"executes→46,47,49,61,63,64,65"},
+            {id:49, cat:3, emoji:"📋✅", text:"Plan then Act", rel:"workflow→46,47,48,62"},
+            {id:50, cat:3, emoji:"⚡📝", text:"Custom Slash", rel:"shortcut→46,52,54"},
+            {id:51, cat:3, emoji:"🪢📜", text:"Sinthome", rel:"anchors→9,46,52,56"},
+            {id:52, cat:3, emoji:"📋🔧", text:"CLAUDE.md Contents", rel:"details→46,50,53"},
+            {id:53, cat:3, emoji:"🏛️📜", text:"CLAUDE.md Hierarchy", rel:"layers→46,52,56"},
+            {id:54, cat:3, emoji:"⚡🎯", text:"Create Custom Slash", rel:"configures→50,52"},
+            {id:55, cat:3, emoji:"🔄🚀", text:"CI/CD Integration", rel:"automates→61,62,64,97"},
+            {id:56, cat:3, emoji:"🏗️📚", text:"Rule Layers", rel:"structures→46,51,53,57"},
+            {id:57, cat:3, emoji:"❌🔄", text:"Rule Violation", rel:"corrects→46,56"},
+            {id:58, cat:3, emoji:"🧠💾", text:"Context Persistence", rel:"remembers→4,7,21,86"},
+            {id:59, cat:3, emoji:"✏️📜", text:"Update CLAUDE.md", rel:"evolves→46,57"},
+            {id:60, cat:3, emoji:"🎬📝", text:"Master Prompt", rel:"guides→46,66,70"},
+            {id:61, cat:3, emoji:"🤖⚙️", text:"Automation Scripting", rel:"scripts→48,55,62"},
+            {id:62, cat:3, emoji:"⛓️🔗", text:"Workflow Chaining", rel:"links→17,47,49,55,61"},
+            {id:63, cat:3, emoji:"👀💻", text:"Code Review", rel:"reviews→48,65,76,77"},
+            {id:64, cat:3, emoji:"🧪✅", text:"TDD with Claude", rel:"tests→48,69,76"},
+            {id:65, cat:3, emoji:"🔄🔧", text:"Refactoring Mode", rel:"cleans→48,63"},
+            {id:66, cat:4, emoji:"📚🎯", text:"Few-Shot Learning", rel:"teaches→68,70,73,75"},
+            {id:67, cat:4, emoji:"📐🔒", text:"JSON Schema Output", rel:"structures→37,68,72,77,78,85"},
+            {id:68, cat:4, emoji:"📋✅", text:"Explicit Criteria", rel:"specifies→66,69,72,77"},
+            {id:69, cat:4, emoji:"🔄✅", text:"Validation Loop", rel:"checks→31,32,38,64,67,68,76,77,78,84"},
+            {id:70, cat:4, emoji:"🎭🎬", text:"Role Prompting", rel:"persona→60,66,71,81"},
+            {id:71, cat:4, emoji:"🧠📝", text:"Chain-of-Thought", rel:"reasons→13,70,72,85"},
+            {id:72, cat:4, emoji:"📄📊", text:"Output Format Spec", rel:"formats→67,68,71,73,82"},
+            {id:73, cat:4, emoji:"📋🔄", text:"Prompt Templating", rel:"reuses→66,72,75"},
+            {id:74, cat:4, emoji:"🚫📝", text:"Negative Prompting", rel:"excludes→68,79"},
+            {id:75, cat:4, emoji:"💡📖", text:"Context Priming", rel:"sets→66,73,80,81"},
+            {id:76, cat:4, emoji:"🔁✨", text:"Prompt Iteration", rel:"refines→63,64,69,77"},
+            {id:77, cat:4, emoji:"✅🔍", text:"Output Validation", rel:"verifies→30,37,38,63,67,68,69,78"},
+            {id:78, cat:4, emoji:"📐🔍", text:"Schema Validation", rel:"types→37,38,67,69,77"},
+            {id:79, cat:4, emoji:"🛡️💉", text:"Prompt Injection Defense", rel:"secures→24,74,81"},
+            {id:80, cat:4, emoji:"💬🔄", text:"Multi-turn Prompting", rel:"converses→4,20,75"},
+            {id:81, cat:4, emoji:"🤖👤", text:"System vs User Prompts", rel:"layers→70,75,79,82"},
+            {id:82, cat:4, emoji:"🌡️🎲", text:"Temperature", rel:"controls→72,83,84"},
+            {id:83, cat:4, emoji:"📏✂️", text:"Max Tokens", rel:"limits→33,82"},
+            {id:84, cat:4, emoji:"🔄🎯", text:"Retry Logic", rel:"recovers→32,69,82"},
+            {id:85, cat:4, emoji:"🧠📊", text:"Structured Reasoning", rel:"organizes→13,67,71"},
+            {id:86, cat:5, emoji:"💾🕰️", text:"Long-term Context Preservation", rel:"saves→4,7,19,20,21,58,90,91"},
+            {id:87, cat:5, emoji:"🙋🤖", text:"Human Handoff", rel:"escalates→15,27"},
+            {id:88, cat:5, emoji:"📊🎯", text:"Confidence Calibration", rel:"measures→77,89"},
+            {id:89, cat:5, emoji:"🛑🌊", text:"Error Propagation Prevention", rel:"contains→24,31,39,88,95"},
+            {id:90, cat:5, emoji:"🪟📏", text:"Context Window Management", rel:"fits→4,7,20,33,83,86,91,92"},
+            {id:91, cat:5, emoji:"📝✂️", text:"Summarization", rel:"compresses→20,33,86,90"},
+            {id:92, cat:5, emoji:"🔍🧠", text:"Semantic Search", rel:"retrieves→21,90,93"},
+            {id:93, cat:5, emoji:"📚🔍", text:"RAG", rel:"augments→21,86,92"},
+            {id:94, cat:5, emoji:"🔄📉", text:"Graceful Degradation", rel:"fallbacks→39,96"},
+            {id:95, cat:5, emoji:"🏁🚫", text:"Circuit Breaker", rel:"protects→24,40,43,89,97"},
+            {id:96, cat:5, emoji:"📦🔄", text:"Fallback Content", rel:"backup→39,94"},
+            {id:97, cat:5, emoji:"📡🔔", text:"Monitoring & Alerting", rel:"watches→40,55,95,100"},
+            {id:98, cat:5, emoji:"🔄🔄", text:"Request Idempotency", rel:"safe retry→41,84"},
+            {id:99, cat:5, emoji:"💥🔧", text:"Chaos Engineering", rel:"tests→97,100"},
+            {id:100, cat:5, emoji:"🔍📊", text:"Observability", rel:"sees→86,97,99,100"}
+        ];
+
+        function buildMindmap(filterCat) {
+            let lines = ['mindmap'];
+            lines.push('  root(("Claude Dev Cert<br/>100 Memory Cards"))');
+
+            for (let c = 1; c <= 5; c++) {
+                if (filterCat && filterCat !== c) continue;
+                const cat = categories[c];
+                const catCards = cards.filter(card => card.cat === c);
+                lines.push(`    ${cat.name}`);
+
+                catCards.forEach(card => {
+                    const cleanText = card.text.replace(/"/g, '\\"');
+                    lines.push(`      "${card.emoji} ${cleanText}"`);
+                });
+            }
+            return lines.join('\n');
+        }
+
+        function buildFlowchart(filterCat) {
+            let lines = ['flowchart TD'];
+            const styleRoot = 'classDef root fill:#0f172a,stroke:#38bdf8,stroke-width:3px,color:#e2e8f0';
+            const styleCat1 = 'classDef cat1 fill:#1e293b,stroke:#ef4444,stroke-width:2px,color:#e2e8f0';
+            const styleCat2 = 'classDef cat2 fill:#1e293b,stroke:#3b82f6,stroke-width:2px,color:#e2e8f0';
+            const styleCat3 = 'classDef cat3 fill:#1e293b,stroke:#10b981,stroke-width:2px,color:#e2e8f0';
+            const styleCat4 = 'classDef cat4 fill:#1e293b,stroke:#f59e0b,stroke-width:2px,color:#e2e8f0';
+            const styleCat5 = 'classDef cat5 fill:#1e293b,stroke:#a855f7,stroke-width:2px,color:#e2e8f0';
+            lines.push(styleRoot);
+            lines.push(styleCat1);
+            lines.push(styleCat2);
+            lines.push(styleCat3);
+            lines.push(styleCat4);
+            lines.push(styleCat5);
+
+            lines.push(`ROOT["🧠 Claude Dev Cert<br/>100 Memory Cards"]:::root`);
+
+            for (let c = 1; c <= 5; c++) {
+                if (filterCat && filterCat !== c) continue;
+                const cat = categories[c];
+                const nodeId = `CAT${c}`;
+                lines.push(`${nodeId}["${cat.name}"]:::cat${c}`);
+                lines.push(`ROOT --> ${nodeId}`);
+
+                const catCards = cards.filter(card => card.cat === c);
+                catCards.forEach(card => {
+                    const cardId = `Q${card.id}`;
+                    const cleanText = card.text.replace(/"/g, '\\"');
+                    lines.push(`${cardId}["${card.emoji}<br/>${cleanText}"]:::cat${c}`);
+                    lines.push(`${nodeId} --> ${cardId}`);
+                });
+            }
+            return lines.join('\n');
+        }
+
+        let currentFilter = null;
+
+        function showMap(view) {
+            document.querySelectorAll('.cat-tab').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            let filterCat = null;
+            if (view === 'cat1') filterCat = 1;
+            if (view === 'cat2') filterCat = 2;
+            if (view === 'cat3') filterCat = 3;
+            if (view === 'cat4') filterCat = 4;
+            if (view === 'cat5') filterCat = 5;
+            currentFilter = filterCat;
+
+            const container = document.getElementById('mindmap-container');
+            container.innerHTML = '';
+            container.removeAttribute('data-processed');
+
+            const graph = buildFlowchart(filterCat);
+            container.textContent = graph;
+
+            mermaid.init(undefined, container).then(() => {
+                renderLegend(filterCat);
+            });
+        }
+
+        function renderLegend(filterCat) {
+            const legend = document.getElementById('legend');
+            legend.innerHTML = '';
+
+            const visibleCards = filterCat ? cards.filter(c => c.cat === filterCat) : cards;
+
+            visibleCards.forEach(card => {
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+                item.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                        <span class="emoji">${card.emoji}</span>
+                        <strong>Q${card.id}</strong>
+                        <span style="color:${categories[card.cat].color};font-size:0.75em;">${categories[card.cat].name}</span>
+                    </div>
+                    <div style="color:var(--text-secondary);font-size:0.8em;">${card.text}</div>
+                    <div style="color:var(--text-muted);font-size:0.75em;margin-top:4px;">${card.rel}</div>
+                `;
+                legend.appendChild(item);
+            });
+        }
+
+        // Initial render
+        showMap('all');
+        document.querySelector('.cat-tab').classList.add('active');
+    </script>
+</body>
+</html>
