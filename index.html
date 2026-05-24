@@ -1305,7 +1305,8 @@
             examData: [],
             examIndex: 0,
             examSelected: null,
-            examShowExplanation: false
+            examShowExplanation: false,
+            masteryIndex: 0
         };
 
         // ================== MULTIPLAYER STATE ==================
@@ -1417,6 +1418,7 @@
                     <button class="nav-tab ${state.activeTab === 'quiz' ? 'active' : ''}" onclick="setTab('quiz')" style="border-left:4px solid var(--accent-purple);">🎯 Quiz Mode</button>
                     <button class="nav-tab ${state.activeTab === 'remember' ? 'active' : ''}" onclick="setTab('remember')" style="border-left:4px solid var(--accent-green);">🎬 Remember (Slideshow)</button>
                     <button class="nav-tab ${state.activeTab === 'exam' ? 'active' : ''}" onclick="setTab('exam')" style="border-left:4px solid var(--accent-yellow);">📝 Mock Exam</button>
+                    <button class="nav-tab ${state.activeTab === 'mastery' ? 'active' : ''}" onclick="setTab('mastery')" style="border-left:4px solid var(--accent-green);">🚀 Mastery Path</button>
                     <button class="nav-tab ${state.activeTab === 'multiplayer' ? 'active' : ''}" onclick="setTab('multiplayer')" style="border-left:4px solid var(--accent-red);">🎮 Multiplayer</button>
                 </div>
                 <div class="nav-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px;opacity:0.85;">
@@ -1902,11 +1904,82 @@
             render();
         }
 
+        function renderMasteryPath() {
+            return `
+                <div class="fade-in">
+                    <h2 style="text-align:center; margin-bottom:20px;">The Claude Mastery Path 🚀</h2>
+                    <p style="text-align:center; color:var(--text-secondary); max-width:700px; margin: 0 auto 40px;">
+                        A multi-sensory self-learning framework designed to take you from foundational recall to creative AGI orchestration.
+                    </p>
+                    
+                    <div style="max-width:900px; margin: 0 auto;">
+                        <div class="relationship-line">
+                            <div class="rel-icon">🧠</div>
+                            <div class="rel-text">
+                                <strong style="color:var(--accent-blue)">1. Memory Cards: Visual Recall</strong>
+                                <p>Start here to seed your long-term memory. Use visual cues and mnemonics to "anchor" 100 core concepts. This stage is about pattern recognition and foundational vocabulary.</p>
+                            </div>
+                        </div>
+
+                        <div class="relationship-line">
+                            <div class="rel-icon">🎯</div>
+                            <div class="rel-text">
+                                <strong style="color:var(--accent-purple)">2. Quiz Mode: Active Retrieval</strong>
+                                <p>Test your recall through randomized quizzes. Forcing your brain to retrieve information from scratch (active retrieval) is the single most effective way to strengthen neural pathways.</p>
+                            </div>
+                        </div>
+
+                        <div class="relationship-line">
+                            <div class="rel-icon">📝</div>
+                            <div class="rel-text">
+                                <strong style="color:var(--accent-yellow)">3. Mock Exam: Structural Validation</strong>
+                                <p>Transition from concepts to scenarios. The mock exam validates your ability to apply knowledge in exam-style contexts, checking for "blind spots" in your understanding.</p>
+                            </div>
+                        </div>
+
+                        <div class="relationship-line">
+                            <div class="rel-icon">🎮</div>
+                            <div class="rel-text">
+                                <strong style="color:var(--accent-red)">4. Multiplayer: Full-Sensory Immersion</strong>
+                                <p>Learning is social. Discussion, competition, and real-time collaboration activate all senses. Explaining a concept to others (the Feynman Technique) ensures absolute mastery.</p>
+                            </div>
+                        </div>
+
+                        <div class="relationship-line">
+                            <div class="rel-icon">🔍</div>
+                            <div class="rel-text">
+                                <strong style="color:var(--accent-orange)">5. Concepts: Top-Down Synthesis</strong>
+                                <p>Analyze the architecture. Step back and see how components like MCP, Agentic Loops, and Tool Design interact. This stage builds the architectural "mental map" needed for engineering.</p>
+                            </div>
+                        </div>
+
+                        <div class="mermaid-section" style="margin-top:40px; border-color:var(--accent-green)">
+                            <h3>The Path to AGI Orchestration</h3>
+                            <div class="mermaid" style="text-align:center;">
+                                graph TD
+                                    A[Foundational Recall] --> B[Active Retrieval]
+                                    B --> C[Structural Validation]
+                                    C --> D[Multi-Sensory Immersion]
+                                    D --> E[Architectural Synthesis]
+                                    E --> F[Creative Goal: AGI Path]
+                                    style F fill:#0f172a,stroke:#10b981,stroke-width:4px
+                            </div>
+                            <div class="phase-desc" style="margin-top:20px;">
+                                <strong>Your Ultimate Goal:</strong> Beyond certification lies the ability to create. Understanding these 5 stages allows you to orchestrate complex systems that mirror the path toward <strong>Artificial General Intelligence (AGI)</strong>—where agents don't just follow instructions, but reason, plan, and create autonomously.
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
         function showCardModal(id) {
             const q = questionsData.find(x => x.id === id);
             if (!q) return;
             const hint = questionHints[id];
             const isMastered = (state.progress[q.category] || []).includes(q.id);
+            const padId = String(id).padStart(3, '0');
+            const githubEditUrl = `https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/formula/memory/MEM-Q${padId}.md`;
+
             const popup = document.createElement('div');
             popup.className = 'card-modal-overlay';
             const videoHtml = q.youtubeShortUrl ? `
@@ -1919,10 +1992,7 @@
                     <h4 style="color:var(--text-secondary);margin-bottom:8px;">🎧 Audio Explanation</h4>
                     <audio controls src="${escapeHtml(q.audioUrl)}" style="width:100%;"></audio>
                 </div>` : '';
-            const notesHtml = q.notesUrl ? `
-                <div style="margin-top:12px;">
-                    <a href="markdown_renderer.html?url=${encodeURIComponent(q.notesUrl)}&title=${encodeURIComponent(q.uid)}" target="_blank" rel="noopener noreferrer" class="claude-btn" style="background:linear-gradient(135deg, var(--accent-green), #059669);">📝 Open Notes</a>
-                </div>` : '';
+            
             popup.innerHTML = `
                 <div class="card-modal">
                     <span class="card-category cat-${q.category}" style="position:static;display:inline-block;margin-bottom:12px;">${categories[q.category].name}</span>
@@ -1933,7 +2003,9 @@
                         <a href="${escapeHtml(q.relatedVideoUrl)}" target="_blank" rel="noopener noreferrer">📹 Related Videos</a>
                         <a href="https://claude.ai/new?q=${encodeURIComponent(q.claudePrompt || '')}" target="_blank" rel="noopener noreferrer">🎓 Ask Claude</a>
                     </div>
-                    ${notesHtml}
+                    <div style="margin-top:12px;">
+                        <a href="${githubEditUrl}" target="_blank" rel="noopener noreferrer" class="claude-btn" style="background:linear-gradient(135deg, var(--accent-green), #059669);">📝 Open Deep Dive (Edit)</a>
+                    </div>
                     <div class="card-answer">${escapeHtml(q.answer)}</div>
                     ${hint ? `<div class="memory-aid"><div class="emoji">${hint.emoji}</div><div class="text">${escapeHtml(hint.memory)}</div></div>` : ''}
                     ${videoHtml}
@@ -2649,6 +2721,7 @@
             else if (state.activeTab === 'quiz') content += renderQuiz();
             else if (state.activeTab === 'remember') content += renderRemember();
             else if (state.activeTab === 'exam') content += renderExam();
+            else if (state.activeTab === 'mastery') content += renderMasteryPath();
             else if (state.activeTab === 'analyse') content += renderAnalyse();
             else if (state.activeTab === 'evaluate') content += renderEvaluate();
             else if (state.activeTab === 'create') content += renderCreate();
