@@ -2173,9 +2173,11 @@
             else prog[category].push(questionId);
             state.progress = prog;
             saveProgress(prog);
-            btn.textContent = (idx > -1) ? 'Mark as Mastered' : '✅ Mastered';
-            btn.classList.toggle('mastered');
             render();
+            // Close current popup and open next card
+            btn.closest('.card-modal-overlay').remove();
+            const nextId = questionId >= 100 ? 1 : questionId + 1;
+            showCardModal(nextId);
         }
 
         function toggleMastery(category, questionId) {
