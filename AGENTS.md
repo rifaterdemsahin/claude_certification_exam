@@ -57,6 +57,7 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
   - `pages/markdown_renderer.html`
   - `pages/mindmap.html`
   - `pages/tactics.html`
+  - `pages/agi-path.html`
 - **Scripts:** Automation scripts in `scripts/`.
 - **AI Guidelines:** Agent-specific instructions live in `.kilo/agent/`.
 

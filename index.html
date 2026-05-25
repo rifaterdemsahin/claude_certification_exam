@@ -1505,7 +1505,7 @@
                     <!-- Create -->
                     <div class="bloom-tier tier-create">
                         <div class="bloom-tier-label">Create</div>
-                        <button class="nav-tab ${state.activeTab === 'create' ? 'active' : ''}" onclick="setTab('create')">🚀 Create (AGI Path)</button>
+                        <a href="pages/agi-path.html" class="nav-tab" style="text-decoration:none;">🚀 AGI Path</a>
                         <button class="nav-tab ${state.activeTab === 'mastery' ? 'active' : ''}" onclick="setTab('mastery')">🚀 Mastery Path</button>
                     </div>
 
@@ -1846,79 +1846,6 @@
                                 </div>
                             </div>
                         `).join('')}
-                    </div>
-                </div>`;
-        }
-
-        function renderCreate() {
-            return `
-                <div class="fade-in">
-                    <h2 style="text-align:center; margin-bottom:20px;">The Path to AGI</h2>
-                    <p style="text-align:center; color:var(--text-secondary); max-width:600px; margin: 0 auto 30px;">Synthesizing certification concepts to visualize the evolution toward Artificial General Intelligence.</p>
-                    
-                    <div class="mermaid-section">
-                        <h3>Phase 1: Static Intelligence</h3>
-                        <pre class="mermaid">
-                        graph LR
-                            A[Input Prompt] --> B(LLM)
-                            B --> C[Static Output]
-                        </pre>
-                        <div class="phase-desc">Basic request-response pattern. The model is a passive knowledge engine.</div>
-                    </div>
-
-                    <div class="mermaid-section">
-                        <h3>Phase 2: Tool-Augmented Agency</h3>
-                        <pre class="mermaid">
-                        graph LR
-                            A[User Goal] --> B(LLM)
-                            B --> C{Tool Call?}
-                            C -- Yes --> D[MCP Server]
-                            D --> E[Execution]
-                            E --> B
-                            C -- No --> F[Final Answer]
-                        </pre>
-                        <div class="phase-desc">Models gain 'hands' through MCP, allowing them to fetch data and perform actions.</div>
-                    </div>
-
-                    <div class="mermaid-section">
-                        <h3>Phase 3: Autonomous Loops</h3>
-                        <pre class="mermaid">
-                        graph TD
-                            A[Complex Task] --> B[Perceive]
-                            B --> C[Think/Reason]
-                            C --> D[Act/Tool]
-                            D --> E{Goal Met?}
-                            E -- No --> B
-                            E -- Yes --> F[Done]
-                        </pre>
-                        <div class="phase-desc">Iterative reasoning cycles allow for self-correction and complex problem solving.</div>
-                    </div>
-
-                    <div class="mermaid-section">
-                        <h3>Phase 4: Multi-Agent Swarms</h3>
-                        <pre class="mermaid">
-                        graph TD
-                            A[Project Goal] --> B[Coordinator]
-                            B --> C[Agent: Code]
-                            B --> D[Agent: Test]
-                            B --> E[Agent: Doc]
-                            C & D & E --> B
-                            B --> F[Validated Solution]
-                        </pre>
-                        <div class="phase-desc">Specialized agents collaborate under a coordinator, mimicking human organizational structures.</div>
-                    </div>
-
-                    <div class="mermaid-section">
-                        <h3>Phase 5: Self-Evolving AGI</h3>
-                        <pre class="mermaid">
-                        graph TD
-                            A[Existence] --> B[Continuous Learning]
-                            B --> C[Goal Synthesis]
-                            C --> D[System Modification]
-                            D --> E[Improved Base]
-                            E --> B
-                        </pre>
-                        <div class="phase-desc">Autonomous systems that define their own goals and improve their own architecture iteratively.</div>
                     </div>
                 </div>`;
         }
@@ -2876,7 +2803,6 @@
             else if (state.activeTab === 'mastery') content += renderMasteryPath();
             else if (state.activeTab === 'analyse') content += renderAnalyse();
             else if (state.activeTab === 'evaluate') content += renderEvaluate();
-            else if (state.activeTab === 'create') content += renderCreate();
             else if (state.activeTab === 'resources') content += renderResources();
             else if (state.activeTab === 'multiplayer') content += renderMultiplayer();
             else if (state.activeTab === 'json') content += renderJSONSource();
@@ -2894,8 +2820,8 @@
                 }
             }
 
-            // Re-run mermaid if we are on the create tab
-            if (state.activeTab === 'create' && typeof mermaid !== 'undefined') {
+            // Re-run mermaid if we are on evaluate tab
+            if (state.activeTab === 'evaluate' && typeof mermaid !== 'undefined') {
                 mermaid.init(undefined, ".mermaid");
             }
 
