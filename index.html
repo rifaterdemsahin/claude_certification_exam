@@ -1940,15 +1940,6 @@
                 render();
             }
         }
-        }
-
-        function nextRemember() {
-            if (state.rememberIndex < questionsData.length - 1) {
-                state.rememberIndex++;
-                state.showRememberAnswer = false;
-                render();
-            }
-        }
 
         function toggleRememberAnswer() {
             state.showRememberAnswer = !state.showRememberAnswer;
