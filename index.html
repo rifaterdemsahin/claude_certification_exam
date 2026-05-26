@@ -3045,6 +3045,8 @@
             const totalParticipants = mpState.participants.filter(p => p.role === 'participant').length;
             const answeredCount = Object.keys(currentAnswers).length;
 
+            const letterEmojis = { 'A': '🅰️', 'B': '🅱️', 'C': '🅲', 'D': '🅳' };
+            
             let optionsHtml = '';
             if (mpState.phase === 'question') {
                 const alreadyAnswered = mpState.myAnswer !== null;
@@ -3052,16 +3054,20 @@
                     ${options.map((opt, idx) => {
                         let cls = 'mp-option';
                         if (alreadyAnswered && opt === mpState.myAnswer) cls += ' selected';
-                        return `<button class="${cls}" onclick="submitAnswerMp(${idx})" ${alreadyAnswered ? 'disabled' : ''}>${escapeHtml(opt)}</button>`;
+                        const letter = opt.charAt(0);
+                        const emoji = letterEmojis[letter] || '';
+                        return `<button class="${cls}" onclick="submitAnswerMp(${idx})" ${alreadyAnswered ? 'disabled' : ''}>${emoji} ${escapeHtml(opt)}</button>`;
                     }).join('')}
                 </div>`;
             } else {
                 optionsHtml = `<div class="mp-options">
-                    ${options.map(opt => {
+                    ${options.map((opt, idx) => {
                         let cls = 'mp-option';
                         if (opt === q.answer) cls += ' correct';
                         else cls += ' wrong';
-                        return `<div class="${cls}" style="cursor:default">${escapeHtml(opt)} ${opt === q.answer ? '✅ Correct' : ''}</div>`;
+                        const letter = opt.charAt(0);
+                        const emoji = letterEmojis[letter] || '';
+                        return `<div class="${cls}" style="cursor:default">${emoji} ${escapeHtml(opt)} ${opt === q.answer ? '✅ Correct' : ''}</div>`;
                     }).join('')}
                 </div>`;
             }
@@ -3098,6 +3104,67 @@
 
             let revealHtml = '';
             if (mpState.phase === 'reveal') {
+                // Generate visual rationale using SVG
+                const isCorrect = mpState.myAnswer === q.answer;
+                const rationaleHtml = `
+                    <div class="visual-rationale-section" style="margin-top:20px;">
+                        <h3>📊 Rationale Analysis</h3>
+                        <div class="svg-container" style="overflow-x:auto; border: 1px solid var(--border); border-radius: 12px; padding: 16px; background: var(--bg-primary);">
+                            <svg viewBox="0 0 800 350" style="width:100%; max-height:300px;">
+                                <!-- Background -->
+                                <rect x="0" y="0" width="800" height="350" fill="#1e293b"/>
+                                
+                                <!-- Question Box -->
+                                <rect x="20" y="20" width="180" height="50" rx="8" fill="#334155" stroke="#475569"/>
+                                <text x="110" y="50" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">Question ${mpState.currentQuestionIndex + 1}</text>
+                                
+                                <!-- Arrow 1 -->
+                                <line x1="200" y1="45" x2="260" y2="45" stroke="#64748b" stroke-width="2"/>
+                                <polygon points="260,40 265,45 260,50" fill="#64748b"/>
+                                
+                                <!-- Analyze Box -->
+                                <rect x="270" y="20" width="120" height="50" rx="8" fill="#334155" stroke="#475569"/>
+                                <text x="330" y="42" text-anchor="middle" fill="#e2e8f0" font-size="12">Analyze</text>
+                                <text x="330" y="56" text-anchor="middle" fill="#e2e8f0" font-size="11">Question</text>
+                                
+                                <!-- Arrow 2 -->
+                                <line x1="390" y1="45" x2="450" y2="45" stroke="#64748b" stroke-width="2"/>
+                                <polygon points="450,40 455,45 450,50" fill="#64748b"/>
+                                
+                                <!-- Identify Box -->
+                                <rect x="460" y="20" width="120" height="50" rx="8" fill="#334155" stroke="#475569"/>
+                                <text x="520" y="42" text-anchor="middle" fill="#e2e8f0" font-size="12">Identify</text>
+                                <text x="520" y="56" text-anchor="middle" fill="#e2e8f0" font-size="11">Key Terms</text>
+                                
+                                <!-- Arrow 3 -->
+                                <line x1="580" y1="45" x2="640" y2="45" stroke="#64748b" stroke-width="2"/>
+                                <polygon points="640,40 645,45 640,50" fill="#64748b"/>
+                                
+                                <!-- Evaluate Box -->
+                                <rect x="650" y="20" width="130" height="50" rx="8" fill="#334155" stroke="#475569"/>
+                                <text x="715" y="42" text-anchor="middle" fill="#e2e8f0" font-size="12">Evaluate</text>
+                                <text x="715" y="56" text-anchor="middle" fill="#e2e8f0" font-size="11">Options</text>
+                                
+                                <!-- Answer Box (highlighted) -->
+                                <rect x="300" y="100" width="200" height="60" rx="8" fill="#38bdf8" stroke="#0ea5e9"/>
+                                <text x="400" y="125" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="bold">Answer: ${q.answer}</text>
+                                
+                                <!-- Decision Point -->
+                                <circle cx="400" cy="200" r="30" fill="#1e293b" stroke="#64748b" stroke-width="3"/>
+                                <text x="400" y="205" text-anchor="middle" fill="#e2e8f0" font-size="12">?</text>
+                                
+                                <!-- Pathways -->
+                                <line x1="400" y1="230" x2="400" y2="270" stroke="${isCorrect ? '#10b981' : '#ef4444'}" stroke-width="3"/>
+                                
+                                <!-- Result Box -->
+                                <rect x="280" y="270" width="240" height="60" rx="8" fill="${isCorrect ? '#10b981' : '#ef4444'}" stroke="#334155"/>
+                                <text x="400" y="295" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="bold">${isCorrect ? '✅ Correct!' : '❌ Incorrect'}</text>
+                                <text x="400" y="315" text-anchor="middle" fill="#1e293b" font-size="12">${isCorrect ? 'Strong Reasoning' : 'Review Needed'}</text>
+                            </svg>
+                        </div>
+                    </div>
+                `;
+
                 revealHtml = `
                     <div class="mp-reveal-grid" style="margin-top:20px;">
                         ${mpState.participants.filter(p => p.role === 'participant').map(p => {
@@ -3114,7 +3181,9 @@
                                 </div>
                             `;
                         }).join('')}
-                    </div>`;
+                    </div>
+                    ${rationaleHtml}
+                `;
             }
 
             return `
