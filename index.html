@@ -571,6 +571,55 @@
             flex-wrap: wrap;
             gap: 8px;
         }
+        .exam-progress-bar {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+        .exam-progress-bar .progress-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .exam-progress-bar .progress-track {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            height: 10px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        .exam-progress-bar .progress-fill {
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 8px;
+        }
+        .exam-progress-bar .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+            color: var(--text-secondary);
+        }
+        .exam-progress-bar .unanswered-warning {
+            margin-top: 8px;
+            padding: 6px 10px;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 6px;
+            color: var(--accent-orange);
+            font-size: 0.85em;
+        }
+        .exam-progress-bar .completed-message {
+            margin-top: 8px;
+            padding: 6px 10px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 6px;
+            color: var(--accent-green);
+            font-size: 0.85em;
+        }
         .quiz-question {
             font-size: clamp(1.1rem, 2.5vw, 1.3rem);
             margin-bottom: 20px;
@@ -1499,6 +1548,7 @@
             examIndex: 0,
             examSelected: null,
             examShowExplanation: false,
+            examAnswers: {},
             masteryIndex: 0
         };
 
@@ -1854,6 +1904,38 @@
                     </div>`;
             }
 
+            // Calculate answered vs unanswered count
+            const answeredCount = state.examData.filter((_, i) => state.examAnswers && state.examAnswers[i]).length;
+            const unansweredCount = state.examData.length - answeredCount;
+            const answeredPercentage = Math.round((answeredCount / state.examData.length) * 100);
+
+            // Generate visual rationale using mermaid
+            const isCorrect = state.examSelected === q.answer;
+            const rationaleVisual = `
+                <div class="mermaid-section" style="margin-top:20px;">
+                    <h3>📊 Rationale Analysis</h3>
+                    <div class="mermaid" style="text-align:center;">
+                        graph TD
+                            A[Question ${state.examIndex + 1}] --> B{Analyze the\nQuestion Stem}
+                            B --> C{Identify Key\nRequirements}
+                            C --> D{Evaluate Each\nOption}
+                            D --> E[${q.answer.substring(0, 3)}]
+                            E --> F{Decision Point}
+                            F -- ✓ Correct --> G[✨ Strong Reasoning]
+                            F -- ✗ Wrong --> H[🔍 Review Needed]
+                            
+                            style A fill:#1e293b,stroke:#334155
+                            style B fill:#334155,stroke:#475569
+                            style C fill:#334155,stroke:#475569
+                            style D fill:#334155,stroke:#475569
+                            style E fill:#38bdf8,stroke:#334155
+                            style F fill:#1e293b,stroke:#334155
+                            style G fill:#10b981,stroke:#334155
+                            style H fill:#f59e0b,stroke:#334155
+                    </div>
+                </div>
+            `;
+
             return `
                 <div class="quiz-container">
                     <div class="quiz-card">
@@ -1861,9 +1943,34 @@
                             <span class="card-category cat-1">CCA-F Master Mock Exam</span>
                             <span style="color:#64748b">Question ${state.examIndex + 1} of ${state.examData.length}</span>
                         </div>
+                        
+                        <!-- Progress bar for unanswered questions -->
+                        <div class="exam-progress-bar">
+                            <div class="progress-label">
+                                Progress: ${answeredCount}/${state.examData.length} answered
+                            </div>
+                            <div class="progress-track">
+                                <div class="progress-fill" style="width:${answeredPercentage}%"></div>
+                            </div>
+                            <div class="progress-stats">
+                                <span>${answeredPercentage}% complete</span>
+                                <span>${unansweredCount} remaining</span>
+                            </div>
+                            ${unansweredCount > 0 ? `
+                                <div class="unanswered-warning">
+                                    ⚠️ ${unansweredCount} question${unansweredCount > 1 ? 's' : ''} remaining to answer
+                                </div>
+                            ` : `
+                                <div class="completed-message">
+                                    ✅ All questions answered! Review your results.
+                                </div>
+                            `}
+                        </div>
+                        
                         <div class="quiz-question">${escapeHtml(q.question)}</div>
                         <div class="quiz-options">${optionsHtml}</div>
                         ${explanationHtml}
+                        ${state.examShowExplanation ? rationaleVisual : ''}
                         <div style="margin:12px 0;text-align:center;">
                             <button class="mastery-btn" style="background:${state.favorites.includes(q.id) ? 'var(--accent-yellow)' : 'var(--bg-secondary)'};color:${state.favorites.includes(q.id) ? 'var(--bg-primary)' : 'var(--text-primary)'};border:1px solid ${state.favorites.includes(q.id) ? 'var(--accent-yellow)' : 'var(--border)'};font-size:1.1em;" onclick="toggleFavorite(${q.id})">
                                 ${state.favorites.includes(q.id) ? '★ Favorited' : '☆ Favorite'}
@@ -1880,6 +1987,8 @@
         function selectExamOption(letter) {
             state.examSelected = letter;
             state.examShowExplanation = true;
+            // Mark this question as answered
+            state.examAnswers[state.examIndex] = { selected: letter, correct: state.examData[state.examIndex].answer };
             render();
         }
 
