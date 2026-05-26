@@ -10,7 +10,8 @@
             items: [
                 { emoji: '🧠', label: 'Memory Cards', href: 'memory_cards.html' },
                 { emoji: '🎬', label: 'Slideshow', href: 'remember.html' },
-                { emoji: '🃏', label: 'Cards Index', href: 'cards.html' }
+                { emoji: '🃏', label: 'Cards Index', href: 'cards.html' },
+                { emoji: '🎯', label: 'Mastery', href: 'mastery.html' }
             ]
         },
         {
@@ -18,11 +19,7 @@
             sublabel: 'Apply',
             items: [
                 { emoji: '🎯', label: 'Quiz Mode', href: 'quiz.html' },
-                { emoji: '📝', label: 'Mock Exam', href: 'exam.html' },
-                { emoji: '📚', label: 'Resources', href: 'resources.html' },
-                { emoji: '📖', label: 'Dictionary', href: 'dictionary.html' },
-                { emoji: '🐍', label: 'MCP Python', href: 'mcp_python.html' },
-                { emoji: '📊', label: 'Pricing', href: 'claude_pricing.html' }
+                { emoji: '📝', label: 'Mock Exam', href: 'exam.html' }
             ]
         },
         {
@@ -32,27 +29,24 @@
                 { emoji: '🔍', label: 'Analyse (Concepts)', href: 'analyse.html' },
                 { emoji: '🗺️', label: 'Mindmap', href: 'mindmap.html' },
                 { emoji: '🎯', label: 'Tactics', href: 'tactics.html' },
-                { emoji: '🗜️', label: 'Compression', href: 'context_compression.html' }
-            ]
-        },
-        {
-            label: '🔍 Evaluate',
-            sublabel: 'Collaborate',
-            items: [
+                { emoji: '🗜️', label: 'Compression', href: 'context_compression.html' },
+                { emoji: '📚', label: 'Resources', href: 'resources.html' },
+                { emoji: '📖', label: 'Dictionary', href: 'dictionary.html' },
+                { emoji: '🐍', label: 'MCP Python', href: 'mcp_python.html' },
+                { emoji: '📊', label: 'Pricing', href: 'claude_pricing.html' },
                 { emoji: '📋', label: 'Criteria', href: 'explicit_criteria.html' },
                 { emoji: '🧩', label: 'Reasoning', href: 'structured_reasoning.html' },
                 { emoji: '💬', label: 'Multi-Turn', href: 'multi_turn.html' },
-                { emoji: '🔗', label: 'Evaluate (Relationships)', href: 'evaluate.html' },
-                { emoji: '🎮', label: 'Multiplayer', href: 'multiplayer.html' }
+                { emoji: '🔗', label: 'Evaluate', href: 'evaluate.html' },
+                { emoji: '🎮', label: 'Multiplayer', href: 'multiplayer.html' },
+                { emoji: '🛠️', label: 'Skills', href: 'skills.html' }
             ]
         },
         {
             label: '🎨 Create',
             sublabel: 'Build',
             items: [
-                { emoji: '🚀', label: 'AGI Path', href: 'agi-path.html' },
-                { emoji: '🛠️', label: 'Skills', href: 'skills.html' },
-                { emoji: '🚀', label: 'Mastery Path', href: 'mastery.html' }
+                { emoji: '🚀', label: 'AGI Path', href: 'agi-path.html' }
             ]
         }
     ];
