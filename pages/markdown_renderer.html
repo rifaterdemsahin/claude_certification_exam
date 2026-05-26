@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Markdown renderer for Claude Developer Certification study notes and documentation.">
-    <title>Markdown Notes Renderer</title>
+    <meta name="description" content="Markdown viewer for Claude Developer Certification study notes. Browse and read memory cards, concepts, and exam questions.">
+    <title>Markdown Notes — Claude Dev Cert</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
     <style>
@@ -21,6 +21,7 @@
             --accent-green: #10b981;
             --accent-yellow: #fbbf24;
             --accent-red: #ef4444;
+            --accent-orange: #f59e0b;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -30,13 +31,11 @@
             min-height: 100vh;
             line-height: 1.6;
         }
-        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
         header {
             text-align: center;
             padding: 24px 16px;
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             border-bottom: 1px solid var(--border);
-            margin-bottom: 24px;
         }
         header h1 {
             font-size: clamp(1.2rem, 3vw, 2rem);
@@ -47,25 +46,65 @@
             font-weight: 700;
         }
         header p { color: var(--text-secondary); font-size: 0.9em; margin-top: 6px; }
-        .loading {
-            text-align: center;
-            padding: 60px 20px;
+        .main-layout {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 100px);
+        }
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 20px;
+            overflow-y: auto;
+            height: calc(100vh - 100px);
+            position: sticky;
+            top: 0;
+        }
+        .sidebar h3 {
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             color: var(--text-muted);
+            margin: 16px 0 8px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid var(--border);
         }
-        .error {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--accent-red);
-            background: rgba(239, 68, 68, 0.05);
-            border-radius: 12px;
-            border: 1px solid rgba(239, 68, 68, 0.2);
+        .sidebar h3:first-child { margin-top: 0; }
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9em;
+            color: var(--text-secondary);
         }
-        .error a { color: var(--accent-blue); }
+        .sidebar-item:hover {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+        }
+        .sidebar-item.active {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-blue);
+            font-weight: 500;
+        }
+        .sidebar-item .icon { font-size: 1.1em; }
+        .content-area {
+            flex: 1;
+            padding: 24px 32px;
+            overflow-y: auto;
+            height: calc(100vh - 100px);
+        }
         .back-btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             padding: 8px 16px;
             border-radius: 8px;
             background: var(--bg-secondary);
@@ -75,7 +114,6 @@
             text-decoration: none;
             transition: all 0.3s;
             cursor: pointer;
-            font-family: inherit;
         }
         .back-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
         .markdown-body {
@@ -144,6 +182,12 @@
             background: var(--bg-primary);
             color: var(--accent-blue);
         }
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state .emoji { font-size: 3em; margin-bottom: 16px; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-primary); }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
@@ -154,71 +198,125 @@
 <body>
     <header>
         <h1>📝 Markdown Notes</h1>
-        <p id="subtitle">Loading notes...</p>
+        <p>Browse and read study materials locally</p>
     </header>
-    <div class="container">
-        <a href="../index.html" class="back-btn">← Back to App</a>
-        <div id="content" class="loading">Fetching notes...</div>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <a href="../index.html" class="back-btn" style="width:100%;justify-content:center;margin-bottom:20px;">🏠 Home</a>
+
+            <h3>🧠 Memory Cards</h3>
+            <div class="sidebar-category" data-category="memory"></div>
+
+            <h3>📚 Concepts</h3>
+            <div class="sidebar-category" data-category="concepts"></div>
+
+            <h3>📝 Exam Questions</h3>
+            <div class="sidebar-category" data-category="exam"></div>
+
+            <h3>🤖 Agent Files</h3>
+            <div class="sidebar-category" data-category="agents"></div>
+        </aside>
+
+        <main class="content-area">
+            <div id="content" class="empty-state">
+                <div class="emoji">📄</div>
+                <h2>Select a Note to Read</h2>
+                <p style="margin-top:8px">Choose a memory card, concept, or exam question from the sidebar to get started.</p>
+            </div>
+        </main>
     </div>
 
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const url = params.get('url');
-        const title = params.get('title') || 'Notes';
-        document.getElementById('subtitle').textContent = title;
+        // File structure mapping
+        const notes = {
+            memory: [
+                { id: 'MEM-Q001', title: 'Q001 - Agentic Architecture', file: 'formula/memory/MEM-Q001.md' },
+                { id: 'MEM-Q002', title: 'Q002 - Tool Design', file: 'formula/memory/MEM-Q002.md' },
+                { id: 'MEM-Q003', title: 'Q003 - Claude Code Config', file: 'formula/memory/MEM-Q003.md' },
+                { id: 'MEM-Q004', title: 'Q004 - Prompt Engineering', file: 'formula/memory/MEM-Q004.md' },
+                { id: 'MEM-Q005', title: 'Q005 - Context Management', file: 'formula/memory/MEM-Q005.md' },
+            ],
+            concepts: [
+                { id: 'agentic-ai', title: 'Agentic AI', file: 'formula/concepts/agentic-ai.md' },
+                { id: 'agentic-loop', title: 'Agentic Loop', file: 'formula/concepts/agentic-loop.md' },
+                { id: 'chain-of-thought', title: 'Chain of Thought', file: 'formula/concepts/chain-of-thought.md' },
+                { id: 'claude-code', title: 'Claude Code', file: 'formula/concepts/claude-code.md' },
+                { id: 'llm-context-size', title: 'LLM Context Size', file: 'formula/concepts/llm-context-size.md' },
+                { id: 'mcp', title: 'MCP (Model Context Protocol)', file: 'formula/concepts/mcp.md' },
+                { id: 'mcp-before-after', title: 'MCP Before/After', file: 'formula/concepts/mcp-before-after.md' },
+                { id: 'prompt-engineering', title: 'Prompt Engineering', file: 'formula/concepts/prompt-engineering.md' },
+                { id: 'reliability', title: 'Reliability', file: 'formula/concepts/reliability.md' },
+                { id: 'validation-loops', title: 'Validation Loops', file: 'formula/concepts/validation-loops.md' },
+                { id: 'skills-location', title: 'Skills Location', file: 'formula/concepts/skills-location.md' },
+                { id: 'coordinator-subagent', title: 'Coordinator-Subagent', file: 'formula/concepts/coordinator-subagent.md' },
+                { id: 'long-term-memory', title: 'Long-Term Memory', file: 'formula/concepts/long-term-memory.md' },
+                { id: 'llm-evolution', title: 'LLM Evolution', file: 'formula/concepts/llm-evolution.md' },
+            ],
+            exam: [
+                { id: 'CAT01-Q001', title: 'Q001 - Agentic Architecture', file: 'formula/exam/CAT01-Q001.md' },
+                { id: 'CAT01-Q002', title: 'Q002 - Tool Design', file: 'formula/exam/CAT01-Q002.md' },
+                { id: 'CAT01-Q003', title: 'Q003 - Claude Code', file: 'formula/exam/CAT01-Q003.md' },
+                { id: 'CAT01-Q004', title: 'Q004 - Prompt Engineering', file: 'formula/exam/CAT01-Q004.md' },
+                { id: 'CAT01-Q005', title: 'Q005 - Context Management', file: 'formula/exam/CAT01-Q005.md' },
+            ],
+            agents: [
+                { id: 'claude.md', title: 'Claude Agent Guidelines', file: '.kilo/agent/claude.md' },
+                { id: 'gemini.md', title: 'Gemini Agent Guidelines', file: '.kilo/agent/gemini.md' },
+                { id: 'opencode.md', title: 'OpenCode Agent Guidelines', file: '.kilo/agent/opencode.md' },
+                { id: 'mimo.md', title: 'Mimo Agent Guidelines', file: '.kilo/agent/mimo.md' },
+            ]
+        };
 
-        function showError(msg) {
-            document.getElementById('content').innerHTML = `
-                <div class="error">
-                    <p><strong>⚠️ Could not load notes</strong></p>
-                    <p style="margin-top:8px">${msg}</p>
-                    <p style="margin-top:12px;font-size:0.9em">
-                        <a href="${url || '#'}">Try opening raw file</a> | 
-                        <a href="../index.html">Go to app</a>
-                    </p>
-                </div>`;
+        // Render sidebar
+        function renderSidebar() {
+            Object.keys(notes).forEach(category => {
+                const container = document.querySelector(`.sidebar-category[data-category="${category}"]`);
+                const categoryNotes = notes[category];
+                
+                categoryNotes.forEach(note => {
+                    const item = document.createElement('div');
+                    item.className = 'sidebar-item';
+                    item.dataset.file = note.file;
+                    item.dataset.id = note.id;
+                    item.innerHTML = `<span class="icon">•</span> ${note.title}`;
+                    item.addEventListener('click', () => loadNote(note.file, note.title));
+                    container.appendChild(item);
+                });
+            });
         }
 
-        async function loadMarkdown() {
-            if (!url) {
-                showError('No URL provided. Use <code>?url=...</code>');
-                return;
-            }
-
-            let rawUrl = url;
-            // Convert GitHub blob URL to raw URL
-            if (url.includes('github.com') && url.includes('/blob/')) {
-                rawUrl = url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
-            }
+        // Load markdown note
+        async function loadNote(filePath, title) {
+            const content = document.getElementById('content');
+            content.className = 'loading';
+            content.textContent = 'Loading...';
 
             try {
-                const response = await fetch(rawUrl, { mode: 'cors' });
+                const response = await fetch(filePath);
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 const text = await response.text();
                 const html = marked.parse(text);
-                document.getElementById('content').className = 'markdown-body';
-                document.getElementById('content').innerHTML = html;
+                content.className = 'markdown-body';
+                content.innerHTML = html;
+
+                // Update active state in sidebar
+                document.querySelectorAll('.sidebar-item').forEach(item => {
+                    item.classList.toggle('active', item.dataset.file === filePath);
+                });
             } catch (e) {
-                // Fallback: try via GitHub raw if not already raw
-                if (rawUrl !== url) {
-                    try {
-                        const response2 = await fetch(rawUrl);
-                        if (!response2.ok) throw new Error(`HTTP ${response2.status}`);
-                        const text2 = await response2.text();
-                        const html2 = marked.parse(text2);
-                        document.getElementById('content').className = 'markdown-body';
-                        document.getElementById('content').innerHTML = html2;
-                        return;
-                    } catch (e2) {
-                        showError(`${e.message}<br/><br/>GitHub raw URL tried: <code>${rawUrl}</code>`);
-                    }
-                } else {
-                    showError(`${e.message}<br/><br/>URL tried: <code>${url}</code>`);
-                }
+                content.className = 'markdown-body';
+                content.innerHTML = `
+                    <div style="color:var(--accent-red);text-align:center;padding:40px;">
+                        <h3>⚠️ Could not load note</h3>
+                        <p style="margin-top:8px">${e.message}</p>
+                        <p style="margin-top:12px;color:var(--text-secondary);">${filePath}</p>
+                    </div>
+                `;
             }
         }
 
-        document.addEventListener('DOMContentLoaded', loadMarkdown);
+        document.addEventListener('DOMContentLoaded', renderSidebar);
     </script>
     <script src="nav.js"></script>
 </body>
