@@ -34,12 +34,18 @@
                 { emoji: '📖', label: 'Dictionary', href: 'dictionary.html' },
                 { emoji: '🐍', label: 'MCP Python', href: 'mcp_python.html' },
                 { emoji: '📊', label: 'Pricing', href: 'claude_pricing.html' },
+                { emoji: '🛠️', label: 'Skills', href: 'skills.html' }
+            ]
+        },
+        {
+            label: '🔍 Evaluate',
+            sublabel: 'Collaborate',
+            items: [
                 { emoji: '📋', label: 'Criteria', href: 'explicit_criteria.html' },
                 { emoji: '🧩', label: 'Reasoning', href: 'structured_reasoning.html' },
                 { emoji: '💬', label: 'Multi-Turn', href: 'multi_turn.html' },
                 { emoji: '🔗', label: 'Evaluate', href: 'evaluate.html' },
-                { emoji: '🎮', label: 'Multiplayer', href: 'multiplayer.html' },
-                { emoji: '🛠️', label: 'Skills', href: 'skills.html' }
+                { emoji: '🎮', label: 'Multiplayer', href: 'multiplayer.html' }
             ]
         },
         {
