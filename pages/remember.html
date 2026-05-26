@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remember - Claude Developer Certification</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header class="app-header">
+        <h1>Remember</h1>
+        <p>Flashcard-style review for quick recall</p>
+    </header>
+
+    <div class="container">
+        <div class="remember-container">
+            <div id="remember-content"></div>
+        </div>
+    </div>
+
+    <footer class="app-footer">
+        <p>Claude Developer Certification Study App</p>
+        <div class="footer-links">
+            <a href="../index.html">Home</a>
+            <a href="cards.html">Cards</a>
+            <a href="quiz.html">Quiz</a>
+            <a href="mastery.html">Mastery</a>
+        </div>
+    </footer>
+
+    <script src="../js/data.js"></script>
+    <script src="../js/state.js"></script>
+    <script src="../js/utils.js"></script>
+    <script>
+        function initRemember() {
+            state.rememberIndex = 0;
+            state.showRememberAnswer = false;
+            renderRemember();
+        }
+
+        function renderRemember() {
+            const container = document.getElementById('remember-content');
+            const q = questionsData[state.rememberIndex];
+            const hint = questionHints[q.id];
+
+            container.innerHTML = `
+                <div class="remember-card fade-in" onclick="toggleAnswer()">
+                    <div class="quiz-meta">
+                        <span class="card-category cat-${q.category}">${categories[q.category].name}</span>
+                        <span>${state.rememberIndex + 1} / ${questionsData.length}</span>
+                    </div>
+
+                    <div class="exam-progress-bar">
+                        <div class="progress-label">Progress</div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: ${(state.rememberIndex / questionsData.length) * 100}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="remember-question">${escapeHtml(q.question)}</div>
+
+                    ${state.showRememberAnswer ? `
+                        <div class="remember-answer">${escapeHtml(q.answer)}</div>
+                        ${hint ? `
+                            <div class="remember-hint">
+                                <div style="font-size:2em;margin-bottom:8px;">${hint.emoji}</div>
+                                <div style="color:var(--accent-yellow);font-style:italic;">${escapeHtml(hint.memory)}</div>
+                            </div>
+                        ` : ''}
+                    ` : '<p style="color:var(--text-muted);margin-top:20px;">Click to reveal answer</p>'}
+
+                    <div class="remember-nav">
+                        <button onclick="event.stopPropagation(); prevRemember()" ${state.rememberIndex === 0 ? 'disabled' : ''}>Previous</button>
+                        <button onclick="event.stopPropagation(); toggleAnswer()">${state.showRememberAnswer ? 'Hide' : 'Show'} Answer</button>
+                        <button onclick="event.stopPropagation(); nextRemember()">${state.rememberIndex < questionsData.length - 1 ? 'Next' : 'Restart'}</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleAnswer() {
+            state.showRememberAnswer = !state.showRememberAnswer;
+            renderRemember();
+        }
+
+        function nextRemember() {
+            if (state.rememberIndex < questionsData.length - 1) {
+                state.rememberIndex++;
+                state.showRememberAnswer = false;
+            } else {
+                state.rememberIndex = 0;
+                state.showRememberAnswer = false;
+            }
+            renderRemember();
+        }
+
+        function prevRemember() {
+            if (state.rememberIndex > 0) {
+                state.rememberIndex--;
+                state.showRememberAnswer = false;
+                renderRemember();
+            }
+        }
+
+        // Initialize
+        initRemember();
+    </script>
+</body>
+</html>

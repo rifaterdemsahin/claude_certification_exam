@@ -122,7 +122,22 @@
             label: '🏠 Home',
             tier: null,
             links: [
-                { href: '../index.html', label: '🏠 Home', cls: 'nav-home', search: 'home main app' },
+                { href: '../index.html', label: '🏠 Home', cls: 'nav-home', search: 'home main app dashboard' },
+            ]
+        },
+        {
+            label: '📝 Study Modes',
+            tier: null,
+            links: [
+                { href: 'cards.html', label: '🃏 Cards', search: 'memory cards flashcards visual hints' },
+                { href: 'quiz.html', label: '📝 Quiz', search: 'quiz interactive test practice' },
+                { href: 'remember.html', label: '🧠 Remember', search: 'remember flashcard review recall' },
+                { href: 'exam.html', label: '📋 Exam', search: 'exam mock test assessment' },
+                { href: 'mastery.html', label: '🎯 Mastery', search: 'mastery progress tracking' },
+                { href: 'analyse.html', label: '📊 Analyse', search: 'analyse statistics performance review' },
+                { href: 'evaluate.html', label: '🔍 Evaluate', search: 'evaluate concept maps diagrams' },
+                { href: 'resources.html', label: '📚 Resources', search: 'resources videos learning materials' },
+                { href: 'multiplayer.html', label: '🎮 Multiplayer', search: 'multiplayer game quiz friends' },
             ]
         },
         {

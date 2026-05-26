@@ -1,40 +1,124 @@
-# Mimo - Project Guidelines
+# Mimo (Xiaomi MiMo) - Project Guidelines
 
-Guidelines for Mimo (Xiaomi MiMo) working on the **Claude Developer Certification - Study Mastery App**.
+This file provides guidelines for Mimo AI working on the **Claude Developer Certification - Study Mastery App**.
 
-## Core Architecture
-- **Single-File App:** The main application lives entirely in `index.html`. Do not split into multiple entry points.
-- **No Build Step:** No Webpack, Vite, or npm. Load React, Mermaid, and MQTT via CDN.
-- **State:** Use browser cookies for progress, favorites, and mastered concepts.
+## Project Identity
 
-## Styling & UI
-- **Vanilla CSS:** Plain CSS inside `<style>` tags in `index.html`. No Tailwind, no CSS-in-JS.
-- **Dark Theme:** Maintain `--bg-primary: #0f172a`, `--bg-secondary: #1e293b`, `--border: #334155`.
-- **Responsive:** Mobile-first. Use `clamp()` for fluid typography.
-- **Visuals:** SVGs, emojis, and Mermaid diagrams for learning aids.
+- **Purpose:** Interactive study guide for Claude Developer Certification exam
+- **Architecture:** Single-file React app in `index.html`
+- **Hosting:** GitHub Pages (static site)
+- **State:** Browser cookies for progress tracking
 
-## Content & Structure
-- **5 Competencies (CAT01–CAT05):** Every question, doc, and page must map to one.
-  - CAT01: Agentic Architecture & Orchestration (27%)
-  - CAT02: Tool Design & MCP Integration (18%)
-  - CAT03: Claude Code Configuration & Workflows (20%)
-  - CAT04: Prompt Engineering & Structured Output (20%)
-  - CAT05: Context Management & Reliability (15%)
-- **Question IDs:** Pattern `CAT{NN}-Q{NNN}` (e.g., `CAT01-Q005`).
-- **Directories:**
-  - `assets/exam/`, `assets/memory/`, `assets/concepts/` — visual media
-  - `data/exam.json` — question source data
-  - `docs/` — study documentation
-  - `formula/concepts/`, `formula/exam/`, `formula/memory/` — content files
-  - `pages/` — auxiliary HTML pages with shared `nav.js` menu
-  - `.kilo/agent/` — AI-specific guidelines (claude.md, gemini.md, opencode.md, mimo.md)
+## Core Constraints
 
-## Navigation & Pages
-- **Shared Menu:** All auxiliary pages in `pages/` include `nav.js` which injects a sticky nav bar.
-- **SEO:** Every page must have `<meta name="description">`, favicon link, and semantic HTML.
+### Architecture Rules
+1. **Single-File App:** Everything stays in `index.html`
+2. **No Build Step:** Never introduce npm, webpack, vite, or any build tool
+3. **CDN Only:** Use CDNs for React, Mermaid, and other libraries
+4. **Vanilla CSS:** Plain CSS in `<style>` tags, no preprocessors
+5. **Cookie State:** Use browser cookies for persistence
 
-## AI Interaction Rules
-- **Surgical Edits:** Use targeted replacements on `index.html`. Never rewrite the whole file.
-- **Consistency:** Follow existing `questionsData`, `categories`, `state`, and `render*` patterns.
-- **Cookie Keys:** Use `claude_cert_*` prefix (e.g., `claude_cert_favorites`, `claude_cert_progress_v2`).
-- **Verification:** After edits, check that `render()` produces valid HTML and the app is functional.
+### Design System
+```css
+/* Dark Theme Tokens */
+--bg-primary: #0f172a
+--bg-secondary: #1e293b
+--bg-card: #1e293b
+--border: #334155
+--text-primary: #e2e8f0
+--text-secondary: #94a3b8
+
+/* Accent Colors */
+--accent-blue: #38bdf8
+--accent-purple: #a855f7
+--accent-green: #10b981
+--accent-yellow: #fbbf24
+--accent-red: #ef4444
+--accent-orange: #f59e0b
+```
+
+## Content Framework
+
+### Competency Areas
+| Code | Area | Weight |
+|------|------|--------|
+| CAT01 | Agentic Architecture & Orchestration | 27% |
+| CAT02 | Tool Design & MCP Integration | 18% |
+| CAT03 | Claude Code Configuration & Workflows | 20% |
+| CAT04 | Prompt Engineering & Structured Output | 20% |
+| CAT05 | Context Management & Reliability | 15% |
+
+### Question Format
+- **ID Pattern:** `CAT{NN}-Q{NNN}` (e.g., `CAT01-Q005`)
+- **Visual Hints:** SVG graphics or emoji mnemonics
+- **Memory Aids:** Short, memorable associations
+
+## Editing Protocol
+
+### When Working with `index.html`
+1. **Surgical Edits Only:** Use targeted replacements, not full rewrites
+2. **Preserve Structure:** Maintain existing component patterns
+3. **Verify Changes:** Check live demo logic after modifications
+4. **Naming Conventions:** Follow `renderSomething`, `handleSomething` patterns
+
+### Content Modifications
+- Align all questions with the 5 competency areas
+- Include visual hints for each question
+- Maintain consistency with existing `questionsData` structure
+
+## File Organization
+
+```
+.
+├── index.html              # Main app (single-file React)
+├── assets/                 # Visual media
+│   ├── exam/               # Exam question images
+│   ├── memory/             # Memory card visuals
+│   └── concepts/           # Concept diagrams
+├── data/                   # Source data (exam.json, exam_source.pdf)
+├── docs/                   # Study documentation by competency
+├── formula/                # Concepts, exam questions, memory cards
+│   ├── concepts/
+│   ├── exam/
+│   └── memory/
+├── pages/                  # Auxiliary HTML pages
+└── scripts/                # Utility scripts
+```
+
+## Quality Checklist
+
+Before completing any task:
+- [ ] Changes are surgical, not wholesale rewrites
+- [ ] Design tokens are used consistently
+- [ ] Responsive design is maintained
+- [ ] Visual hints (SVG/emoji) are included where appropriate
+- [ ] Question IDs follow the CAT{NN}-Q{NNN} pattern
+- [ ] No build tools or npm dependencies were introduced
+
+## Memory Cards
+
+### URL Pattern
+```
+pages/markdown_renderer.html?url=../formula/memory/MEM-Q{ID}.md&title=Memory Card {ID}
+```
+
+### File Naming
+- Location: `formula/memory/`
+- Pattern: `MEM-Q{ID}.md`
+
+## Common Pitfalls
+
+- **Don't** introduce npm or package.json
+- **Don't** use CSS preprocessors
+- **Don't** break the single-file architecture
+- **Don't** modify cookie structure without migration
+- **Don't** add external dependencies without CDN approval
+- **Don't** rewrite large sections of index.html
+
+## Bloom's Taxonomy Integration
+
+Support multiple learning levels:
+- **Remember:** Slideshows and flashcards
+- **Analyse:** Concept breakdowns
+- **Evaluate:** Relationships and trade-offs
+- **Create:** Synthesizing knowledge for high-level goals
