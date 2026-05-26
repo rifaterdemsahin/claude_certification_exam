@@ -611,14 +611,20 @@
             color: var(--accent-orange);
             font-size: 0.85em;
         }
-        .exam-progress-bar .completed-message {
-            margin-top: 8px;
-            padding: 6px 10px;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 6px;
-            color: var(--accent-green);
-            font-size: 0.85em;
+        .visual-rationale-section {
+            margin-top: 20px;
+        }
+        .visual-rationale-section h3 {
+            color: var(--accent-blue);
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+        .svg-container {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            background: var(--bg-primary);
         }
         .quiz-question {
             font-size: clamp(1.1rem, 2.5vw, 1.3rem);
@@ -699,6 +705,37 @@
         }
         .quiz-nav button:hover { background: #7dd3fc; }
         .quiz-nav button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* Visual Rationale Section */
+        .visual-rationale-section {
+            margin-top: 24px;
+            padding: 20px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+        .visual-rationale-section h3 {
+            color: var(--accent-blue);
+            margin-bottom: 16px;
+            font-size: 1.1em;
+            text-align: center;
+        }
+        .visual-rationale-section .svg-container {
+            overflow-x: auto;
+            border: none;
+            background: transparent;
+            padding: 0;
+        }
+        .visual-rationale-section a {
+            display: inline-block;
+            margin-top: 12px;
+            color: var(--accent-blue);
+            font-size: 0.9em;
+            text-decoration: none;
+        }
+        .visual-rationale-section a:hover {
+            text-decoration: underline;
+        }
 
         /* Resources */
         .resources-section {
@@ -1880,12 +1917,13 @@
             
             let optionsHtml = q.options.map((opt) => {
                 const optLetter = opt.charAt(0);
+                const letterEmojis = { 'A': '🅰️', 'B': '🅱️', 'C': '🅲', 'D': '🅳' };
                 let cls = 'quiz-option';
                 if (state.examShowExplanation) {
                     if (optLetter === q.answer) cls += ' correct';
                     else if (optLetter === state.examSelected) cls += ' incorrect';
                 }
-                return `<button class="${cls}" onclick="selectExamOption('${optLetter}')" ${state.examShowExplanation ? 'disabled' : ''}>${escapeHtml(opt)}</button>`;
+                return `<button class="${cls}" onclick="selectExamOption('${optLetter}')" ${state.examShowExplanation ? 'disabled' : ''}>${letterEmojis[optLetter]} ${escapeHtml(opt.substring(2))}</button>`;
             }).join('');
 
             let explanationHtml = '';
@@ -1909,30 +1947,75 @@
             const unansweredCount = state.examData.length - answeredCount;
             const answeredPercentage = Math.round((answeredCount / state.examData.length) * 100);
 
-            // Generate visual rationale using mermaid
+            // Generate visual rationale using SVG
             const isCorrect = state.examSelected === q.answer;
             const rationaleVisual = `
-                <div class="mermaid-section" style="margin-top:20px;">
+                <div class="visual-rationale-section" style="margin-top:20px;">
                     <h3>📊 Rationale Analysis</h3>
-                    <div class="mermaid" style="text-align:center;">
-                        graph TD
-                            A[Question ${state.examIndex + 1}] --> B{Analyze the\nQuestion Stem}
-                            B --> C{Identify Key\nRequirements}
-                            C --> D{Evaluate Each\nOption}
-                            D --> E[${q.answer.substring(0, 3)}]
-                            E --> F{Decision Point}
-                            F -- ✓ Correct --> G[✨ Strong Reasoning]
-                            F -- ✗ Wrong --> H[🔍 Review Needed]
+                    <div class="svg-container" style="overflow-x:auto; border: 1px solid var(--border); border-radius: 12px; padding: 16px; background: var(--bg-primary);">
+                        <svg viewBox="0 0 800 350" style="width:100%; max-height:300px;">
+                            <!-- Background -->
+                            <rect x="0" y="0" width="800" height="350" fill="#1e293b"/>
                             
-                            style A fill:#1e293b,stroke:#334155
-                            style B fill:#334155,stroke:#475569
-                            style C fill:#334155,stroke:#475569
-                            style D fill:#334155,stroke:#475569
-                            style E fill:#38bdf8,stroke:#334155
-                            style F fill:#1e293b,stroke:#334155
-                            style G fill:#10b981,stroke:#334155
-                            style H fill:#f59e0b,stroke:#334155
+                            <!-- Question Box -->
+                            <rect x="20" y="20" width="180" height="50" rx="8" fill="#334155" stroke="#475569"/>
+                            <text x="110" y="50" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">Question ${state.examIndex + 1}</text>
+                            
+                            <!-- Arrow 1 -->
+                            <line x1="200" y1="45" x2="260" y2="45" stroke="#64748b" stroke-width="2"/>
+                            <polygon points="260,40 270,45 260,50" fill="#64748b"/>
+                            
+                            <!-- Analyze Box -->
+                            <rect x="270" y="20" width="120" height="50" rx="8" fill="#334155" stroke="#475569"/>
+                            <text x="330" y="42" text-anchor="middle" fill="#e2e8f0" font-size="12">Analyze</text>
+                            <text x="330" y="56" text-anchor="middle" fill="#e2e8f0" font-size="11">Question</text>
+                            
+                            <!-- Arrow 2 -->
+                            <line x1="390" y1="45" x2="450" y2="45" stroke="#64748b" stroke-width="2"/>
+                            <polygon points="450,40 460,45 450,50" fill="#64748b"/>
+                            
+                            <!-- Identify Box -->
+                            <rect x="460" y="20" width="120" height="50" rx="8" fill="#334155" stroke="#475569"/>
+                            <text x="520" y="42" text-anchor="middle" fill="#e2e8f0" font-size="12">Identify</text>
+                            <text x="520" y="56" text-anchor="middle" fill="#e2e8f0" font-size="11">Key Terms</text>
+                            
+                            <!-- Arrow 3 -->
+                            <line x1="580" y1="45" x2="640" y2="45" stroke="#64748b" stroke-width="2"/>
+                            <polygon points="640,40 650,45 640,50" fill="#64748b"/>
+                            
+                            <!-- Evaluate Box -->
+                            <rect x="650" y="20" width="130" height="50" rx="8" fill="#334155" stroke="#475569"/>
+                            <text x="715" y="42" text-anchor="middle" fill="#e2e8f0" font-size="12">Evaluate</text>
+                            <text x="715" y="56" text-anchor="middle" fill="#e2e8f0" font-size="11">Options</text>
+                            
+                            <!-- Answer Box (highlighted) -->
+                            <rect x="300" y="100" width="200" height="60" rx="8" fill="#38bdf8" stroke="#0ea5e9"/>
+                            <text x="400" y="125" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="bold">Answer: ${q.answer}</text>
+                            <text x="400" y="145" text-anchor="middle" fill="#1e293b" font-size="11">${q.options.find(o => o.startsWith(q.answer))?.substring(2) || ''}</text>
+                            
+                            <!-- Decision Point -->
+                            <circle cx="400" cy="200" r="30" fill="#1e293b" stroke="#64748b" stroke-width="3"/>
+                            <text x="400" y="205" text-anchor="middle" fill="#e2e8f0" font-size="12">?</text>
+                            
+                            <!-- Pathways -->
+                            <line x1="400" y1="230" x2="400" y2="270" stroke="${isCorrect ? '#10b981' : '#ef4444'}" stroke-width="3"/>
+                            
+                            <!-- Result Box -->
+                            <rect x="280" y="270" width="240" height="60" rx="8" fill="${isCorrect ? '#10b981' : '#ef4444'}" stroke="#334155"/>
+                            <text x="400" y="295" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="bold">${isCorrect ? '✅ Correct!' : '❌ Incorrect'}</text>
+                            <text x="400" y="315" text-anchor="middle" fill="#1e293b" font-size="12">${isCorrect ? 'Strong Reasoning' : 'Review Needed'}</text>
+                            
+                            <!-- Legend -->
+                            <rect x="20" y="280" width="120" height="60" rx="6" fill="#1e293b" stroke="#334155"/>
+                            <circle cx="45" cy="300" r="6" fill="#38bdf8"/>
+                            <text x="60" y="304" fill="#e2e8f0" font-size="10">Answer</text>
+                            <circle cx="45" cy="320" r="6" fill="${isCorrect ? '#10b981' : '#ef4444'}"/>
+                            <text x="60" y="324" fill="#e2e8f0" font-size="10">Result</text>
+                        </svg>
                     </div>
+                    <a href="pages/markdown_renderer.html?url=../formula/exam/CAT01-Q${String(state.examIndex + 1).padStart(2, '0')}.md&title=Question%20${state.examIndex + 1}" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:12px;color:var(--accent-blue);font-size:0.9em;">
+                        📄 View Full Explanation on GitHub
+                    </a>
                 </div>
             `;
 
