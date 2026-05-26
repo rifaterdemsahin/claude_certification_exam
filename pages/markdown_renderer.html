@@ -316,7 +316,20 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', renderSidebar);
+        document.addEventListener('DOMContentLoaded', function() {
+            renderSidebar();
+
+            // Handle URL parameters for direct memory card links
+            const params = new URLSearchParams(window.location.search);
+            const urlParam = params.get('url');
+            const titleParam = params.get('title');
+
+            if (urlParam) {
+                // Decode the URL and load the note
+                const decodedUrl = decodeURIComponent(urlParam);
+                loadNote(decodedUrl, titleParam || 'Memory Card');
+            }
+        });
     </script>
     <script src="nav.js"></script>
 </body>

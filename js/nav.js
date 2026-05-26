@@ -5,33 +5,12 @@
 
     const navItems = [
         {
-            label: '🎨 Create',
-            sublabel: 'Build',
+            label: '🧠 Remember',
+            sublabel: 'Visuals',
             items: [
-                { emoji: '🚀', label: 'AGI Path', href: 'agi-path.html' },
-                { emoji: '🛠️', label: 'Skills', href: 'skills.html' },
-                { emoji: '🚀', label: 'Mastery Path', href: 'mastery.html' }
-            ]
-        },
-        {
-            label: '🔍 Evaluate',
-            sublabel: 'Collaborate',
-            items: [
-                { emoji: '📋', label: 'Criteria', href: 'explicit_criteria.html' },
-                { emoji: '🧩', label: 'Reasoning', href: 'structured_reasoning.html' },
-                { emoji: '💬', label: 'Multi-Turn', href: 'multi_turn.html' },
-                { emoji: '🔗', label: 'Evaluate (Relationships)', href: 'evaluate.html' },
-                { emoji: '🎮', label: 'Multiplayer', href: 'multiplayer.html' }
-            ]
-        },
-        {
-            label: '📊 Analyse',
-            sublabel: 'Connect',
-            items: [
-                { emoji: '🔍', label: 'Analyse (Concepts)', href: 'analyse.html' },
-                { emoji: '🗺️', label: 'Mindmap', href: 'mindmap.html' },
-                { emoji: '🎯', label: 'Tactics', href: 'tactics.html' },
-                { emoji: '🗜️', label: 'Compression', href: 'context_compression.html' }
+                { emoji: '🧠', label: 'Memory Cards', href: 'memory_cards.html' },
+                { emoji: '🎬', label: 'Slideshow', href: 'remember.html' },
+                { emoji: '🃏', label: 'Cards Index', href: 'cards.html' }
             ]
         },
         {
@@ -47,12 +26,33 @@
             ]
         },
         {
-            label: '🧠 Remember',
-            sublabel: 'Visuals',
+            label: '📊 Analyse',
+            sublabel: 'Connect',
             items: [
-                { emoji: '🧠', label: 'Memory Cards', href: 'memory_cards.html' },
-                { emoji: '🎬', label: 'Slideshow', href: 'remember.html' },
-                { emoji: '🃏', label: 'Cards Index', href: 'cards.html' }
+                { emoji: '🔍', label: 'Analyse (Concepts)', href: 'analyse.html' },
+                { emoji: '🗺️', label: 'Mindmap', href: 'mindmap.html' },
+                { emoji: '🎯', label: 'Tactics', href: 'tactics.html' },
+                { emoji: '🗜️', label: 'Compression', href: 'context_compression.html' }
+            ]
+        },
+        {
+            label: '🔍 Evaluate',
+            sublabel: 'Collaborate',
+            items: [
+                { emoji: '📋', label: 'Criteria', href: 'explicit_criteria.html' },
+                { emoji: '🧩', label: 'Reasoning', href: 'structured_reasoning.html' },
+                { emoji: '💬', label: 'Multi-Turn', href: 'multi_turn.html' },
+                { emoji: '🔗', label: 'Evaluate (Relationships)', href: 'evaluate.html' },
+                { emoji: '🎮', label: 'Multiplayer', href: 'multiplayer.html' }
+            ]
+        },
+        {
+            label: '🎨 Create',
+            sublabel: 'Build',
+            items: [
+                { emoji: '🚀', label: 'AGI Path', href: 'agi-path.html' },
+                { emoji: '🛠️', label: 'Skills', href: 'skills.html' },
+                { emoji: '🚀', label: 'Mastery Path', href: 'mastery.html' }
             ]
         }
     ];
@@ -88,17 +88,60 @@
             html += '</div></div>';
         });
 
-        html += '<div class="nav-separator"></div>';
+        html += '</div>';
 
-        // Global links
-        globalLinks.forEach(item => {
-            const active = isActive(item.href) ? ' active' : '';
-            html += '<a href="' + prefix + item.href + '" class="nav-link nav-global' + active + '">' + item.emoji + ' ' + item.label + '</a>';
-        });
+        // Search bar on the right
+        html += '<div class="nav-search">';
+        html += '<input type="text" id="nav-search-input" placeholder="🔍 Search pages..." oninput="navSearch(this.value)">';
+        html += '<div id="nav-search-results" class="nav-search-results"></div>';
+        html += '</div>';
 
-        html += '</div></div></nav>';
+        html += '</div></nav>';
         return html;
     }
+
+    // Search functionality
+    window.navSearch = function(query) {
+        const resultsContainer = document.getElementById('nav-search-results');
+        if (!query || query.length < 2) {
+            resultsContainer.style.display = 'none';
+            return;
+        }
+
+        const allItems = [];
+        navItems.forEach(group => {
+            group.items.forEach(item => {
+                allItems.push({ ...item, category: group.label });
+            });
+        });
+
+        const q = query.toLowerCase();
+        const matches = allItems.filter(item =>
+            item.label.toLowerCase().includes(q) ||
+            item.category.toLowerCase().includes(q)
+        ).slice(0, 8);
+
+        if (matches.length === 0) {
+            resultsContainer.style.display = 'none';
+            return;
+        }
+
+        let html = '';
+        matches.forEach(item => {
+            html += '<a href="' + prefix + item.href + '" class="nav-search-item">' + item.emoji + ' ' + item.label + '</a>';
+        });
+        resultsContainer.innerHTML = html;
+        resultsContainer.style.display = 'block';
+    };
+
+    // Close search results when clicking outside
+    document.addEventListener('click', function(e) {
+        const results = document.getElementById('nav-search-results');
+        const input = document.getElementById('nav-search-input');
+        if (results && input && !input.contains(e.target) && !results.contains(e.target)) {
+            results.style.display = 'none';
+        }
+    });
 
     // Inject styles
     const style = document.createElement('style');
@@ -217,7 +260,65 @@
         .nav-global {
             font-weight: 500;
         }
+        .nav-search {
+            position: relative;
+            margin-left: auto;
+        }
+        .nav-search input {
+            padding: 6px 12px;
+            border: 1px solid var(--border, #334155);
+            border-radius: 6px;
+            background: var(--bg-primary, #0f172a);
+            color: var(--text-primary, #e2e8f0);
+            font-size: 0.85em;
+            width: 200px;
+            outline: none;
+            font-family: inherit;
+        }
+        .nav-search input:focus {
+            border-color: var(--accent-blue, #38bdf8);
+        }
+        .nav-search-results {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--bg-secondary, #1e293b);
+            border: 1px solid var(--border, #334155);
+            border-radius: 8px;
+            padding: 6px;
+            min-width: 220px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            z-index: 1001;
+        }
+        .nav-search-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            color: var(--text-primary, #e2e8f0);
+            text-decoration: none;
+            font-size: 0.85em;
+            border-radius: 6px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .nav-search-item:hover {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue, #38bdf8);
+        }
         @media (max-width: 900px) {
+            .nav-search {
+                width: 100%;
+                margin: 8px 0;
+            }
+            .nav-search input {
+                width: 100%;
+            }
+            .nav-search-results {
+                position: static;
+                box-shadow: none;
+            }
             .nav-toggle { display: block; }
             .nav-menu {
                 display: none;
