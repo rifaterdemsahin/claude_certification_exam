@@ -56,6 +56,38 @@
         }
         .app-header p { color: var(--text-secondary); font-size: 1em; }
 
+        /* Bloom's Taxonomy Triangle */
+        .bloom-triangle {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            margin-top: 16px;
+        }
+        .bloom-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 5px 16px;
+            border-radius: 6px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+        .bloom-row .emoji { font-size: 1.1em; }
+        .bloom-row-create     { background: rgba(16,185,129,0.15); color: var(--accent-green);  min-width: 240px; }
+        .bloom-row-evaluate   { background: rgba(239,68,68,0.15);  color: var(--accent-red);    min-width: 310px; }
+        .bloom-row-analyse    { background: rgba(245,158,11,0.15); color: var(--accent-orange); min-width: 380px; }
+        .bloom-row-understand { background: rgba(168,85,247,0.15); color: var(--accent-purple); min-width: 450px; }
+        .bloom-row-remember   { background: rgba(56,189,248,0.15); color: var(--accent-blue);   min-width: 520px; }
+        @media (max-width: 640px) {
+            .bloom-row { min-width: unset !important; width: 100%; font-size: 0.7em; }
+        }
+
         /* Stats */
         .stats-grid {
             display: grid;
@@ -1128,8 +1160,10 @@
         
         .global-tools {
             display: flex;
+            flex-wrap: wrap;
             gap: 12px;
             justify-content: center;
+            align-items: center;
             margin-bottom: 20px;
             padding-bottom: 20px;
             border-bottom: 1px solid var(--border);
@@ -1514,6 +1548,13 @@
                 <header class="app-header">
                     <h1>Claude Developer Certification</h1>
                     <p>100 Question Mastery with Visual Hints & Memory Aids</p>
+                    <div class="bloom-triangle">
+                        <div class="bloom-row bloom-row-create"><span class="emoji">🎨</span> CREATE — Build</div>
+                        <div class="bloom-row bloom-row-evaluate"><span class="emoji">🔍</span> EVALUATE — Collaborate</div>
+                        <div class="bloom-row bloom-row-analyse"><span class="emoji">📊</span> ANALYSE — Connect</div>
+                        <div class="bloom-row bloom-row-understand"><span class="emoji">📝</span> UNDERSTAND — Apply</div>
+                        <div class="bloom-row bloom-row-remember"><span class="emoji">🧠</span> REMEMBER — Visuals</div>
+                    </div>
                     <p style="margin-top:8px;font-size:0.85em;color:var(--accent-yellow);">🔨 Building the tools is the way to learn while creating the notes — that is the active self-learning process</p>
                 </header>
                 <button class="debug-toggle" onclick="toggleDebug()" title="Toggle Debug Mode">🐛 Debug</button>`;
@@ -1567,50 +1608,55 @@
                 <div class="global-tools">
                     <button class="reset-btn" onclick="resetProgress()">🗑️ Reset Progress</button>
                     <button class="nav-tab ${state.shuffled ? 'active' : ''}" onclick="shuffleCards()" title="Toggle random order">🔀 ${state.shuffled ? 'Shuffled' : 'Shuffle'}</button>
+                    <input type="text" class="search-input" placeholder="🔍 Search questions..." value="${escapeHtml(state.searchQuery)}" oninput="handleSearch(this.value)" style="max-width:240px;">
                 </div>
 
                 <nav class="bloom-nav">
-                    <!-- Create -->
+                    <!-- 🎨 CREATE — Build -->
                     <div class="bloom-tier tier-create">
-                        <div class="bloom-tier-label">Create</div>
+                        <div class="bloom-tier-label">🎨 Create — Build</div>
                         <a href="pages/agi-path.html" class="nav-tab" style="text-decoration:none;">🚀 AGI Path</a>
+                        <a href="pages/skills.html" class="nav-tab" style="text-decoration:none;">🛠️ Skills</a>
                         <button class="nav-tab ${state.activeTab === 'mastery' ? 'active' : ''}" onclick="setTab('mastery')">🚀 Mastery Path</button>
                     </div>
 
-                    <!-- Evaluate -->
+                    <!-- 🔍 EVALUATE — Collaborate -->
                     <div class="bloom-tier tier-evaluate">
-                        <div class="bloom-tier-label">Evaluate</div>
+                        <div class="bloom-tier-label">🔍 Evaluate — Collaborate</div>
+                        <a href="pages/explicit_criteria.html" class="nav-tab" style="text-decoration:none;">📋 Criteria</a>
+                        <a href="pages/structured_reasoning.html" class="nav-tab" style="text-decoration:none;">🧩 Reasoning</a>
+                        <a href="pages/multi_turn.html" class="nav-tab" style="text-decoration:none;">💬 Multi-Turn</a>
                         <button class="nav-tab ${state.activeTab === 'evaluate' ? 'active' : ''}" onclick="setTab('evaluate')">🔗 Evaluate (Relationships)</button>
                         <button class="nav-tab ${state.activeTab === 'multiplayer' ? 'active' : ''}" onclick="setTab('multiplayer')">🎮 Multiplayer</button>
                     </div>
 
-                    <!-- Analyse -->
+                    <!-- 📊 ANALYSE — Connect -->
                     <div class="bloom-tier tier-analyse">
-                        <div class="bloom-tier-label">Analyse</div>
+                        <div class="bloom-tier-label">📊 Analyse — Connect</div>
                         <button class="nav-tab ${state.activeTab === 'analyse' ? 'active' : ''}" onclick="setTab('analyse')">🔍 Analyse (Concepts)</button>
-                        <a href="pages/mindmap.html" class="nav-tab" style="text-decoration:none;">🗺️ Memory Palace (Mindmap)</a>
+                        <a href="pages/mindmap.html" class="nav-tab" style="text-decoration:none;">🗺️ Mindmap</a>
+                        <a href="pages/tactics.html" class="nav-tab" style="text-decoration:none;">🎯 Tactics</a>
+                        <a href="pages/context_compression.html" class="nav-tab" style="text-decoration:none;">🗜️ Compression</a>
                     </div>
 
-                    <!-- Apply -->
+                    <!-- 📝 UNDERSTAND — Apply -->
                     <div class="bloom-tier tier-apply">
-                        <div class="bloom-tier-label">Apply</div>
+                        <div class="bloom-tier-label">📝 Understand — Apply</div>
                         <button class="nav-tab ${state.activeTab === 'quiz' ? 'active' : ''}" onclick="setTab('quiz')">🎯 Quiz Mode</button>
                         <button class="nav-tab ${state.activeTab === 'exam' ? 'active' : ''}" onclick="setTab('exam')">📝 Mock Exam</button>
                         <button class="nav-tab ${state.activeTab === 'resources' ? 'active' : ''}" onclick="setTab('resources')">📚 Resources</button>
+                        <a href="pages/dictionary.html" class="nav-tab" style="text-decoration:none;">📖 Dictionary</a>
+                        <a href="pages/mcp_python.html" class="nav-tab" style="text-decoration:none;">🐍 MCP Python</a>
+                        <a href="pages/claude_pricing.html" class="nav-tab" style="text-decoration:none;">📊 Pricing</a>
                     </div>
 
-                    <!-- Remember -->
+                    <!-- 🧠 REMEMBER — Visuals -->
                     <div class="bloom-tier tier-remember">
-                        <div class="bloom-tier-label">Remember</div>
+                        <div class="bloom-tier-label">🧠 Remember — Visuals</div>
                         <button class="nav-tab ${state.activeTab === 'cards' ? 'active' : ''}" onclick="setTab('cards')">🧠 Memory Cards</button>
-                        <button class="nav-tab ${state.activeTab === 'remember' ? 'active' : ''}" onclick="setTab('remember')">🎬 Remember (Slideshow)</button>
+                        <button class="nav-tab ${state.activeTab === 'remember' ? 'active' : ''}" onclick="setTab('remember')">🎬 Slideshow</button>
                         <a href="pages/memory_cards.html" class="nav-tab" style="text-decoration:none;">🃏 Cards Index</a>
-                        <a href="pages/dictionary.html" class="nav-tab" style="text-decoration:none;">📖 Dictionary</a>
-                        <a href="pages/mindmap.html" class="nav-tab" style="text-decoration:none;">🗺️ Mindmap</a>
-                        <a href="pages/tactics.html" class="nav-tab" style="text-decoration:none;">🎯 Tactics</a>
-                        <a href="pages/skills.html" class="nav-tab" style="text-decoration:none;">🛠️ Skills</a>
-                        <a href="pages/explicit_criteria.html" class="nav-tab" style="text-decoration:none;">📋 Criteria</a>
-                        <a href="pages/structured_reasoning.html" class="nav-tab" style="text-decoration:none;">🧩 Reasoning</a>
+                        <a href="pages/markdown_renderer.html" class="nav-tab" style="text-decoration:none;">📝 Renderer</a>
                     </div>
                 </nav>
 
@@ -1756,6 +1802,11 @@
                         ${hintHtml}
                         <div class="quiz-options">${optionsHtml}</div>
                         ${explanationHtml}
+                        <div style="margin:12px 0;text-align:center;">
+                            <button class="mastery-btn ${isMastered ? 'mastered' : ''}" onclick="toggleMastery(${q.category}, ${q.id})">
+                                ${isMastered ? '✅ Mastered' : '☆ Mark as Mastered'}
+                            </button>
+                        </div>
                         <div class="quiz-nav">
                             <button onclick="prevQuiz()" ${state.quizIndex === 0 ? 'disabled' : ''}>Previous</button>
                             <button onclick="nextQuiz()" ${state.quizIndex === state.quizQuestions.length - 1 ? 'disabled' : ''}>Next</button>
@@ -2238,10 +2289,19 @@
             if (!wasMastered) {
                 showMasteredReward();
             }
-            // Close current popup and open next card
+            // Close current popup and open next unmastered card
             btn.closest('.card-modal-overlay').remove();
-            const nextId = questionId >= 100 ? 1 : questionId + 1;
-            showCardModal(nextId);
+            const nextId = findNextUnmasteredId(questionId);
+            if (nextId) showCardModal(nextId);
+        }
+
+        function findNextUnmasteredId(afterId) {
+            for (let i = 1; i <= 100; i++) {
+                const tryId = ((afterId + i - 1) % 100) + 1;
+                const q = questionsData.find(x => x.id === tryId);
+                if (q && !(state.progress[q.category] || []).includes(q.id)) return tryId;
+            }
+            return null;
         }
 
         function showMasteredReward() {

@@ -61,6 +61,8 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
   - `pages/skills.html` — AI skills, slash commands, and agent file guidance
   - `pages/explicit_criteria.html` — Explicit output criteria and constraint examples
   - `pages/structured_reasoning.html` — Chain-of-thought and structured reasoning patterns
+  - `pages/multi_turn.html` — Multi-turn prompting strategies and patterns
+  - `pages/context_compression.html` — Context window compression and summary techniques
 - **Scripts:** Automation scripts in `scripts/`.
 - **AI Guidelines:** Agent-specific instructions live in `.kilo/agent/`.
   - `claude.md` — Claude-specific guidelines
@@ -103,6 +105,8 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
 │   ├── skills.html         # AI skills and slash-command guide
 │   ├── explicit_criteria.html # Explicit output criteria examples
 │   ├── structured_reasoning.html # Chain-of-thought and structured reasoning
+│   ├── multi_turn.html      # Multi-turn prompting strategies
+│   ├── context_compression.html # Context compression and summary
 │   └── nav.js              # Shared navigation menu script
 ├── scripts/                # Automation scripts
 │   └── generate_notes.py

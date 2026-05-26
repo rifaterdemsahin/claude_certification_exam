@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Multi-turn prompting strategies for the Claude Developer Certification. Build coherent conversations that improve with each exchange.">
+    <title>Claude Dev Cert — Multi-Turn Prompting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --border: #334155;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444;
+            --accent-orange: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        header {
+            text-align: center;
+            padding: 30px 16px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        header h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+        header p { color: var(--text-secondary); font-size: 1em; margin-top: 8px; }
+        .section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: border-color 0.3s;
+        }
+        .section:hover { border-color: var(--accent-blue); }
+        .section h2 {
+            font-size: 1.3em;
+            margin-bottom: 16px;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section h3 {
+            font-size: 1.1em;
+            margin: 20px 0 10px;
+            color: var(--accent-purple);
+        }
+        .section p { color: var(--text-secondary); margin-bottom: 12px; }
+        .section ul { margin-left: 20px; color: var(--text-secondary); }
+        .section li { margin-bottom: 8px; }
+        .section code {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SFMono-Regular', Consolas, monospace;
+            font-size: 0.9em;
+        }
+        .section pre {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+        .section pre code {
+            background: transparent;
+            padding: 0;
+            font-size: 0.85em;
+            color: var(--text-secondary);
+        }
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        @media (min-width: 640px) {
+            .compare-grid { grid-template-columns: 1fr 1fr; }
+        }
+        .compare-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .compare-card.bad { border-color: var(--accent-red); }
+        .compare-card.good { border-color: var(--accent-green); }
+        .compare-label {
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .compare-label.bad { color: var(--accent-red); }
+        .compare-label.good { color: var(--accent-green); }
+        .compare-card pre {
+            margin: 0;
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+        .compare-card pre code {
+            font-size: 0.82em;
+            line-height: 1.6;
+        }
+        .turn-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin: 16px 0;
+        }
+        .turn {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 12px;
+            border-left: 3px solid var(--border);
+            margin-left: 20px;
+        }
+        .turn.user { border-left-color: var(--accent-blue); }
+        .turn.assistant { border-left-color: var(--accent-green); }
+        .turn.system { border-left-color: var(--accent-purple); }
+        .turn-badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            font-weight: 700;
+            text-transform: uppercase;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .turn.user .turn-badge { background: rgba(56,189,248,0.2); color: var(--accent-blue); }
+        .turn.assistant .turn-badge { background: rgba(16,185,129,0.2); color: var(--accent-green); }
+        .turn.system .turn-badge { background: rgba(168,85,247,0.2); color: var(--accent-purple); }
+        .turn-content {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .tip-box {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px dashed var(--accent-green);
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 12px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .tip-box .emoji { font-size: 1.4em; flex-shrink: 0; }
+        .tip-box .text { color: var(--accent-green); font-size: 0.9em; }
+        .warn-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px dashed var(--accent-red);
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 12px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .warn-box .emoji { font-size: 1.4em; flex-shrink: 0; }
+        .warn-box .text { color: var(--accent-red); font-size: 0.9em; }
+        .pattern-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            margin: 4px;
+        }
+        .tag-refine  { background: rgba(56,189,248,0.15); color: var(--accent-blue); }
+        .tag-branch  { background: rgba(168,85,247,0.15); color: var(--accent-purple); }
+        .tag-build   { background: rgba(16,185,129,0.15); color: var(--accent-green); }
+        .tag-correct { background: rgba(239,68,68,0.15); color: var(--accent-red); }
+        .tag-deepen  { background: rgba(245,158,11,0.15); color: var(--accent-orange); }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>💬 Multi-Turn Prompting</h1>
+        <p>Build coherent, stateful conversations that improve with each exchange</p>
+    </header>
+
+    <div class="container">
+
+        <!-- What Is Multi-Turn Prompting -->
+        <div class="section">
+            <h2>🔄 What Is Multi-Turn Prompting?</h2>
+            <p>Multi-turn prompting is the practice of building a conversation across <strong>multiple user-assistant exchanges</strong>, where each turn builds on the context of previous turns. Unlike single-turn prompts, the model has access to the full conversation history.</p>
+            <p>This enables iterative refinement, progressive disclosure, and complex workflows that cannot be expressed in a single prompt.</p>
+
+            <div class="turn-flow">
+                <div class="turn system">
+                    <span class="turn-badge">System</span>
+                    <div class="turn-content">You are a senior Python engineer. Respond with code and brief explanations.</div>
+                </div>
+                <div class="turn user">
+                    <span class="turn-badge">Turn 1</span>
+                    <div class="turn-content">Write a function to validate email addresses.</div>
+                </div>
+                <div class="turn assistant">
+                    <span class="turn-badge">Turn 1</span>
+                    <div class="turn-content">Here's a function using regex: <code>validate_email(email) -> bool</code> ...</div>
+                </div>
+                <div class="turn user">
+                    <span class="turn-badge">Turn 2</span>
+                    <div class="turn-content">Now add support for international domains (IDN).</div>
+                </div>
+                <div class="turn assistant">
+                    <span class="turn-badge">Turn 2</span>
+                    <div class="turn-content">Updated with <code>encode('idna')</code> for punycode conversion ...</div>
+                </div>
+                <div class="turn user">
+                    <span class="turn-badge">Turn 3</span>
+                    <div class="turn-content">Add unit tests for edge cases.</div>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <span class="emoji">💡</span>
+                <div class="text">
+                    <strong>Exam link:</strong> Maps to <strong>CAT05 — Context Management & Reliability (15%)</strong> and <strong>CAT04 — Prompt Engineering & Structured Output (20%)</strong>. Multi-turn is the foundation of agentic workflows.
+                </div>
+            </div>
+        </div>
+
+        <!-- Five Patterns -->
+        <div class="section">
+            <h2>🧰 Five Multi-Turn Patterns</h2>
+
+            <div style="display:flex;flex-wrap:wrap;margin:12px 0;">
+                <span class="pattern-tag tag-refine">🔄 Refine</span>
+                <span class="pattern-tag tag-branch">🌿 Branch</span>
+                <span class="pattern-tag tag-build">🧱 Build</span>
+                <span class="pattern-tag tag-correct">🔧 Correct</span>
+                <span class="pattern-tag tag-deepen">🔬 Deepen</span>
+            </div>
+
+            <ul>
+                <li><strong>Refine:</strong> Start broad, then narrow down. "Give me 5 options" → "I like option 3, expand it" → "Add error handling to that."</li>
+                <li><strong>Branch:</strong> Explore alternatives. "What if we used Redis instead?" → "Now compare that with Memcached."</li>
+                <li><strong>Build:</strong> Layer complexity. "Create the schema" → "Now add the API layer" → "Now add auth."</li>
+                <li><strong>Correct:</strong> Fix issues. "That has a bug on line 12" → "Now optimize the loop."</li>
+                <li><strong>Deepen:</strong> Drill into specifics. "Explain the architecture" → "Zoom into the caching layer" → "What happens on cache miss?"</li>
+            </ul>
+        </div>
+
+        <!-- Before & After -->
+        <div class="section">
+            <h2>⚖️ Single-Turn vs. Multi-Turn</h2>
+
+            <h3>Example 1: Building an API</h3>
+            <div class="compare-grid">
+                <div class="compare-card bad">
+                    <div class="compare-label bad">❌ Single-Turn (Everything at Once)</div>
+                    <pre><code>Write a REST API with Express that has
+user registration, login, JWT auth,
+rate limiting, input validation,
+error handling, and logging. Use
+PostgreSQL and include migrations.
+Also add Docker and CI/CD.</code></pre>
+                </div>
+                <div class="compare-card good">
+                    <div class="compare-label good">✅ Multi-Turn (Progressive Build)</div>
+                    <pre><code>Turn 1: "Set up an Express project
+with PostgreSQL connection and a
+users table migration."
+
+Turn 2: "Add POST /register and
+POST /login endpoints with bcrypt
+password hashing."
+
+Turn 3: "Add JWT middleware that
+protects all /api/* routes."
+
+Turn 4: "Add rate limiting (100 req/
+min) and input validation with Zod."
+
+Turn 5: "Add error handling middleware
+and request logging with Winston."
+
+Turn 6: "Add Dockerfile and a GitHub
+Actions CI pipeline."</code></pre>
+                </div>
+            </div>
+
+            <h3>Example 2: Debugging</h3>
+            <div class="compare-grid">
+                <div class="compare-card bad">
+                    <div class="compare-label bad">❌ Single-Turn</div>
+                    <pre><code>My app crashes sometimes with
+"Cannot read property 'id' of
+undefined" but only on Tuesdays.
+Here's 500 lines of code. [pastes
+entire codebase]</code></pre>
+                </div>
+                <div class="compare-card good">
+                    <div class="compare-label good">✅ Multi-Turn (Progressive Debug)</div>
+                    <pre><code>Turn 1: "I get this error: Cannot
+read property 'id' of undefined.
+Here's the stack trace: ..."
+
+Turn 2: "The error comes from
+getUser(). Here's that function: ..."
+
+Turn 3: "The user object is null
+when the cache expires. Here's
+the caching code: ..."
+
+Turn 4: "Found it — the TTL is set
+to 0 on Tuesdays due to a cron
+job. How should I fix this?"</code></pre>
+                </div>
+            </div>
+
+            <h3>Example 3: Code Review</h3>
+            <div class="compare-grid">
+                <div class="compare-card bad">
+                    <div class="compare-label bad">❌ Single-Turn</div>
+                    <pre><code>Review this PR. [pastes 40 files
+of diff with no context about
+what the PR does]</code></pre>
+                </div>
+                <div class="compare-card good">
+                    <div class="compare-label good">✅ Multi-Turn (Layered Review)</div>
+                    <pre><code>Turn 1: "This PR adds a payment
+module. Here's the architecture
+overview: [diagram]. Does the
+design make sense?"
+
+Turn 2: "Good. Now review the
+Stripe integration in
+src/payments/stripe.ts for
+security issues."
+
+Turn 3: "Now check the error
+handling in the webhook handler.
+Does it handle all Stripe event
+types correctly?"
+
+Turn 4: "Finally, review the
+tests. Are edge cases covered?"</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Prompt Strategy -->
+        <div class="section">
+            <h2>🎯 System Prompt Strategy for Multi-Turn</h2>
+            <p>The system prompt sets the foundation for the entire conversation. In multi-turn, it should define:</p>
+
+            <pre><code>SYSTEM PROMPT:
+You are a senior backend engineer
+reviewing code for production readiness.
+
+CONVERSATION RULES:
+1. Reference previous turns by saying
+   "As we discussed in turn 3..."
+2. When I say "go deeper", expand the
+   last point with more detail.
+3. When I say "next", move to the next
+   topic without repeating context.
+4. Maintain a running summary of
+   decisions made so far.
+5. If I contradict a previous decision,
+   flag it explicitly.
+
+OUTPUT FORMAT:
+- Code blocks with language tags
+- One-line explanation before each block
+- If uncertain, state confidence level</code></pre>
+
+            <div class="tip-box">
+                <span class="emoji">🛡️</span>
+                <div class="text">
+                    <strong>Pro tip:</strong> Define "control words" in your system prompt (like "go deeper", "next", "summarize"). These act as shortcuts that the model will interpret consistently across turns.
+                </div>
+            </div>
+        </div>
+
+        <!-- Context Management -->
+        <div class="section">
+            <h2>📐 Context Management Across Turns</h2>
+            <p>As the conversation grows, you must manage what stays in context and what gets compressed. See the <a href="context_compression.html" style="color:var(--accent-blue);">Context Compression</a> page for details.</p>
+
+            <h3>Turn Budget Strategy</h3>
+            <pre><code>TURNS 1-5:   Full verbatim history
+             (establish context)
+
+TURNS 6-15:  Summarize turns 1-5 into
+             a 200-token block. Keep
+             turns 6+ verbatim.
+
+TURNS 16-30: Summarize turns 1-15 into
+             a 300-token block. Keep
+             turns 16+ verbatim.
+
+TURN 30+:    Rolling window: keep last
+             5 turns verbatim, compress
+             everything else.</code></pre>
+
+            <h3>What to Preserve Across Turns</h3>
+            <ul>
+                <li><strong>Always keep:</strong> Decisions made, file paths modified, error messages, API contracts established.</li>
+                <li><strong>Compress:</strong> Long code blocks (keep signatures only), verbose explanations (keep conclusions only).</li>
+                <li><strong>Drop:</strong> Greetings, acknowledgments, code that was later replaced, abandoned approaches.</li>
+            </ul>
+        </div>
+
+        <!-- Multi-Turn for Agents -->
+        <div class="section">
+            <h2>🤖 Multi-Turn in Agentic Loops</h2>
+            <p>Agents use multi-turn implicitly. Each tool call is a turn in a conversation between the agent and the environment.</p>
+
+            <pre><code>AGENT MULTI-TURN LOOP:
+
+Turn 1 (System):
+  "You are a coding agent. Use tools
+   to complete the user's task."
+
+Turn 2 (User):
+  "Add pagination to the /users endpoint."
+
+Turn 3 (Assistant):
+  [calls read_file("src/routes/users.ts")]
+
+Turn 4 (Tool Result):
+  [file contents]
+
+Turn 5 (Assistant):
+  [calls edit_file("src/routes/users.ts",
+   { pagination logic })]
+
+Turn 6 (Tool Result):
+  "File updated successfully"
+
+Turn 7 (Assistant):
+  [calls run_tests()]
+
+Turn 8 (Tool Result):
+  "All 12 tests passed"
+
+Turn 9 (Assistant):
+  "Done. Added offset/limit pagination
+   with ?page and ?per_page params."</code></pre>
+
+            <div class="warn-box">
+                <span class="emoji">⚠️</span>
+                <div class="text">
+                    <strong>Exam trap:</strong> "Multi-turn always outperforms single-turn" is FALSE. For simple, self-contained tasks (translation, classification), single-turn is faster and cheaper. Use multi-turn only when the task requires iteration or progressive context.
+                </div>
+            </div>
+        </div>
+
+        <!-- Common Pitfalls -->
+        <div class="section">
+            <h2>🚫 Common Multi-Turn Pitfalls</h2>
+            <ul>
+                <li><strong>Context drift:</strong> The model forgets earlier instructions as the conversation grows. Solution: restate key constraints in later turns.</li>
+                <li><strong>Contradiction accumulation:</strong> Turn 3 says "use TypeScript", turn 10 says "switch to JavaScript". The model may hallucinate a hybrid. Solution: explicitly revoke old instructions.</li>
+                <li><strong>Repetition loops:</strong> The model re-explains the same thing each turn. Solution: say "don't repeat previous context" in the system prompt.</li>
+                <li><strong>Lost artifacts:</strong> Code from turn 5 gets referenced in turn 15 but was compressed out. Solution: save important code to files, not conversation history.</li>
+                <li><strong>Assumption creep:</strong> The model assumes earlier context is still valid when requirements changed. Solution: use "starting fresh" to reset assumptions.</li>
+            </ul>
+        </div>
+
+        <!-- Related -->
+        <div class="section">
+            <h2>🔗 Related Competency</h2>
+            <ul>
+                <li><strong>CAT05 — Context Management & Reliability (15%)</strong>: Token budgets, context window management, conversation state.</li>
+                <li><strong>CAT04 — Prompt Engineering & Structured Output (20%)</strong>: System prompt design, output format control across turns.</li>
+                <li><strong>CAT01 — Agentic Architecture & Orchestration (27%)</strong>: Multi-turn is the backbone of agentic tool-use loops.</li>
+            </ul>
+        </div>
+    </div>
+    <script src="nav.js"></script>
+</body>
+</html>
