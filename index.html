@@ -1937,6 +1937,14 @@
                         <button class="nav-tab active" onclick="toggleRememberAnswer()">${state.showRememberAnswer ? 'Hide Answer' : 'Show Answer'}</button>
                         <button class="nav-tab" onclick="nextRemember()" ${idx === effectivePool.length - 1 ? 'disabled' : ''}>Next</button>
                     </div>
+                    <div style="margin-top:10px;text-align:center;">
+                        <button class="mastery-btn" style="margin-right:8px;" onclick="toggleMastery(${q.category}, ${q.id})">
+                            ${(state.progress[q.category] || []).includes(q.id) ? '✅ Mastered' : '☆ Mark as Mastered'}
+                        </button>
+                        <button class="mastery-btn" style="background:${state.favorites.includes(q.id) ? 'var(--accent-yellow)' : 'var(--bg-secondary)'};color:${state.favorites.includes(q.id) ? 'var(--bg-primary)' : 'var(--text-primary)'};border:1px solid ${state.favorites.includes(q.id) ? 'var(--accent-yellow)' : 'var(--border)'};" onclick="toggleFavorite(${q.id})">
+                            ${state.favorites.includes(q.id) ? '★ Favorited' : '☆ Favorite'}
+                        </button>
+                    </div>
                 </div>`;
         }
 
