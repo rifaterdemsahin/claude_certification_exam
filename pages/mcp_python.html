@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP Python Guide — Claude Dev Cert</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --border: #334155;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --code-bg: #000000;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        header {
+            text-align: center;
+            padding: 40px 16px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+        .section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        h2 { color: var(--accent-blue); margin-bottom: 16px; font-size: 1.5rem; }
+        p { margin-bottom: 16px; color: var(--text-secondary); }
+        code {
+            font-family: 'Fira Code', monospace;
+            background: rgba(56, 189, 248, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--accent-blue);
+        }
+        pre {
+            background: var(--code-bg);
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            margin: 20px 0;
+        }
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: #d1d5db;
+            font-size: 0.9rem;
+        }
+        .keyword { color: #f472b6; }
+        .function { color: #60a5fa; }
+        .string { color: #34d399; }
+        .comment { color: #6b7280; font-style: italic; }
+        .decorator { color: #fbbf24; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Model Context Protocol (MCP)</h1>
+        <p>Python Server & Client Implementation Guide</p>
+    </header>
+    <div class="container">
+        <a href="../index.html" class="back-btn">← Back to Study App</a>
+
+        <div class="section">
+            <h2>What is MCP?</h2>
+            <p>The <strong>Model Context Protocol (MCP)</strong> is an open standard that enables AI models to interact with data and tools from various sources. It decouples the AI model (the client) from the data sources and tools (the server).</p>
+        </div>
+
+        <div class="section">
+            <h2>1. MCP Server (Python)</h2>
+            <p>Using the <code>mcp</code> Python SDK with <code>FastMCP</code> is the easiest way to create a server. This server exposes a simple tool to Claude.</p>
+            <pre><code><span class="keyword">from</span> fastmcp <span class="keyword">import</span> FastMCP
+
+<span class="comment"># Create an MCP server</span>
+mcp = FastMCP(<span class="string">"MyServer"</span>)
+
+<span class="decorator">@mcp.tool()</span>
+<span class="keyword">def</span> <span class="function">calculate_sum</span>(a: <span class="keyword">int</span>, b: <span class="keyword">int</span>) -> <span class="keyword">int</span>:
+    <span class="comment">"""Add two numbers together."""</span>
+    <span class="keyword">return</span> a + b
+
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    mcp.run()</code></pre>
+            <p>This server automatically generates the JSON schema for the <code>calculate_sum</code> tool based on its type hints and docstring.</p>
+        </div>
+
+        <div class="section">
+            <h2>2. MCP Client (Python)</h2>
+            <p>A client connects to the server to discover and call tools. In production, the "client" is often an app like <strong>Claude Desktop</strong> or a custom agent.</p>
+            <pre><code><span class="keyword">import</span> asyncio
+<span class="keyword">from</span> mcp <span class="keyword">import</span> ClientSession, StdioServerParameters
+<span class="keyword">from</span> mcp.client.stdio <span class="keyword">import</span> stdio_client
+
+<span class="keyword">async def</span> <span class="function">run_client</span>():
+    <span class="comment"># Connect to the server via stdio</span>
+    server_params = StdioServerParameters(
+        command=<span class="string">"python"</span>,
+        args=[<span class="string">"server.py"</span>]
+    )
+
+    <span class="keyword">async with</span> stdio_client(server_params) <span class="keyword">as</span> (read, write):
+        <span class="keyword">async with</span> ClientSession(read, write) <span class="keyword">as</span> session:
+            <span class="comment"># Initialize the session</span>
+            <span class="keyword">await</span> session.initialize()
+
+            <span class="comment"># List available tools</span>
+            tools = <span class="keyword">await</span> session.list_tools()
+            <span class="function">print</span>(<span class="string">f"Available tools: {tools}"</span>)
+
+            <span class="comment"># Call the tool</span>
+            result = <span class="keyword">await</span> session.call_tool(
+                <span class="string">"calculate_sum"</span>, 
+                arguments={<span class="string">"a"</span>: <span class="string">5</span>, <span class="string">"b"</span>: <span class="string">10</span>}
+            )
+            <span class="function">print</span>(<span class="string">f"Result: {result}"</span>)
+
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    asyncio.run(run_client())</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>Key Primitives</h2>
+            <ul>
+                <li><strong>Tools:</strong> Executable functions exposed to the AI.</li>
+                <li><strong>Resources:</strong> Read-only data sources (like files or database rows).</li>
+                <li><strong>Prompts:</strong> Server-side templates for common tasks.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
