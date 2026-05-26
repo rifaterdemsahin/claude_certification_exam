@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Structured reasoning and chain-of-thought prompting for the Claude Developer Certification. Force models to organize thinking into clear steps and categories.">
+    <title>Claude Dev Cert — Structured Reasoning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --border: #334155;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444;
+            --accent-orange: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        header {
+            text-align: center;
+            padding: 30px 16px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        header h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+        header p { color: var(--text-secondary); font-size: 1em; margin-top: 8px; }
+        .section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: border-color 0.3s;
+        }
+        .section:hover { border-color: var(--accent-blue); }
+        .section h2 {
+            font-size: 1.3em;
+            margin-bottom: 16px;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section h3 {
+            font-size: 1.1em;
+            margin: 20px 0 10px;
+            color: var(--accent-purple);
+        }
+        .section p { color: var(--text-secondary); margin-bottom: 12px; }
+        .section ul { margin-left: 20px; color: var(--text-secondary); }
+        .section li { margin-bottom: 8px; }
+        .section code {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SFMono-Regular', Consolas, monospace;
+            font-size: 0.9em;
+        }
+        .section pre {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+        .section pre code {
+            background: transparent;
+            padding: 0;
+            font-size: 0.85em;
+            color: var(--text-secondary);
+        }
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        @media (min-width: 640px) {
+            .compare-grid { grid-template-columns: 1fr 1fr; }
+        }
+        .compare-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .compare-card.bad { border-color: var(--accent-red); }
+        .compare-card.good { border-color: var(--accent-green); }
+        .compare-label {
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .compare-label.bad { color: var(--accent-red); }
+        .compare-label.good { color: var(--accent-green); }
+        .compare-card pre {
+            margin: 0;
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+        .compare-card pre code {
+            font-size: 0.82em;
+            line-height: 1.6;
+        }
+        .step-flow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0;
+            align-items: center;
+            margin: 16px 0;
+            justify-content: center;
+        }
+        .step-box {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            text-align: center;
+            min-width: 120px;
+        }
+        .step-box .num {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+        .step-box .label {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .step-arrow {
+            color: var(--accent-purple);
+            font-size: 1.4em;
+            padding: 0 8px;
+        }
+        .tip-box {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px dashed var(--accent-green);
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 12px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .tip-box .emoji { font-size: 1.4em; flex-shrink: 0; }
+        .tip-box .text { color: var(--accent-green); font-size: 0.9em; }
+        .warn-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px dashed var(--accent-red);
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 12px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .warn-box .emoji { font-size: 1.4em; flex-shrink: 0; }
+        .warn-box .text { color: var(--accent-red); font-size: 0.9em; }
+        .technique-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            margin: 4px;
+        }
+        .tag-cot { background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); }
+        .tag-step { background: rgba(168, 85, 247, 0.15); color: var(--accent-purple); }
+        .tag-cat { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+        .tag-xml { background: rgba(245, 158, 11, 0.15); color: var(--accent-orange); }
+        .tag-role { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🧩 Structured Reasoning</h1>
+        <p>Force the model to organize its thinking into clear steps and categories before responding</p>
+    </header>
+
+    <div class="container">
+
+        <!-- What Is Structured Reasoning -->
+        <div class="section">
+            <h2>🤔 What Is Structured Reasoning?</h2>
+            <p>Structured reasoning is a prompting technique where you instruct the model to <strong>break its internal thinking into explicit, ordered steps</strong> before producing a final answer. Instead of jumping to a conclusion, the model must show its work — like a student solving a math problem.</p>
+            <p>This improves accuracy, makes errors easier to catch, and produces outputs that are consistent and auditable.</p>
+
+            <div class="step-flow">
+                <div class="step-box"><div class="num">1</div><div class="label">Read Input</div></div>
+                <div class="step-arrow">→</div>
+                <div class="step-box"><div class="num">2</div><div class="label">Categorize</div></div>
+                <div class="step-arrow">→</div>
+                <div class="step-box"><div class="num">3</div><div class="label">Reason</div></div>
+                <div class="step-arrow">→</div>
+                <div class="step-box"><div class="num">4</div><div class="label">Validate</div></div>
+                <div class="step-arrow">→</div>
+                <div class="step-box"><div class="num">5</div><div class="label">Respond</div></div>
+            </div>
+
+            <div class="tip-box">
+                <span class="emoji">💡</span>
+                <div class="text">
+                    <strong>Exam link:</strong> Maps to <strong>CAT04 — Prompt Engineering & Structured Output (20%)</strong> and <strong>CAT05 — Context Management & Reliability (15%)</strong>. Expect questions on chain-of-thought, step-by-step reasoning, and output structuring.
+                </div>
+            </div>
+        </div>
+
+        <!-- Five Techniques -->
+        <div class="section">
+            <h2>🧰 Five Structured Reasoning Techniques</h2>
+
+            <div style="display:flex;flex-wrap:wrap;margin:12px 0;">
+                <span class="technique-tag tag-cot">🔗 Chain-of-Thought</span>
+                <span class="technique-tag tag-step">🔢 Numbered Steps</span>
+                <span class="technique-tag tag-cat">📁 Categorization</span>
+                <span class="technique-tag tag-xml">🏷️ XML Tags</span>
+                <span class="technique-tag tag-role">🎭 Role Framing</span>
+            </div>
+
+            <ul>
+                <li><strong>Chain-of-Thought (CoT):</strong> Ask the model to "think step by step" or "show your reasoning" before answering.</li>
+                <li><strong>Numbered Steps:</strong> Force a fixed sequence — "Step 1: identify the problem. Step 2: list options. Step 3: pick one."</li>
+                <li><strong>Categorization:</strong> Require the model to sort inputs into buckets first — "Classify each item as HIGH, MEDIUM, or LOW before scoring."</li>
+                <li><strong>XML Tags:</strong> Use <code>&lt;thinking&gt;</code>, <code>&lt;analysis&gt;</code>, <code>&lt;answer&gt;</code> tags to separate reasoning from output.</li>
+                <li><strong>Role Framing:</strong> Assign a persona that naturally reasons — "You are a senior security auditor. Analyze this code step by step."</li>
+            </ul>
+        </div>
+
+        <!-- Before & After -->
+        <div class="section">
+            <h2>⚖️ Unstructured vs. Structured Prompts</h2>
+
+            <h3>Example 1: Code Review</h3>
+            <div class="compare-grid">
+                <div class="compare-card bad">
+                    <div class="compare-label bad">❌ Unstructured</div>
+                    <pre><code>Review this code for bugs.</code></pre>
+                </div>
+                <div class="compare-card good">
+                    <div class="compare-label good">✅ Structured Reasoning</div>
+                    <pre><code>Review this code for bugs. Before
+responding, organize your thinking:
+
+1. SYNTAX — list any syntax errors
+2. LOGIC — identify logic flaws
+3. EDGE CASES — find unhandled cases
+4. SECURITY — flag vulnerabilities
+5. VERDICT — rate severity 1-5
+
+Show each category before the final
+verdict. If a category has no issues,
+write "None found."</code></pre>
+                </div>
+            </div>
+
+            <h3>Example 2: Choosing a Tech Stack</h3>
+            <div class="compare-grid">
+                <div class="compare-card bad">
+                    <div class="compare-label bad">❌ Unstructured</div>
+                    <pre><code>Should I use React or Vue for
+my dashboard project?</code></pre>
+                </div>
+                <div class="compare-card good">
+                    <div class="compare-label good">✅ Structured Reasoning</div>
+                    <pre><code>Compare React and Vue for a
+real-time dashboard project.
+
+Before answering, think through
+these categories:
+
+1. PROJECT NEEDS — what does a
+   real-time dashboard require?
+2. REACT FIT — how well does
+   React meet those needs?
+3. VUE FIT — how well does Vue
+   meet those needs?
+4. TRADE-OFFS — what do you
+   sacrifice with each choice?
+5. RECOMMENDATION — pick one
+   with a 2-sentence justification.</code></pre>
+                </div>
+            </div>
+
+            <h3>Example 3: Bug Diagnosis</h3>
+            <div class="compare-grid">
+                <div class="compare-card bad">
+                    <div class="compare-label bad">❌ Unstructured</div>
+                    <pre><code>Why is my API returning 500?</code></pre>
+                </div>
+                <div class="compare-card good">
+                    <div class="compare-label good">✅ Structured Reasoning</div>
+                    <pre><code>My API returns 500 on POST /users.
+
+Think step by step:
+
+1. REPRODUCE — what input triggers
+   the error?
+2. TRACE — which middleware or
+   handler is likely failing?
+3. HYPOTHESES — list 3 possible
+   root causes ranked by likelihood.
+4. EVIDENCE — what logs or data
+   would confirm each hypothesis?
+5. FIX — suggest the most probable
+   fix with code.</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- XML Tag Pattern -->
+        <div class="section">
+            <h2>🏷️ XML Tag Separation Pattern</h2>
+            <p>Claude models respond well to XML tags that separate reasoning phases. This makes it trivial to parse the final answer programmatically.</p>
+
+            <pre><code>Analyze the user's request below.
+
+&lt;thinking&gt;
+Break the request into sub-problems.
+For each sub-problem:
+  - Identify what information is needed
+  - Determine the approach
+  - Note any assumptions
+&lt;/thinking&gt;
+
+&lt;analysis&gt;
+Evaluate each sub-problem's solution.
+Rank them by confidence (high/med/low).
+Flag any unresolved uncertainties.
+&lt;/analysis&gt;
+
+&lt;answer&gt;
+Provide ONLY the final answer here.
+This section will be shown to the user.
+Keep it concise and actionable.
+&lt;/answer&gt;</code></pre>
+
+            <div class="tip-box">
+                <span class="emoji">🛡️</span>
+                <div class="text">
+                    <strong>Parsing tip:</strong> When consuming the response programmatically, extract the <code>&lt;answer&gt;</code> block only. The <code>&lt;thinking&gt;</code> block is for debugging and auditing — never show it to end users.
+                </div>
+            </div>
+        </div>
+
+        <!-- Categorization Pattern -->
+        <div class="section">
+            <h2>📁 Force Categorization Before Response</h2>
+            <p>Categorization-first prompts make the model sort inputs into buckets before doing any work. This prevents hasty generalizations.</p>
+
+            <pre><code>You are a triage assistant for support tickets.
+
+For each ticket:
+1. CLASSIFY the ticket type:
+   - BUG (something is broken)
+   - FEATURE (new capability request)
+   - QUESTION (how-to or confusion)
+   - BILLING (payment or account issue)
+
+2. ASSIGN severity:
+   - CRITICAL (service down, data loss)
+   - HIGH (major feature broken)
+   - MEDIUM (workaround exists)
+   - LOW (cosmetic or nice-to-have)
+
+3. ROUTE to the correct team based
+   on your classification above.
+
+4. RESPOND with a JSON object:
+   {
+     "type": "...",
+     "severity": "...",
+     "team": "...",
+     "summary": "one sentence"
+   }
+
+Do NOT skip steps 1-3. Show your
+classification before producing JSON.</code></pre>
+        </div>
+
+        <!-- Numbered Step Chains -->
+        <div class="section">
+            <h2>🔢 Numbered Step Chains</h2>
+            <p>When the task has a fixed sequence of operations, define each step explicitly and require the model to label its output by step number.</p>
+
+            <pre><code>Convert this business requirement into code.
+
+Follow these steps IN ORDER:
+
+Step 1 — PARSE
+  Extract all entities, actions, and
+  constraints from the requirement.
+
+Step 2 — MODEL
+  Define the data structures needed.
+  Use TypeScript interfaces.
+
+Step 3 — IMPLEMENT
+  Write the core function.
+  Include error handling.
+
+Step 4 — TEST
+  Write 3 unit tests:
+  - happy path
+  - edge case
+  - error case
+
+Step 5 — EXPLAIN
+  Provide a 3-sentence summary of
+  what the code does and why.
+
+Label each section: "Step 1 — PARSE:",
+"Step 2 — MODEL:", etc.</code></pre>
+        </div>
+
+        <!-- When NOT to Use -->
+        <div class="section">
+            <h2>🚫 When NOT to Use Structured Reasoning</h2>
+            <ul>
+                <li><strong>Simple factual lookups:</strong> "What is the capital of France?" — forcing steps here wastes tokens.</li>
+                <li><strong>Creative writing:</strong> Over-structuring kills creative flow. Use it only for the outline phase.</li>
+                <li><strong>Real-time chat:</strong> Users waiting for a response don't want to see 5 reasoning steps. Use it for behind-the-scenes processing only.</li>
+                <li><strong>Token-constrained calls:</strong> Structured reasoning adds 2-5x more output tokens. Budget accordingly.</li>
+            </ul>
+
+            <div class="warn-box">
+                <span class="emoji">⚠️</span>
+                <div class="text">
+                    <strong>Exam trap:</strong> "Chain-of-thought always improves results" is FALSE. CoT helps with complex reasoning but adds latency and cost. For simple tasks, direct prompting is more efficient.
+                </div>
+            </div>
+        </div>
+
+        <!-- Combining Techniques -->
+        <div class="section">
+            <h2>🔗 Combining with Other Patterns</h2>
+            <p>Structured reasoning works best when combined with other prompt engineering techniques:</p>
+            <ul>
+                <li><strong>+ Explicit Criteria:</strong> Define the rules the model must follow at each step (see <a href="explicit_criteria.html" style="color:var(--accent-blue);">Explicit Criteria</a> page).</li>
+                <li><strong>+ Few-Shot Examples:</strong> Show one complete structured reasoning example, then let the model follow the pattern.</li>
+                <li><strong>+ JSON Schema:</strong> Use structured reasoning in the thinking phase, then output the final answer as validated JSON.</li>
+                <li><strong>+ Role Prompting:</strong> Assign a role that naturally reasons (auditor, architect, doctor) and the model will produce higher-quality steps.</li>
+            </ul>
+        </div>
+
+        <!-- Related Competency -->
+        <div class="section">
+            <h2>🔗 Related Competency</h2>
+            <ul>
+                <li><strong>CAT04 — Prompt Engineering & Structured Output (20%)</strong>: Chain-of-thought, step-by-step, XML tag separation, few-shot patterns.</li>
+                <li><strong>CAT05 — Context Management & Reliability (15%)</strong>: Ensuring reasoning quality across multi-turn conversations.</li>
+                <li><strong>CAT01 — Agentic Architecture & Orchestration (27%)</strong>: Structured reasoning is the backbone of agentic planning loops.</li>
+            </ul>
+        </div>
+    </div>
+    <script src="nav.js"></script>
+</body>
+</html>

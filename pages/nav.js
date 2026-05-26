@@ -58,6 +58,7 @@
         { href: 'tactics.html', label: '🎯 Tactics' },
         { href: 'skills.html', label: '🛠️ Skills' },
         { href: 'explicit_criteria.html', label: '📋 Criteria' },
+        { href: 'structured_reasoning.html', label: '🧩 Reasoning' },
         { href: 'agi-path.html', label: '🚀 AGI Path' },
         { href: 'memory_cards.html', label: '🃏 Cards' },
     ];
