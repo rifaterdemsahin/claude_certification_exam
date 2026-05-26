@@ -1923,7 +1923,7 @@
                     if (optLetter === q.answer) cls += ' correct';
                     else if (optLetter === state.examSelected) cls += ' incorrect';
                 }
-                return `<button class="${cls}" onclick="selectExamOption('${optLetter}')" ${state.examShowExplanation ? 'disabled' : ''}>${letterEmojis[optLetter]} ${escapeHtml(opt.substring(2))}</button>`;
+                return `<button class="${cls}" onclick="selectExamOption('${optLetter}')" ${state.examShowExplanation ? 'disabled' : ''}>${letterEmojis[optLetter]} ${escapeHtml(opt.substring(3))}</button>`;
             }).join('');
 
             let explanationHtml = '';
