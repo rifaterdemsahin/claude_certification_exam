@@ -51,4 +51,16 @@
         <lastmod>2026-05-26</lastmod>
         <priority>0.7</priority>
     </url>
+    <url>
+        <loc>https://rifaterdemsahin.github.io/claude_certification_exam/pages/skills.html</loc>
+        <lastmod>2026-05-26</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://rifaterdemsahin.github.io/claude_certification_exam/pages/explicit_criteria.html</loc>
+        <lastmod>2026-05-26</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
 </urlset>

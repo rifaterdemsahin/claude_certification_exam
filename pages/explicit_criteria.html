@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explicit output criteria and constraint examples for prompt engineering. Learn to define unambiguous model requirements for the Claude Developer Certification.">
+    <title>Claude Dev Cert — Explicit Criteria & Constraints</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --border: #334155;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444;
+            --accent-orange: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        header {
+            text-align: center;
+            padding: 30px 16px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        header h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+        header p { color: var(--text-secondary); font-size: 1em; margin-top: 8px; }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-size: 0.9em;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .back-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+
+        .section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: border-color 0.3s;
+        }
+        .section:hover { border-color: var(--accent-blue); }
+        .section h2 {
+            font-size: 1.3em;
+            margin-bottom: 16px;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section h3 {
+            font-size: 1.1em;
+            margin: 16px 0 8px;
+            color: var(--accent-purple);
+        }
+        .section p { color: var(--text-secondary); margin-bottom: 12px; }
+        .section ul { margin-left: 20px; color: var(--text-secondary); }
+        .section li { margin-bottom: 8px; }
+        .section code {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SFMono-Regular', Consolas, monospace;
+            font-size: 0.9em;
+        }
+        .section pre {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+        .section pre code {
+            background: transparent;
+            padding: 0;
+            font-size: 0.85em;
+            color: var(--text-secondary);
+        }
+
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        @media (min-width: 640px) {
+            .compare-grid { grid-template-columns: 1fr 1fr; }
+        }
+        .compare-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .compare-card.bad { border-color: var(--accent-red); }
+        .compare-card.good { border-color: var(--accent-green); }
+        .compare-label {
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .compare-label.bad { color: var(--accent-red); }
+        .compare-label.good { color: var(--accent-green); }
+        .compare-card pre {
+            margin: 0;
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+
+        .criterion-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            margin: 4px;
+        }
+        .tag-format { background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); }
+        .tag-length { background: rgba(168, 85, 247, 0.15); color: var(--accent-purple); }
+        .tag-range { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+        .tag-enum { background: rgba(245, 158, 11, 0.15); color: var(--accent-orange); }
+        .tag-forbid { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .checklist-item .check { color: var(--accent-green); font-weight: 700; font-size: 1.2em; }
+        .checklist-item .text { color: var(--text-secondary); font-size: 0.95em; }
+
+        .tip-box {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px dashed var(--accent-green);
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 12px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .tip-box .emoji { font-size: 1.4em; flex-shrink: 0; }
+        .tip-box .text { color: var(--accent-green); font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📋 Explicit Criteria & Constraints</h1>
+        <p>How to define unambiguous requirements that model outputs must satisfy</p>
+    </header>
+
+    <div class="container">
+        <a href="../index.html" class="back-btn">← Back to Mastery App</a>
+
+        <!-- What Are Explicit Criteria -->
+        <div class="section">
+            <h2>🎯 What Are Explicit Criteria?</h2>
+            <p>Explicit criteria are <strong>precise, testable rules</strong> that dictate what a model must or must not produce. They remove ambiguity, reduce hallucination, and make output validation possible.</p>
+            <p>Implicit instructions rely on the model's general training (e.g., "be helpful"). Explicit instructions leave no room for interpretation (e.g., "respond in exactly 3 bullet points, each under 10 words").</p>
+
+            <div class="tip-box">
+                <span class="emoji">💡</span>
+                <div class="text">
+                    <strong>Exam link:</strong> This topic maps to <strong>CAT04 — Prompt Engineering & Structured Output (20%)</strong>. Expect questions on schema validation, output constraints, and defining success criteria.
+                </div>
+            </div>
+        </div>
+
+        <!-- The Five Types of Constraints -->
+        <div class="section">
+            <h2>🧰 The Five Types of Constraints</h2>
+            <p>Every explicit criterion falls into one of these categories. Tag your prompts with them to ensure coverage:</p>
+
+            <div style="display:flex;flex-wrap:wrap;margin:12px 0;">
+                <span class="criterion-tag tag-format">📐 Format</span>
+                <span class="criterion-tag tag-length">📏 Length</span>
+                <span class="criterion-tag tag-range">🔢 Range</span>
+                <span class="criterion-tag tag-enum">📎 Enum</span>
+                <span class="criterion-tag tag-forbid">🚫 Forbidden</span>
+            </div>
+
+            <ul>
+                <li><strong>Format:</strong> JSON, Markdown table, bullet list, XML, YAML, regex pattern.</li>
+                <li><strong>Length:</strong> Max tokens, max words, exact character count, min/max paragraphs.</li>
+                <li><strong>Range:</strong> Numeric bounds (1–5), date windows, confidence thresholds.</li>
+                <li><strong>Enum:</strong> Closed set of allowed values ("only: HIGH, MEDIUM, LOW").</li>
+                <li><strong>Forbidden:</strong> Prohibited words, topics, assumptions, or output patterns.</li>
+            </ul>
+        </div>
+
+        <!-- Before & After -->
+        <div class="section">
+            <h2>⚖️ Implicit vs. Explicit Prompts</h2>
+
+            <h3>Example 1: Summarization</h3>
+            <div class="compare-grid">
+                <div class="compare-card bad">
+                    <div class="compare-label bad">❌ Implicit / Vague</div>
+                    <pre><code>Summarize this article.</code></pre>
+                </div>
+                <div class="compare-card good">
+                    <div class="compare-label good">✅ Explicit / Constrained</div>
+                    <pre><code>Summarize the article in exactly 3 bullet points.
+Each bullet must be under 15 words.
+Include only facts mentioned in the text.
+Do not add interpretation or opinion.
+Output as a JSON array of strings.</code></pre>
+                </div>
+            </div>
+
+            <h3>Example 2: Sentiment Analysis</h3>
+            <div class="compare-grid">
+                <div class="compare-card bad">
+                    <div class="compare-label bad">❌ Implicit / Vague</div>
+                    <pre><code>What is the sentiment of this review?</code></pre>
+                </div>
+                <div class="compare-card good">
+                    <div class="compare-label good">✅ Explicit / Constrained</div>
+                    <pre><code>Classify the review sentiment.
+Allowed values: POSITIVE, NEUTRAL, NEGATIVE.
+Provide a confidence score 0.0–1.0.
+If mixed, pick the dominant sentiment.
+Respond ONLY with valid JSON: {"sentiment": "...", "confidence": 0.0}</code></pre>
+                </div>
+            </div>
+
+            <h3>Example 3: Code Generation</h3>
+            <div class="compare-grid">
+                <div class="compare-card bad">
+                    <div class="compare-label bad">❌ Implicit / Vague</div>
+                    <pre><code>Write a Python function to sort users.</code></pre>
+                </div>
+                <div class="compare-card good">
+                    <div class="compare-label good">✅ Explicit / Constrained</div>
+                    <pre><code>Write a Python function `sort_users(users)`.
+Input: list of dicts with keys "name" (str) and "age" (int).
+Sort by age ascending, then name ascending.
+Return a new list; do not mutate the input.
+Use only the standard library (no external packages).
+Include a 3-line docstring and type hints.
+Max function length: 20 lines.</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- JSON Schema Example -->
+        <div class="section">
+            <h2>📐 Structured Output with JSON Schema</h2>
+            <p>When you need machine-parseable results, bind the model to a strict schema. This turns soft constraints into hard validation rules.</p>
+
+            <pre><code>{
+  "name": "risk_assessment",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "risk_level": {
+        "type": "string",
+        "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+      },
+      "score": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 100
+      },
+      "mitigations": {
+        "type": "array",
+        "items": { "type": "string" },
+        "minItems": 1,
+        "maxItems": 5
+      },
+      "flagged": { "type": "boolean" }
+    },
+    "required": ["risk_level", "score", "mitigations", "flagged"],
+    "additionalProperties": false
+  }
+}</code></pre>
+
+            <div class="tip-box">
+                <span class="emoji">🛡️</span>
+                <div class="text">
+                    <strong>Validation tip:</strong> Always set <code>additionalProperties: false</code> to prevent the model from inventing keys outside your schema. This is a common exam trap.
+                </div>
+            </div>
+        </div>
+
+        <!-- Checklist -->
+        <div class="section">
+            <h2>✅ Explicit Criteria Checklist</h2>
+            <p>Before sending a prompt to production, verify every item below:</p>
+
+            <div class="checklist-item">
+                <span class="check">✓</span>
+                <span class="text">The output format is named (JSON, Markdown, CSV, plain text, etc.).</span>
+            </div>
+            <div class="checklist-item">
+                <span class="check">✓</span>
+                <span class="text">Length limits are specified (max tokens, words, characters, items).</span>
+            </div>
+            <div class="checklist-item">
+                <span class="check">✓</span>
+                <span class="text">Allowed values are listed when the output is categorical (enum).</span>
+            </div>
+            <div class="checklist-item">
+                <span class="check">✓</span>
+                <span class="text">Numeric fields have min/max bounds or precision rules.</span>
+            </div>
+            <div class="checklist-item">
+                <span class="check">✓</span>
+                <span class="text">Forbidden content is explicitly blocked (topics, tone, assumptions).</span>
+            </div>
+            <div class="checklist-item">
+                <span class="check">✓</span>
+                <span class="text">Required vs. optional fields are distinguished.</span>
+            </div>
+            <div class="checklist-item">
+                <span class="check">✓</span>
+                <span class="text">Examples of "good" output are provided in the prompt (few-shot).</span>
+            </div>
+            <div class="checklist-item">
+                <span class="check">✓</span>
+                <span class="text">A validation step is described ("check that X before responding").</span>
+            </div>
+        </div>
+
+        <!-- Exam Traps -->
+        <div class="section">
+            <h2>🚫 Common Exam Traps</h2>
+            <ul>
+                <li><strong>Assuming implicit knowledge:</strong> "Use best practices" is not a criterion. Name the practice.</li>
+                <li><strong>Missing edge cases:</strong> If the input is empty, the model must still follow the schema.</li>
+                <li><strong>Over-constraining:</strong> Too many rigid rules can lower quality. Balance specificity with room for reasoning.</li>
+                <li><strong>No validation hook:</strong> Always tell the model how to verify its own output before returning it.</li>
+                <li><strong>Conflicting constraints:</strong> "Respond in 1 sentence" + "include all 10 data points" is impossible.</li>
+            </ul>
+        </div>
+
+        <!-- Related Competency -->
+        <div class="section">
+            <h2>🔗 Related Competency</h2>
+            <ul>
+                <li><strong>CAT04 — Prompt Engineering & Structured Output (20%)</strong>: Covers schema design, constraint definition, and output validation.</li>
+                <li><strong>CAT05 — Context Management & Reliability (15%)</strong>: Ensures constraints survive across multi-turn conversations and tool calls.</li>
+            </ul>
+        </div>
+    </div>
+    <script src="nav.js"></script>
+</body>
+</html>

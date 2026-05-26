@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI skills, slash commands, and agent file guidance for the Claude Developer Certification study app. Learn how .kilo/agent/ files work.">
+    <title>Claude Dev Cert — AI Skills & Resources</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --border: #334155;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444;
+            --accent-orange: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        header {
+            text-align: center;
+            padding: 30px 16px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        header h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+        header p { color: var(--text-secondary); font-size: 1em; margin-top: 8px; }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-size: 0.9em;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .back-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+
+        .section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: border-color 0.3s;
+        }
+        .section:hover { border-color: var(--accent-blue); }
+        .section h2 {
+            font-size: 1.3em;
+            margin-bottom: 16px;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section h3 {
+            font-size: 1.1em;
+            margin: 16px 0 8px;
+            color: var(--accent-purple);
+        }
+        .section p { color: var(--text-secondary); margin-bottom: 12px; }
+        .section ul { margin-left: 20px; color: var(--text-secondary); }
+        .section li { margin-bottom: 8px; }
+        .section code {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SFMono-Regular', Consolas, monospace;
+            font-size: 0.9em;
+        }
+        .section pre {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+        .section pre code {
+            background: transparent;
+            padding: 0;
+            font-size: 0.85em;
+        }
+
+        .command-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .command-badge {
+            background: var(--accent-blue);
+            color: var(--bg-primary);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85em;
+            white-space: nowrap;
+        }
+        .command-desc { color: var(--text-secondary); font-size: 0.95em; }
+
+        .size-card {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        @media (min-width: 640px) {
+            .size-card { grid-template-columns: repeat(3, 1fr); }
+        }
+        .size-item {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+        .size-number {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+        .size-label { color: var(--text-secondary); font-size: 0.85em; margin-top: 4px; }
+
+        .file-tree {
+            font-family: 'SFMono-Regular', Consolas, monospace;
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            line-height: 1.8;
+        }
+        .file-tree .dir { color: var(--accent-yellow); }
+        .file-tree .file { color: var(--accent-blue); }
+        .file-tree .comment { color: var(--text-muted); }
+
+        .tip-box {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px dashed var(--accent-green);
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 12px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .tip-box .emoji { font-size: 1.4em; flex-shrink: 0; }
+        .tip-box .text { color: var(--accent-green); font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🛠️ AI Skills & Resources</h1>
+        <p>How skills work, how to create them, and how to invoke them with slash commands</p>
+    </header>
+
+    <div class="container">
+        <a href="../index.html" class="back-btn">← Back to Mastery App</a>
+
+        <!-- What Are Skills -->
+        <div class="section">
+            <h2>🧠 What Are Skills?</h2>
+            <p>Skills are specialized instruction bundles that teach an AI agent how to perform a specific task or follow a domain-specific workflow. In this project, skills live in the <code>.kilo/agent/</code> directory and provide context-aware guidance to different AI tools.</p>
+            <p>Think of a skill as a "cheat sheet" loaded into the agent's context window. When a skill is active, the agent follows its rules, conventions, and examples before generating output.</p>
+
+            <div class="file-tree">
+<span class="dir">.</span>
+├── <span class="dir">.kilo/</span>
+│   └── <span class="dir">agent/</span>
+│       ├── <span class="file">claude.md</span>       <span class="comment"># Claude-specific guidelines</span>
+│       ├── <span class="file">gemini.md</span>       <span class="comment"># Gemini-specific guidelines</span>
+│       └── <span class="file">opencode.md</span>     <span class="comment"># OpenCode-specific guidelines</span>
+            </div>
+        </div>
+
+        <!-- How to Create a Skill -->
+        <div class="section">
+            <h2>✏️ How to Create a Skill</h2>
+            <p>A skill is simply a Markdown file with structured guidance. Follow these steps:</p>
+            <ul>
+                <li><strong>Pick a scope:</strong> Decide what the skill controls (e.g., coding style, testing rules, UI patterns).</li>
+                <li><strong>Name the file:</strong> Use the agent or tool name (e.g., <code>claude.md</code>, <code>gemini.md</code>).</li>
+                <li><strong>Place it correctly:</strong> Drop it into <code>.kilo/agent/</code> (or <code>.kilocode/agent/</code> for some tools).</li>
+                <li><strong>Write concise sections:</strong> Use headers (##) for clear separation. Bullet points beat paragraphs.</li>
+                <li><strong>Include examples:</strong> Show the agent what "good" looks like with code snippets or decision trees.</li>
+            </ul>
+
+            <h3>Example: Minimal Skill Template</h3>
+            <pre><code># Agent-Name — Project Guidelines
+
+## 🛠️ Core Architecture
+- Rule 1
+- Rule 2
+
+## 🎨 Styling & UI
+- Color tokens
+- Responsive breakpoints
+
+## 📚 Content & Structure
+- Directory conventions
+- Naming patterns
+
+## 🤖 AI Interaction Rules
+- Surgical edits
+- Verification steps</code></pre>
+        </div>
+
+        <!-- Slash Commands -->
+        <div class="section">
+            <h2>⌨️ Calling Skills with / Commands</h2>
+            <p>Most AI tools let you invoke skills directly from the chat input using <strong>slash commands</strong>. The exact syntax depends on the platform:</p>
+
+            <div class="command-row">
+                <span class="command-badge">/skill name</span>
+                <span class="command-desc">Kilo / OpenCode — loads the named skill into the current session context.</span>
+            </div>
+            <div class="command-row">
+                <span class="command-badge">@agent-name</span>
+                <span class="command-desc">Some IDEs — mention the agent file to pull its instructions inline.</span>
+            </div>
+            <div class="command-row">
+                <span class="command-badge">#file.md</span>
+                <span class="command-desc">Generic Markdown reference — attach the skill file as context.</span>
+            </div>
+
+            <div class="tip-box">
+                <span class="emoji">💡</span>
+                <div class="text">
+                    <strong>Pro tip:</strong> If your tool supports auto-discovery, simply placing <code>claude.md</code> in <code>.kilo/agent/</code> is enough. The agent reads it automatically on every request without needing a slash command.
+                </div>
+            </div>
+        </div>
+
+        <!-- claude.md Size & Content -->
+        <div class="section">
+            <h2>📏 How Big Can claude.md Be?</h2>
+            <p>There is no hard file-size limit, but you are constrained by the model's <strong>context window</strong>. The entire skill file is injected into the prompt on every turn, so brevity pays off.</p>
+
+            <div class="size-card">
+                <div class="size-item">
+                    <div class="size-number">~2-4K</div>
+                    <div class="size-label">Tokens (sweet spot)<br>Fast & focused</div>
+                </div>
+                <div class="size-item">
+                    <div class="size-number">~8K</div>
+                    <div class="size-label">Tokens (comfortable max)<br>Rich examples still fit</div>
+                </div>
+                <div class="size-item">
+                    <div class="size-number">~32K</div>
+                    <div class="size-label">Tokens (hard ceiling)<br>Modern Claude models only</div>
+                </div>
+            </div>
+
+            <p style="margin-top: 16px;">As a rule of thumb: a Markdown file under <strong>2,000 words</strong> (~1,500 tokens) loads instantly and leaves plenty of room for the actual user query and file context.</p>
+        </div>
+
+        <!-- What to Place in claude.md -->
+        <div class="section">
+            <h2>🧰 What Should Go Inside claude.md?</h2>
+            <p>Treat the file as a <strong>single source of truth</strong> for any decision the AI must make repeatedly. Prioritize high-signal, low-noise content:</p>
+
+            <ul>
+                <li><strong>Architecture rules</strong> — Single-file vs. multi-file, build step yes/no, CDN vs. npm.</li>
+                <li><strong>Styling tokens</strong> — Hex values, spacing scale, breakpoint rules, dark-mode constraints.</li>
+                <li><strong>Directory map</strong> — Where assets, data, docs, and pages live and what belongs in each.</li>
+                <li><strong>Naming conventions</strong> — Question IDs (<code>CAT01-Q005</code>), file prefixes, branch names.</li>
+                <li><strong>Interaction rules</strong> — Surgical edits, when to use <code>edit</code> vs <code>write</code>, test-before-push policy.</li>
+                <li><strong>Forbidden patterns</strong> — Things the agent must never do (e.g., "Do not introduce Webpack").</li>
+                <li><strong>Verification checklist</strong> — Steps to confirm a change (run tests, check live demo, lint).</li>
+            </ul>
+
+            <div class="tip-box">
+                <span class="emoji">🎯</span>
+                <div class="text">
+                    <strong>Golden rule:</strong> If you find yourself correcting the same agent mistake twice, that rule belongs in <code>claude.md</code>.
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Files -->
+        <div class="section">
+            <h2>🔗 Related Files in This Repo</h2>
+            <ul>
+                <li><code>AGENTS.md</code> — Human- and agent-readable overview of the whole project.</li>
+                <li><code>.kilo/agent/claude.md</code> — Claude-specific surgical-edit and architecture rules.</li>
+                <li><code>.kilo/agent/gemini.md</code> — Gemini CLI constraints and Bloom's taxonomy integration.</li>
+                <li><code>.kilo/agent/opencode.md</code> — OpenCode agent guidelines (mirrors Claude rules).</li>
+            </ul>
+        </div>
+    </div>
+    <script src="nav.js"></script>
+</body>
+</html>

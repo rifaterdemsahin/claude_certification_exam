@@ -58,8 +58,14 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
   - `pages/mindmap.html`
   - `pages/tactics.html`
   - `pages/agi-path.html`
+  - `pages/skills.html` — AI skills, slash commands, and agent file guidance
+  - `pages/explicit_criteria.html` — Explicit output criteria and constraint examples
 - **Scripts:** Automation scripts in `scripts/`.
 - **AI Guidelines:** Agent-specific instructions live in `.kilo/agent/`.
+  - `claude.md` — Claude-specific guidelines
+  - `gemini.md` — Gemini CLI guidelines
+  - `opencode.md` — OpenCode guidelines
+  - `mimo.md` — Mimo (Xiaomi MiMo) guidelines
 
 ## File Layout
 
@@ -72,19 +78,16 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
 │   └── agent/
 │       ├── claude.md       # Claude-specific guidelines
 │       ├── gemini.md       # Gemini-specific guidelines
-│       └── opencode.md     # OpenCode-specific guidelines
+│       ├── opencode.md     # OpenCode-specific guidelines
+│       └── mimo.md         # Mimo (Xiaomi MiMo) guidelines
 ├── assets/                 # All visual media
 │   ├── exam/               # Exam question images
-│   └── memory/             # Memory card visual aids (PNG/SVG)
+│   ├── memory/             # Memory card visual aids (PNG/SVG)
+│   └── concepts/           # Concept diagrams and illustrations
 ├── data/                   # Raw data & source material
 │   ├── exam.json           # Question data source
 │   └── exam_source.pdf     # Exam source material
 ├── docs/                   # Study documentation by competency
-│   ├── 01_agentic_loops/
-│   ├── 02_tool_mcp/
-│   ├── 03_workflows/
-│   ├── 04_prompt_eng/
-│   └── 05_reliability/
 ├── exercises/              # Hands-on coding challenges
 ├── formula/                # Concepts and exam questions
 │   ├── concepts/
@@ -92,7 +95,12 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
 │   └── memory/
 ├── pages/                  # Auxiliary HTML pages
 │   ├── dictionary.html
-│   └── markdown_renderer.html
+│   ├── markdown_renderer.html
+│   ├── mindmap.html
+│   ├── tactics.html
+│   ├── agi-path.html
+│   ├── skills.html         # AI skills and slash-command guide
+│   └── explicit_criteria.html # Explicit output criteria examples
 ├── scripts/                # Automation scripts
 │   └── generate_notes.py
 ├── robots.txt
