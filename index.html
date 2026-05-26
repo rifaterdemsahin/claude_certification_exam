@@ -1198,7 +1198,7 @@
             
             // GitHub link logic - updated to refer to the correct extension
             q.githubImageUrl = `https://github.com/rifaterdemsahin/claude_certification_exam/blob/main/assets/memory/${memId}_v1.${ext}`;
-            q.notesUrl = q.notesUrl || `https://github.com/rifaterdemsahin/claude_certification_exam/blob/main/formula/${q.uid}.md`;
+            q.notesUrl = q.notesUrl || `https://github.com/rifaterdemsahin/claude_certification_exam/blob/main/formula/memory/${memId}.md`;
             q.claudePrompt = q.claudePrompt || `As a Claude Developer Certification teaching assistant, explain this concept in depth: "${q.question}". Include analogies, why it matters for the exam, and 2 quiz questions to check my understanding.`;
         });
         const categories = {
@@ -1384,6 +1384,7 @@
             filter: 'unmastered',
             searchQuery: '',
             progress: getProgress(),
+            masteredConcepts: JSON.parse(getCookie('claude_cert_mastered_concepts') || '[]'),
             quizIndex: 0,
             quizQuestions: [],
             quizSelected: null,
@@ -1536,6 +1537,7 @@
                         <div class="bloom-tier-label">Remember</div>
                         <button class="nav-tab ${state.activeTab === 'cards' ? 'active' : ''}" onclick="setTab('cards')">🧠 Memory Cards</button>
                         <button class="nav-tab ${state.activeTab === 'remember' ? 'active' : ''}" onclick="setTab('remember')">🎬 Remember (Slideshow)</button>
+                        <a href="pages/memory_cards.html" class="nav-tab" style="text-decoration:none;">🃏 Cards Index</a>
                         <a href="pages/dictionary.html" class="nav-tab" style="text-decoration:none;">📖 Dictionary</a>
                         <a href="pages/mindmap.html" class="nav-tab" style="text-decoration:none;">🗺️ Mindmap</a>
                         <a href="pages/tactics.html" class="nav-tab" style="text-decoration:none;">🎯 Tactics</a>
@@ -1799,6 +1801,7 @@
             const concepts = [
                 { slug: "agentic-ai", title: "Agentic AI", desc: "The evolution from passive AI agents to autonomous systems that use agentic loops (Perceive-Think-Act) to solve open-ended goals.", img: "https://miro.medium.com/1*7bH-lUKE22j8aYxP_RXSUA.jpeg" },
                 { slug: "agentic-loop", title: "Agentic Loop", desc: "The iterative cycle of Perceive-Think-Act. Managing these loops efficiently (e.g., via prompt compression) is key to building cost-effective and low-latency agents.", img: "https://machinelearningmastery.com/wp-content/uploads/2026/03/mlm-implementing-prompt-compression-to-reduce-agentic-loop-costs.png" },
+                { slug: "llm-context-size", title: "LLM Context Size", desc: "The limit of tokens an LLM can process in one go. Larger context allows for deeper memory and more complex reasoning by including more historical data and documents.", img: "https://raw.githubusercontent.com/rifaterdemsahin/claude_certification_exam/main/assets/concepts/llm-evolution.png" },
                 { slug: "coordinator-subagent", title: "Coordinator-Subagent", desc: "An architectural pattern where a central 'brain' delegates specialized tasks to focused sub-agents." },
                 { slug: "mcp", title: "MCP (Model Context Protocol)", desc: "A standardized protocol that decouples AI models from their tools and data sources, enabling universal integration." },
                 { slug: "claude-code", title: "Claude Code", desc: "A specialized agentic workflow for software engineering, utilizing project-level memory and local tool execution." },
@@ -1806,19 +1809,29 @@
                 { slug: "validation-loops", title: "Validation Loops", desc: "Automated checks that verify model output against schemas or criteria, triggering re-prompts on failure." },
                 { slug: "long-term-memory", title: "Long-Term Memory", desc: "The use of external storage (RAG, Vector DBs) to maintain context beyond the model's immediate window." }
             ];
+
+            const filtered = concepts.filter(c => !state.masteredConcepts.includes(c.slug));
+
             return `
                 <div class="fade-in">
                     <h2 style="text-align:center; margin-bottom:20px;">Key Concepts Analysis</h2>
-                    <p style="text-align:center; color:var(--text-secondary); max-width:600px; margin: 0 auto 30px;">Breaking down the core components of the Claude Developer Certification.</p>
+                    <p style="text-align:center; color:var(--text-secondary); max-width:600px; margin: 0 auto 10px;">Breaking down the core components of the Claude Developer Certification.</p>
+                    <div style="text-align:center; margin-bottom:30px;">
+                        <button class="nav-tab" onclick="state.masteredConcepts = []; setCookie('claude_cert_mastered_concepts', '[]', 365); render();">🔄 Reset Concept Mastery</button>
+                    </div>
                     <div class="concept-grid">
-                        ${concepts.map(c => `
-                            <div class="concept-card" onclick="window.open('https://github.com/rifaterdemsahin/claude_certification_exam/blob/main/formula/concepts/${c.slug}.md', '_blank')" style="cursor:pointer;">
+                        ${filtered.length === 0 ? '<div style="grid-column: 1/-1; text-align:center; padding: 40px; color:var(--text-secondary);">🎉 All concepts mastered!</div>' : ''}
+                        ${filtered.map(c => `
+                            <div class="concept-card" style="position:relative;">
                                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-                                    <h3 style="margin-bottom:0;">${c.title}</h3>
-                                    <span style="font-size:0.8em;color:var(--accent-blue);">Open Note ↗</span>
+                                    <h3 style="margin-bottom:0;cursor:pointer;" onclick="window.open('https://github.com/rifaterdemsahin/claude_certification_exam/blob/main/formula/concepts/${c.slug}.md', '_blank')">${c.title}</h3>
+                                    <button class="mastery-btn" style="padding: 4px 10px; font-size:0.7em;" onclick="toggleConceptMastery('${c.slug}')">Mark Mastered</button>
                                 </div>
-                                ${c.img ? `<img src="${c.img}" style="width:100%; border-radius:8px; margin-bottom:15px; border:1px solid var(--border);" alt="${c.title}">` : ''}
+                                ${c.img ? `<img src="${c.img}" style="width:100%; border-radius:8px; margin-bottom:15px; border:1px solid var(--border); cursor:pointer;" alt="${c.title}" onclick="window.open('https://github.com/rifaterdemsahin/claude_certification_exam/blob/main/formula/concepts/${c.slug}.md', '_blank')">` : ''}
                                 <p>${c.desc}</p>
+                                <div style="margin-top:12px; text-align:right;">
+                                    <a href="https://github.com/rifaterdemsahin/claude_certification_exam/blob/main/formula/concepts/${c.slug}.md" target="_blank" style="font-size:0.8em;color:var(--accent-blue);text-decoration:none;">Open Note ↗</a>
+                                </div>
                             </div>
                         `).join('')}
                     </div>
@@ -1895,6 +1908,10 @@
                 <footer class="app-footer">
                     <p>Built for the Claude Developer Certification Exam</p>
                     <div class="footer-links">
+                        <a href="pages/memory_cards.html">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 14h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
+                            Memory Cards Index
+                        </a>
                         <a href="https://www.linkedin.com/in/rifaterdemsahin/" target="_blank" rel="noopener noreferrer">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                             Rifat Erdem Sahin on LinkedIn
@@ -1952,6 +1969,14 @@
                 if (r.id !== q.id && !wrong.includes(r.answer)) wrong.push(r.answer);
             }
             state.quizOptions = [...wrong, q.answer].sort(() => Math.random() - 0.5);
+        }
+
+        function toggleConceptMastery(slug) {
+            const idx = state.masteredConcepts.indexOf(slug);
+            if (idx > -1) state.masteredConcepts.splice(idx, 1);
+            else state.masteredConcepts.push(slug);
+            setCookie('claude_cert_mastered_concepts', JSON.stringify(state.masteredConcepts), 365);
+            render();
         }
 
         function handleSearch(query) {
@@ -2265,6 +2290,7 @@
                     <h2 style="text-align:center;margin-bottom:20px;">🔗 Footer Links</h2>
                     <div class="resources-section">
                         <ul class="resource-list">
+                            <li><a href="pages/memory_cards.html" class="resource-link">🃏 Memory Cards Index</a></li>
                             <li><a href="https://www.linkedin.com/in/rifaterdemsahin/" target="_blank" rel="noopener noreferrer" class="resource-link">Rifat Erdem Sahin on LinkedIn</a></li>
                             <li><a href="https://rifaterdemsahin.github.io/claude_certification_exam/" target="_blank" rel="noopener noreferrer" class="resource-link">View on GitHub</a></li>
                         </ul>
