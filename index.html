@@ -1864,6 +1864,11 @@
                         <div class="quiz-question">${escapeHtml(q.question)}</div>
                         <div class="quiz-options">${optionsHtml}</div>
                         ${explanationHtml}
+                        <div style="margin:12px 0;text-align:center;">
+                            <button class="mastery-btn" style="background:${state.favorites.includes(q.id) ? 'var(--accent-yellow)' : 'var(--bg-secondary)'};color:${state.favorites.includes(q.id) ? 'var(--bg-primary)' : 'var(--text-primary)'};border:1px solid ${state.favorites.includes(q.id) ? 'var(--accent-yellow)' : 'var(--border)'};font-size:1.1em;" onclick="toggleFavorite(${q.id})">
+                                ${state.favorites.includes(q.id) ? '★ Favorited' : '☆ Favorite'}
+                            </button>
+                        </div>
                         <div class="quiz-nav">
                             <button onclick="prevExam()" ${state.examIndex === 0 ? 'disabled' : ''}>Previous</button>
                             <button onclick="nextExam()" ${state.examIndex === state.examData.length - 1 ? 'disabled' : ''}>Next</button>
