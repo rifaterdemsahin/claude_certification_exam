@@ -604,3 +604,15 @@ Move the AGI Path page from Create menu to Analyse menu. Add converge/diverge em
 ## Commit 98: (pending) — Reorder Remember menu and fix exam rationale
 
 Reorder Remember menu items: Play Cards, Slideshow, Mastery, Quiz Mode, Memory Cards. Update mermaid diagram in exam to show concepts leading to the answer instead of just the question. Fix memory card links to use correct format MEM-Q{id}.
+
+---
+
+## Commit 99: (pending) — Move tactics content to home page
+
+Move the exam tactics and study strategy content from tactics.html to the home page (index.html). Include readiness checklist, score thresholds, multi-sensory training grid, memory palace method, live AI study sessions with copyable prompts, exam day protocol, and tidy-up checklist. Add external training links for Claude, Anthropic certification exam, Skilljar, and Anthropic documentation.
+
+---
+
+## Commit 100: (pending) — Make exam buttons more graphical
+
+Update exam Previous/Next buttons to be more graphical and useful. Add emojis (⬅️/➡️/🏁), show question numbers as hints, add centered progress indicator (current/total), enhance hover effects with elevation and color, add colored left/right borders, and style the results page buttons consistently.

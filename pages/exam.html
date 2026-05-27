@@ -40,6 +40,73 @@
             border-color: var(--accent-red);
             color: var(--accent-red);
         }
+        .exam-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            gap: 12px;
+        }
+        .exam-nav button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 12px 24px;
+            border-radius: 12px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 140px;
+        }
+        .exam-nav button:hover:not(:disabled) {
+            border-color: var(--accent-blue);
+            background: rgba(56,189,248,0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(56,189,248,0.2);
+        }
+        .exam-nav button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .nav-prev-btn { border-left: 4px solid var(--accent-blue) !important; }
+        .nav-next-btn { border-right: 4px solid var(--accent-green) !important; }
+        .nav-next-btn:hover:not(:disabled) {
+            border-color: var(--accent-green) !important;
+            background: rgba(16,185,129,0.1) !important;
+            box-shadow: 0 4px 12px rgba(16,185,129,0.2) !important;
+        }
+        .nav-hint {
+            font-size: 0.75em;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+        .nav-progress {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            font-size: 1.1em;
+        }
+        .nav-current {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+        .nav-separator {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+        .nav-total {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
@@ -263,9 +330,18 @@
                     ` : ''}
 
                     <div class="exam-nav">
-                        <button onclick="prevExamQuestion()" ${state.examIndex === 0 ? 'disabled' : ''}>Previous</button>
-                        <button onclick="nextExamQuestion()">
-                            ${state.examIndex < state.examData.length - 1 ? 'Next' : 'Finish Exam'}
+                        <button onclick="prevExamQuestion()" ${state.examIndex === 0 ? 'disabled' : ''} class="nav-prev-btn">
+                            ⬅️ Previous
+                            ${state.examIndex > 0 ? `<span class="nav-hint">Q${state.examIndex}</span>` : ''}
+                        </button>
+                        <div class="nav-progress">
+                            <span class="nav-current">${state.examIndex + 1}</span>
+                            <span class="nav-separator">/</span>
+                            <span class="nav-total">${state.examData.length}</span>
+                        </div>
+                        <button onclick="nextExamQuestion()" class="nav-next-btn">
+                            ${state.examIndex < state.examData.length - 1 ? 'Next ➡️' : '🏁 Finish Exam'}
+                            ${state.examIndex < state.examData.length - 1 ? `<span class="nav-hint">Q${state.examIndex + 2}</span>` : ''}
                         </button>
                     </div>
                 </div>
@@ -358,8 +434,8 @@
                     }).join('')}
 
                     <div class="exam-nav" style="margin-top:24px;">
-                        <button onclick="initExam()">Retake Exam</button>
-                        <a href="../index.html" class="nav-tab">Back to Home</a>
+                        <button onclick="initExam()" class="nav-prev-btn">🔄 Retake Exam</button>
+                        <a href="../index.html" class="nav-tab" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 24px;border-radius:12px;background:var(--bg-primary);border:2px solid var(--border);color:var(--text-primary);text-decoration:none;font-weight:600;min-width:140px;">🏠 Back to Home</a>
                     </div>
                 </div>
             `;

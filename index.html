@@ -7,6 +7,166 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Tactics Styles */
+        .tactic-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .tactic-section h2 {
+            font-size: 1.3em;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .tactic-section h3 {
+            font-size: 1.05em;
+            color: var(--accent-blue);
+            margin: 20px 0 10px;
+        }
+        .tactic-section p, .tactic-section li {
+            color: var(--text-secondary);
+            font-size: 0.95em;
+        }
+        .tactic-section ul { margin: 8px 0 8px 20px; }
+        .tactic-section li { margin-bottom: 6px; }
+
+        /* Checklist */
+        .checklist { display: grid; gap: 10px; }
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+        .check-box {
+            width: 22px; height: 22px; min-width: 22px;
+            border-radius: 6px;
+            border: 2px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.75em;
+            margin-top: 2px;
+        }
+        .check-box.done { background: var(--accent-green); border-color: var(--accent-green); color: #fff; }
+        .check-label { font-size: 0.9em; }
+        .check-label strong { color: var(--text-primary); display: block; margin-bottom: 2px; }
+        .check-label span { font-size: 0.85em; color: var(--text-muted); }
+
+        /* Multi-sensory grid */
+        .sense-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .sense-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+        .sense-card .icon { font-size: 2em; margin-bottom: 8px; }
+        .sense-card strong { color: var(--text-primary); font-size: 0.95em; }
+        .sense-card p { font-size: 0.8em; margin-top: 6px; }
+
+        /* Memory Palace */
+        .palace-step {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            padding: 14px;
+            background: var(--bg-primary);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+        .palace-num {
+            width: 32px; height: 32px; min-width: 32px;
+            border-radius: 50%;
+            background: var(--accent-purple);
+            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.9em;
+        }
+        .palace-content strong { color: var(--text-primary); font-size: 0.95em; }
+        .palace-content p { font-size: 0.85em; margin-top: 4px; }
+
+        /* Prompt box */
+        .prompt-box {
+            background: #0b1220;
+            border: 1px dashed var(--accent-blue);
+            border-radius: 12px;
+            padding: 16px;
+            font-family: 'Inter', monospace;
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin: 12px 0;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+        .copy-btn {
+            float: right;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--accent-blue);
+            font-size: 0.75em;
+            cursor: pointer;
+        }
+
+        /* Score thresholds */
+        .threshold {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .threshold .pct {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+        .threshold.red .pct { color: var(--accent-red); }
+        .threshold.yellow .pct { color: var(--accent-yellow); }
+
+        /* Training Links */
+        .training-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .training-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+        .training-link:hover {
+            border-color: var(--accent-blue);
+            background: rgba(56,189,248,0.05);
+        }
+        .training-link .icon { font-size: 1.5em; }
+        .training-link .info strong { display: block; font-size: 0.95em; }
+        .training-link .info span { font-size: 0.8em; color: var(--text-secondary); }
+    </style>
 </head>
 <body>
     <script src="js/nav.js"></script>
@@ -58,6 +218,294 @@
         <div class="resources-section">
             <h3>📊 Exam Categories</h3>
             <div id="exam-categories"></div>
+        </div>
+
+        <!-- External Training Links -->
+        <div class="tactic-section">
+            <h2><span>🎓</span> Official Training & Resources</h2>
+            <p style="margin-bottom:16px">Enhance your preparation with official resources and extra training materials.</p>
+            <div class="training-links">
+                <a href="https://claude.ai" target="_blank" class="training-link">
+                    <span class="icon">🤖</span>
+                    <div class="info">
+                        <strong>Claude by Anthropic</strong>
+                        <span>Try Claude directly — practice with the actual AI you're certifying for</span>
+                    </div>
+                </a>
+                <a href="https://www.anthropic.com/claude-certification" target="_blank" class="training-link">
+                    <span class="icon">📋</span>
+                    <div class="info">
+                        <strong>Claude Certification Exam</strong>
+                        <span>Official exam registration and certification details from Anthropic</span>
+                    </div>
+                </a>
+                <a href="https://skilljar.com" target="_blank" class="training-link">
+                    <span class="icon">📚</span>
+                    <div class="info">
+                        <strong>Skilljar Training</strong>
+                        <span>Extra training courses and learning paths for deeper preparation</span>
+                    </div>
+                </a>
+                <a href="https://docs.anthropic.com" target="_blank" class="training-link">
+                    <span class="icon">📖</span>
+                    <div class="info">
+                        <strong>Anthropic Documentation</strong>
+                        <span>Official API docs, guides, and reference materials</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Readiness Checklist -->
+        <div class="tactic-section">
+            <h2><span>✅</span> Readiness Checklist</h2>
+            <p style="margin-bottom:16px">Do not book the exam until <strong>all</strong> of these are true. The exam costs money and has a cooldown between retakes.</p>
+            <div class="checklist">
+                <div class="check-item">
+                    <div class="check-box" id="chk1">☐</div>
+                    <div class="check-label">
+                        <strong>All 100 Memory Cards Mastered</strong>
+                        <span>Every card in the app shows the green "Mastered" badge. No gaps.</span>
+                    </div>
+                </div>
+                <div class="check-item">
+                    <div class="check-box" id="chk2">☐</div>
+                    <div class="check-label">
+                        <strong>Mock Exam Passed Twice in a Row</strong>
+                        <span>85%+ on the in-app mock exam, two consecutive attempts, on different days.</span>
+                    </div>
+                </div>
+                <div class="check-item">
+                    <div class="check-box" id="chk3">☐</div>
+                    <div class="check-label">
+                        <strong>Weak Categories Fixed</strong>
+                        <span>Any category below 80% mastery gets re-studied with targeted cards and concepts.</span>
+                    </div>
+                </div>
+                <div class="check-item">
+                    <div class="check-box" id="chk4">☐</div>
+                    <div class="check-label">
+                        <strong>Explain Any Card to a Friend</strong>
+                        <span>If you can teach every card out loud without reading, you truly know it.</span>
+                    </div>
+                </div>
+                <div class="check-item">
+                    <div class="check-box" id="chk5">☐</div>
+                    <div class="check-label">
+                        <strong>One Day Rest Before Exam</strong>
+                        <span>No new material. Light review of memory palaces only. Sleep > cramming.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Score Thresholds -->
+        <div class="tactic-section">
+            <h2><span>📊</span> Score Thresholds</h2>
+            <div class="threshold red">
+                <span class="pct">&lt;70%</span>
+                <span>Not ready. Go back to memory cards and concept deep-dives.</span>
+            </div>
+            <div class="threshold yellow">
+                <span class="pct">70-84%</span>
+                <span>Close, but risky. Focus on weak categories and retake mock exam.</span>
+            </div>
+            <div class="threshold">
+                <span class="pct">85-92%</span>
+                <span>Good to book. One final review pass of all cards recommended.</span>
+            </div>
+            <div class="threshold">
+                <span class="pct">93%+</span>
+                <span>Very strong. Book with confidence. Maintain with light spaced review.</span>
+            </div>
+        </div>
+
+        <!-- Multi-Sensory Training -->
+        <div class="tactic-section">
+            <h2><span>🧠</span> Multi-Sensory Training</h2>
+            <p>The brain encodes memories more deeply when multiple senses are engaged. Do not just read — see, hear, speak, and move.</p>
+            <div class="sense-grid">
+                <div class="sense-card">
+                    <div class="icon">👁️</div>
+                    <strong>Visual</strong>
+                    <p>Memory card images, mindmap, mermaid diagrams, color-coded categories.</p>
+                </div>
+                <div class="sense-card">
+                    <div class="icon">👂</div>
+                    <strong>Auditory</strong>
+                    <p>Read cards out loud. Record yourself explaining concepts. Listen back.</p>
+                </div>
+                <div class="sense-card">
+                    <div class="icon">✍️</div>
+                    <strong>Kinesthetic</strong>
+                    <p>Write answers by hand. Draw the agentic loop. Walk while reciting.</p>
+                </div>
+                <div class="sense-card">
+                    <div class="icon">💬</div>
+                    <strong>Social</strong>
+                    <p>Explain to a study partner. Use the multiplayer mode. Debate answers.</p>
+                </div>
+                <div class="sense-card">
+                    <div class="icon">🎬</div>
+                    <strong>Motion</strong>
+                    <p>Watch video explanations. Animate concepts in your head like a movie.</p>
+                </div>
+                <div class="sense-card">
+                    <div class="icon">🗺️</div>
+                    <strong>Spatial</strong>
+                    <p>Memory palaces with real locations. Map concepts to physical places.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Memory Palace -->
+        <div class="tactic-section">
+            <h2><span>🏛️</span> Memory Palace Method</h2>
+            <p>Use a real-world location you know well (your home, commute, gym). Assign each category to a room or area. Place cards as objects in that space.</p>
+
+            <div class="palace-step">
+                <div class="palace-num">1</div>
+                <div class="palace-content">
+                    <strong>Choose Your Palace</strong>
+                    <p>Pick a familiar building with 5 distinct rooms — e.g., your home: Living Room, Kitchen, Office, Bedroom, Bathroom.</p>
+                </div>
+            </div>
+            <div class="palace-step">
+                <div class="palace-num">2</div>
+                <div class="palace-content">
+                    <strong>Map Categories to Rooms</strong>
+                    <p>Living Room = Agentic Architecture (red). Kitchen = Tool Design & MCP (blue). Office = Claude Code (green). Bedroom = Prompt Engineering (yellow). Bathroom = Reliability (purple).</p>
+                </div>
+            </div>
+            <div class="palace-step">
+                <div class="palace-num">3</div>
+                <div class="palace-content">
+                    <strong>Place Cards as Objects</strong>
+                    <p>Q1 Agentic Loop → a spinning wheel on the sofa. Q28 MCP → a USB-C cable on the kitchen counter. Q46 CLAUDE.md → a constitution scroll on the office desk. Make them bizarre and vivid — the weirder, the more memorable.</p>
+                </div>
+            </div>
+            <div class="palace-step">
+                <div class="palace-num">4</div>
+                <div class="palace-content">
+                    <strong>Walk the Route</strong>
+                    <p>Mentally walk through each room daily. See the objects. Recall the card. Say the answer out loud. Speed up as you get faster.</p>
+                </div>
+            </div>
+            <div class="palace-step">
+                <div class="palace-num">5</div>
+                <div class="palace-content">
+                    <strong>Link Related Cards</strong>
+                    <p>If two cards are related, place them interacting. The "Coordinator" (Q2) holds a traffic baton pointing at "Sub-agent" (Q8). The "Tool Call" (Q11) menu is cooked by the "MCP Server" (Q34) chef.</p>
+                </div>
+            </div>
+
+            <h3>🔗 Open the Interactive Mindmap</h3>
+            <p>The mindmap shows every relationship between cards. Use it to plan your palace interactions.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;">
+                <a href="pages/mindmap.html" target="_blank" style="padding:10px 18px;border-radius:10px;background:var(--bg-primary);border:1px solid var(--border);color:var(--accent-blue);text-decoration:none;font-size:0.9em;">🗺️ Launch Memory Palace Mindmap</a>
+            </div>
+        </div>
+
+        <!-- Live AI Study Sessions -->
+        <div class="tactic-section">
+            <h2><span>🤖</span> Live AI Study Sessions</h2>
+            <p>Use an LLM as an interactive tutor. Give it the memory card content and ask it to quiz you, tell stories, or challenge your understanding. Below are ready-to-use prompts.</p>
+
+            <h3>Prompt 1 — Story Mode Memory Palace</h3>
+            <p>Copy and paste this into Gemini or Claude. Replace <code>[YOUR PALACE]</code> with your real location.</p>
+            <div style="position:relative">
+                <button class="copy-btn" onclick="copyPrompt(this, 'prompt1')">Copy</button>
+                <div class="prompt-box" id="prompt1">I am studying for the Claude Developer Certification. I have 100 memory cards organized into 5 categories:
+
+1. Agentic Architecture & Orchestration (27%)
+2. Tool Design & MCP Integration (18%)
+3. Claude Code Configuration & Workflows (20%)
+4. Prompt Engineering & Structured Output (20%)
+5. Context Management & Reliability (15%)
+
+My memory palace is [YOUR PALACE] with 5 rooms.
+
+Act as my memory palace guide. Walk me through each room one by one. For each room, ask me to recall the cards placed there. If I get one wrong, tell me the right answer and weave it into a bizarre, vivid story that links it to the room and the next card. Make the story absurd and unforgettable.
+
+Start with Room 1.</div>
+            </div>
+
+            <h3>Prompt 2 — Drill Mode with Weak Cards</h3>
+            <p>Paste this after identifying your weak categories in the app.</p>
+            <div style="position:relative">
+                <button class="copy-btn" onclick="copyPrompt(this, 'prompt2')">Copy</button>
+                <div class="prompt-box" id="prompt2">I am preparing for the Claude Developer Certification. My weakest categories are: [LIST THEM].
+
+I have a set of memory cards for each concept. Drill me on these weak areas only. For each question:
+- Ask me the concept
+- Wait for my answer
+- If correct: reinforce with a mnemonic and move on
+- If wrong: explain why, give an analogy, and ask a follow-up twist question
+
+Do not move to the next topic until I answer correctly twice in a row. Begin now.</div>
+            </div>
+
+            <h3>Prompt 3 — Mock Exam Debrief</h3>
+            <p>Use this after taking a mock exam to analyze mistakes.</p>
+            <div style="position:relative">
+                <button class="copy-btn" onclick="copyPrompt(this, 'prompt3')">Copy</button>
+                <div class="prompt-box" id="prompt3">I just took a practice exam for the Claude Developer Certification and got these questions wrong:
+
+[PASTE WRONG QUESTIONS AND YOUR ANSWERS]
+
+For each wrong answer:
+1. Explain the correct answer conceptually
+2. Link it to the relevant memory card mnemonic
+3. Tell me what misconception led to my wrong choice
+4. Give me a 1-sentence rule to prevent this mistake on the real exam
+
+At the end, rank my weak categories and suggest which memory cards to review first.</div>
+            </div>
+        </div>
+
+        <!-- Exam Day Protocol -->
+        <div class="tactic-section">
+            <h2><span>🎓</span> Exam Day Protocol</h2>
+            <ul>
+                <li><strong>Sleep > Cramming.</strong> 7-8 hours of sleep improves recall more than an all-nighter.</li>
+                <li><strong>Light breakfast.</strong> Avoid heavy carbs that cause a mid-exam crash. Protein + fruit.</li>
+                <li><strong>Review palaces only.</strong> 20 minutes before the exam, mentally walk your palace. No new material.</li>
+                <li><strong>Read twice, answer once.</strong> The exam may have tricky phrasing. Read the question fully before selecting.</li>
+                <li><strong>Flag and skip.</strong> If unsure, mark for review and move on. Return at the end with fresh eyes.</li>
+                <li><strong>Trust the palace.</strong> If a question feels familiar, close your eyes, locate the room, see the object. The answer is there.</li>
+                <li><strong>Breathe.</strong> 4-7-8 breathing between sections resets focus.</li>
+            </ul>
+        </div>
+
+        <!-- Tidy-Up Checklist -->
+        <div class="tactic-section">
+            <h2><span>🧹</span> Tidy-Up Checklist (Pre-Exam Week)</h2>
+            <div class="checklist">
+                <div class="check-item">
+                    <div class="check-box">☐</div>
+                    <div class="check-label"><strong>All cards green</strong> in the app progress tracker.</div>
+                </div>
+                <div class="check-item">
+                    <div class="check-box">☐</div>
+                    <div class="check-label"><strong>Images load</strong> — verify no broken image links in memory cards.</div>
+                </div>
+                <div class="check-item">
+                    <div class="check-box">☐</div>
+                    <div class="check-label"><strong>Concept docs read</strong> — every <code>formula/concepts/*.md</code> reviewed at least once.</div>
+                </div>
+                <div class="check-item">
+                    <div class="check-box">☐</div>
+                    <div class="check-label"><strong>Dictionary terms</strong> — can define every term without looking.</div>
+                </div>
+                <div class="check-item">
+                    <div class="check-box">☐</div>
+                    <div class="check-label"><strong>Mindmap relationships</strong> — can trace how any 3 cards connect.</div>
+                </div>
+                <div class="check-item">
+                    <div class="check-box">☐</div>
+                    <div class="check-label"><strong>Mock exam retaken</strong> today or yesterday with 85%+.</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -141,6 +589,25 @@
 
         // Initialize
         updateDashboard();
+
+        // Tactics: copy prompt
+        function copyPrompt(btn, id) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const old = btn.textContent;
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = old, 1500);
+            });
+        }
+
+        // Tactics: auto-check readiness boxes based on progress
+        try {
+            const totalMastered = Object.keys(state.progress).length;
+            if (totalMastered >= 100) {
+                const chk1 = document.getElementById('chk1');
+                if (chk1) { chk1.textContent = '✓'; chk1.classList.add('done'); }
+            }
+        } catch(e) {}
     </script>
 </body>
 </html>
