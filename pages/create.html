@@ -757,16 +757,14 @@
         }
 
         async function fetchVotes() {
-            if (!GIST_ID) return cachedVotes;
+            if (!WORKER_URL) return cachedVotes;
             try {
-                const resp = await fetch(`https://api.github.com/gists/${GIST_ID}`);
+                const resp = await fetch(WORKER_URL + '?t=' + Date.now());
                 if (!resp.ok) throw new Error('HTTP ' + resp.status);
-                const gist = await resp.json();
-                cachedVotes = JSON.parse(gist.files['claude-cert-votes.json'].content);
+                cachedVotes = await resp.json();
                 console.log('[votes] Fetched:', cachedVotes);
             } catch (e) {
                 console.warn('[votes] Fetch failed:', e);
-                showToast('Could not load vote counts', 'err');
             }
             return cachedVotes;
         }

@@ -29,7 +29,29 @@ export default {
     }
 
     if (request.method === 'POST') {
-      const { ids } = await request.json();
+      const body = await request.json();
+
+      // Reset action
+      if (body.action === 'reset') {
+        const zeros = {};
+        for (let i = 1; i <= 16; i++) zeros[String(i)] = 0;
+        const patchResp = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+          method: 'PATCH',
+          headers: {
+            'Authorization': `token ${GITHUB_TOKEN}`,
+            'User-Agent': 'claude-cert-votes',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            files: { 'claude-cert-votes.json': { content: JSON.stringify(zeros, null, 2) } },
+          }),
+        });
+        return new Response(JSON.stringify({ ok: true, votes: zeros }), {
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': ALLOWED_ORIGIN },
+        });
+      }
+
+      const { ids } = body;
 
       if (!Array.isArray(ids) || ids.length < 1 || ids.length > 3 ||
           ids.some(id => id < 1 || id > 16)) {
