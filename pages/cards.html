@@ -7,6 +7,128 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
     <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        /* Card Modal Styles */
+        .card-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.2s ease;
+        }
+        .card-modal {
+            background: var(--bg-secondary);
+            border: 2px solid var(--accent-blue);
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 32px;
+            position: relative;
+            animation: popIn 0.3s ease;
+        }
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .card-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+        .card-modal-close:hover { color: var(--accent-red); background: rgba(239,68,68,0.1); }
+        .card-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .card-modal-id {
+            font-size: 0.9em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .card-modal-category {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+        .card-modal-question {
+            font-size: 1.3em;
+            line-height: 1.5;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
+        .card-modal-answer {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: var(--accent-green);
+            margin-bottom: 20px;
+            padding: 16px;
+            background: rgba(16,185,129,0.1);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-green);
+        }
+        .card-modal-hint {
+            padding: 16px;
+            background: rgba(56,189,248,0.1);
+            border-radius: 12px;
+            border: 1px solid var(--accent-blue);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .card-modal-hint .emoji { font-size: 2em; margin-bottom: 8px; }
+        .card-modal-hint .text { color: var(--accent-yellow); font-style: italic; }
+        .card-modal-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .card-modal-actions button {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95em;
+            transition: all 0.2s;
+        }
+        .card-modal-actions button:hover { border-color: var(--accent-blue); }
+        .card-modal-actions .fav-active {
+            border-color: var(--accent-yellow);
+            color: var(--accent-yellow);
+            background: rgba(251,191,36,0.1);
+        }
+        .card-modal-actions .mastered-active {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+            background: rgba(16,185,129,0.1);
+        }
+        @media (max-width: 640px) {
+            .card-modal { padding: 20px; margin: 10px; }
+            .card-modal-question { font-size: 1.1em; }
+            .card-modal-answer { font-size: 1em; }
+            .card-modal-actions { flex-direction: column; }
+            .card-modal-actions button { width: 100%; }
+        }
+    </style>
 </head>
 <body>
     <script src="../js/nav.js"></script>
@@ -76,7 +198,7 @@
                 const isFavorite = state.favorites.includes(q.id);
 
                 return `
-                    <div class="flip-card" onclick="this.classList.toggle('flipped')" data-id="${q.id}">
+                    <div class="flip-card" onclick="openCardModal(${q.id})" data-id="${q.id}">
                         <div class="flip-card-inner">
                             <div class="flip-card-front">
                                 <div class="card-number">${q.uid}</div>
@@ -86,7 +208,6 @@
                                 </button>
                                 <div class="card-question">${escapeHtml(q.question)}</div>
                                 <button class="hint-btn" onclick="event.stopPropagation(); showHint(${q.id})">Hint</button>
-                                <button class="claude-btn card-claude-btn" onclick="event.stopPropagation(); askClaude(${q.id})">Ask Claude</button>
                             </div>
                             <div class="flip-card-back">
                                 <div class="card-number">${q.uid}</div>
@@ -107,6 +228,50 @@
             }).join('');
 
             updateStats();
+        }
+
+        // Open card in modal
+        function openCardModal(id) {
+            const q = questionsData.find(q => q.id === id);
+            if (!q) return;
+
+            const hint = questionHints[q.id];
+            const isMastered = state.progress[q.id];
+            const isFavorite = state.favorites.includes(q.id);
+
+            const overlay = document.createElement('div');
+            overlay.className = 'card-modal-overlay';
+            overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
+
+            overlay.innerHTML = `
+                <div class="card-modal">
+                    <button class="card-modal-close" onclick="this.closest('.card-modal-overlay').remove()">✕</button>
+                    <div class="card-modal-header">
+                        <span class="card-modal-id">${q.uid}</span>
+                        <span class="card-modal-category cat-${q.category}">${categories[q.category].name}</span>
+                    </div>
+                    <div class="card-modal-question">${escapeHtml(q.question)}</div>
+                    <div class="card-modal-answer">${escapeHtml(q.answer)}</div>
+                    ${hint ? `
+                        <div class="card-modal-hint">
+                            <div class="emoji">${hint.emoji}</div>
+                            <div class="text">${escapeHtml(hint.memory)}</div>
+                        </div>
+                    ` : ''}
+                    <div class="card-modal-actions">
+                        <button class="${isFavorite ? 'fav-active' : ''}" onclick="toggleFavorite(${q.id}); this.closest('.card-modal-overlay').remove(); openCardModal(${q.id});">
+                            ${isFavorite ? '★ Favorited' : '☆ Favorite'}
+                        </button>
+                        <button class="${isMastered ? 'mastered-active' : ''}" onclick="toggleMastery(${q.id}); this.closest('.card-modal-overlay').remove(); openCardModal(${q.id});">
+                            ${isMastered ? '✓ Mastered' : 'Mark Mastered'}
+                        </button>
+                        ${q.claudePrompt ? `<button onclick="window.open('https://claude.ai/new?q=${encodeURIComponent(q.claudePrompt)}', '_blank')">Ask Claude</button>` : ''}
+                        <button onclick="this.closest('.card-modal-overlay').remove()">Close</button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(overlay);
         }
 
         function updateStats() {
