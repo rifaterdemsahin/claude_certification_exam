@@ -56,6 +56,7 @@
             label: '🎨 Create ◀️',
             sublabel: 'Build',
             items: [
+                { emoji: '🗳️', label: 'Vote for Videos', href: 'create.html' },
                 { emoji: '🎬', label: 'Creator', href: 'creator.html' },
                 { emoji: '📝', label: 'Prompts', href: 'markdown_renderer.html?url=../prompts.md&title=Prompts' },
                 { emoji: '📦', label: 'GitHub Repo', href: 'https://github.com/rifaterdemsahin/claude_certification_exam', external: true }

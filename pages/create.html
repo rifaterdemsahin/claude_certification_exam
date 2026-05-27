@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Vote for the Claude Certification video ideas you want to see created. 16 proof-of-concept videos covering all Bloom's taxonomy levels.">
+    <title>Create - Vote for Videos | Claude Developer Certification</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>">
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        /* Create Page Specific */
+        .create-hero {
+            text-align: center;
+            padding: 40px 24px;
+            background: linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(56,189,248,0.08) 100%);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            margin-bottom: 32px;
+        }
+        .create-hero h2 {
+            font-size: 1.8em;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .create-hero p {
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin: 0 auto 16px;
+            line-height: 1.7;
+        }
+        .selection-counter {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--bg-primary);
+            border: 2px solid var(--accent-green);
+            border-radius: 30px;
+            font-weight: 600;
+            color: var(--accent-green);
+            font-size: 1em;
+        }
+        .selection-counter .count {
+            font-size: 1.3em;
+        }
+        .selection-counter.maxed {
+            border-color: var(--accent-yellow);
+            color: var(--accent-yellow);
+        }
+
+        /* Filter Bar */
+        .create-filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .create-filters .filter-btn {
+            font-size: 0.85em;
+        }
+
+        /* Video Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        @media (min-width: 640px) {
+            .video-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        }
+
+        /* Video Card */
+        .video-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            user-select: none;
+        }
+        .video-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(56,189,248,0.15);
+        }
+        .video-card.selected {
+            border-color: var(--accent-green);
+            background: rgba(16,185,129,0.05);
+            box-shadow: 0 0 20px rgba(16,185,129,0.15);
+        }
+        .video-card.disabled {
+            opacity: 0.5;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .video-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .video-number {
+            min-width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9em;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .video-title {
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.4;
+            flex: 1;
+        }
+        .video-category-badge {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            font-weight: 500;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .video-poc {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 14px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Bloom Stages inside card */
+        .bloom-stages {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+        @media (max-width: 400px) {
+            .bloom-stages { grid-template-columns: 1fr; }
+        }
+        .bloom-stage {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 0.78em;
+            line-height: 1.4;
+        }
+        .bloom-stage-icon {
+            font-size: 1em;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .bloom-stage-text {
+            color: var(--text-secondary);
+        }
+        .bloom-stage-text strong {
+            color: var(--text-primary);
+            font-size: 0.9em;
+        }
+        .stage-remember   { background: rgba(56,189,248,0.08); }
+        .stage-understand { background: rgba(168,85,247,0.08); }
+        .stage-analyse    { background: rgba(245,158,11,0.08); }
+        .stage-evaluate   { background: rgba(239,68,68,0.08); }
+
+        /* Checkbox */
+        .video-checkbox {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            background: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-size: 0.9em;
+            color: transparent;
+        }
+        .video-card.selected .video-checkbox {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            color: #fff;
+        }
+
+        /* Vote Count */
+        .vote-count {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 12px;
+            font-size: 0.8em;
+            color: var(--text-muted);
+        }
+        .vote-bar {
+            flex: 1;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .vote-bar-fill {
+            height: 100%;
+            background: var(--accent-green);
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+
+        /* Floating Submit Bar */
+        .submit-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border-top: 2px solid var(--accent-green);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            z-index: 100;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            box-shadow: 0 -4px 24px rgba(0,0,0,0.4);
+        }
+        .submit-bar.visible {
+            transform: translateY(0);
+        }
+        .submit-bar .selected-names {
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            max-width: 400px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .submit-btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        .submit-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 16px rgba(16,185,129,0.4);
+        }
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .clear-btn {
+            padding: 12px 20px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .clear-btn:hover {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        /* Confirmation Overlay */
+        .confirm-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .confirm-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .confirm-box {
+            background: var(--bg-secondary);
+            border: 2px solid var(--accent-green);
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s;
+        }
+        .confirm-overlay.visible .confirm-box {
+            transform: scale(1);
+        }
+        .confirm-box .emoji { font-size: 3em; margin-bottom: 16px; }
+        .confirm-box h3 {
+            font-size: 1.4em;
+            margin-bottom: 12px;
+            color: var(--accent-green);
+        }
+        .confirm-box p {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        .confirm-box .chosen-list {
+            text-align: left;
+            margin: 16px 0;
+            padding: 16px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        .confirm-box .chosen-item {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9em;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .confirm-box .chosen-item:last-child { border-bottom: none; }
+        .confirm-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .confirm-actions button {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95em;
+            transition: all 0.2s;
+        }
+        .confirm-submit {
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            border: none;
+            color: #fff;
+        }
+        .confirm-submit:hover { transform: scale(1.03); }
+        .confirm-cancel {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        .confirm-cancel:hover { border-color: var(--text-primary); color: var(--text-primary); }
+
+        /* Already Voted State */
+        .already-voted {
+            text-align: center;
+            padding: 32px;
+            background: rgba(16,185,129,0.08);
+            border: 1px solid var(--accent-green);
+            border-radius: 16px;
+            margin-bottom: 24px;
+        }
+        .already-voted h3 {
+            color: var(--accent-green);
+            margin-bottom: 8px;
+        }
+        .already-voted p {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+        .reset-vote-btn {
+            margin-top: 12px;
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.85em;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .reset-vote-btn:hover {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        /* Leaderboard */
+        .leaderboard {
+            margin-top: 40px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+        }
+        .leaderboard h3 {
+            color: var(--accent-blue);
+            margin-bottom: 16px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .lb-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .lb-item:last-child { border-bottom: none; }
+        .lb-rank {
+            min-width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85em;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+        }
+        .lb-rank.top { background: var(--accent-yellow); color: var(--bg-primary); }
+        .lb-name { flex: 1; font-size: 0.9em; }
+        .lb-votes { color: var(--accent-green); font-weight: 600; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <script src="../js/nav.js"></script>
+
+    <header class="app-header">
+        <h1>Create</h1>
+        <p>Vote for the proof-of-concept videos you want to see</p>
+    </header>
+
+    <div class="container">
+        <!-- Hero -->
+        <div class="create-hero">
+            <h2>16 PoC Videos — Pick Your Top 3</h2>
+            <p>Each video covers all 4 Bloom's stages in one take: <strong>Remember</strong> the concept, <strong>Understand</strong> by building it, <strong>Analyse</strong> the trade-offs, <strong>Evaluate</strong> the verdict. Select the 3 you want created first.</p>
+            <div class="selection-counter" id="selectionCounter">
+                <span>Selected:</span>
+                <span class="count" id="selectedCount">0</span>
+                <span>/ 3</span>
+            </div>
+        </div>
+
+        <!-- Already Voted Banner (hidden by default) -->
+        <div class="already-voted" id="alreadyVoted" style="display:none;">
+            <h3>You already voted!</h3>
+            <p id="votedMessage">Your picks have been recorded. Thanks for your input.</p>
+            <button class="reset-vote-btn" onclick="resetVote()">Change my vote</button>
+        </div>
+
+        <!-- Filters -->
+        <div class="create-filters">
+            <span style="color:var(--text-secondary);font-size:0.85em;">Filter:</span>
+            <button class="filter-btn active" onclick="filterVideos('all', this)">All</button>
+            <button class="filter-btn" onclick="filterVideos(1, this)">Agentic Architecture</button>
+            <button class="filter-btn" onclick="filterVideos(2, this)">Tool Design & MCP</button>
+            <button class="filter-btn" onclick="filterVideos(3, this)">Claude Code</button>
+            <button class="filter-btn" onclick="filterVideos(4, this)">Prompt Engineering</button>
+            <button class="filter-btn" onclick="filterVideos(5, this)">Context & Reliability</button>
+        </div>
+
+        <!-- Video Grid -->
+        <div class="video-grid" id="videoGrid"></div>
+
+        <!-- Leaderboard -->
+        <div class="leaderboard" id="leaderboard">
+            <h3>Community Votes</h3>
+            <div id="leaderboardList"></div>
+        </div>
+    </div>
+
+    <!-- Floating Submit Bar -->
+    <div class="submit-bar" id="submitBar">
+        <span class="selected-names" id="selectedNames"></span>
+        <button class="clear-btn" onclick="clearSelections()">Clear</button>
+        <button class="submit-btn" id="submitBtn" onclick="showConfirm()">Suggest These Videos</button>
+    </div>
+
+    <!-- Confirmation Overlay -->
+    <div class="confirm-overlay" id="confirmOverlay">
+        <div class="confirm-box">
+            <div class="emoji">&#127916;</div>
+            <h3>Confirm Your Picks</h3>
+            <p>You're suggesting these 3 videos to be created first:</p>
+            <div class="chosen-list" id="chosenList"></div>
+            <p style="font-size:0.85em;color:var(--text-muted);">Your vote helps us prioritize which proof-of-concept to build next.</p>
+            <div class="confirm-actions">
+                <button class="confirm-cancel" onclick="hideConfirm()">Go Back</button>
+                <button class="confirm-submit" onclick="submitVote()">Submit Vote</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="app-footer">
+        <p>Claude Developer Certification Study App</p>
+        <p>Created by Rifat Erdem Sahin</p>
+        <div class="footer-links">
+            <a href="../index.html">Home</a>
+            <a href="cards.html">Cards</a>
+            <a href="quiz.html">Quiz</a>
+            <a href="practice_exam.html">Practice Exam</a>
+            <a href="exam.html">Mock Exam</a>
+            <a href="mastery.html">Mastery</a>
+            <a href="https://github.com/rifaterdemsahin/claude_certification_exam" target="_blank">GitHub</a>
+        </div>
+    </footer>
+
+    <script>
+        // ================== VIDEO DATA ==================
+        const videos = [
+            {
+                id: 1, cat: 1, title: "Build a File-Fixing Agent in 5 Minutes",
+                poc: "Live-code an agent that reads a file, finds bugs, fixes them, and re-reads to verify. Single-prompt vs loop approach compared.",
+                stages: {
+                    remember: "Agentic loop diagram — Perceive, Think, Act",
+                    understand: "Build the agent live: read file, detect bug, fix, re-read",
+                    analyse: "Single-prompt vs loop — accuracy & token cost comparison",
+                    evaluate: "Self-correction score: how many iterations until clean?"
+                }
+            },
+            {
+                id: 2, cat: 1, title: "One Coordinator, Three Subagents",
+                poc: "Build a coordinator that spawns 3 subagents (researcher, coder, reviewer) in parallel and merges results.",
+                stages: {
+                    remember: "Coordinator-Subagent pattern visual",
+                    understand: "Spawn 3 subagents in parallel, collect results",
+                    analyse: "Sequential vs parallel execution — wall-clock time",
+                    evaluate: "Is coordination overhead worth the speedup?"
+                }
+            },
+            {
+                id: 3, cat: 1, title: "Session Memory: Claude Remembers Across Turns",
+                poc: "Build a conversation where Claude tracks project state across 10 turns, with and without context passing.",
+                stages: {
+                    remember: "Short-term vs long-term memory diagram",
+                    understand: "Track project state across 10 conversation turns",
+                    analyse: "With/without context passing — hallucination rate",
+                    evaluate: "At what turn count does context drift break things?"
+                }
+            },
+            {
+                id: 4, cat: 1, title: "The Human Handoff Pattern",
+                poc: "Build an agent that hits an unknown, stops, asks the human. Compare autonomous retry vs human-in-the-loop.",
+                stages: {
+                    remember: "Escalation pattern visual",
+                    understand: "Agent detects unknown, pauses, asks human for help",
+                    analyse: "Autonomous retry vs human-in-the-loop — error recovery",
+                    evaluate: "Where's the break-even point for automation?"
+                }
+            },
+            {
+                id: 5, cat: 2, title: "MCP Server in 10 Lines of Python",
+                poc: "Build a working MCP server with one tool, connect Claude Desktop to it. Compare MCP vs raw API call.",
+                stages: {
+                    remember: "MCP 3-primitives diagram — Tools, Resources, Prompts",
+                    understand: "Build MCP server, connect Claude Desktop, call the tool",
+                    analyse: "MCP vs raw API — code reuse & swap-ability",
+                    evaluate: "Was setup cost worth it vs a simple function call?"
+                }
+            },
+            {
+                id: 6, cat: 2, title: "Signal-to-Noise: Design Tools That Don't Suck",
+                poc: "Build two versions of the same tool — one returns everything, one returns only what matters. Measure token usage.",
+                stages: {
+                    remember: "Context bloat concept",
+                    understand: "Build verbose vs focused tool, run same agent task",
+                    analyse: "Token usage per call — verbose vs focused",
+                    evaluate: "Did the focused tool produce better agent decisions?"
+                }
+            },
+            {
+                id: 7, cat: 2, title: "Tool Composition: Chain 3 Tools Into 1 Workflow",
+                poc: "Build a search → read → summarize workflow with 3 separate MCP tools. Compare monolithic vs composable.",
+                stages: {
+                    remember: "Tool composition visual",
+                    understand: "Chain 3 MCP tools into one agent workflow",
+                    analyse: "Monolithic tool vs composable tools — flexibility vs complexity",
+                    evaluate: "Which approach is easier to debug when it breaks?"
+                }
+            },
+            {
+                id: 8, cat: 2, title: "Schema Validation: Catch Bad Inputs Before They Run",
+                poc: "Build a tool with Zod validation, pass bad inputs intentionally. Compare error handling with/without schema.",
+                stages: {
+                    remember: "JSON Schema concept",
+                    understand: "Build tool with Zod validation, test with bad inputs",
+                    analyse: "Error handling with/without schema — crash rate",
+                    evaluate: "Is upfront schema effort worth the runtime safety?"
+                }
+            },
+            {
+                id: 9, cat: 3, title: "Plan Mode vs Act Mode: Side-by-Side",
+                poc: "Give Claude the same task in Plan Mode and direct Act Mode. Compare output quality, rework, and time.",
+                stages: {
+                    remember: "Plan/Act cycle diagram",
+                    understand: "Same task, two modes — watch both execute live",
+                    analyse: "Output quality, rework needed, time taken",
+                    evaluate: "When is planning overkill vs essential?"
+                }
+            },
+            {
+                id: 10, cat: 3, title: "CLAUDE.md: Write It, Break It, Fix It",
+                poc: "Write CLAUDE.md rules, then ask Claude to violate them. Observe compliance rate across 5 rule types.",
+                stages: {
+                    remember: "CLAUDE.md as constitution concept",
+                    understand: "Write rules, intentionally ask Claude to break them",
+                    analyse: "Compliance rate across 5 different rule categories",
+                    evaluate: "Which rule types does Claude follow best/worst?"
+                }
+            },
+            {
+                id: 11, cat: 3, title: "Custom Slash Commands: Build Your Own Workflow",
+                poc: "Create a /review command that triggers a code review workflow. Compare manual vs one-command efficiency.",
+                stages: {
+                    remember: "Slash command concept",
+                    understand: "Create /review command with full review workflow",
+                    analyse: "Manual multi-step vs one-command — keystrokes saved",
+                    evaluate: "Is setup time justified by daily usage?"
+                }
+            },
+            {
+                id: 12, cat: 3, title: "Test-Driven Development with Claude",
+                poc: "Write tests first, let Claude implement to pass them. Compare test-first vs code-first approach.",
+                stages: {
+                    remember: "TDD cycle visual — Red, Green, Refactor",
+                    understand: "Write tests, Claude implements, watch them pass",
+                    analyse: "Test-first vs code-first — coverage achieved",
+                    evaluate: "Does TDD with Claude produce more reliable code?"
+                }
+            },
+            {
+                id: 13, cat: 4, title: "Few-Shot vs Zero-Shot: Same Task, Different Results",
+                poc: "Run the same task with 0, 1, 3, and 5 examples. Plot accuracy vs number of examples.",
+                stages: {
+                    remember: "Few-shot concept visual",
+                    understand: "Run task with 0, 1, 3, 5 examples each",
+                    analyse: "Plot accuracy vs examples — find the curve",
+                    evaluate: "Diminishing returns — where's the sweet spot?"
+                }
+            },
+            {
+                id: 14, cat: 4, title: "Chain-of-Thought: Make Claude Show Its Work",
+                poc: "Ask a complex question with and without 'think step by step.' Compare accuracy and reasoning transparency.",
+                stages: {
+                    remember: "CoT prompting visual",
+                    understand: "Same question, with/without CoT instruction",
+                    analyse: "Answer accuracy and reasoning transparency",
+                    evaluate: "When does CoT help vs add unnecessary tokens?"
+                }
+            },
+            {
+                id: 15, cat: 4, title: "Validation Loops: Auto-Retry Until It's Right",
+                poc: "Build a prompt that checks its own output against JSON schema, retries on failure. Measure success rates.",
+                stages: {
+                    remember: "Validation loop diagram",
+                    understand: "Build self-checking prompt with schema validation",
+                    analyse: "First-try vs retry success rate",
+                    evaluate: "How many retries before quality plateaus?"
+                }
+            },
+            {
+                id: 16, cat: 5, title: "Context Compression: Fit 10x More Into Your Window",
+                poc: "Feed a long conversation, apply summarization, then semantic search. Compare token count before/after.",
+                stages: {
+                    remember: "Context window concept",
+                    understand: "Feed long convo, compress with summarization + search",
+                    analyse: "Token count before/after — information retention",
+                    evaluate: "What's the information loss trade-off?"
+                }
+            }
+        ];
+
+        // ================== STATE ==================
+        const STORAGE_KEY = 'create_video_votes';
+        const VOTED_KEY = 'create_video_voted';
+        let selectedIds = new Set();
+        let currentFilter = 'all';
+
+        function getVotes() {
+            try {
+                return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+            } catch { return {}; }
+        }
+
+        function saveVotes(votes) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(votes));
+        }
+
+        function getVoted() {
+            try {
+                return JSON.parse(localStorage.getItem(VOTED_KEY)) || null;
+            } catch { return null; }
+        }
+
+        function saveVoted(ids) {
+            localStorage.setItem(VOTED_KEY, JSON.stringify(ids));
+        }
+
+        // ================== RENDER ==================
+        function getCatName(cat) {
+            return { 1: "Agentic Architecture", 2: "Tool Design & MCP", 3: "Claude Code", 4: "Prompt Engineering", 5: "Context & Reliability" }[cat] || "";
+        }
+        function getCatColor(cat) {
+            return { 1: "#ef4444", 2: "#3b82f6", 3: "#10b981", 4: "#f59e0b", 5: "#a855f7" }[cat] || "#64748b";
+        }
+        function getCatClass(cat) {
+            return { 1: "cat-1", 2: "cat-2", 3: "cat-3", 4: "cat-4", 5: "cat-5" }[cat] || "";
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('videoGrid');
+            const votes = getVotes();
+            const maxVotes = Math.max(1, ...Object.values(votes));
+
+            const filtered = currentFilter === 'all' ? videos : videos.filter(v => v.cat === currentFilter);
+
+            grid.innerHTML = filtered.map(v => {
+                const isSelected = selectedIds.has(v.id);
+                const isDisabled = !isSelected && selectedIds.size >= 3;
+                const voteCount = votes[v.id] || 0;
+                const votePct = Math.round((voteCount / maxVotes) * 100);
+                const color = getCatColor(v.cat);
+
+                return `
+                <div class="video-card ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}"
+                     onclick="toggleSelect(${v.id})" data-cat="${v.cat}" data-id="${v.id}">
+                    <div class="video-checkbox">${isSelected ? '&#10003;' : ''}</div>
+                    <div class="video-card-header">
+                        <div class="video-number" style="background:${color}">${v.id}</div>
+                        <div class="video-title">${v.title}</div>
+                    </div>
+                    <div class="video-poc">${v.poc}</div>
+                    <div class="bloom-stages">
+                        <div class="bloom-stage stage-remember">
+                            <span class="bloom-stage-icon">&#129504;</span>
+                            <div class="bloom-stage-text"><strong>Remember</strong><br>${v.stages.remember}</div>
+                        </div>
+                        <div class="bloom-stage stage-understand">
+                            <span class="bloom-stage-icon">&#128214;</span>
+                            <div class="bloom-stage-text"><strong>Understand</strong><br>${v.stages.understand}</div>
+                        </div>
+                        <div class="bloom-stage stage-analyse">
+                            <span class="bloom-stage-icon">&#128202;</span>
+                            <div class="bloom-stage-text"><strong>Analyse</strong><br>${v.stages.analyse}</div>
+                        </div>
+                        <div class="bloom-stage stage-evaluate">
+                            <span class="bloom-stage-icon">&#128269;</span>
+                            <div class="bloom-stage-text"><strong>Evaluate</strong><br>${v.stages.evaluate}</div>
+                        </div>
+                    </div>
+                    <div class="vote-count">
+                        <span>${voteCount} vote${voteCount !== 1 ? 's' : ''}</span>
+                        <div class="vote-bar"><div class="vote-bar-fill" style="width:${votePct}%"></div></div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            updateUI();
+        }
+
+        function renderLeaderboard() {
+            const votes = getVotes();
+            const sorted = videos
+                .map(v => ({ ...v, votes: votes[v.id] || 0 }))
+                .sort((a, b) => b.votes - a.votes);
+
+            const list = document.getElementById('leaderboardList');
+            list.innerHTML = sorted.map((v, i) => `
+                <div class="lb-item">
+                    <div class="lb-rank ${i < 3 ? 'top' : ''}">${i + 1}</div>
+                    <div class="lb-name">${v.title}</div>
+                    <div class="lb-votes">${v.votes} vote${v.votes !== 1 ? 's' : ''}</div>
+                </div>
+            `).join('');
+        }
+
+        // ================== INTERACTION ==================
+        function toggleSelect(id) {
+            if (selectedIds.has(id)) {
+                selectedIds.delete(id);
+            } else if (selectedIds.size < 3) {
+                selectedIds.add(id);
+            }
+            renderGrid();
+        }
+
+        function updateUI() {
+            const count = selectedIds.size;
+            document.getElementById('selectedCount').textContent = count;
+
+            const counter = document.getElementById('selectionCounter');
+            counter.classList.toggle('maxed', count >= 3);
+
+            const submitBar = document.getElementById('submitBar');
+            submitBar.classList.toggle('visible', count > 0);
+
+            const names = [...selectedIds].map(id => {
+                const v = videos.find(v => v.id === id);
+                return v ? `#${v.id}` : '';
+            }).join(', ');
+            document.getElementById('selectedNames').textContent = names ? `Your picks: ${names}` : '';
+
+            document.getElementById('submitBtn').disabled = count === 0;
+        }
+
+        function clearSelections() {
+            selectedIds.clear();
+            renderGrid();
+        }
+
+        function filterVideos(cat, btn) {
+            currentFilter = cat;
+            document.querySelectorAll('.create-filters .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderGrid();
+        }
+
+        // ================== SUBMIT ==================
+        function showConfirm() {
+            if (selectedIds.size === 0) return;
+
+            const list = document.getElementById('chosenList');
+            list.innerHTML = [...selectedIds].map(id => {
+                const v = videos.find(v => v.id === id);
+                return `<div class="chosen-item"><span style="color:${getCatColor(v.cat)}">&#9679;</span> #${v.id} — ${v.title}</div>`;
+            }).join('');
+
+            document.getElementById('confirmOverlay').classList.add('visible');
+        }
+
+        function hideConfirm() {
+            document.getElementById('confirmOverlay').classList.remove('visible');
+        }
+
+        function submitVote() {
+            const votes = getVotes();
+            selectedIds.forEach(id => {
+                votes[id] = (votes[id] || 0) + 1;
+            });
+            saveVotes(votes);
+            saveVoted([...selectedIds]);
+
+            hideConfirm();
+            selectedIds.clear();
+            renderGrid();
+            renderLeaderboard();
+            showVotedBanner();
+        }
+
+        function showVotedBanner() {
+            const voted = getVoted();
+            if (!voted) return;
+
+            const banner = document.getElementById('alreadyVoted');
+            banner.style.display = 'block';
+
+            const names = voted.map(id => {
+                const v = videos.find(v => v.id === id);
+                return v ? `#${v.id} ${v.title}` : '';
+            }).join(', ');
+            document.getElementById('votedMessage').textContent = `You picked: ${names}`;
+        }
+
+        function resetVote() {
+            // Remove previous votes
+            const voted = getVoted();
+            if (voted) {
+                const votes = getVotes();
+                voted.forEach(id => {
+                    if (votes[id] > 0) votes[id]--;
+                });
+                saveVotes(votes);
+            }
+            localStorage.removeItem(VOTED_KEY);
+            document.getElementById('alreadyVoted').style.display = 'none';
+        }
+
+        // ================== INIT ==================
+        renderGrid();
+        renderLeaderboard();
+        showVotedBanner();
+    </script>
+</body>
+</html>
