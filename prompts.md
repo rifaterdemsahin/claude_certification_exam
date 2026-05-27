@@ -598,3 +598,9 @@ Create a new page explaining prompt caching concepts, efficiency impact, and bes
 ## Commit 97: (pending) — Move AGI Path to Analyse menu and add YouTube videos
 
 Move the AGI Path page from Create menu to Analyse menu. Add converge/diverge emojis to menu labels (Remember ◀️, Analyse ▶️, Create ◀️). Add YouTube channel videos to Create menu with external link support.
+
+---
+
+## Commit 98: (pending) — Reorder Remember menu and fix exam rationale
+
+Reorder Remember menu items: Play Cards, Slideshow, Mastery, Quiz Mode, Memory Cards. Update mermaid diagram in exam to show concepts leading to the answer instead of just the question. Fix memory card links to use correct format MEM-Q{id}.

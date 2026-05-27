@@ -159,19 +159,27 @@
                         </div>
 
                         <div class="exam-rationale" style="margin-top:16px;padding:16px;background:var(--bg-primary);border-radius:12px;border:1px solid var(--border);">
-                            <h4 style="color:var(--accent-blue);margin-bottom:12px;">📊 Rationale</h4>
+                            <h4 style="color:var(--accent-blue);margin-bottom:12px;">📊 Rationale - Concepts Leading to Answer</h4>
                             <div class="mermaid">
-                                graph TD
-                                    A[Question: ${escapeHtml(q.question.substring(0, 30))}...] --> B{Analysis}
-                                    B --> C[Correct Answer: ${escapeHtml(q.answer.substring(0, 30))}...]
-                                    B --> D[Your Answer: ${escapeHtml(state.examSelected || 'None').substring(0, 30)}...]
-                                    C --> E[${state.examSelected === q.answer ? '✅ Match' : '❌ Mismatch'}]
+                                graph LR
+                                    ${q.concepts && q.concepts.length > 0 ? q.concepts.map((c, i) => `C${i}["${c}"] --> A`).join('\n                                    ') : 'C0["General Knowledge"] --> A'}
+                                    A["${escapeHtml(q.answer.substring(0, 50))}..."]
+                                    ${state.examSelected === q.answer ? '' : `A --> R["${state.examSelected === q.answer ? '✅ Correct' : '❌ Incorrect'}"]`}
+                            </div>
+                            <div style="margin-top:12px;padding:12px;background:var(--bg-secondary);border-radius:8px;">
+                                <strong style="color:var(--accent-green);">Key Concepts:</strong>
+                                <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">
+                                    ${q.concepts && q.concepts.length > 0 ? q.concepts.map(c => `<span style="padding:4px 10px;background:rgba(56,189,248,0.1);border:1px solid var(--accent-blue);border-radius:6px;font-size:0.85em;color:var(--accent-blue);">${c}</span>`).join('') : '<span style="color:var(--text-secondary);">No specific concepts listed</span>'}
+                                </div>
                             </div>
                         </div>
 
                         <div class="exam-memory-card" style="margin-top:16px;padding:16px;background:rgba(168,85,247,0.1);border-radius:12px;border:1px solid var(--accent-purple);">
                             <h4 style="color:var(--accent-purple);margin-bottom:8px;">🃏 Related Memory Card</h4>
-                            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q${q.uid.replace('CAT01-Q', '').padStart(3, '0')}.md&title=Memory Card ${q.uid}" style="color:var(--accent-blue);text-decoration:none;">View Memory Card: ${q.uid}</a>
+                            ${(() => {
+                                const num = q.id.toString().padStart(3, '0');
+                                return `<a href="markdown_renderer.html?url=../formula/memory/MEM-Q${num}.md&title=Memory Card Q${num}" style="color:var(--accent-blue);text-decoration:none;">View Memory Card: MEM-Q${num}</a>`;
+                            })()}
                         </div>
                     ` : ''}
 
