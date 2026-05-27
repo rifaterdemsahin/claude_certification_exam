@@ -738,31 +738,65 @@
         let cachedVotes = {};
 
         // ================== API ==================
+        function showToast(msg, type) {
+            const existing = document.getElementById('voteToast');
+            if (existing) existing.remove();
+            const toast = document.createElement('div');
+            toast.id = 'voteToast';
+            toast.style.cssText = 'position:fixed;top:60px;right:20px;z-index:9999;padding:12px 20px;border-radius:10px;font-size:0.9em;font-weight:500;animation:fadeIn 0.3s;max-width:320px;';
+            if (type === 'ok') {
+                toast.style.background = 'rgba(16,185,129,0.9)'; toast.style.color = '#fff';
+            } else if (type === 'err') {
+                toast.style.background = 'rgba(239,68,68,0.9)'; toast.style.color = '#fff';
+            } else {
+                toast.style.background = 'rgba(56,189,248,0.9)'; toast.style.color = '#fff';
+            }
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
         async function fetchVotes() {
             if (!GIST_ID) return cachedVotes;
             try {
                 const resp = await fetch(`https://api.github.com/gists/${GIST_ID}`);
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
                 const gist = await resp.json();
                 cachedVotes = JSON.parse(gist.files['claude-cert-votes.json'].content);
+                console.log('[votes] Fetched:', cachedVotes);
             } catch (e) {
-                console.warn('Failed to fetch votes from gist:', e);
+                console.warn('[votes] Fetch failed:', e);
+                showToast('Could not load vote counts', 'err');
             }
             return cachedVotes;
         }
 
         async function postVote(ids) {
-            if (!WORKER_URL) return null;
+            if (!WORKER_URL) {
+                showToast('Vote saved locally (no worker configured)', 'info');
+                return null;
+            }
             try {
+                console.log('[votes] Posting:', ids);
                 const resp = await fetch(WORKER_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ids }),
                 });
                 const data = await resp.json();
-                if (data.votes) cachedVotes = data.votes;
+                console.log('[votes] Response:', data);
+                if (data.error) {
+                    showToast('Vote error: ' + data.error, 'err');
+                    return null;
+                }
+                if (data.votes) {
+                    cachedVotes = data.votes;
+                    showToast('Vote recorded!', 'ok');
+                }
                 return data;
             } catch (e) {
-                console.warn('Failed to post vote:', e);
+                console.warn('[votes] Post failed:', e);
+                showToast('Vote failed — check console for details', 'err');
                 return null;
             }
         }
