@@ -30,6 +30,7 @@
                 { emoji: '🗺️', label: 'Mindmap', href: 'mindmap.html' },
                 { emoji: '🎯', label: 'Tactics', href: 'tactics.html' },
                 { emoji: '🗜️', label: 'Compression', href: 'context_compression.html' },
+                { emoji: '🖥️', label: 'Claude CLI', href: 'claude_cli.html' },
                 { emoji: '📚', label: 'Resources', href: 'resources.html' },
                 { emoji: '📖', label: 'Dictionary', href: 'dictionary.html' },
                 { emoji: '🐍', label: 'MCP Python', href: 'mcp_python.html' },

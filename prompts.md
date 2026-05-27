@@ -532,3 +532,15 @@ Check the last commit and reflect to the structure and fix links. The .kilo/agen
 ## Commit 86: (pending) — Fix mastered button auto-advance in cards.html
 
 When clicking "Mark Mastered" in the card modal, it should automatically advance to the next unmastered question instead of reopening the same card. Add a getNextUnmasteredId function that finds the next unmastered card in sequence.
+
+---
+
+## Commit 87: (pending) — Show remaining count and card images in cards.html
+
+Show the remaining question count in the card modal when playing memory cards. Add thumbnail images from assets/memory to the card grid view. Display images on the front of each card with proper styling.
+
+---
+
+## Commit 88: (pending) — Add Claude CLI enterprise architecture analysis page
+
+Create a new page analyzing Claude CLI's open architecture strategy. Include content about enterprise compliance, developer real estate war, infrastructure offloading, and MCP open standard strategy. Add comparison table for Direct API vs Hyperscaler Backends. Include the concept image from assets/concepts/claude_cli_opensource.png.

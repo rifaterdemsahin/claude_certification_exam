@@ -60,6 +60,14 @@
             color: var(--text-muted);
             font-weight: 600;
         }
+        .card-modal-remaining {
+            font-size: 0.8em;
+            color: var(--accent-orange);
+            background: rgba(245,158,11,0.1);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
         .card-modal-category {
             padding: 4px 12px;
             border-radius: 12px;
@@ -128,6 +136,15 @@
             border-radius: 12px;
             padding: 12px;
             border: 1px solid var(--border);
+        }
+        .card-thumb {
+            width: 100%;
+            max-height: 120px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin: 8px 0;
+            background: var(--bg-primary);
+            padding: 4px;
         }
         .card-modal-image img {
             max-width: 100%;
@@ -247,6 +264,7 @@
                                 <button class="fav-btn ${isFavorite ? 'fav-active' : ''}" onclick="event.stopPropagation(); toggleFavorite(${q.id})">
                                     ${isFavorite ? '★' : '☆'}
                                 </button>
+                                ${q.imageUrl ? `<img src="${q.imageUrl}" alt="" class="card-thumb" onerror="this.style.display='none'" loading="lazy">` : ''}
                                 <div class="card-question">${escapeHtml(q.question)}</div>
                                 <button class="hint-btn" onclick="event.stopPropagation(); showHint(${q.id})">Hint</button>
                             </div>
@@ -284,11 +302,14 @@
             overlay.className = 'card-modal-overlay';
             overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
 
+            const remainingCount = questionsData.length - Object.keys(state.progress).length;
+
             overlay.innerHTML = `
                 <div class="card-modal">
                     <button class="card-modal-close" onclick="this.closest('.card-modal-overlay').remove()">✕</button>
                     <div class="card-modal-header">
                         <span class="card-modal-id">${q.uid}</span>
+                        <span class="card-modal-remaining">${remainingCount} remaining</span>
                         <span class="card-modal-category cat-${q.category}">${categories[q.category].name}</span>
                     </div>
                     <div class="card-modal-image">
