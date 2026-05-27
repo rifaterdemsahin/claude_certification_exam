@@ -616,3 +616,21 @@ Move the exam tactics and study strategy content from tactics.html to the home p
 ## Commit 100: (pending) — Make exam buttons more graphical
 
 Update exam Previous/Next buttons to be more graphical and useful. Add emojis (⬅️/➡️/🏁), show question numbers as hints, add centered progress indicator (current/total), enhance hover effects with elevation and color, add colored left/right borders, and style the results page buttons consistently.
+
+---
+
+## Commit 101: (pending) — Update Create menu with all YouTube videos
+
+Replace the 4 video links in the Create menu with all 24 videos from Erdem's YouTube channel, using the actual video IDs fetched via oEmbed API.
+
+---
+
+## Commit 102: (pending) — Add correct answer animation and Enter key navigation
+
+Add CSS animations for correct answers (green pulse) and incorrect answers (red shake). Add Enter keyboard shortcut to move to next question after answering. Show keyboard hint below explanation.
+
+---
+
+## Commit 103: (pending) — Fix mermaid diagram and add colors
+
+Fix broken mermaid diagrams by sanitizing answer text (removing special characters). Add colorful styling with blue concept nodes and green answer node. Improve mermaid initialization with better error handling and theme variables.

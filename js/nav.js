@@ -56,9 +56,30 @@
             sublabel: 'Build',
             items: [
                 { emoji: '🎬', label: 'YouTube Channel', href: 'https://www.youtube.com/@RifatErdemSahin', external: true },
-                { emoji: '📹', label: 'Claude Code Basics', href: 'https://www.youtube.com/watch?v=B12vqJ2xKQ4', external: true },
-                { emoji: '📹', label: 'MCP Explained', href: 'https://www.youtube.com/watch?v=Dpmegqh23nY', external: true },
-                { emoji: '📹', label: 'Agentic Loops', href: 'https://www.youtube.com/watch?v=agentic-loop', external: true }
+                { emoji: '📹', label: 'AI No-Code: Build AI Solutions', href: 'https://www.youtube.com/watch?v=yI5BIb74kVI', external: true },
+                { emoji: '📹', label: 'The Agentic Era: Digital Workforce', href: 'https://www.youtube.com/watch?v=c1UotPbvKoQ', external: true },
+                { emoji: '📹', label: 'The New Professional Standard', href: 'https://www.youtube.com/watch?v=Frty5ICAdOo', external: true },
+                { emoji: '📹', label: 'RAISE: RAG with Copilot', href: 'https://www.youtube.com/watch?v=QwFB7tvzLoA', external: true },
+                { emoji: '📹', label: '10x Interview Rate: ChatGPT CV', href: 'https://www.youtube.com/watch?v=bsH-vBGNERE', external: true },
+                { emoji: '📹', label: 'AI Agents vs Human Freelancers', href: 'https://www.youtube.com/watch?v=YZqcACObMws', external: true },
+                { emoji: '📹', label: 'Authentic AI Content Creation', href: 'https://www.youtube.com/watch?v=VdnZI0PfscM', external: true },
+                { emoji: '📹', label: 'How to Actually Learn AI', href: 'https://www.youtube.com/watch?v=IYgcXAZkevY', external: true },
+                { emoji: '📹', label: 'AI to Automate LinkedIn Job Hunt', href: 'https://www.youtube.com/watch?v=qNJpDJ8yHu8', external: true },
+                { emoji: '📹', label: 'AI CV Generator: Resumes Obsolete', href: 'https://www.youtube.com/watch?v=pUf8wGV2NBU', external: true },
+                { emoji: '📹', label: 'Write Cover Letters with AI', href: 'https://www.youtube.com/watch?v=EtpfGUGAFJw', external: true },
+                { emoji: '📹', label: 'MCP Explained: AI Integration', href: 'https://www.youtube.com/watch?v=wtXDL0Vmr7A', external: true },
+                { emoji: '📹', label: 'The Rise of Personal AI', href: 'https://www.youtube.com/watch?v=fxj1orsKpYM', external: true },
+                { emoji: '📹', label: 'Being Broken: Secret Weapon in AI', href: 'https://www.youtube.com/watch?v=3VgRz5GeYDA', external: true },
+                { emoji: '📹', label: 'Master Complex Topics with AI', href: 'https://www.youtube.com/watch?v=E52uDnN5FB0', external: true },
+                { emoji: '📹', label: 'Mastering Self-Learning', href: 'https://www.youtube.com/watch?v=MnYEZWflHDs', external: true },
+                { emoji: '📹', label: 'AI for Accountability', href: 'https://www.youtube.com/watch?v=WK66w51UMrs', external: true },
+                { emoji: '📹', label: '10 AI Tips to Learn Faster', href: 'https://www.youtube.com/watch?v=2EVPwgi8NZA', external: true },
+                { emoji: '📹', label: 'Daily Skill Learning with AI', href: 'https://www.youtube.com/watch?v=DDuGVH_uPTA', external: true },
+                { emoji: '📹', label: 'AI-Powered CV as Code', href: 'https://www.youtube.com/watch?v=dCU0GpriG1o', external: true },
+                { emoji: '📹', label: 'AI-Powered Emotional Intelligence', href: 'https://www.youtube.com/watch?v=yKN0ParJ0fo', external: true },
+                { emoji: '📹', label: 'AI Career Guide: Start IT Career', href: 'https://www.youtube.com/watch?v=j5lku3LYoK4', external: true },
+                { emoji: '📹', label: 'Text Blaze for AI Self Learning', href: 'https://www.youtube.com/watch?v=DNQEQZPnpfg', external: true },
+                { emoji: '📹', label: 'Master AI, Stay Ahead', href: 'https://www.youtube.com/watch?v=3bwaZ-xUJcs', external: true }
             ]
         }
     ];

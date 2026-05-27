@@ -40,6 +40,59 @@
             border-color: var(--accent-red);
             color: var(--accent-red);
         }
+        /* Correct/Incorrect animations */
+        @keyframes correctPulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
+            50% { transform: scale(1.02); box-shadow: 0 0 20px 10px rgba(16,185,129,0.2); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+        }
+        @keyframes incorrectShake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        @keyframes correctConfetti {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .exam-option.correct {
+            animation: correctPulse 0.6s ease-out;
+            border: 2px solid var(--accent-green) !important;
+            background: rgba(16,185,129,0.15) !important;
+        }
+        .exam-option.incorrect {
+            animation: incorrectShake 0.5s ease-out;
+            border: 2px solid var(--accent-red) !important;
+            background: rgba(239,68,68,0.15) !important;
+        }
+        .quiz-explanation.correct-enter {
+            animation: fadeInUp 0.3s ease-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .enter-hint {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(56,189,248,0.1);
+            border: 1px solid var(--accent-blue);
+            border-radius: 8px;
+            font-size: 0.8em;
+            color: var(--accent-blue);
+            margin-top: 12px;
+        }
+        .enter-hint kbd {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 0.9em;
+            font-family: inherit;
+        }
         .exam-nav {
             display: flex;
             justify-content: space-between;
@@ -299,18 +352,25 @@
                     </div>
 
                     ${state.examShowExplanation ? `
-                        <div class="quiz-explanation">
+                        <div class="quiz-explanation correct-enter">
                             <strong>${state.examSelected === q.answer ? '✅ Correct!' : '❌ Incorrect'}</strong>
                             <p>${escapeHtml(q.answer)}</p>
+                        </div>
+                        <div class="enter-hint">
+                            Press <kbd>Enter</kbd> to go to next question
                         </div>
 
                         <div class="exam-rationale" style="margin-top:16px;padding:16px;background:var(--bg-primary);border-radius:12px;border:1px solid var(--border);">
                             <h4 style="color:var(--accent-blue);margin-bottom:12px;">📊 Rationale - Concepts Leading to Answer</h4>
                             <div class="mermaid">
                                 graph LR
-                                    ${q.concepts && q.concepts.length > 0 ? q.concepts.map((c, i) => `C${i}["${c}"] --> A`).join('\n                                    ') : 'C0["General Knowledge"] --> A'}
-                                    A["${escapeHtml(q.answer.substring(0, 50))}..."]
-                                    ${state.examSelected === q.answer ? '' : `A --> R["${state.examSelected === q.answer ? '✅ Correct' : '❌ Incorrect'}"]`}
+                                    ${q.concepts && q.concepts.length > 0 ? q.concepts.map((c, i) => {
+                                        const safeName = c.replace(/[^a-zA-Z0-9]/g, '_');
+                                        return `C${i}["${c}"] --> A`;
+                                    }).join('\n                                    ') : 'C0["General Knowledge"] --> A'}
+                                    A["${q.answer.substring(0, 60).replace(/["\[\]{}()]/g, '').replace(/\n/g, ' ')}"]
+                                    ${q.concepts && q.concepts.length > 0 ? q.concepts.map((c, i) => `style C${i} fill:#1e3a5f,stroke:#38bdf8,color:#e2e8f0`).join('\n                                    ') : ''}
+                                    style A fill:#064e3b,stroke:#10b981,color:#e2e8f0
                             </div>
                             <div style="margin-top:12px;padding:12px;background:var(--bg-secondary);border-radius:8px;">
                                 <strong style="color:var(--accent-green);">Key Concepts:</strong>
@@ -442,7 +502,21 @@
         }
 
         // Initialize mermaid
-        mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'dark',
+            securityLevel: 'loose',
+            flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+            themeVariables: {
+                primaryColor: '#1e3a5f',
+                primaryTextColor: '#e2e8f0',
+                primaryBorderColor: '#38bdf8',
+                lineColor: '#38bdf8',
+                secondaryColor: '#064e3b',
+                tertiaryColor: '#1e293b',
+                fontSize: '14px'
+            }
+        });
 
         // Initialize
         initExam();
@@ -451,8 +525,22 @@
         const originalRenderExam = renderExam;
         renderExam = function() {
             originalRenderExam();
-            setTimeout(() => mermaid.init(undefined, '.mermaid'), 100);
+            setTimeout(() => {
+                try {
+                    mermaid.init(undefined, '.mermaid');
+                } catch(e) {
+                    console.warn('Mermaid rendering error:', e);
+                }
+            }, 100);
         };
+
+        // Keyboard navigation: Enter to go to next question
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && state.examShowExplanation) {
+                e.preventDefault();
+                nextExamQuestion();
+            }
+        });
     </script>
 </body>
 </html>
