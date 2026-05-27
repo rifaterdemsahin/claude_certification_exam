@@ -121,12 +121,53 @@
             color: var(--accent-green);
             background: rgba(16,185,129,0.1);
         }
+        .card-modal-image {
+            margin-bottom: 20px;
+            text-align: center;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 12px;
+            border: 1px solid var(--border);
+        }
+        .card-modal-image img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+        .card-modal-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        .card-link-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--accent-blue);
+            text-decoration: none;
+            text-align: center;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+        .card-link-btn:hover {
+            border-color: var(--accent-blue);
+            background: rgba(56,189,248,0.1);
+        }
         @media (max-width: 640px) {
             .card-modal { padding: 20px; margin: 10px; }
             .card-modal-question { font-size: 1.1em; }
             .card-modal-answer { font-size: 1em; }
             .card-modal-actions { flex-direction: column; }
             .card-modal-actions button { width: 100%; }
+            .card-modal-links { flex-direction: column; }
+            .card-link-btn { width: 100%; }
         }
     </style>
 </head>
@@ -250,6 +291,9 @@
                         <span class="card-modal-id">${q.uid}</span>
                         <span class="card-modal-category cat-${q.category}">${categories[q.category].name}</span>
                     </div>
+                    <div class="card-modal-image">
+                        <img src="${q.imageUrl}" alt="${escapeHtml(q.question)}" onerror="this.style.display='none'" loading="lazy">
+                    </div>
                     <div class="card-modal-question">${escapeHtml(q.question)}</div>
                     <div class="card-modal-answer">${escapeHtml(q.answer)}</div>
                     ${hint ? `
@@ -267,6 +311,11 @@
                         </button>
                         ${q.claudePrompt ? `<button onclick="window.open('https://claude.ai/new?q=${encodeURIComponent(q.claudePrompt)}', '_blank')">Ask Claude</button>` : ''}
                         <button onclick="this.closest('.card-modal-overlay').remove()">Close</button>
+                    </div>
+                    <div class="card-modal-links">
+                        <a href="${q.googleImageUrl}" target="_blank" class="card-link-btn">🔍 Google Images</a>
+                        <a href="${q.relatedVideoUrl}" target="_blank" class="card-link-btn">🎬 YouTube Videos</a>
+                        <a href="markdown_renderer.html?url=${encodeURIComponent(q.notesUrl)}&title=${encodeURIComponent(q.uid)}" class="card-link-btn">📝 Notes</a>
                     </div>
                 </div>
             `;
