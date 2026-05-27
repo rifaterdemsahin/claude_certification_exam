@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SWE Benchmarks — how AI agents are measured on real-world software engineering tasks.">
+    <title>SWE Benchmarks - Claude Developer Certification</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧪</text></svg>">
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        .swe-hero {
+            text-align: center;
+            padding: 40px 24px;
+            background: linear-gradient(135deg, rgba(239,68,68,0.08) 0%, rgba(168,85,247,0.08) 100%);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            margin-bottom: 32px;
+        }
+        .swe-hero h2 {
+            font-size: 1.8em;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--accent-red), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .swe-hero p {
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+        .swe-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .swe-section h3 {
+            color: var(--accent-blue);
+            margin-bottom: 16px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .swe-section p, .swe-section li {
+            color: var(--text-secondary);
+            font-size: 0.95em;
+            line-height: 1.7;
+        }
+        .swe-section ul {
+            margin: 8px 0 8px 20px;
+        }
+        .swe-section li {
+            margin-bottom: 8px;
+        }
+        .bench-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .bench-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            transition: all 0.2s;
+        }
+        .bench-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+        .bench-card strong {
+            color: var(--text-primary);
+            font-size: 0.95em;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .bench-card .focus {
+            color: var(--accent-blue);
+            font-size: 0.8em;
+            margin-bottom: 6px;
+        }
+        .bench-card .trait {
+            color: var(--text-secondary);
+            font-size: 0.85em;
+        }
+        .props-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .prop-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+        }
+        .prop-card .icon { font-size: 1.8em; margin-bottom: 8px; }
+        .prop-card strong { color: var(--text-primary); font-size: 0.9em; display: block; }
+        .prop-card p { color: var(--text-secondary); font-size: 0.8em; margin-top: 4px; }
+        .connect-list {
+            display: grid;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .connect-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+        .connect-item .icon { font-size: 1.4em; flex-shrink: 0; }
+        .connect-item strong { color: var(--text-primary); font-size: 0.9em; }
+        .connect-item p { color: var(--text-secondary); font-size: 0.85em; margin-top: 2px; }
+        .frontier-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin-top: 16px;
+        }
+        .frontier-stat {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+        .frontier-stat .num {
+            font-size: 1.8em;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-red), var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .frontier-stat .label {
+            color: var(--text-secondary);
+            font-size: 0.8em;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <script src="../js/nav.js"></script>
+
+    <header class="app-header">
+        <h1>SWE Benchmarks</h1>
+        <p>How AI agents are measured on real-world software engineering</p>
+    </header>
+
+    <div class="container">
+        <!-- Hero -->
+        <div class="swe-hero">
+            <h2>Beyond Hello World</h2>
+            <p>SWE benchmarks test whether an AI agent can understand a codebase, locate the right files, reason about a fix, implement it, and verify it passes tests — the full engineering loop, not just code completion.</p>
+        </div>
+
+        <!-- What Are SWE Benchmarks -->
+        <div class="swe-section">
+            <h3>What Are SWE Benchmarks?</h3>
+            <p>Traditional coding benchmarks (HumanEval, MBPP) test isolated function completion. SWE benchmarks test the complete software engineering workflow:</p>
+            <ul>
+                <li>Read and understand a bug report or feature request</li>
+                <li>Navigate a real codebase with multiple files and dependencies</li>
+                <li>Locate the relevant code to change</li>
+                <li>Implement a correct fix or feature</li>
+                <li>Verify the solution passes existing tests</li>
+            </ul>
+        </div>
+
+        <!-- Key Properties -->
+        <div class="swe-section">
+            <h3>Key Properties of a Good Benchmark</h3>
+            <div class="props-grid">
+                <div class="prop-card">
+                    <div class="icon">&#128683;</div>
+                    <strong>Contamination-Free</strong>
+                    <p>Tasks written from scratch, not from existing commits or PRs. No model has seen the solution during pretraining.</p>
+                </div>
+                <div class="prop-card">
+                    <div class="icon">&#127759;</div>
+                    <strong>High Diversity</strong>
+                    <p>Tasks span many repositories and languages, not just Python scripts.</p>
+                </div>
+                <div class="prop-card">
+                    <div class="icon">&#128295;</div>
+                    <strong>Real-World Complexity</strong>
+                    <p>Solutions require understanding multiple files, not just one function.</p>
+                </div>
+                <div class="prop-card">
+                    <div class="icon">&#9989;</div>
+                    <strong>Reliable Verification</strong>
+                    <p>Tests software behavior, not implementation details. Hand-written verifiers.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benchmark Landscape -->
+        <div class="swe-section">
+            <h3>Benchmark Landscape</h3>
+            <div class="bench-grid">
+                <div class="bench-card">
+                    <strong>SWE-bench</strong>
+                    <div class="focus">GitHub issues to PRs</div>
+                    <div class="trait">First widely-used SWE benchmark. Foundation for measuring coding agents.</div>
+                </div>
+                <div class="bench-card">
+                    <strong>SWE-bench Pro</strong>
+                    <div class="focus">Harder subset</div>
+                    <div class="trait">Longer, more complex tasks that separate frontier models from the pack.</div>
+                </div>
+                <div class="bench-card">
+                    <strong>DeepSWE</strong>
+                    <div class="focus">Long-horizon engineering</div>
+                    <div class="trait">5.5x more code per solution. 91 repos, 5 languages. Contamination-free.</div>
+                </div>
+                <div class="bench-card">
+                    <strong>HumanEval</strong>
+                    <div class="focus">Function completion</div>
+                    <div class="trait">Simple, isolated tasks. Good for baseline coding ability.</div>
+                </div>
+                <div class="bench-card">
+                    <strong>MBPP</strong>
+                    <div class="focus">Basic Python problems</div>
+                    <div class="trait">Entry-level coding. Mostly single-function solutions.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DeepSWE Stats -->
+        <div class="swe-section">
+            <h3>DeepSWE: Pushing the Frontier</h3>
+            <p>Today's leading models cluster within a narrow score band on existing benchmarks. DeepSWE separates them with harder, longer, contamination-free tasks.</p>
+            <div class="frontier-grid">
+                <div class="frontier-stat">
+                    <div class="num">5.5x</div>
+                    <div class="label">More code per solution vs SWE-bench Pro</div>
+                </div>
+                <div class="frontier-stat">
+                    <div class="num">2x</div>
+                    <div class="label">More output tokens required</div>
+                </div>
+                <div class="frontier-stat">
+                    <div class="num">91</div>
+                    <div class="label">Repositories across 5 languages</div>
+                </div>
+                <div class="frontier-stat">
+                    <div class="num">0</div>
+                    <div class="label">Contaminated tasks (all from scratch)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Connection to Agentic Architecture -->
+        <div class="swe-section">
+            <h3>Connection to Agentic Architecture</h3>
+            <p>SWE benchmarks are the proving ground for the patterns covered in this certification:</p>
+            <div class="connect-list">
+                <div class="connect-item">
+                    <span class="icon">&#128260;</span>
+                    <div>
+                        <strong>Agentic Loop</strong>
+                        <p>Agent perceives codebase, thinks about the fix, acts by editing files, then verifies — the full Perceive-Think-Act cycle.</p>
+                    </div>
+                </div>
+                <div class="connect-item">
+                    <span class="icon">&#129489;</span>
+                    <div>
+                        <strong>Coordinator-Subagent</strong>
+                        <p>Complex tasks may need separate agents for research, coding, and testing, coordinated by a main agent.</p>
+                    </div>
+                </div>
+                <div class="connect-item">
+                    <span class="icon">&#128260;</span>
+                    <div>
+                        <strong>Validation Loops</strong>
+                        <p>Agent runs tests, checks results, retries if failures — the core reliability pattern.</p>
+                    </div>
+                </div>
+                <div class="connect-item">
+                    <span class="icon">&#128230;</span>
+                    <div>
+                        <strong>Context Management</strong>
+                        <p>Large codebases require smart context window usage — summarization, semantic search, compression.</p>
+                    </div>
+                </div>
+                <div class="connect-item">
+                    <span class="icon">&#128295;</span>
+                    <div>
+                        <strong>MCP Tools</strong>
+                        <p>File system tools, test runners, and linters are all MCP tools the agent calls during the loop.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="app-footer">
+        <p>Claude Developer Certification Study App</p>
+        <p>Created by Rifat Erdem Sahin</p>
+        <div class="footer-links">
+            <a href="../index.html">Home</a>
+            <a href="cards.html">Cards</a>
+            <a href="quiz.html">Quiz</a>
+            <a href="practice_exam.html">Practice Exam</a>
+            <a href="exam.html">Mock Exam</a>
+            <a href="mastery.html">Mastery</a>
+            <a href="https://github.com/rifaterdemsahin/claude_certification_exam" target="_blank">GitHub</a>
+        </div>
+    </footer>
+</body>
+</html>

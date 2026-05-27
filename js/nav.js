@@ -27,21 +27,22 @@
             label: '📊 Analyse ▶️',
             sublabel: 'Connect',
             items: [
-                { emoji: '📊', label: 'Stats', href: 'analyse.html' },
-                { emoji: '🗺️', label: 'Mindmap', href: 'mindmap.html' },
-                { emoji: '🎯', label: 'Tactics', href: 'tactics.html' },
-                { emoji: '🗜️', label: 'Compression', href: 'context_compression.html' },
-                { emoji: '🖥️', label: 'Claude CLI', href: 'claude_cli.html' },
                 { emoji: '🚀', label: 'AGI Path', href: 'agi-path.html' },
-                { emoji: '📚', label: 'Resources', href: 'resources.html' },
-                { emoji: '📖', label: 'Dictionary', href: 'dictionary.html' },
-                { emoji: '🐍', label: 'MCP Python', href: 'mcp_python.html' },
-                { emoji: '🛠️', label: 'Skills', href: 'skills.html' },
+                { emoji: '🖥️', label: 'Claude CLI', href: 'claude_cli.html' },
+                { emoji: '🗜️', label: 'Compression', href: 'context_compression.html' },
                 { emoji: '📋', label: 'Criteria', href: 'explicit_criteria.html' },
-                { emoji: '🧩', label: 'Reasoning', href: 'structured_reasoning.html' },
+                { emoji: '📖', label: 'Dictionary', href: 'dictionary.html' },
+                { emoji: '🔗', label: 'Evaluate', href: 'evaluate.html' },
+                { emoji: '🐍', label: 'MCP Python', href: 'mcp_python.html' },
+                { emoji: '🗺️', label: 'Mindmap', href: 'mindmap.html' },
                 { emoji: '💬', label: 'Multi-Turn', href: 'multi_turn.html' },
                 { emoji: '💾', label: 'Prompt Caching', href: 'prompt_caching.html' },
-                { emoji: '🔗', label: 'Evaluate', href: 'evaluate.html' }
+                { emoji: '🧩', label: 'Reasoning', href: 'structured_reasoning.html' },
+                { emoji: '📚', label: 'Resources', href: 'resources.html' },
+                { emoji: '🧪', label: 'SWE Benchmarks', href: 'swe_bench.html' },
+                { emoji: '🛠️', label: 'Skills', href: 'skills.html' },
+                { emoji: '📊', label: 'Stats', href: 'analyse.html' },
+                { emoji: '🎯', label: 'Tactics', href: 'tactics.html' }
             ]
         },
         {
