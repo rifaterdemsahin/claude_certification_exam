@@ -11,15 +11,15 @@
                 { emoji: '🧠', label: 'Memory Cards', href: 'memory_cards.html' },
                 { emoji: '🃏', label: 'Play Cards', href: 'cards.html' },
                 { emoji: '🎬', label: 'Slideshow', href: 'remember.html' },
-                { emoji: '🎯', label: 'Mastery', href: 'mastery.html' }
+                { emoji: '🎯', label: 'Mastery', href: 'mastery.html' },
+                { emoji: '📝', label: 'Quiz Mode', href: 'quiz.html' }
             ]
         },
         {
             label: '📝 Understand',
             sublabel: 'Apply',
             items: [
-                { emoji: '🎯', label: 'Quiz Mode', href: 'quiz.html' },
-                { emoji: '📝', label: 'Mock Exam', href: 'exam.html' }
+                { emoji: '📋', label: 'Mock Exam', href: 'exam.html' }
             ]
         },
         {
