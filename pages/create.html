@@ -482,6 +482,11 @@
             <button class="reset-vote-btn" onclick="resetVote()">Change my vote</button>
         </div>
 
+        <!-- Setup Notice (shown when gist not configured) -->
+        <div id="setupNotice" style="display:none;padding:12px 16px;background:rgba(245,158,11,0.1);border:1px solid var(--accent-yellow);border-radius:10px;margin-bottom:20px;font-size:0.85em;color:var(--accent-yellow);">
+            Running in local mode. Votes are browser-only. Configure GIST_ID and WORKER_URL for shared voting.
+        </div>
+
         <!-- Filters -->
         <div class="create-filters">
             <span style="color:var(--text-secondary);font-size:0.85em;">Filter:</span>
@@ -704,20 +709,44 @@
             }
         ];
 
-        // ================== STATE ==================
-        const STORAGE_KEY = 'create_video_votes';
+        // ================== CONFIG ==================
+        // Set these after completing setup steps 1-3
+        const GIST_ID = ''; // e.g. 'abc123def456'
+        const WORKER_URL = ''; // e.g. 'https://claude-cert-votes.your-subdomain.workers.dev'
         const VOTED_KEY = 'create_video_voted';
+
         let selectedIds = new Set();
         let currentFilter = 'all';
+        let cachedVotes = {};
 
-        function getVotes() {
+        // ================== API ==================
+        async function fetchVotes() {
+            if (!GIST_ID) return cachedVotes;
             try {
-                return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-            } catch { return {}; }
+                const resp = await fetch(`https://api.github.com/gists/${GIST_ID}`);
+                const gist = await resp.json();
+                cachedVotes = JSON.parse(gist.files['claude-cert-votes.json'].content);
+            } catch (e) {
+                console.warn('Failed to fetch votes from gist:', e);
+            }
+            return cachedVotes;
         }
 
-        function saveVotes(votes) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(votes));
+        async function postVote(ids) {
+            if (!WORKER_URL) return null;
+            try {
+                const resp = await fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids }),
+                });
+                const data = await resp.json();
+                if (data.votes) cachedVotes = data.votes;
+                return data;
+            } catch (e) {
+                console.warn('Failed to post vote:', e);
+                return null;
+            }
         }
 
         function getVoted() {
@@ -743,7 +772,7 @@
 
         function renderGrid() {
             const grid = document.getElementById('videoGrid');
-            const votes = getVotes();
+            const votes = cachedVotes;
             const maxVotes = Math.max(1, ...Object.values(votes));
 
             const filtered = currentFilter === 'all' ? videos : videos.filter(v => v.cat === currentFilter);
@@ -793,7 +822,7 @@
         }
 
         function renderLeaderboard() {
-            const votes = getVotes();
+            const votes = cachedVotes;
             const sorted = videos
                 .map(v => ({ ...v, votes: votes[v.id] || 0 }))
                 .sort((a, b) => b.votes - a.votes);
@@ -866,19 +895,27 @@
             document.getElementById('confirmOverlay').classList.remove('visible');
         }
 
-        function submitVote() {
-            const votes = getVotes();
-            selectedIds.forEach(id => {
-                votes[id] = (votes[id] || 0) + 1;
-            });
-            saveVotes(votes);
-            saveVoted([...selectedIds]);
+        async function submitVote() {
+            const ids = [...selectedIds];
+            saveVoted(ids);
 
+            // Optimistic update
+            ids.forEach(id => { cachedVotes[String(id)] = (cachedVotes[String(id)] || 0) + 1; });
             hideConfirm();
             selectedIds.clear();
             renderGrid();
             renderLeaderboard();
             showVotedBanner();
+
+            // Persist to gist
+            if (WORKER_URL) {
+                const result = await postVote(ids);
+                if (result && result.votes) {
+                    cachedVotes = result.votes;
+                    renderGrid();
+                    renderLeaderboard();
+                }
+            }
         }
 
         function showVotedBanner() {
@@ -896,23 +933,20 @@
         }
 
         function resetVote() {
-            // Remove previous votes
-            const voted = getVoted();
-            if (voted) {
-                const votes = getVotes();
-                voted.forEach(id => {
-                    if (votes[id] > 0) votes[id]--;
-                });
-                saveVotes(votes);
-            }
             localStorage.removeItem(VOTED_KEY);
             document.getElementById('alreadyVoted').style.display = 'none';
         }
 
         // ================== INIT ==================
-        renderGrid();
-        renderLeaderboard();
-        showVotedBanner();
+        (async function() {
+            if (!GIST_ID) {
+                document.getElementById('setupNotice').style.display = 'block';
+            }
+            await fetchVotes();
+            renderGrid();
+            renderLeaderboard();
+            showVotedBanner();
+        })();
     </script>
 </body>
 </html>
