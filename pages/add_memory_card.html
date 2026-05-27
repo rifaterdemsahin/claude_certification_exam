@@ -220,9 +220,10 @@
                     <h3>Card Details</h3>
 
                     <div class="form-group">
-                        <label for="cardId">Question ID</label>
-                        <div class="hint">Pattern: CAT{NN}-Q{NNN} (e.g., CAT01-Q001)</div>
-                        <input type="text" id="cardId" placeholder="CAT01-Q001" maxlength="12">
+                        <label>Question ID</label>
+                        <div class="hint">Auto-assigned based on next available ID</div>
+                        <div id="cardIdDisplay" style="padding:10px 14px;background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;font-weight:600;color:var(--accent-blue);font-size:1.1em;">Loading...</div>
+                        <input type="hidden" id="cardId" value="">
                     </div>
 
                     <div class="form-group">
@@ -264,17 +265,17 @@
                         <textarea id="cardMemory" placeholder="PERCEIVE (eyes) → THINK (brain) → ACT (hands) → REPEAT" style="min-height:60px;"></textarea>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="cardConcepts">Concepts</label>
-                            <div class="hint">Comma-separated slugs</div>
-                            <input type="text" id="cardConcepts" placeholder="agentic-loop, agentic-ai">
-                        </div>
-                        <div class="form-group">
-                            <label for="cardImage">Image URL (optional)</label>
-                            <div class="hint">SVG or PNG visual</div>
-                            <input type="text" id="cardImage" placeholder="https://...">
-                        </div>
+                    <div class="form-group">
+                        <label>Concepts</label>
+                        <div class="hint">Click to select multiple concepts</div>
+                        <div id="conceptsSelect" style="display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;min-height:44px;"></div>
+                        <input type="hidden" id="cardConcepts" value="">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cardImage">Image URL (optional)</label>
+                        <div class="hint">SVG or PNG visual</div>
+                        <input type="text" id="cardImage" placeholder="https://...">
                     </div>
                 </div>
 
@@ -332,6 +333,43 @@
     <script>
         // ================== CONFIG ==================
         const WORKER_URL = 'https://tiny-mode-1370.polished-boat-17b2.workers.dev';
+
+        // ================== AUTO ID ==================
+        let nextId = 101;
+
+        function updateIdDisplay() {
+            const cat = document.getElementById('cardCategory').value;
+            const idStr = `CAT0${cat}-Q${String(nextId).padStart(3, '0')}`;
+            document.getElementById('cardId').value = idStr;
+            document.getElementById('cardIdDisplay').textContent = idStr;
+        }
+
+        document.getElementById('cardCategory').addEventListener('change', updateIdDisplay);
+
+        // ================== CONCEPTS MULTI-SELECT ==================
+        const allConcepts = Object.entries(categorySlugs).map(([slug, name]) => ({ slug, name }));
+        let selectedConcepts = new Set();
+
+        function renderConcepts() {
+            const container = document.getElementById('conceptsSelect');
+            container.innerHTML = allConcepts.map(c => {
+                const sel = selectedConcepts.has(c.slug);
+                return `<button type="button" onclick="toggleConcept('${c.slug}')" style="
+                    padding:4px 10px;border-radius:16px;border:1px solid ${sel ? 'var(--accent-blue)' : 'var(--border)'};
+                    background:${sel ? 'rgba(56,189,248,0.15)' : 'transparent'};
+                    color:${sel ? 'var(--accent-blue)' : 'var(--text-secondary)'};
+                    font-size:0.8em;cursor:pointer;font-family:inherit;transition:all 0.15s;
+                ">${c.name}</button>`;
+            }).join('');
+            document.getElementById('cardConcepts').value = [...selectedConcepts].join(', ');
+            updatePreview();
+        }
+
+        function toggleConcept(slug) {
+            if (selectedConcepts.has(slug)) selectedConcepts.delete(slug);
+            else selectedConcepts.add(slug);
+            renderConcepts();
+        }
 
         // ================== FORM ==================
         const form = ['cardId', 'cardCategory', 'cardTitle', 'cardEmoji', 'cardQuestion', 'cardAnswer', 'cardMemory', 'cardConcepts', 'cardImage'];
@@ -478,18 +516,27 @@ ${(d.cardConcepts || '').split(',').map(c => '- ' + c.trim()).filter(c => c.leng
             btn.disabled = false;
         }
 
-        // ================== LOAD CARD COUNT ==================
-        async function loadCardCount() {
+        // ================== INIT ==================
+        async function init() {
+            const repo = 'rifaterdemsahin/claude_certification_exam';
             try {
-                const resp = await fetch(`https://api.github.com/repos/${REPO}/contents/formula/memory`);
+                const resp = await fetch(`https://api.github.com/repos/${repo}/contents/formula/memory`);
                 const files = await resp.json();
                 const mdFiles = files.filter(f => f.name.endsWith('.md'));
                 document.getElementById('cardCount').textContent = `${mdFiles.length} memory cards in formula/memory/`;
+
+                const ids = mdFiles
+                    .filter(f => f.name.match(/MEM-Q\d+\.md/))
+                    .map(f => parseInt(f.name.match(/MEM-Q(\d+)\.md/)[1]));
+                nextId = ids.length > 0 ? Math.max(...ids) + 1 : 101;
             } catch {
                 document.getElementById('cardCount').textContent = 'Could not load card count';
+                nextId = 101;
             }
+            updateIdDisplay();
+            renderConcepts();
         }
-        loadCardCount();
+        init();
     </script>
 </body>
 </html>
