@@ -453,6 +453,23 @@
         .lb-rank.top { background: var(--accent-yellow); color: var(--bg-primary); }
         .lb-name { flex: 1; font-size: 0.9em; }
         .lb-votes { color: var(--accent-green); font-weight: 600; font-size: 0.9em; }
+
+        /* Refresh Button */
+        .refresh-btn {
+            padding: 6px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.8em;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+            margin-left: auto;
+        }
+        .refresh-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+        .refresh-btn.spinning .refresh-icon { animation: spin 0.6s linear; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -499,7 +516,12 @@
 
         <!-- Leaderboard -->
         <div class="leaderboard" id="leaderboard">
-            <h3>Community Votes</h3>
+            <h3 style="display:flex;align-items:center;gap:8px;">
+                Community Votes
+                <button class="refresh-btn" onclick="refreshVotes(this)" title="Refresh vote counts">
+                    <span class="refresh-icon">&#8635;</span> Refresh
+                </button>
+            </h3>
             <div id="leaderboardList"></div>
         </div>
     </div>
@@ -872,6 +894,14 @@
             document.querySelectorAll('.create-filters .filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             renderGrid();
+        }
+
+        async function refreshVotes(btn) {
+            btn.classList.add('spinning');
+            await fetchVotes();
+            renderGrid();
+            renderLeaderboard();
+            setTimeout(() => btn.classList.remove('spinning'), 600);
         }
 
         // ================== SUBMIT ==================
