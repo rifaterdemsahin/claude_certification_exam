@@ -26,13 +26,15 @@ Browser (write) ──► Cloudflare Worker ──► GitHub Gist API (authentic
 |--------|------|-------------|
 | GET | `/` | Read all votes from gist |
 | POST | `/` | Submit a vote `{ "ids": [1, 5, 12] }` |
+| POST | `/` | Reset votes `{ "action": "reset" }` |
+| POST | `/` | Create memory card `{ "action": "create-card", "path": "...", "content": "..." }` |
 | OPTIONS | `/` | CORS preflight |
 
 ### Worker Code
 
 ```javascript
 const GIST_ID = '2bfb092b05e08669b092f8371ac9c018';
-const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN'; // Classic PAT with `gist` scope (NOT fine-grained)
+const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN'; // Classic PAT with `repo` + `gist` scopes (NOT fine-grained)
 const ALLOWED_ORIGIN = 'https://rifaterdemsahin.github.io';
 
 export default {

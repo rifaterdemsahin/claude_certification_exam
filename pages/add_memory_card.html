@@ -331,9 +331,7 @@
     <script src="../js/data.js"></script>
     <script>
         // ================== CONFIG ==================
-        const GITHUB_TOKEN = ''; // Paste your classic token with `repo` scope here
-        const REPO = 'rifaterdemsahin/claude_certification_exam';
-        const BRANCH = 'main';
+        const WORKER_URL = 'https://tiny-mode-1370.polished-boat-17b2.workers.dev';
 
         // ================== FORM ==================
         const form = ['cardId', 'cardCategory', 'cardTitle', 'cardEmoji', 'cardQuestion', 'cardAnswer', 'cardMemory', 'cardConcepts', 'cardImage'];
@@ -441,53 +439,36 @@ ${(d.cardConcepts || '').split(',').map(c => '- ' + c.trim()).filter(c => c.leng
         async function commitCard() {
             const d = getFormData();
             const filename = generateFilename(d);
-            if (!filename || !GITHUB_TOKEN) {
-                showStatus('Missing GitHub token. Add it to the page source.', 'err');
+            if (!filename) {
+                showStatus('Invalid Question ID format.', 'err');
                 return;
             }
 
             const btn = document.getElementById('commitBtn');
             btn.disabled = true;
             btn.textContent = 'Committing...';
-            showStatus('Creating file on GitHub...', 'info');
+            showStatus('Sending to Cloudflare Worker...', 'info');
 
             const path = `formula/memory/${filename}`;
-            const content = btoa(unescape(encodeURIComponent(generateMarkdown(d))));
+            const content = generateMarkdown(d);
 
             try {
-                // Check if file already exists
-                const checkResp = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
-                    headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'User-Agent': 'claude-cert' },
+                const resp = await fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'create-card',
+                        path: path,
+                        content: content,
+                        message: `Add memory card ${filename}`,
+                    }),
                 });
 
-                const body = {
-                    message: `Add memory card ${filename}`,
-                    content: content,
-                    branch: BRANCH,
-                };
-
-                if (checkResp.ok) {
-                    const existing = await checkResp.json();
-                    body.sha = existing.sha;
-                    body.message = `Update memory card ${filename}`;
-                }
-
-                const resp = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${GITHUB_TOKEN}`,
-                        'User-Agent': 'claude-cert',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(body),
-                });
-
-                if (resp.ok) {
-                    const result = await resp.json();
-                    showStatus(`Committed! ${result.content.name} → ${result.commit.sha.substring(0, 7)}`, 'ok');
+                const data = await resp.json();
+                if (data.ok) {
+                    showStatus(`Committed! ${data.name} → ${data.sha.substring(0, 7)}`, 'ok');
                 } else {
-                    const err = await resp.json();
-                    showStatus(`Error: ${err.message}`, 'err');
+                    showStatus(`Error: ${data.error}`, 'err');
                 }
             } catch (e) {
                 showStatus(`Failed: ${e.message}`, 'err');

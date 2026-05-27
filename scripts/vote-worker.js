@@ -1,6 +1,7 @@
 const GIST_ID = '2bfb092b05e08669b092f8371ac9c018';
-const GITHUB_TOKEN = 'PASTE_YOUR_TOKEN_HERE';
+const GITHUB_TOKEN = 'PASTE_YOUR_TOKEN_HERE'; // Classic token with `repo` + `gist` scopes
 const ALLOWED_ORIGIN = 'https://rifaterdemsahin.github.io';
+const REPO = 'rifaterdemsahin/claude_certification_exam';
 
 export default {
   async fetch(request, env) {
@@ -47,6 +48,67 @@ export default {
           }),
         });
         return new Response(JSON.stringify({ ok: true, votes: zeros }), {
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': ALLOWED_ORIGIN },
+        });
+      }
+
+      // Create memory card action
+      if (body.action === 'create-card') {
+        const { path, content, message } = body;
+        if (!path || !content) {
+          return new Response(JSON.stringify({ error: 'Missing path or content' }), {
+            status: 400,
+            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': ALLOWED_ORIGIN },
+          });
+        }
+
+        // Validate path is in formula/memory/
+        if (!path.startsWith('formula/memory/MEM-Q') || !path.endsWith('.md')) {
+          return new Response(JSON.stringify({ error: 'Invalid path. Must be formula/memory/MEM-Q*.md' }), {
+            status: 400,
+            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': ALLOWED_ORIGIN },
+          });
+        }
+
+        const encoded = btoa(unescape(encodeURIComponent(content)));
+
+        // Check if file exists
+        let sha = null;
+        const checkResp = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+          headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'User-Agent': 'claude-cert-worker' },
+        });
+        if (checkResp.ok) {
+          const existing = await checkResp.json();
+          sha = existing.sha;
+        }
+
+        const body_payload = {
+          message: message || (sha ? `Update ${path}` : `Add ${path}`),
+          content: encoded,
+          branch: 'main',
+        };
+        if (sha) body_payload.sha = sha;
+
+        const putResp = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${GITHUB_TOKEN}`,
+            'User-Agent': 'claude-cert-worker',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body_payload),
+        });
+
+        if (!putResp.ok) {
+          const err = await putResp.json();
+          return new Response(JSON.stringify({ error: err.message }), {
+            status: putResp.status,
+            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': ALLOWED_ORIGIN },
+          });
+        }
+
+        const result = await putResp.json();
+        return new Response(JSON.stringify({ ok: true, sha: result.commit.sha, name: result.content.name }), {
           headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': ALLOWED_ORIGIN },
         });
       }
