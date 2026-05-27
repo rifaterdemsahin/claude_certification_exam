@@ -520,3 +520,15 @@ Add memory card image display after answering questions. Add Google Image Search
 ## Commit 84: `605c20a` — Remove shared-nav from all pages, add image/video search to memory cards
 
 Remove the shared-nav div from all pages by emptying pages/nav.js. Add Google Image Search and YouTube links to each memory card in memory_cards.html.
+
+---
+
+## Commit 85: `efa4da7` — Fix broken links: update .kilo/agent references to project root
+
+Check the last commit and reflect to the structure and fix links. The .kilo/agent/ directory no longer exists - files were moved to project root. Update all references in markdown_renderer.html, skills.html, CLAUDE.md, GEMINI.md, AGENTS.md, README.md to point to the correct locations.
+
+---
+
+## Commit 86: (pending) — Fix mastered button auto-advance in cards.html
+
+When clicking "Mark Mastered" in the card modal, it should automatically advance to the next unmastered question instead of reopening the same card. Add a getNextUnmasteredId function that finds the next unmastered card in sequence.

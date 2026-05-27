@@ -306,7 +306,7 @@
                         <button class="${isFavorite ? 'fav-active' : ''}" onclick="toggleFavorite(${q.id}); this.closest('.card-modal-overlay').remove(); openCardModal(${q.id});">
                             ${isFavorite ? '★ Favorited' : '☆ Favorite'}
                         </button>
-                        <button class="${isMastered ? 'mastered-active' : ''}" onclick="toggleMastery(${q.id}); this.closest('.card-modal-overlay').remove(); openCardModal(${q.id});">
+                        <button class="${isMastered ? 'mastered-active' : ''}" onclick="toggleMastery(${q.id}); this.closest('.card-modal-overlay').remove(); const nextId = getNextUnmasteredId(${q.id}); if(nextId) openCardModal(nextId);">
                             ${isMastered ? '✓ Mastered' : 'Mark Mastered'}
                         </button>
                         ${q.claudePrompt ? `<button onclick="window.open('https://claude.ai/new?q=${encodeURIComponent(q.claudePrompt)}', '_blank')">Ask Claude</button>` : ''}
@@ -376,6 +376,20 @@
             }
             saveProgress(state.progress);
             renderCards();
+        }
+
+        function getNextUnmasteredId(currentId) {
+            const currentIndex = questionsData.findIndex(q => q.id === currentId);
+            if (currentIndex === -1) return null;
+
+            // Look for next unmastered card starting from current position
+            for (let i = 1; i < questionsData.length; i++) {
+                const nextIndex = (currentIndex + i) % questionsData.length;
+                if (!state.progress[questionsData[nextIndex].id]) {
+                    return questionsData[nextIndex].id;
+                }
+            }
+            return null; // All mastered
         }
 
         function showHint(id) {
