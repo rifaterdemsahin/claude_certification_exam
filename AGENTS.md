@@ -64,11 +64,11 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
   - `pages/multi_turn.html` — Multi-turn prompting strategies and patterns
   - `pages/context_compression.html` — Context window compression and summary techniques
 - **Scripts:** Automation scripts in `scripts/`.
-- **AI Guidelines:** Agent-specific instructions live in `.kilo/agent/`.
-  - `claude.md` — Claude-specific guidelines
-  - `gemini.md` — Gemini CLI guidelines
-  - `opencode.md` — OpenCode guidelines
+- **AI Guidelines:** Agent-specific instructions in project root.
+  - `CLAUDE.md` — Claude-specific guidelines
+  - `GEMINI.md` — Gemini CLI guidelines
   - `mimo.md` — Mimo (Xiaomi MiMo) guidelines
+  - `AGENTS.md` — Multi-agent guidelines (this file)
 
 ## File Layout
 

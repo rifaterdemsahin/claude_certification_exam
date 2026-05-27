@@ -51,7 +51,9 @@ An interactive study guide for the **Claude Developer Certification** exam with 
 ├── formula/            # Concepts, exam questions, and memory card notes
 ├── pages/              # Auxiliary HTML pages
 ├── scripts/            # Automation scripts
-└── .kilo/agent/        # AI tool guidelines
+├── CLAUDE.md           # Claude-specific guidelines
+├── GEMINI.md           # Gemini-specific guidelines
+└── mimo.md             # Mimo-specific guidelines
 ```
 
 ## 🎯 Study Strategy

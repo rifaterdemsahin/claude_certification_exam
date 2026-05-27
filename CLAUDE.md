@@ -49,12 +49,9 @@ Pattern: `CAT{NN}-Q{NNN}` (e.g., `CAT01-Q005`)
 ├── index.html              # Main single-file React app
 ├── AGENTS.md               # Multi-agent guidelines
 ├── CLAUDE.md               # This file (Claude Code config)
+├── GEMINI.md               # Gemini-specific guidelines
+├── mimo.md                 # Mimo-specific guidelines
 ├── README.md               # Human-facing project overview
-├── .kilo/agent/            # AI tool guidelines
-│   ├── claude.md
-│   ├── gemini.md
-│   ├── opencode.md
-│   └── mimo.md
 ├── assets/                 # Visual media
 │   ├── exam/               # Exam question images
 │   ├── memory/             # Memory card visual aids

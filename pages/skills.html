@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="AI skills, slash commands, and agent file guidance for the Claude Developer Certification study app. Learn how .kilo/agent/ files work.">
+    <meta name="description" content="AI skills, slash commands, and agent file guidance for the Claude Developer Certification study app. Learn how agent guideline files work.">
     <title>Claude Dev Cert — AI Skills & Resources</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
@@ -196,16 +196,15 @@
         <!-- What Are Skills -->
         <div class="section">
             <h2>🧠 What Are Skills?</h2>
-            <p>Skills are specialized instruction bundles that teach an AI agent how to perform a specific task or follow a domain-specific workflow. In this project, skills live in the <code>.kilo/agent/</code> directory and provide context-aware guidance to different AI tools.</p>
+            <p>Skills are specialized instruction bundles that teach an AI agent how to perform a specific task or follow a domain-specific workflow. In this project, skills live in the project root as markdown files and provide context-aware guidance to different AI tools.</p>
             <p>Think of a skill as a "cheat sheet" loaded into the agent's context window. When a skill is active, the agent follows its rules, conventions, and examples before generating output.</p>
 
             <div class="file-tree">
 <span class="dir">.</span>
-├── <span class="dir">.kilo/</span>
-│   └── <span class="dir">agent/</span>
-│       ├── <span class="file">claude.md</span>       <span class="comment"># Claude-specific guidelines</span>
-│       ├── <span class="file">gemini.md</span>       <span class="comment"># Gemini-specific guidelines</span>
-│       └── <span class="file">opencode.md</span>     <span class="comment"># OpenCode-specific guidelines</span>
+├── <span class="file">CLAUDE.md</span>       <span class="comment"># Claude-specific guidelines</span>
+├── <span class="file">GEMINI.md</span>       <span class="comment"># Gemini-specific guidelines</span>
+├── <span class="file">mimo.md</span>         <span class="comment"># Mimo-specific guidelines</span>
+└── <span class="file">AGENTS.md</span>       <span class="comment"># Multi-agent guidelines</span>
             </div>
         </div>
 
@@ -216,7 +215,7 @@
             <ul>
                 <li><strong>Pick a scope:</strong> Decide what the skill controls (e.g., coding style, testing rules, UI patterns).</li>
                 <li><strong>Name the file:</strong> Use the agent or tool name (e.g., <code>claude.md</code>, <code>gemini.md</code>).</li>
-                <li><strong>Place it correctly:</strong> Drop it into <code>.kilo/agent/</code> (or <code>.kilocode/agent/</code> for some tools).</li>
+                <li><strong>Place it correctly:</strong> Drop it into the project root directory.</li>
                 <li><strong>Write concise sections:</strong> Use headers (##) for clear separation. Bullet points beat paragraphs.</li>
                 <li><strong>Include examples:</strong> Show the agent what "good" looks like with code snippets or decision trees.</li>
             </ul>
@@ -262,7 +261,7 @@
             <div class="tip-box">
                 <span class="emoji">💡</span>
                 <div class="text">
-                    <strong>Pro tip:</strong> If your tool supports auto-discovery, simply placing <code>claude.md</code> in <code>.kilo/agent/</code> is enough. The agent reads it automatically on every request without needing a slash command.
+                    <strong>Pro tip:</strong> If your tool supports auto-discovery, simply placing <code>CLAUDE.md</code> in the project root is enough. The agent reads it automatically on every request without needing a slash command.
                 </div>
             </div>
         </div>
@@ -318,9 +317,9 @@
             <h2>🔗 Related Files in This Repo</h2>
             <ul>
                 <li><code>AGENTS.md</code> — Human- and agent-readable overview of the whole project.</li>
-                <li><code>.kilo/agent/claude.md</code> — Claude-specific surgical-edit and architecture rules.</li>
-                <li><code>.kilo/agent/gemini.md</code> — Gemini CLI constraints and Bloom's taxonomy integration.</li>
-                <li><code>.kilo/agent/opencode.md</code> — OpenCode agent guidelines (mirrors Claude rules).</li>
+                <li><code>CLAUDE.md</code> — Claude-specific surgical-edit and architecture rules.</li>
+                <li><code>GEMINI.md</code> — Gemini CLI constraints and Bloom's taxonomy integration.</li>
+                <li><code>mimo.md</code> — Mimo agent guidelines.</li>
             </ul>
         </div>
     </div>

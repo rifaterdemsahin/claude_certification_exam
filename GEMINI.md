@@ -28,7 +28,7 @@ This file serves as a foundational mandate for Gemini CLI and other AI tools wor
   - `formula/`: Concepts (`concepts/`), exam questions (`exam/`), and memory card notes (`memory/`).
   - `pages/`: Auxiliary HTML pages (`dictionary.html`, `markdown_renderer.html`, `memory_cards.html`).
   - `scripts/`: Utility scripts.
-  - `.kilo/agent/`: AI-specific guideline files (`claude.md`, `gemini.md`, `opencode.md`).
+  - `CLAUDE.md`, `GEMINI.md`, `mimo.md`: AI-specific guideline files in project root.
 
 ## 🔗 Unique URLs & Accessibility
 - All memory cards must be accessible via unique URLs using the `pages/markdown_renderer.html`.
