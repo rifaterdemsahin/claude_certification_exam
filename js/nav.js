@@ -19,7 +19,8 @@
             label: '📝 Understand',
             sublabel: 'Apply',
             items: [
-                { emoji: '📋', label: 'Mock Exam', href: 'exam.html' }
+                { emoji: '📋', label: 'Mock Exam Cards', href: 'exam.html' },
+                { emoji: '🎯', label: 'Practice Exam', href: 'practice_exam.html' }
             ]
         },
         {
