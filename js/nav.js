@@ -26,7 +26,7 @@
             label: '📊 Analyse',
             sublabel: 'Connect',
             items: [
-                { emoji: '🔍', label: 'Analyse (Concepts)', href: 'analyse.html' },
+                { emoji: '📊', label: 'Stats', href: 'analyse.html' },
                 { emoji: '🗺️', label: 'Mindmap', href: 'mindmap.html' },
                 { emoji: '🎯', label: 'Tactics', href: 'tactics.html' },
                 { emoji: '🗜️', label: 'Compression', href: 'context_compression.html' },
@@ -38,6 +38,7 @@
                 { emoji: '📋', label: 'Criteria', href: 'explicit_criteria.html' },
                 { emoji: '🧩', label: 'Reasoning', href: 'structured_reasoning.html' },
                 { emoji: '💬', label: 'Multi-Turn', href: 'multi_turn.html' },
+                { emoji: '💾', label: 'Prompt Caching', href: 'prompt_caching.html' },
                 { emoji: '🔗', label: 'Evaluate', href: 'evaluate.html' }
             ]
         },

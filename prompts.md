@@ -544,3 +544,51 @@ Show the remaining question count in the card modal when playing memory cards. A
 ## Commit 88: (pending) — Add Claude CLI enterprise architecture analysis page
 
 Create a new page analyzing Claude CLI's open architecture strategy. Include content about enterprise compliance, developer real estate war, infrastructure offloading, and MCP open standard strategy. Add comparison table for Direct API vs Hyperscaler Backends. Include the concept image from assets/concepts/claude_cli_opensource.png.
+
+---
+
+## Commit 89: (pending) — Add shuffle button to cards.html
+
+Add a shuffle button to the memory cards page that randomly shuffles the order of questions. Use Fisher-Yates shuffle algorithm for proper randomization.
+
+---
+
+## Commit 90: (pending) — Add can remember checkbox to dictionary.html
+
+Add a "I can remember this" checkbox to each dictionary term. Save the state in a cookie so users can track which terms they've memorized. Add a reset button to clear all remembered terms.
+
+---
+
+## Commit 91: (pending) — Save exam state in cookie
+
+Save exam progress in a cookie so users can resume where they left off. Store exam data, current index, and answers. Add shuffle button to restart with new questions.
+
+---
+
+## Commit 92: (pending) — Add shuffle button to exam.html
+
+Add a shuffle button to the exam page that randomizes questions and restarts the exam with new questions from the question bank.
+
+---
+
+## Commit 93: (pending) — Show rationale and memory cards in exam
+
+Show rationale with mermaid diagram explaining the answer logic. Add related memory card links for each question. Add colored borders for A/B/C/D options.
+
+---
+
+## Commit 94: (pending) — Update footer on all pages
+
+Update all pages to have consistent footer with "Created by Rifat Erdem Sahin" and navigation links including Home, Cards, Quiz, Exam, Mastery, and GitHub.
+
+---
+
+## Commit 95: (pending) — Rename analyse page to Stats
+
+Rename the analyse page title and navigation link from "Analyse" to "Stats" for clearer naming.
+
+---
+
+## Commit 96: (pending) — Add prompt caching content
+
+Create a new page explaining prompt caching concepts, efficiency impact, and best practices. Include comparison table showing impact with and without caching.

@@ -7,12 +7,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
     <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        .exam-option-a { border-left: 4px solid #ef4444 !important; }
+        .exam-option-b { border-left: 4px solid #3b82f6 !important; }
+        .exam-option-c { border-left: 4px solid #10b981 !important; }
+        .exam-option-d { border-left: 4px solid #f59e0b !important; }
+        .exam-option-a:hover { background: rgba(239,68,68,0.1) !important; }
+        .exam-option-b:hover { background: rgba(59,130,246,0.1) !important; }
+        .exam-option-c:hover { background: rgba(16,185,129,0.1) !important; }
+        .exam-option-d:hover { background: rgba(245,158,11,0.1) !important; }
+    </style>
 </head>
 <body>
     <script src="../js/nav.js"></script>
     <header class="app-header">
         <h1>Exam Mode</h1>
         <p>Mock exam with realistic formatting</p>
+        <button onclick="shuffleExam()" style="margin-top:12px;padding:8px 16px;border-radius:8px;background:rgba(168,85,247,0.15);color:var(--accent-purple);border:1px solid var(--accent-purple);cursor:pointer;font-family:inherit;">🔀 Shuffle & Restart</button>
     </header>
 
     <div class="container">
@@ -23,18 +35,65 @@
 
     <footer class="app-footer">
         <p>Claude Developer Certification Study App</p>
+        <p>Created by Rifat Erdem Sahin</p>
+        <div class="footer-links">
+            <a href="../index.html">🏠 Home</a>
+            <a href="cards.html">🃏 Cards</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="exam.html">📋 Exam</a>
+            <a href="mastery.html">🎯 Mastery</a>
+            <a href="https://github.com/rifaterdemsahin/claude_certification_exam" target="_blank">GitHub</a>
+        </div>
     </footer>
 
     <script src="../js/data.js"></script>
     <script src="../js/state.js"></script>
     <script src="../js/utils.js"></script>
     <script>
+        function getExamCookie() {
+            const cookie = document.cookie.split(';').find(c => c.trim().startsWith('exam_state='));
+            return cookie ? JSON.parse(cookie.split('=')[1]) : null;
+        }
+
+        function saveExamCookie() {
+            const examState = {
+                examData: state.examData,
+                examIndex: state.examIndex,
+                examAnswers: state.examAnswers
+            };
+            document.cookie = `exam_state=${JSON.stringify(examState)};path=/;max-age=86400`;
+        }
+
+        function clearExamCookie() {
+            document.cookie = 'exam_state=;path=/;max-age=0';
+        }
+
         function initExam() {
+            const saved = getExamCookie();
+            if (saved && saved.examData && saved.examData.length > 0) {
+                state.examData = saved.examData;
+                state.examIndex = saved.examIndex || 0;
+                state.examAnswers = saved.examAnswers || {};
+                state.examSelected = state.examAnswers[state.examData[state.examIndex].id] || null;
+                state.examShowExplanation = state.examSelected !== null;
+            } else {
+                state.examData = shuffleArray([...questionsData]).slice(0, 20);
+                state.examIndex = 0;
+                state.examSelected = null;
+                state.examShowExplanation = false;
+                state.examAnswers = {};
+            }
+            renderExam();
+        }
+
+        function shuffleExam() {
+            clearExamCookie();
             state.examData = shuffleArray([...questionsData]).slice(0, 20);
             state.examIndex = 0;
             state.examSelected = null;
             state.examShowExplanation = false;
             state.examAnswers = {};
+            saveExamCookie();
             renderExam();
         }
 
@@ -81,7 +140,7 @@
                         ${options.map((opt, idx) => {
                             const letter = String.fromCharCode(65 + idx);
                             const emoji = letterEmojis[letter] || '';
-                            let cls = 'exam-option';
+                            let cls = `exam-option exam-option-${letter.toLowerCase()}`;
                             if (state.examSelected === opt) cls += ' selected';
                             if (state.examShowExplanation) {
                                 if (opt === q.answer) cls += ' correct';
@@ -97,6 +156,22 @@
                         <div class="quiz-explanation">
                             <strong>${state.examSelected === q.answer ? '✅ Correct!' : '❌ Incorrect'}</strong>
                             <p>${escapeHtml(q.answer)}</p>
+                        </div>
+
+                        <div class="exam-rationale" style="margin-top:16px;padding:16px;background:var(--bg-primary);border-radius:12px;border:1px solid var(--border);">
+                            <h4 style="color:var(--accent-blue);margin-bottom:12px;">📊 Rationale</h4>
+                            <div class="mermaid">
+                                graph TD
+                                    A[Question: ${escapeHtml(q.question.substring(0, 30))}...] --> B{Analysis}
+                                    B --> C[Correct Answer: ${escapeHtml(q.answer.substring(0, 30))}...]
+                                    B --> D[Your Answer: ${escapeHtml(state.examSelected || 'None').substring(0, 30)}...]
+                                    C --> E[${state.examSelected === q.answer ? '✅ Match' : '❌ Mismatch'}]
+                            </div>
+                        </div>
+
+                        <div class="exam-memory-card" style="margin-top:16px;padding:16px;background:rgba(168,85,247,0.1);border-radius:12px;border:1px solid var(--accent-purple);">
+                            <h4 style="color:var(--accent-purple);margin-bottom:8px;">🃏 Related Memory Card</h4>
+                            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q${q.uid.replace('CAT01-Q', '').padStart(3, '0')}.md&title=Memory Card ${q.uid}" style="color:var(--accent-blue);text-decoration:none;">View Memory Card: ${q.uid}</a>
                         </div>
                     ` : ''}
 
@@ -115,6 +190,7 @@
             state.examSelected = answer;
             state.examAnswers[q.id] = answer;
             state.examShowExplanation = true;
+            saveExamCookie();
             renderExam();
         }
 
@@ -196,8 +272,18 @@
             `;
         }
 
+        // Initialize mermaid
+        mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+
         // Initialize
         initExam();
+
+        // Re-render mermaid after each render
+        const originalRenderExam = renderExam;
+        renderExam = function() {
+            originalRenderExam();
+            setTimeout(() => mermaid.init(undefined, '.mermaid'), 100);
+        };
     </script>
 </body>
 </html>

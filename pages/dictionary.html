@@ -146,6 +146,43 @@
         ::-webkit-scrollbar-track { background: var(--bg-primary); }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
         .hidden { display: none !important; }
+        .remember-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+        .remember-check input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-green);
+            cursor: pointer;
+        }
+        .remember-check label {
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            cursor: pointer;
+            user-select: none;
+        }
+        .remember-check input:checked + label {
+            color: var(--accent-green);
+        }
+        .reset-btn {
+            background: rgba(239,68,68,0.15);
+            color: var(--accent-red);
+            border: 1px solid var(--accent-red);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+        .reset-btn:hover {
+            background: rgba(239,68,68,0.3);
+        }
     </style>
 </head>
 <body>
@@ -157,6 +194,7 @@
     <div class="container">
         <div class="search-bar">
             <input type="text" id="dictSearch" placeholder="🔍 Search terms..." oninput="filterTerms()">
+            <button class="reset-btn" onclick="resetRemembered()">🗑️ Reset Progress</button>
         </div>
         <div class="dict-grid" id="dictGrid"></div>
     </div>
@@ -210,21 +248,55 @@
             { term: "Request Idempotency", cat: "reliability", catName: "Reliability", def: "Retrying a failed request without causing duplicate actions.", example: "" }
         ];
 
+        function getRemembered() {
+            const cookie = document.cookie.split(';').find(c => c.trim().startsWith('dict_remembered='));
+            return cookie ? JSON.parse(cookie.split('=')[1]) : [];
+        }
+
+        function setRemembered(remembered) {
+            document.cookie = `dict_remembered=${JSON.stringify(remembered)};path=/;max-age=31536000`;
+        }
+
+        function toggleRemember(term) {
+            const remembered = getRemembered();
+            const index = remembered.indexOf(term);
+            if (index === -1) {
+                remembered.push(term);
+            } else {
+                remembered.splice(index, 1);
+            }
+            setRemembered(remembered);
+        }
+
+        function resetRemembered() {
+            if (confirm('Reset all remembered terms?')) {
+                document.cookie = 'dict_remembered=;path=/;max-age=0';
+                renderTerms(document.getElementById('dictSearch').value.trim());
+            }
+        }
+
         function renderTerms(filter = '') {
             const grid = document.getElementById('dictGrid');
+            const remembered = getRemembered();
             const filtered = filter
                 ? terms.filter(t => t.term.toLowerCase().includes(filter.toLowerCase()) || t.def.toLowerCase().includes(filter.toLowerCase()))
                 : terms;
-            grid.innerHTML = filtered.map(t => `
-                <div class="dict-card">
+            grid.innerHTML = filtered.map(t => {
+                const isRemembered = remembered.includes(t.term);
+                return `
+                <div class="dict-card" style="${isRemembered ? 'border-color: var(--accent-green);' : ''}">
                     <div class="dict-term">
                         ${escapeHtml(t.term)}
                         <span class="dict-cat cat-${t.cat}">${t.catName}</span>
                     </div>
                     <div class="dict-def">${escapeHtml(t.def)}</div>
                     ${t.example ? (t.example.match(/\.(png|jpe?g|gif|webp|svg)$/i) ? `<a href="${escapeHtml(t.example)}" target="_blank" rel="noopener noreferrer" class="dict-example">🖼️ Image</a>` : `<a href="${escapeHtml(t.example)}" target="_blank" rel="noopener noreferrer" class="dict-example">▶️ Example</a>`) : ''}
-                </div>
-            `).join('');
+                    <div class="remember-check">
+                        <input type="checkbox" id="remember-${t.term.replace(/\s+/g, '-')}" ${isRemembered ? 'checked' : ''} onchange="toggleRemember('${escapeHtml(t.term)}')">
+                        <label for="remember-${t.term.replace(/\s+/g, '-')}">I can remember this</label>
+                    </div>
+                </div>`;
+            }).join('');
         }
 
         function escapeHtml(text) {

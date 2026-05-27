@@ -146,6 +146,14 @@
             background: var(--bg-primary);
             padding: 4px;
         }
+        .shuffle-btn {
+            background: rgba(168,85,247,0.15) !important;
+            color: var(--accent-purple) !important;
+            border-color: var(--accent-purple) !important;
+        }
+        .shuffle-btn:hover {
+            background: rgba(168,85,247,0.3) !important;
+        }
         .card-modal-image img {
             max-width: 100%;
             max-height: 300px;
@@ -202,6 +210,7 @@
             <button class="filter-btn" onclick="setFilter('unmastered')">Unmastered</button>
             <button class="filter-btn" onclick="setFilter('mastered')">Mastered</button>
             <button class="filter-btn" onclick="setFilter('favorites')">Favorites</button>
+            <button class="filter-btn shuffle-btn" onclick="shuffleCards()">🔀 Shuffle</button>
             <div class="search-container">
                 <input type="text" class="search-input" placeholder="Search questions..." oninput="filterCards(this.value)">
                 <button class="search-clear" onclick="clearSearch()">×</button>
@@ -220,6 +229,15 @@
 
     <footer class="app-footer">
         <p>Claude Developer Certification Study App</p>
+        <p>Created by Rifat Erdem Sahin</p>
+        <div class="footer-links">
+            <a href="../index.html">🏠 Home</a>
+            <a href="cards.html">🃏 Cards</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="exam.html">📋 Exam</a>
+            <a href="mastery.html">🎯 Mastery</a>
+            <a href="https://github.com/rifaterdemsahin/claude_certification_exam" target="_blank">GitHub</a>
+        </div>
     </footer>
 
     <script src="../js/data.js"></script>
@@ -374,6 +392,14 @@
             document.querySelector('.search-input').value = '';
             state.searchQuery = '';
             document.querySelector('.search-clear').classList.remove('visible');
+            renderCards();
+        }
+
+        function shuffleCards() {
+            for (let i = questionsData.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [questionsData[i], questionsData[j]] = [questionsData[j], questionsData[i]];
+            }
             renderCards();
         }
 
