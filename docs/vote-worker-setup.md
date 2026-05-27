@@ -32,7 +32,7 @@ Browser (write) ──► Cloudflare Worker ──► GitHub Gist API (authentic
 
 ```javascript
 const GIST_ID = '2bfb092b05e08669b092f8371ac9c018';
-const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN'; // Fine-grained PAT with Gists → Read and write
+const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN'; // Classic PAT with `gist` scope (NOT fine-grained)
 const ALLOWED_ORIGIN = 'https://rifaterdemsahin.github.io';
 
 export default {
@@ -113,13 +113,19 @@ export default {
 
 ## GitHub Token Setup
 
-1. Go to github.com/settings/tokens?type=beta
-2. Generate new fine-grained token
+**Important**: Use a Classic token, NOT a fine-grained token. Fine-grained tokens return `403: Resource not accessible by personal access token` when writing to gists.
+
+1. Go to **github.com/settings/tokens** (classic tokens page, NOT `/type=beta`)
+2. Click **Generate new token** → **Classic**
 3. Name: `claude-cert-votes`
 4. Expiration: 90 days
-5. Repository access: No repositories
-6. Account permissions: Gists → Read and write
-7. Copy token → paste into worker code → Save and Deploy
+5. Under **Scopes**, check: **`gist`** (full control of gists)
+6. Click **Generate token**
+7. Copy token → paste into worker code replacing `YOUR_GITHUB_TOKEN` → Save and Deploy
+
+### Why Classic tokens?
+
+Fine-grained tokens use repository-level permissions and don't support gist-level access the same way. The `gist` scope on classic tokens grants read/write access to all your gists, which is what the worker needs.
 
 ## Test Commands
 
