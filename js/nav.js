@@ -28,6 +28,7 @@
             label: '📊 Analyse ▶️',
             sublabel: 'Connect',
             items: [
+                { emoji: '🏗️', label: 'BMAD', href: 'bmad.html' },
                 { emoji: '🚀', label: 'AGI Path', href: 'agi-path.html' },
                 { emoji: '🖥️', label: 'Claude CLI', href: 'claude_cli.html' },
                 { emoji: '🗜️', label: 'Compression', href: 'context_compression.html' },
