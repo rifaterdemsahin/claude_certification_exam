@@ -17,6 +17,29 @@
         .exam-option-b:hover { background: rgba(59,130,246,0.1) !important; }
         .exam-option-c:hover { background: rgba(16,185,129,0.1) !important; }
         .exam-option-d:hover { background: rgba(245,158,11,0.1) !important; }
+        .exam-timer {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(16,185,129,0.1);
+            border: 1px solid var(--accent-green);
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--accent-green);
+            margin-top: 12px;
+        }
+        .exam-timer.warning {
+            background: rgba(245,158,11,0.1);
+            border-color: var(--accent-orange);
+            color: var(--accent-orange);
+        }
+        .exam-timer.danger {
+            background: rgba(239,68,68,0.1);
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
     </style>
 </head>
 <body>
@@ -24,7 +47,10 @@
     <header class="app-header">
         <h1>Exam Mode</h1>
         <p>Mock exam with realistic formatting</p>
-        <button onclick="shuffleExam()" style="margin-top:12px;padding:8px 16px;border-radius:8px;background:rgba(168,85,247,0.15);color:var(--accent-purple);border:1px solid var(--accent-purple);cursor:pointer;font-family:inherit;">🔀 Shuffle & Restart</button>
+        <div style="display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:12px;">
+            <div id="exam-timer" class="exam-timer">⏱️ 00:00</div>
+            <button onclick="shuffleExam()" style="padding:8px 16px;border-radius:8px;background:rgba(168,85,247,0.15);color:var(--accent-purple);border:1px solid var(--accent-purple);cursor:pointer;font-family:inherit;">🔀 Shuffle & Restart</button>
+        </div>
     </header>
 
     <div class="container">
@@ -59,9 +85,52 @@
             const examState = {
                 examData: state.examData,
                 examIndex: state.examIndex,
-                examAnswers: state.examAnswers
+                examAnswers: state.examAnswers,
+                startTime: state.examStartTime || Date.now(),
+                elapsedSeconds: state.examElapsedSeconds || 0
             };
             document.cookie = `exam_state=${JSON.stringify(examState)};path=/;max-age=86400`;
+        }
+
+        let timerInterval = null;
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function updateTimer() {
+            const elapsed = state.examElapsedSeconds || 0;
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            const timerEl = document.getElementById('exam-timer');
+            if (timerEl) {
+                timerEl.textContent = `⏱️ ${display}`;
+
+                // Add warning/danger classes based on time
+                timerEl.classList.remove('warning', 'danger');
+                if (elapsed >= 1800) { // 30 minutes
+                    timerEl.classList.add('danger');
+                } else if (elapsed >= 900) { // 15 minutes
+                    timerEl.classList.add('warning');
+                }
+            }
+            state.examElapsedSeconds = (state.examElapsedSeconds || 0) + 1;
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
         function clearExamCookie() {
@@ -76,24 +145,34 @@
                 state.examAnswers = saved.examAnswers || {};
                 state.examSelected = state.examAnswers[state.examData[state.examIndex].id] || null;
                 state.examShowExplanation = state.examSelected !== null;
+                state.examStartTime = saved.startTime || Date.now();
+                state.examElapsedSeconds = saved.elapsedSeconds || 0;
             } else {
                 state.examData = shuffleArray([...questionsData]).slice(0, 20);
                 state.examIndex = 0;
                 state.examSelected = null;
                 state.examShowExplanation = false;
                 state.examAnswers = {};
+                state.examStartTime = Date.now();
+                state.examElapsedSeconds = 0;
             }
+            updateTimer();
+            startTimer();
             renderExam();
         }
 
         function shuffleExam() {
             clearExamCookie();
+            stopTimer();
             state.examData = shuffleArray([...questionsData]).slice(0, 20);
             state.examIndex = 0;
             state.examSelected = null;
             state.examShowExplanation = false;
             state.examAnswers = {};
+            state.examStartTime = Date.now();
+            state.examElapsedSeconds = 0;
             saveExamCookie();
+            startTimer();
             renderExam();
         }
 
@@ -223,6 +302,7 @@
         }
 
         function showExamResults() {
+            stopTimer();
             const container = document.getElementById('exam-content');
             let correct = 0;
             state.examData.forEach(q => {
@@ -230,6 +310,7 @@
             });
 
             const percentage = Math.round((correct / state.examData.length) * 100);
+            const timeTaken = formatTime(state.examElapsedSeconds || 0);
 
             container.innerHTML = `
                 <div class="exam-card fade-in">
@@ -251,6 +332,10 @@
                         <div class="stat-card">
                             <div class="stat-number">${state.examData.length}</div>
                             <div class="stat-label">Total</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">⏱️ ${timeTaken}</div>
+                            <div class="stat-label">Time Taken</div>
                         </div>
                     </div>
 
