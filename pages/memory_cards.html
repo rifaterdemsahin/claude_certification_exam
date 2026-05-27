@@ -74,6 +74,31 @@
             font-size: 0.9rem;
         }
         .back-link:hover { text-decoration: underline; }
+        .card-search-links {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .card-search-link {
+            flex: 1;
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--accent-blue);
+            text-decoration: none;
+            text-align: center;
+            font-size: 0.75em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .card-search-link:hover {
+            border-color: var(--accent-blue);
+            background: rgba(56,189,248,0.1);
+        }
+        @media (max-width: 640px) {
+            .card-search-links { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
@@ -787,6 +812,18 @@
             </a>
         </div>
     </div>
-    <script src="nav.js"></script>
+    <script>
+    document.querySelectorAll('.card').forEach(card => {
+        const question = card.querySelector('.card-question').textContent.trim();
+        const q = encodeURIComponent(question);
+        const links = document.createElement('div');
+        links.className = 'card-search-links';
+        links.innerHTML = `
+            <a href="https://www.google.com/search?tbm=isch&q=${q}" target="_blank" class="card-search-link" onclick="event.stopPropagation()">🔍 Images</a>
+            <a href="https://www.youtube.com/results?search_query=${q}" target="_blank" class="card-search-link" onclick="event.stopPropagation()">🎬 YouTube</a>
+        `;
+        card.appendChild(links);
+    });
+    </script>
 </body>
 </html>
