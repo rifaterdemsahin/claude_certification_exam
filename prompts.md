@@ -592,3 +592,9 @@ Rename the analyse page title and navigation link from "Analyse" to "Stats" for 
 ## Commit 96: (pending) — Add prompt caching content
 
 Create a new page explaining prompt caching concepts, efficiency impact, and best practices. Include comparison table showing impact with and without caching.
+
+---
+
+## Commit 97: (pending) — Move AGI Path to Analyse menu and add YouTube videos
+
+Move the AGI Path page from Create menu to Analyse menu. Add converge/diverge emojis to menu labels (Remember ◀️, Analyse ▶️, Create ◀️). Add YouTube channel videos to Create menu with external link support.

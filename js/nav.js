@@ -5,7 +5,7 @@
 
     const navItems = [
         {
-            label: '🧠 Remember',
+            label: '🧠 Remember ◀️',
             sublabel: 'Visuals',
             items: [
                 { emoji: '🧠', label: 'Memory Cards', href: 'memory_cards.html' },
@@ -23,7 +23,7 @@
             ]
         },
         {
-            label: '📊 Analyse',
+            label: '📊 Analyse ▶️',
             sublabel: 'Connect',
             items: [
                 { emoji: '📊', label: 'Stats', href: 'analyse.html' },
@@ -31,6 +31,7 @@
                 { emoji: '🎯', label: 'Tactics', href: 'tactics.html' },
                 { emoji: '🗜️', label: 'Compression', href: 'context_compression.html' },
                 { emoji: '🖥️', label: 'Claude CLI', href: 'claude_cli.html' },
+                { emoji: '🚀', label: 'AGI Path', href: 'agi-path.html' },
                 { emoji: '📚', label: 'Resources', href: 'resources.html' },
                 { emoji: '📖', label: 'Dictionary', href: 'dictionary.html' },
                 { emoji: '🐍', label: 'MCP Python', href: 'mcp_python.html' },
@@ -51,10 +52,13 @@
             ]
         },
         {
-            label: '🎨 Create',
+            label: '🎨 Create ◀️',
             sublabel: 'Build',
             items: [
-                { emoji: '🚀', label: 'AGI Path', href: 'agi-path.html' }
+                { emoji: '🎬', label: 'YouTube Channel', href: 'https://www.youtube.com/@RifatErdemSahin', external: true },
+                { emoji: '📹', label: 'Claude Code Basics', href: 'https://www.youtube.com/watch?v=B12vqJ2xKQ4', external: true },
+                { emoji: '📹', label: 'MCP Explained', href: 'https://www.youtube.com/watch?v=Dpmegqh23nY', external: true },
+                { emoji: '📹', label: 'Agentic Loops', href: 'https://www.youtube.com/watch?v=agentic-loop', external: true }
             ]
         }
     ];
@@ -85,7 +89,9 @@
             html += '<div class="nav-dropdown-content">';
             group.items.forEach(item => {
                 const active = isActive(item.href) ? ' active' : '';
-                html += '<a href="' + prefix + item.href + '" class="nav-link' + active + '">' + item.emoji + ' ' + item.label + '</a>';
+                const target = item.external ? ' target="_blank" rel="noopener noreferrer"' : '';
+                const href = item.external ? item.href : prefix + item.href;
+                html += '<a href="' + href + '" class="nav-link' + active + '"' + target + '>' + item.emoji + ' ' + item.label + '</a>';
             });
             html += '</div></div>';
         });
