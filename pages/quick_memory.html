@@ -218,7 +218,7 @@
             </div>
 
             <button class="push-btn" id="pushBtn" onclick="pushCard()" disabled>
-                <span id="pushIcon">&#128640;</span> Push to GitHub
+                <span id="pushIcon">&#128640;</span> Push to Azure
             </button>
 
             <div class="status" id="status"></div>
@@ -228,8 +228,8 @@
     </div>
 
     <script>
-        const WORKER_URL = 'https://content-worker.polished-boat-17b2.workers.dev';
-        const REPO = 'rifaterdemsahin/claude_certification_exam';
+        const API_BASE = 'https://claude-cert-api.azurewebsites.net/api';
+        const BLOB_BASE = 'https://claudecertstore.blob.core.windows.net';
 
         let nextId = 101;
         let imageData = null;   // base64
@@ -239,40 +239,18 @@
         async function calculateNextId() {
             const badge = document.getElementById('idBadge');
             try {
-                const resp = await fetch(`https://api.github.com/repos/${REPO}/contents/formula/memory`);
-                const files = await resp.json();
-                const ids = files
-                    .filter(f => f.name.match(/MEM-Q\d+\.md/))
-                    .map(f => parseInt(f.name.match(/MEM-Q(\d+)\.md/)[1]));
-                nextId = ids.length > 0 ? Math.max(...ids) + 1 : 101;
+                const resp = await fetch(`${API_BASE}/cards`);
+                const data = await resp.json();
+                if (data.files && data.files.length > 0) {
+                    const ids = data.files
+                        .filter(f => f.match(/MEM-Q\d+\.md/))
+                        .map(f => parseInt(f.match(/MEM-Q(\d+)\.md/)[1]));
+                    nextId = ids.length > 0 ? Math.max(...ids) + 1 : 101;
+                }
             } catch {
                 nextId = 101;
             }
             badge.textContent = `MEM-Q${String(nextId).padStart(3, '0')}`;
-        }
-
-        // ================== AI GENERATE ==================
-        async function aiGenerate(systemPrompt, userPrompt) {
-            const resp = await fetch(WORKER_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'ai-generate',
-                    prompt: userPrompt,
-                    system: systemPrompt,
-                }),
-            });
-            if (!resp.ok) {
-                const text = await resp.text();
-                console.error('[aiGenerate] HTTP', resp.status, text);
-                throw new Error(`AI generate failed (HTTP ${resp.status}): ${text}`);
-            }
-            const data = await resp.json();
-            if (data.error) {
-                console.error('[aiGenerate] Worker error:', data);
-                throw new Error(`AI error: ${data.error}`);
-            }
-            return data.text || '';
         }
 
         // ================== PASTE HANDLING ==================
@@ -364,26 +342,24 @@
 
             const padId = String(nextId).padStart(3, '0');
             const filename = `MEM-Q${padId}`;
-            const imagePath = `assets/memory/${filename}_v1.${imageExt}`;
-            const cardPath = `formula/memory/${filename}.md`;
+            const imageFilename = `${filename}_v1.${imageExt}`;
 
             try {
-                // Step 1: Upload image
+                // Step 1: Upload image to Azure
                 btn.innerHTML = '<span class="spinner"></span> Uploading image...';
                 let imgResp;
                 try {
-                    imgResp = await fetch(WORKER_URL, {
+                    imgResp = await fetch(`${API_BASE}/images`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            action: 'upload-image',
-                            path: imagePath,
+                            filename: imageFilename,
                             content: imageData,
-                            message: `Add image ${filename}_v1.${imageExt}`,
+                            contentType: `image/${imageExt}`,
                         }),
                     });
                 } catch (fetchErr) {
-                    throw new Error(`Step 1 — Network error uploading image: ${fetchErr.message}. Is the worker URL correct?`);
+                    throw new Error(`Step 1 — Network error uploading image: ${fetchErr.message}`);
                 }
                 if (!imgResp.ok) {
                     const errBody = await imgResp.text();
@@ -393,71 +369,46 @@
                 if (!imgData.ok) throw new Error('Step 1 — Image upload failed: ' + (imgData.error || JSON.stringify(imgData)));
                 console.log('[push] Image uploaded:', imgData);
 
-                const imageUrl = `https://raw.githubusercontent.com/${REPO}/main/${imagePath}`;
+                const imageUrl = `${BLOB_BASE}/memory-images/${imageFilename}`;
 
-                // Step 2: AI generate question, answer, memory aid
-                btn.innerHTML = '<span class="spinner"></span> Generating metadata...';
-                let question = '', answer = '', memoryAid = '';
-                try {
-                    [question, answer, memoryAid] = await Promise.all([
-                        aiGenerate(
-                            'Generate a clear, exam-style question about the given topic for the Claude Developer Certification. Return ONLY the question text.',
-                            title
-                        ),
-                        aiGenerate(
-                            'Generate a concise, accurate answer for the Claude Developer Certification exam about the given topic. Include key points. Return ONLY the answer text.',
-                            title
-                        ),
-                        aiGenerate(
-                            'Generate a creative mnemonic or memory aid to help remember the given concept. Use analogies, visual imagery, or wordplay. Return ONLY the memory aid text.',
-                            title
-                        ),
-                    ]);
-                } catch (aiErr) {
-                    console.warn('[push] AI generation failed, using fallbacks:', aiErr.message);
-                    // Continue with fallback values
-                }
-
-                // Step 3: Create markdown card
+                // Step 2: Create markdown card in Azure
                 btn.innerHTML = '<span class="spinner"></span> Creating card...';
                 const md = `# Memory Card: CAT01-Q${padId}
 
 ## Question
-${question || title}
+${title}
 
 ## Answer
-${answer || '(see image)'}
+(see image)
 
 ## Memory Aid
-${memoryAid || 'No memory aid provided.'}
+No memory aid provided.
 
 ## Image
 ![${title}](${imageUrl})
 `;
                 let cardResp;
                 try {
-                    cardResp = await fetch(WORKER_URL, {
+                    cardResp = await fetch(`${API_BASE}/cards`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            action: 'create-card',
-                            path: cardPath,
+                            filename: `${filename}.md`,
                             content: md,
-                            message: `Add memory card ${filename}`,
                         }),
                     });
                 } catch (fetchErr) {
-                    throw new Error(`Step 3 — Network error creating card: ${fetchErr.message}`);
+                    throw new Error(`Step 2 — Network error creating card: ${fetchErr.message}`);
                 }
                 if (!cardResp.ok) {
                     const errBody = await cardResp.text();
-                    throw new Error(`Step 3 — Card creation HTTP ${cardResp.status}: ${errBody}`);
+                    throw new Error(`Step 2 — Card creation HTTP ${cardResp.status}: ${errBody}`);
                 }
                 const cardData = await cardResp.json();
-                if (!cardData.ok) throw new Error('Step 3 — Card creation failed: ' + (cardData.error || JSON.stringify(cardData)));
+                if (!cardData.ok) throw new Error('Step 2 — Card creation failed: ' + (cardData.error || JSON.stringify(cardData)));
                 console.log('[push] Card created:', cardData);
 
-                showStatus(`Pushed! ${filename} &amp; image committed.`, 'ok');
+                showStatus(`Pushed! ${filename} &amp; image saved to Azure.`, 'ok');
 
                 // Reset for next card
                 nextId++;

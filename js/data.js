@@ -114,14 +114,14 @@ questionsData.forEach(q => {
 
     // Logic to handle image formats: SVG for new ones, PNG for existing ones
     const ext = (q.id >= 16) ? 'svg' : 'png';
-    q.imageUrl = q.imageUrl || `https://raw.githubusercontent.com/rifaterdemsahin/claude_certification_exam/main/assets/memory/${memId}_v1.${ext}`;
+    q.imageUrl = q.imageUrl || `https://claudecertstore.blob.core.windows.net/memory-images/${memId}_v1.${ext}`;
 
     q.googleImageUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q.question + ' claude llm')}`;
     q.relatedVideoUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(q.question + ' tutorial')}`;
 
-    // GitHub link logic - updated to refer to the correct extension
-    q.githubImageUrl = `https://github.com/rifaterdemsahin/claude_certification_exam/blob/main/assets/memory/${memId}_v1.${ext}`;
-    q.notesUrl = q.notesUrl || `../formula/memory/${memId}.md`;
+    // Azure Blob URL for image
+    q.azureImageUrl = `https://claudecertstore.blob.core.windows.net/memory-images/${memId}_v1.${ext}`;
+    q.notesUrl = q.notesUrl || `https://claudecertstore.blob.core.windows.net/memory-cards/${memId}.md`;
     q.claudePrompt = q.claudePrompt || `As a Claude Developer Certification teaching assistant, explain this concept in depth: "${q.question}". Include analogies, why it matters for the exam, and 2 quiz questions to check my understanding.`;
 });
 

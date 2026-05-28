@@ -228,15 +228,12 @@
     </div>
 
     <script>
-        // File structure mapping
+        const API_BASE = 'https://claude-cert-api.azurewebsites.net/api';
+        const BLOB_BASE = 'https://claudecertstore.blob.core.windows.net';
+
+        // File structure mapping - memory cards will be loaded dynamically
         const notes = {
-            memory: [
-                { id: 'MEM-Q001', title: 'Q001 - Agentic Architecture', file: '../formula/memory/MEM-Q001.md' },
-                { id: 'MEM-Q002', title: 'Q002 - Tool Design', file: '../formula/memory/MEM-Q002.md' },
-                { id: 'MEM-Q003', title: 'Q003 - Claude Code Config', file: '../formula/memory/MEM-Q003.md' },
-                { id: 'MEM-Q004', title: 'Q004 - Prompt Engineering', file: '../formula/memory/MEM-Q004.md' },
-                { id: 'MEM-Q005', title: 'Q005 - Context Management', file: '../formula/memory/MEM-Q005.md' },
-            ],
+            memory: [],
             concepts: [
                 { id: 'agentic-ai', title: 'Agentic AI', file: '../formula/concepts/agentic-ai.md' },
                 { id: 'agentic-loop', title: 'Agentic Loop', file: '../formula/concepts/agentic-loop.md' },
@@ -316,7 +313,24 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Load memory cards from Azure API
+            try {
+                const resp = await fetch(`${API_BASE}/cards`);
+                const data = await resp.json();
+                const files = data.files || [];
+                notes.memory = files
+                    .filter(f => f.match(/MEM-Q\d+\.md/))
+                    .map(f => {
+                        const id = f.replace('.md', '');
+                        const num = id.replace('MEM-Q', '');
+                        return { id, title: `Q${num}`, file: `${BLOB_BASE}/memory-cards/${f}` };
+                    })
+                    .sort((a, b) => a.id.localeCompare(b.id));
+            } catch (e) {
+                console.error('Failed to load memory cards:', e);
+            }
+
             renderSidebar();
 
             // Handle URL parameters for direct memory card links

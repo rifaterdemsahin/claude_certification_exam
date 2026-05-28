@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Memory card index for the Claude Developer Certification exam. Browse all 100 questions with visual hints and memory aids.">
-    <title>Memory Cards Index - Claude Certification</title>
+    <meta name="description" content="Browse all 100 memory cards for Claude Developer Certification exam prep.">
+    <title>Memory Cards Index — Claude Dev Cert</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
     <style>
@@ -14,90 +14,108 @@
             --border: #334155;
             --text-primary: #e2e8f0;
             --text-secondary: #94a3b8;
+            --text-muted: #64748b;
             --accent-blue: #38bdf8;
             --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
-            line-height: 1.6;
-            padding: 40px 20px;
+            min-height: 100vh;
         }
-        .container { max-width: 1000px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 40px; }
-        header h1 { 
-            font-size: 2.5rem; 
+        .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+        header {
+            text-align: center;
+            padding: 32px 16px;
+            margin-bottom: 24px;
+        }
+        header h1 {
+            font-size: 1.8em;
             background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+            background-clip: text;
         }
+        header p { color: var(--text-secondary); margin-top: 8px; }
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            gap: 16px;
         }
         .card {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 20px;
-            transition: transform 0.2s, border-color 0.2s;
+            padding: 16px;
             text-decoration: none;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
+            transition: all 0.2s;
+            display: block;
         }
         .card:hover {
-            transform: translateY(-5px);
             border-color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.15);
         }
         .card-meta {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        .card-id { color: var(--text-secondary); }
-        .card-category { padding: 2px 8px; border-radius: 4px; }
-        .card-question { font-size: 1rem; font-weight: 500; flex-grow: 1; }
-        .back-link {
-            display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 20px;
-            color: var(--accent-blue);
-            text-decoration: none;
-            font-size: 0.9rem;
+            margin-bottom: 8px;
         }
-        .back-link:hover { text-decoration: underline; }
+        .card-id {
+            font-family: monospace;
+            font-size: 0.85em;
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+        .card-category {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.75em;
+            font-weight: 500;
+        }
+        .card-question {
+            color: var(--text-primary);
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        .loading .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 12px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         .card-search-links {
             display: flex;
             gap: 8px;
-            margin-top: 12px;
+            margin-top: 8px;
         }
         .card-search-link {
-            flex: 1;
-            padding: 6px 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: var(--bg-primary);
-            color: var(--accent-blue);
-            text-decoration: none;
-            text-align: center;
             font-size: 0.75em;
-            font-weight: 500;
-            transition: all 0.2s;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
         }
         .card-search-link:hover {
+            color: var(--accent-blue);
             border-color: var(--accent-blue);
-            background: rgba(56,189,248,0.1);
-        }
-        @media (max-width: 640px) {
-            .card-search-links { flex-direction: column; }
         }
     </style>
 </head>
@@ -106,724 +124,68 @@
     <div class="container">
         <header>
             <h1>🧠 Memory Cards Index</h1>
-            <p>Direct unique URLs to all 100 memory cards</p>
+            <p id="subtitle">Loading memory cards from Azure...</p>
         </header>
-        <div class="card-grid">
-            
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q001.md&title=Memory Card 001" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q001</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What are the three stages of an Agentic Loop?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q002.md&title=Memory Card 002" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q002</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is the Coordinator-Subagent model?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q003.md&title=Memory Card 003" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q003</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is Task Decomposition in agentic systems?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q004.md&title=Memory Card 004" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q004</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is Session Management in agentic architecture?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q005.md&title=Memory Card 005" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q005</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is the difference between a simple prompt and an agentic loop?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q006.md&title=Memory Card 006" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q006</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is an autonomous cycle in agent architecture?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q007.md&title=Memory Card 007" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q007</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What does 'stateless' mean in agent design?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q008.md&title=Memory Card 008" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q008</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is a sub-agent?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q009.md&title=Memory Card 009" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q009</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is the 'Sinthome' concept in Claude projects?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q010.md&title=Memory Card 010" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q010</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is the purpose of routing logic in the Coordinator pattern?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q011.md&title=Memory Card 011" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q011</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is a 'tool call' in an agentic loop?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q012.md&title=Memory Card 012" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q012</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is 'observation' in the Perceive stage?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q013.md&title=Memory Card 013" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q013</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is 'reasoning' in the Think stage?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q014.md&title=Memory Card 014" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q014</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is 'execution' in the Act stage?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q015.md&title=Memory Card 015" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q015</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is an 'escalation pattern' in agent systems?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q016.md&title=Memory Card 016" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q016</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is 'parallel sub-agent execution'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q017.md&title=Memory Card 017" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q017</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is 'sequential sub-agent execution'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q018.md&title=Memory Card 018" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q018</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is 'task handoff' between agents?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q019.md&title=Memory Card 019" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q019</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is 'agent memory'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q020.md&title=Memory Card 020" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q020</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is 'short-term memory' in agents?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q021.md&title=Memory Card 021" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q021</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is 'long-term memory' in agents?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q022.md&title=Memory Card 022" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q022</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is a 'feedback loop' in agentic systems?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q023.md&title=Memory Card 023" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q023</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is 'goal-oriented behavior' in agents?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q024.md&title=Memory Card 024" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q024</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is an 'agentic boundary'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q025.md&title=Memory Card 025" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q025</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is 're-planning' in an agentic loop?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q026.md&title=Memory Card 026" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q026</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is a 'termination condition' for an agent?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q027.md&title=Memory Card 027" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q027</span>
-                    <span class="card-category" style="background: #ef444422; color: #ef4444">Agentic Architecture</span>
-                </div>
-                <div class="card-question">What is 'human-in-the-loop' orchestration?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q028.md&title=Memory Card 028" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q028</span>
-                    <span class="card-category" style="background: #3b82f622; color: #3b82f6">Tool Design & MCP</span>
-                </div>
-                <div class="card-question">What does MCP stand for?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q029.md&title=Memory Card 029" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q029</span>
-                    <span class="card-category" style="background: #3b82f622; color: #3b82f6">Tool Design & MCP</span>
-                </div>
-                <div class="card-question">What is the key principle of MCP as 'Protocol over API'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q030.md&title=Memory Card 030" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q030</span>
-                    <span class="card-category" style="background: #3b82f622; color: #3b82f6">Tool Design & MCP</span>
-                </div>
-                <div class="card-question">What is 'Signal-to-Noise' ratio in tool interfaces?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q031.md&title=Memory Card 031" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q031</span>
-                    <span class="card-category" style="background: #3b82f622; color: #3b82f6">Tool Design & MCP</span>
-                </div>
-                <div class="card-question">What is 'structured error handling' for tools?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q032.md&title=Memory Card 032" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q032</span>
-                    <span class="card-category" style="background: #3b82f622; color: #3b82f6">Tool Design & MCP</span>
-                </div>
-                <div class="card-question">What is 'self-correction' in tool usage?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q033.md&title=Memory Card 033" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q033</span>
-                    <span class="card-category" style="background: #3b82f622; color: #3b82f6">Tool Design & MCP</span>
-                </div>
-                <div class="card-question">What is 'context bloat prevention' in tool design?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q034.md&title=Memory Card 034" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q034</span>
-                    <span class="card-category" style="background: #3b82f622; color: #3b82f6">Tool Design & MCP</span>
-                </div>
-                <div class="card-question">What is an MCP server?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q035.md&title=Memory Card 035" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q035</span>
-                    <span class="card-category" style="background: #3b82f622; color: #3b82f6">Tool Design & MCP</span>
-                </div>
-                <div class="card-question">What are the three core primitives of MCP?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q036.md&title=Memory Card 036" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q036</span>
-                    <span class="card-category" style="background: #3b82f622; color: #3b82f6">Tool Design & MCP</span>
-                </div>
-                <div class="card-question">What is 'tool discovery' in MCP?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q037.md&title=Memory Card 037" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q037</span>
-                    <span class="card-category" style="background: #3b82f622; color: #3b82f6">Tool Design & MCP</span>
-                </div>
-                <div class="card-question">Why is JSON schema important for tool interfaces?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q038.md&title=Memory Card 038" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q038</span>
-                    <span class="card-category" style="background: #3b82f622; color: #3b82f6">Tool Design & MCP</span>
-                </div>
-                <div class="card-question">What is 'parameter validation' in tool design?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q039.md&title=Memory Card 039" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q039</span>
-                    <span class="card-category" style="background: #3b82f622; color: #3b82f6">Tool Design & MCP</span>
-                </div>
-                <div class="card-question">What is a 'tool fallback strategy'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q040.md&title=Memory Card 040" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q040</span>
-                    <span class="card-category" style="background: #3b82f622; color: #3b82f6">Tool Design & MCP</span>
-                </div>
-                <div class="card-question">What is 'rate limiting' in tool integration?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q041.md&title=Memory Card 041" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q041</span>
-                    <span class="card-category" style="background: #3b82f622; color: #3b82f6">Tool Design & MCP</span>
-                </div>
-                <div class="card-question">What is 'tool idempotency'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q042.md&title=Memory Card 042" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q042</span>
-                    <span class="card-category" style="background: #3b82f622; color: #3b82f6">Tool Design & MCP</span>
-                </div>
-                <div class="card-question">What is 'schema evolution' in tool design?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q043.md&title=Memory Card 043" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q043</span>
-                    <span class="card-category" style="background: #3b82f622; color: #3b82f6">Tool Design & MCP</span>
-                </div>
-                <div class="card-question">What is 'timeout handling' for tools?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q044.md&title=Memory Card 044" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q044</span>
-                    <span class="card-category" style="background: #3b82f622; color: #3b82f6">Tool Design & MCP</span>
-                </div>
-                <div class="card-question">What is 'tool composition'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q045.md&title=Memory Card 045" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q045</span>
-                    <span class="card-category" style="background: #3b82f622; color: #3b82f6">Tool Design & MCP</span>
-                </div>
-                <div class="card-question">What is the benefit of MCP standardization?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q046.md&title=Memory Card 046" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q046</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">What is the purpose of CLAUDE.md?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q047.md&title=Memory Card 047" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q047</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">What is 'Plan Mode' in Claude Code?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q048.md&title=Memory Card 048" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q048</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">What is 'Act Mode' in Claude Code?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q049.md&title=Memory Card 049" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q049</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">When should you use Plan Mode vs. Act Mode?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q050.md&title=Memory Card 050" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q050</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">What are custom slash commands in Claude Code?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q051.md&title=Memory Card 051" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q051</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">How does CLAUDE.md act as a 'Sinthome'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q052.md&title=Memory Card 052" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q052</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">What should be included in a CLAUDE.md file?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q053.md&title=Memory Card 053" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q053</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">What is the hierarchy of CLAUDE.md files?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q054.md&title=Memory Card 054" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q054</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">How do you create a custom slash command?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q055.md&title=Memory Card 055" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q055</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">What is CI/CD integration with Claude Code?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q056.md&title=Memory Card 056" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q056</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">What is the 'CLAUDE.md hierarchy' concept?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q057.md&title=Memory Card 057" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q057</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">What happens if Claude violates a CLAUDE.md rule?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q058.md&title=Memory Card 058" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q058</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">What is 'context persistence' in Claude Code?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q059.md&title=Memory Card 059" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q059</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">How do you update CLAUDE.md?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q060.md&title=Memory Card 060" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q060</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">What is a 'Video Creator Master Prompt' file?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q061.md&title=Memory Card 061" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q061</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">What is 'automation scripting' in Claude Code?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q062.md&title=Memory Card 062" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q062</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">What is 'workflow chaining'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q063.md&title=Memory Card 063" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q063</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">What is 'code review mode' in Claude Code?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q064.md&title=Memory Card 064" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q064</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">What is 'test-driven development' with Claude?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q065.md&title=Memory Card 065" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q065</span>
-                    <span class="card-category" style="background: #10b98122; color: #10b981">Claude Code Workflows</span>
-                </div>
-                <div class="card-question">What is 'refactoring mode' in Claude Code?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q066.md&title=Memory Card 066" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q066</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is Few-Shot Learning in prompting?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q067.md&title=Memory Card 067" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q067</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is a JSON Schema in structured output?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q068.md&title=Memory Card 068" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q068</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What are 'Explicit Criteria' in prompt engineering?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q069.md&title=Memory Card 069" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q069</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is a 'Validation Loop'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q070.md&title=Memory Card 070" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q070</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is 'role prompting'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q071.md&title=Memory Card 071" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q071</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is 'chain-of-thought prompting'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q072.md&title=Memory Card 072" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q072</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is 'output format specification'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q073.md&title=Memory Card 073" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q073</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is 'prompt templating'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q074.md&title=Memory Card 074" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q074</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is 'negative prompting'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q075.md&title=Memory Card 075" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q075</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is 'context priming'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q076.md&title=Memory Card 076" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q076</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is 'prompt iteration'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q077.md&title=Memory Card 077" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q077</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is 'output validation'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q078.md&title=Memory Card 078" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q078</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is 'schema validation' with JSON?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q079.md&title=Memory Card 079" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q079</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is 'prompt injection defense'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q080.md&title=Memory Card 080" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q080</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is 'multi-turn prompting'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q081.md&title=Memory Card 081" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q081</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is 'system vs. user prompts'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q082.md&title=Memory Card 082" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q082</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is 'temperature' in prompting?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q083.md&title=Memory Card 083" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q083</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is 'max tokens' configuration?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q084.md&title=Memory Card 084" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q084</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is 'retry logic' in prompt engineering?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q085.md&title=Memory Card 085" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q085</span>
-                    <span class="card-category" style="background: #f59e0b22; color: #f59e0b">Prompt Engineering</span>
-                </div>
-                <div class="card-question">What is 'structured reasoning'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q086.md&title=Memory Card 086" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q086</span>
-                    <span class="card-category" style="background: #a855f722; color: #a855f7">Context & Reliability</span>
-                </div>
-                <div class="card-question">What is 'Long-Term Context Preservation'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q087.md&title=Memory Card 087" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q087</span>
-                    <span class="card-category" style="background: #a855f722; color: #a855f7">Context & Reliability</span>
-                </div>
-                <div class="card-question">What is a 'Human Handoff' pattern?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q088.md&title=Memory Card 088" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q088</span>
-                    <span class="card-category" style="background: #a855f722; color: #a855f7">Context & Reliability</span>
-                </div>
-                <div class="card-question">What is 'Confidence Calibration'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q089.md&title=Memory Card 089" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q089</span>
-                    <span class="card-category" style="background: #a855f722; color: #a855f7">Context & Reliability</span>
-                </div>
-                <div class="card-question">What is 'Error Propagation Prevention'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q090.md&title=Memory Card 090" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q090</span>
-                    <span class="card-category" style="background: #a855f722; color: #a855f7">Context & Reliability</span>
-                </div>
-                <div class="card-question">What is 'context window management'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q091.md&title=Memory Card 091" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q091</span>
-                    <span class="card-category" style="background: #a855f722; color: #a855f7">Context & Reliability</span>
-                </div>
-                <div class="card-question">What is 'summarization for context'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q092.md&title=Memory Card 092" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q092</span>
-                    <span class="card-category" style="background: #a855f722; color: #a855f7">Context & Reliability</span>
-                </div>
-                <div class="card-question">What is 'semantic search for context'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q093.md&title=Memory Card 093" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q093</span>
-                    <span class="card-category" style="background: #a855f722; color: #a855f7">Context & Reliability</span>
-                </div>
-                <div class="card-question">What is 'RAG' (Retrieval-Augmented Generation)?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q094.md&title=Memory Card 094" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q094</span>
-                    <span class="card-category" style="background: #a855f722; color: #a855f7">Context & Reliability</span>
-                </div>
-                <div class="card-question">What is 'graceful degradation'?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q095.md&title=Memory Card 095" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q095</span>
-                    <span class="card-category" style="background: #a855f722; color: #a855f7">Context & Reliability</span>
-                </div>
-                <div class="card-question">What is 'circuit breaker' pattern in reliability?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q096.md&title=Memory Card 096" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q096</span>
-                    <span class="card-category" style="background: #a855f722; color: #a855f7">Context & Reliability</span>
-                </div>
-                <div class="card-question">What is 'fallback content' strategy?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q097.md&title=Memory Card 097" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q097</span>
-                    <span class="card-category" style="background: #a855f722; color: #a855f7">Context & Reliability</span>
-                </div>
-                <div class="card-question">What is 'monitoring and alerting' for agents?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q098.md&title=Memory Card 098" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q098</span>
-                    <span class="card-category" style="background: #a855f722; color: #a855f7">Context & Reliability</span>
-                </div>
-                <div class="card-question">What is 'request idempotency' in reliability?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q099.md&title=Memory Card 099" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q099</span>
-                    <span class="card-category" style="background: #a855f722; color: #a855f7">Context & Reliability</span>
-                </div>
-                <div class="card-question">What is 'chaos engineering' for AI systems?</div>
-            </a>
-            <a href="markdown_renderer.html?url=../formula/memory/MEM-Q100.md&title=Memory Card 100" class="card">
-                <div class="card-meta">
-                    <span class="card-id">MEM-Q100</span>
-                    <span class="card-category" style="background: #a855f722; color: #a855f7">Context & Reliability</span>
-                </div>
-                <div class="card-question">What is 'observability' in agent systems?</div>
-            </a>
+        <div class="card-grid" id="cardGrid">
+            <div class="loading">
+                <div class="spinner"></div>
+                <div>Loading cards...</div>
+            </div>
         </div>
     </div>
     <script>
-    document.querySelectorAll('.card').forEach(card => {
-        const question = card.querySelector('.card-question').textContent.trim();
-        const q = encodeURIComponent(question);
-        const links = document.createElement('div');
-        links.className = 'card-search-links';
-        links.innerHTML = `
-            <a href="https://www.google.com/search?tbm=isch&q=${q}" target="_blank" class="card-search-link" onclick="event.stopPropagation()">🔍 Images</a>
-            <a href="https://www.youtube.com/results?search_query=${q}" target="_blank" class="card-search-link" onclick="event.stopPropagation()">🎬 YouTube</a>
-        `;
-        card.appendChild(links);
-    });
+        const API_BASE = 'https://claude-cert-api.azurewebsites.net/api';
+        const BLOB_BASE = 'https://claudecertstore.blob.core.windows.net';
+
+        const categoryColors = {
+            1: '#ef4444', 2: '#3b82f6', 3: '#10b981', 4: '#f59e0b', 5: '#a855f7'
+        };
+        const categoryNames = {
+            1: 'Agentic Architecture', 2: 'Tool Design & MCP', 3: 'Claude Code',
+            4: 'Prompt Engineering', 5: 'Context & Reliability'
+        };
+
+        async function loadCards() {
+            const grid = document.getElementById('cardGrid');
+            const subtitle = document.getElementById('subtitle');
+
+            try {
+                const resp = await fetch(`${API_BASE}/cards`);
+                const data = await resp.json();
+                const files = (data.files || [])
+                    .filter(f => f.match(/MEM-Q\d+\.md/))
+                    .sort();
+
+                subtitle.textContent = `${files.length} memory cards stored in Azure Blob Storage`;
+
+                grid.innerHTML = '';
+
+                for (const file of files) {
+                    const id = file.replace('.md', '');
+                    const num = parseInt(id.replace('MEM-Q', ''));
+                    const cat = num <= 27 ? 1 : num <= 45 ? 2 : num <= 65 ? 3 : num <= 85 ? 4 : 5;
+                    const color = categoryColors[cat];
+                    const catName = categoryNames[cat];
+
+                    const card = document.createElement('a');
+                    card.className = 'card';
+                    card.href = `markdown_renderer.html?url=${encodeURIComponent(`${BLOB_BASE}/memory-cards/${file}`)}&title=Memory Card ${String(num).padStart(3, '0')}`;
+                    card.innerHTML = `
+                        <div class="card-meta">
+                            <span class="card-id">${id}</span>
+                            <span class="card-category" style="background: ${color}22; color: ${color}">${catName}</span>
+                        </div>
+                        <div class="card-question">Memory Card ${String(num).padStart(3, '0')}</div>
+                    `;
+                    grid.appendChild(card);
+                }
+            } catch (e) {
+                grid.innerHTML = `<div style="color:var(--accent-red);text-align:center;padding:40px;">Failed to load cards: ${e.message}</div>`;
+                subtitle.textContent = 'Error loading cards';
+            }
+        }
+
+        loadCards();
     </script>
 </body>
 </html>

@@ -192,7 +192,7 @@
                                 &#127912; Open Canva
                             </a>
                             <button class="btn-upload" onclick="uploadImage()" type="button" id="uploadBtn">
-                                &#128228; Upload to GitHub
+                                &#128228; Upload to Azure
                             </button>
                             <a href="https://github.com/rifaterdemsahin/claude_certification_exam/tree/main/assets/memory" target="_blank" class="btn-canva">
                                 &#128193; View Upload Folder
@@ -218,7 +218,7 @@
                     <h3>Actions</h3>
                     <div class="action-bar">
                         <button class="btn-primary" id="commitBtn" onclick="commitCard()" disabled>
-                            Commit to GitHub
+                            Save to Azure
                         </button>
                         <button class="btn-copy" onclick="copyMarkdown()">
                             Copy Markdown
@@ -305,8 +305,9 @@
     <script src="../js/data.js"></script>
     <script>
         // ================== CONFIG ==================
-        const WORKER_URL = 'https://content-worker.polished-boat-17b2.workers.dev';
-        const REPO = 'rifaterdemsahin/claude_certification_exam';
+        const API_BASE = 'https://claude-cert-api.azurewebsites.net/api';
+        const BLOB_BASE = 'https://claudecertstore.blob.core.windows.net';
+        const WORKER_URL = 'https://content-worker.polished-boat-17b2.workers.dev'; // For AI generate only
 
         // ================== EMOJI DATA ==================
         const emojiData = {
@@ -648,7 +649,7 @@
         }
 
         // ================== IMAGE UPLOAD ==================
-        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB limit for GitHub API
+        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB limit
 
         function uploadImage() {
             document.getElementById('imageFileInput').click();
@@ -668,7 +669,6 @@
             const padId = String(nextId).padStart(3, '0');
             const ext = file.name.split('.').pop().toLowerCase();
             const filename = `MEM-Q${padId}_v1.${ext}`;
-            const path = `assets/memory/${filename}`;
 
             const uploadBtn = document.getElementById('uploadBtn');
             uploadBtn.textContent = 'Reading...';
@@ -679,23 +679,22 @@
                 const base64 = await readFileAsBase64(file);
                 const base64Size = Math.round(base64.length * 0.75);
                 uploadBtn.textContent = 'Uploading...';
-                showStatus(`Uploading ${filename} (${(base64Size/1024).toFixed(0)}KB) to GitHub...`, 'info');
+                showStatus(`Uploading ${filename} (${(base64Size/1024).toFixed(0)}KB) to Azure...`, 'info');
 
-                const resp = await fetch(WORKER_URL, {
+                const resp = await fetch(`${API_BASE}/images`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        action: 'upload-image',
-                        path: path,
+                        filename: filename,
                         content: base64,
-                        message: `Add image ${filename}`,
+                        contentType: file.type || 'image/png',
                     }),
                 });
 
                 if (!resp.ok) {
                     const errText = await resp.text();
                     showStatus(`Upload failed (HTTP ${resp.status}): ${errText}`, 'err');
-                    uploadBtn.textContent = 'Upload to GitHub';
+                    uploadBtn.textContent = 'Upload to Azure';
                     uploadBtn.disabled = false;
                     input.value = '';
                     return;
@@ -704,7 +703,7 @@
                 const data = await resp.json();
 
                 if (data.ok) {
-                    const url = `https://raw.githubusercontent.com/${REPO}/main/${path}`;
+                    const url = `${BLOB_BASE}/memory-images/${filename}`;
                     document.getElementById('cardImage').value = url;
 
                     const urlDisplay = document.getElementById('imageUrlDisplay');
@@ -844,27 +843,24 @@ ${(d.cardConcepts || '').split(',').map(c => '- ' + c.trim()).filter(c => c.leng
 
             const btn = document.getElementById('commitBtn');
             btn.disabled = true;
-            btn.textContent = 'Committing...';
-            showStatus('Sending to Cloudflare Worker...', 'info');
+            btn.textContent = 'Saving...';
+            showStatus('Saving to Azure Blob Storage...', 'info');
 
-            const path = `formula/memory/${filename}`;
             const content = generateMarkdown(d);
 
             try {
-                const resp = await fetch(WORKER_URL, {
+                const resp = await fetch(`${API_BASE}/cards`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        action: 'create-card',
-                        path: path,
+                        filename: filename,
                         content: content,
-                        message: `Add memory card ${filename}`,
                     }),
                 });
 
                 const data = await resp.json();
                 if (data.ok) {
-                    showStatus(`Committed! ${data.name} → ${data.sha.substring(0, 7)}`, 'ok');
+                    showStatus(`Saved! ${filename} to Azure Blob Storage.`, 'ok');
                     nextId++;
                     updateIdDisplay();
                 } else {
@@ -874,7 +870,7 @@ ${(d.cardConcepts || '').split(',').map(c => '- ' + c.trim()).filter(c => c.leng
                 showStatus(`Failed: ${e.message}`, 'err');
             }
 
-            btn.textContent = 'Commit to GitHub';
+            btn.textContent = 'Save to Azure';
             btn.disabled = false;
         }
 
@@ -886,14 +882,15 @@ ${(d.cardConcepts || '').split(',').map(c => '- ' + c.trim()).filter(c => c.leng
             fileDisplay.innerHTML = '<span style="color:var(--text-muted);">Calculating...</span>';
 
             try {
-                const resp = await fetch(`https://api.github.com/repos/${REPO}/contents/formula/memory`);
-                const files = await resp.json();
-                const mdFiles = files.filter(f => f.name.endsWith('.md'));
-                document.getElementById('cardCount').textContent = `${mdFiles.length} memory cards in formula/memory/`;
+                const resp = await fetch(`${API_BASE}/cards`);
+                const data = await resp.json();
+                const files = data.files || [];
+                const mdFiles = files.filter(f => f.endsWith('.md'));
+                document.getElementById('cardCount').textContent = `${mdFiles.length} memory cards in Azure Blob Storage`;
 
                 const ids = mdFiles
-                    .filter(f => f.name.match(/MEM-Q\d+\.md/))
-                    .map(f => parseInt(f.name.match(/MEM-Q(\d+)\.md/)[1]));
+                    .filter(f => f.match(/MEM-Q\d+\.md/))
+                    .map(f => parseInt(f.match(/MEM-Q(\d+)\.md/)[1]));
                 nextId = ids.length > 0 ? Math.max(...ids) + 1 : 101;
                 window._existingIds = new Set(ids);
             } catch {
