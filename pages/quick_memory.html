@@ -235,22 +235,16 @@
         let imageData = null;   // base64
         let imageExt = 'png';
 
-        // ================== CALCULATE NEXT ID (via worker) ==================
+        // ================== CALCULATE NEXT ID ==================
         async function calculateNextId() {
             const badge = document.getElementById('idBadge');
             try {
-                const resp = await fetch(WORKER_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'list-cards' }),
-                });
-                const data = await resp.json();
-                if (data.files && data.files.length > 0) {
-                    const ids = data.files
-                        .filter(f => f.match(/MEM-Q\d+\.md/))
-                        .map(f => parseInt(f.match(/MEM-Q(\d+)\.md/)[1]));
-                    nextId = ids.length > 0 ? Math.max(...ids) + 1 : 101;
-                }
+                const resp = await fetch(`https://api.github.com/repos/${REPO}/contents/formula/memory`);
+                const files = await resp.json();
+                const ids = files
+                    .filter(f => f.name.match(/MEM-Q\d+\.md/))
+                    .map(f => parseInt(f.name.match(/MEM-Q(\d+)\.md/)[1]));
+                nextId = ids.length > 0 ? Math.max(...ids) + 1 : 101;
             } catch {
                 nextId = 101;
             }
