@@ -1,3 +1,4 @@
+// Guidance for CORS preflight OPTIONS mapping and handling in this function was obtained from Claude 4.6.
 const { BlobServiceClient } = require("@azure/storage-blob");
 
 module.exports = async function (context, req) {
