@@ -262,7 +262,16 @@
                     system: systemPrompt,
                 }),
             });
+            if (!resp.ok) {
+                const text = await resp.text();
+                console.error('[aiGenerate] HTTP', resp.status, text);
+                throw new Error(`AI generate failed (HTTP ${resp.status}): ${text}`);
+            }
             const data = await resp.json();
+            if (data.error) {
+                console.error('[aiGenerate] Worker error:', data);
+                throw new Error(`AI error: ${data.error}`);
+            }
             return data.text || '';
         }
 
@@ -361,37 +370,53 @@
             try {
                 // Step 1: Upload image
                 btn.innerHTML = '<span class="spinner"></span> Uploading image...';
-                const imgResp = await fetch(WORKER_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'upload-image',
-                        path: imagePath,
-                        content: imageData,
-                        message: `Add image ${filename}_v1.${imageExt}`,
-                    }),
-                });
+                let imgResp;
+                try {
+                    imgResp = await fetch(WORKER_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'upload-image',
+                            path: imagePath,
+                            content: imageData,
+                            message: `Add image ${filename}_v1.${imageExt}`,
+                        }),
+                    });
+                } catch (fetchErr) {
+                    throw new Error(`Step 1 — Network error uploading image: ${fetchErr.message}. Is the worker URL correct?`);
+                }
+                if (!imgResp.ok) {
+                    const errBody = await imgResp.text();
+                    throw new Error(`Step 1 — Image upload HTTP ${imgResp.status}: ${errBody}`);
+                }
                 const imgData = await imgResp.json();
-                if (!imgData.ok) throw new Error('Image upload failed: ' + (imgData.error || 'Unknown'));
+                if (!imgData.ok) throw new Error('Step 1 — Image upload failed: ' + (imgData.error || JSON.stringify(imgData)));
+                console.log('[push] Image uploaded:', imgData);
 
                 const imageUrl = `https://raw.githubusercontent.com/${REPO}/main/${imagePath}`;
 
                 // Step 2: AI generate question, answer, memory aid
                 btn.innerHTML = '<span class="spinner"></span> Generating metadata...';
-                const [question, answer, memoryAid] = await Promise.all([
-                    aiGenerate(
-                        'Generate a clear, exam-style question about the given topic for the Claude Developer Certification. Return ONLY the question text.',
-                        title
-                    ),
-                    aiGenerate(
-                        'Generate a concise, accurate answer for the Claude Developer Certification exam about the given topic. Include key points. Return ONLY the answer text.',
-                        title
-                    ),
-                    aiGenerate(
-                        'Generate a creative mnemonic or memory aid to help remember the given concept. Use analogies, visual imagery, or wordplay. Return ONLY the memory aid text.',
-                        title
-                    ),
-                ]);
+                let question = '', answer = '', memoryAid = '';
+                try {
+                    [question, answer, memoryAid] = await Promise.all([
+                        aiGenerate(
+                            'Generate a clear, exam-style question about the given topic for the Claude Developer Certification. Return ONLY the question text.',
+                            title
+                        ),
+                        aiGenerate(
+                            'Generate a concise, accurate answer for the Claude Developer Certification exam about the given topic. Include key points. Return ONLY the answer text.',
+                            title
+                        ),
+                        aiGenerate(
+                            'Generate a creative mnemonic or memory aid to help remember the given concept. Use analogies, visual imagery, or wordplay. Return ONLY the memory aid text.',
+                            title
+                        ),
+                    ]);
+                } catch (aiErr) {
+                    console.warn('[push] AI generation failed, using fallbacks:', aiErr.message);
+                    // Continue with fallback values
+                }
 
                 // Step 3: Create markdown card
                 btn.innerHTML = '<span class="spinner"></span> Creating card...';
@@ -409,18 +434,28 @@ ${memoryAid || 'No memory aid provided.'}
 ## Image
 ![${title}](${imageUrl})
 `;
-                const cardResp = await fetch(WORKER_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'create-card',
-                        path: cardPath,
-                        content: md,
-                        message: `Add memory card ${filename}`,
-                    }),
-                });
+                let cardResp;
+                try {
+                    cardResp = await fetch(WORKER_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'create-card',
+                            path: cardPath,
+                            content: md,
+                            message: `Add memory card ${filename}`,
+                        }),
+                    });
+                } catch (fetchErr) {
+                    throw new Error(`Step 3 — Network error creating card: ${fetchErr.message}`);
+                }
+                if (!cardResp.ok) {
+                    const errBody = await cardResp.text();
+                    throw new Error(`Step 3 — Card creation HTTP ${cardResp.status}: ${errBody}`);
+                }
                 const cardData = await cardResp.json();
-                if (!cardData.ok) throw new Error('Card creation failed: ' + (cardData.error || 'Unknown'));
+                if (!cardData.ok) throw new Error('Step 3 — Card creation failed: ' + (cardData.error || JSON.stringify(cardData)));
+                console.log('[push] Card created:', cardData);
 
                 showStatus(`Pushed! ${filename} &amp; image committed.`, 'ok');
 
