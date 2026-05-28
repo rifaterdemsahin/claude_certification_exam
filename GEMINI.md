@@ -21,19 +21,20 @@ This file serves as a foundational mandate for Gemini CLI and other AI tools wor
   4. Prompt Engineering & Structured Output (20%)
   5. Context Management & Reliability (15%)
 - **Directory Usage:**
-  - `assets/`: Visual media — `assets/exam/` for question images, `assets/memory/` for memory card visuals.
+  - `assets/`: Visual media — `assets/exam/` for question images, `assets/concepts/` for concept diagrams.
+  - `azure-api/`: Azure Function App for memory card API.
   - `data/`: Raw data — `data/exam.json`, `data/exam_source.pdf`.
   - `docs/`: Markdown files for detailed study content.
   - `exercises/`: Hands-on coding challenges.
-  - `formula/`: Concepts (`concepts/`), exam questions (`exam/`), and memory card notes (`memory/`).
+  - `formula/`: Concepts (`concepts/`), exam questions (`exam/`). Memory cards stored in Azure Blob Storage.
   - `pages/`: Auxiliary HTML pages (`dictionary.html`, `markdown_renderer.html`, `memory_cards.html`).
   - `scripts/`: Utility scripts.
   - `CLAUDE.md`, `GEMINI.md`, `mimo.md`: AI-specific guideline files in project root.
 
 ## 🔗 Unique URLs & Accessibility
-- All memory cards must be accessible via unique URLs using the `pages/markdown_renderer.html`.
-- Pattern: `pages/markdown_renderer.html?url=../formula/memory/MEM-Q{ID}.md&title=Memory Card {ID}`
-- A central index of these URLs should be maintained in `pages/memory_cards.html`.
+- All memory cards are stored in Azure Blob Storage and accessible via unique URLs.
+- Pattern: `pages/markdown_renderer.html?url=https://claudecertstore.blob.core.windows.net/memory-cards/MEM-Q{ID}.md&title=Memory Card {ID}`
+- A central index of these URLs is maintained in `pages/memory_cards.html` (loaded dynamically from Azure API).
 
 ## 🤖 AI Interaction Rules
 - **Surgical Edits:** Use targeted `replace` calls when modifying `index.html`.

@@ -54,11 +54,11 @@ Pattern: `CAT{NN}-Q{NNN}` (e.g., `CAT01-Q005`)
 ├── README.md               # Human-facing project overview
 ├── assets/                 # Visual media
 │   ├── exam/               # Exam question images
-│   ├── memory/             # Memory card visual aids
 │   └── concepts/           # Concept diagrams
+├── azure-api/              # Azure Function App (memory cards API)
 ├── data/                   # Raw data & source material
 ├── docs/                   # Study documentation by competency
-├── formula/                # Concepts, exam questions, memory cards
+├── formula/                # Concepts, exam questions
 ├── pages/                  # Auxiliary HTML pages
 ├── scripts/                # Automation scripts
 └── tests/                  # Test files
@@ -85,8 +85,9 @@ Pattern: `CAT{NN}-Q{NNN}` (e.g., `CAT01-Q005`)
 ## Content Guidelines
 
 - **Visuals:** Use SVG graphics and emojis for hints and mnemonics
-- **Memory Cards:** Accessible via unique URLs using `pages/markdown_renderer.html`
-- **Pattern:** `pages/markdown_renderer.html?url=../formula/memory/MEM-Q{ID}.md&title=Memory Card {ID}`
+- **Memory Cards:** Stored in Azure Blob Storage, accessible via `pages/markdown_renderer.html`
+- **Pattern:** `pages/markdown_renderer.html?url=https://claudecertstore.blob.core.windows.net/memory-cards/MEM-Q{ID}.md&title=Memory Card {ID}`
+- **Images:** Stored in Azure Blob Storage at `https://claudecertstore.blob.core.windows.net/memory-images/`
 
 ## Testing & Verification
 
@@ -109,9 +110,9 @@ Pattern: `CAT{NN}-Q{NNN}` (e.g., `CAT01-Q005`)
 4. Add memory aid if applicable
 
 ### Creating Memory Cards
-1. Create markdown file in `formula/memory/`
-2. Use naming pattern: `MEM-Q{ID}.md`
-3. Add URL to memory cards index
+1. Use `pages/quick_memory.html` or `pages/add_memory_card.html`
+2. Cards are stored in Azure Blob Storage (no GitHub deployment triggered)
+3. Use naming pattern: `MEM-Q{ID}.md`
 
 ## Don'ts
 

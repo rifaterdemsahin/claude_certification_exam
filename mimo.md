@@ -99,12 +99,13 @@ Before completing any task:
 
 ### URL Pattern
 ```
-pages/markdown_renderer.html?url=../formula/memory/MEM-Q{ID}.md&title=Memory Card {ID}
+pages/markdown_renderer.html?url=https://claudecertstore.blob.core.windows.net/memory-cards/MEM-Q{ID}.md&title=Memory Card {ID}
 ```
 
-### File Naming
-- Location: `formula/memory/`
+### Storage
+- Location: Azure Blob Storage (`memory-cards` container)
 - Pattern: `MEM-Q{ID}.md`
+- Images: Azure Blob Storage (`memory-images` container)
 
 ## Common Pitfalls
 
