@@ -1,7 +1,7 @@
 // Test suite for the Content Worker
 // Run: node tests/test_content_worker.js
 
-const WORKER_URL = 'PASTE_CONTENT_WORKER_URL_HERE'; // e.g. https://claude-cert-content.xxx.workers.dev
+const WORKER_URL = 'https://content-worker.polished-boat-17b2.workers.dev';
 
 async function test(name, fn) {
     try {
