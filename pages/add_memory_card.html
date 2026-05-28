@@ -47,15 +47,19 @@
         .card-count { color:var(--text-muted); font-size:0.85em; }
 
         /* Emoji Picker */
-        .emoji-picker { display:none; position:absolute; z-index:100; background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:12px; box-shadow:0 8px 24px rgba(0,0,0,0.4); max-height:280px; overflow-y:auto; width:320px; }
+        .emoji-picker { display:none; position:absolute; z-index:100; background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:12px; box-shadow:0 8px 24px rgba(0,0,0,0.4); max-height:320px; overflow-y:auto; width:340px; }
         .emoji-picker.open { display:block; }
+        .emoji-search { width:100%; padding:8px 12px; background:var(--bg-primary); border:1px solid var(--border); border-radius:8px; color:var(--text-primary); font-size:0.85em; margin-bottom:8px; outline:none; }
+        .emoji-search:focus { border-color:var(--accent-blue); }
         .emoji-grid { display:grid; grid-template-columns:repeat(8,1fr); gap:4px; }
         .emoji-btn { font-size:1.4em; padding:6px; border:none; background:transparent; border-radius:6px; cursor:pointer; transition:background 0.15s; text-align:center; }
         .emoji-btn:hover { background:rgba(56,189,248,0.15); }
+        .emoji-btn.hidden { display:none; }
         .emoji-selected { display:flex; flex-wrap:wrap; gap:4px; padding:8px; background:var(--bg-primary); border:1px solid var(--border); border-radius:8px; min-height:40px; cursor:pointer; align-items:center; }
         .emoji-chip { font-size:1.3em; padding:2px 4px; cursor:pointer; transition:transform 0.1s; }
         .emoji-chip:hover { transform:scale(1.2); }
         .emoji-cat-label { font-size:0.75em; color:var(--text-muted); padding:8px 0 4px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+        .emoji-cat-label.hidden { display:none; }
 
         /* Image Upload */
         .image-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
@@ -63,13 +67,23 @@
         .btn-canva:hover { background:rgba(245,158,11,0.2); }
         .btn-upload { padding:8px 16px; border:1px solid var(--accent-green); border-radius:8px; background:rgba(16,185,129,0.1); color:var(--accent-green); font-size:0.85em; cursor:pointer; font-family:inherit; transition:all 0.2s; }
         .btn-upload:hover { background:rgba(16,185,129,0.2); }
+        .image-url-display { margin-top:8px; padding:8px 12px; background:var(--bg-primary); border:1px solid var(--border); border-radius:8px; font-size:0.85em; word-break:break-all; display:none; }
+        .image-url-display a { color:var(--accent-blue); text-decoration:none; }
+        .image-url-display a:hover { text-decoration:underline; }
 
-        /* AI Helper */
-        .ai-panel { background:var(--bg-primary); border:1px solid var(--accent-purple); border-radius:12px; padding:16px; margin-top:12px; display:none; }
-        .ai-panel.open { display:block; }
-        .ai-panel textarea { width:100%; min-height:80px; padding:10px; background:var(--bg-secondary); border:1px solid var(--border); border-radius:8px; color:var(--text-primary); font-family:inherit; font-size:0.9em; resize:vertical; margin-bottom:8px; }
-        .ai-result { background:var(--bg-secondary); border:1px solid var(--border); border-radius:8px; padding:12px; margin-top:8px; font-size:0.9em; color:var(--text-secondary); white-space:pre-wrap; max-height:200px; overflow-y:auto; }
-        .ai-actions { display:flex; gap:8px; margin-top:8px; }
+        /* AI Popup */
+        .ai-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); z-index:999; display:flex; align-items:center; justify-content:center; padding:24px; opacity:0; pointer-events:none; transition:opacity 0.3s; }
+        .ai-overlay.open { opacity:1; pointer-events:auto; }
+        .ai-popup { background:var(--bg-secondary); border:2px solid var(--accent-purple); border-radius:20px; padding:28px; max-width:560px; width:100%; max-height:85vh; overflow-y:auto; transform:scale(0.9); transition:transform 0.3s; }
+        .ai-overlay.open .ai-popup { transform:scale(1); }
+        .ai-popup h3 { color:var(--accent-purple); margin-bottom:16px; font-size:1.1em; display:flex; align-items:center; gap:8px; }
+        .ai-popup textarea { width:100%; min-height:80px; padding:10px 14px; background:var(--bg-primary); border:1px solid var(--border); border-radius:8px; color:var(--text-primary); font-family:inherit; font-size:0.95em; resize:vertical; margin-bottom:12px; outline:none; }
+        .ai-popup textarea:focus { border-color:var(--accent-purple); }
+        .ai-popup .ai-actions { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+        .ai-popup .ai-result { background:var(--bg-primary); border:1px solid var(--border); border-radius:8px; padding:12px; font-size:0.9em; color:var(--text-secondary); white-space:pre-wrap; max-height:200px; overflow-y:auto; display:none; margin-bottom:12px; }
+        .ai-popup .ai-apply-btns { display:none; gap:8px; flex-wrap:wrap; }
+        .ai-popup .close-btn { margin-top:12px; padding:10px 24px; border:1px solid var(--border); border-radius:8px; background:transparent; color:var(--text-secondary); cursor:pointer; font-family:inherit; transition:all 0.2s; }
+        .ai-popup .close-btn:hover { border-color:var(--accent-red); color:var(--accent-red); }
     </style>
 </head>
 <body>
@@ -122,45 +136,27 @@
 
                     <div class="form-group">
                         <label for="cardTitle">Title</label>
-                        <div class="hint">Short name for the concept (e.g., "Agentic Loop")</div>
+                        <div class="hint">Short name for the concept. Use AI helper to generate.</div>
                         <input type="text" id="cardTitle" placeholder="Agentic Loop">
                     </div>
 
                     <!-- Emoji Picker -->
                     <div class="form-group" style="position:relative;">
                         <label>Emoji</label>
-                        <div class="hint">Click to pick multiple emojis for your visual mnemonic</div>
+                        <div class="hint">Search or click to pick multiple emojis (max 6)</div>
                         <div class="emoji-selected" id="emojiDisplay" onclick="toggleEmojiPicker()">
                             <span style="color:var(--text-muted);font-size:0.85em;" id="emojiPlaceholder">Click to add emojis...</span>
                         </div>
                         <input type="hidden" id="cardEmoji" value="">
-                        <div class="emoji-picker" id="emojiPicker"></div>
+                        <div class="emoji-picker" id="emojiPicker">
+                            <input type="text" class="emoji-search" id="emojiSearch" placeholder="Search emojis (e.g. brain, lock, arrow)" oninput="filterEmojis(this.value)">
+                            <div id="emojiGrid"></div>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="cardQuestion">Question</label>
                         <textarea id="cardQuestion" placeholder="What are the three stages of an Agentic Loop?"></textarea>
-                    </div>
-
-                    <!-- AI Writing Helper -->
-                    <div class="form-group">
-                        <label>AI Writing Helper</label>
-                        <div class="hint">Use AI to improve your question and answer</div>
-                        <button class="btn-ai" onclick="toggleAiPanel()" type="button">&#10024; Open AI Helper</button>
-                        <div class="ai-panel" id="aiPanel">
-                            <textarea id="aiPrompt" placeholder="Describe what you want to write about, e.g., 'Explain the agentic loop pattern for a certification exam'"></textarea>
-                            <div class="ai-actions">
-                                <button class="btn-ai" onclick="aiGenerate('question')" type="button">Generate Question</button>
-                                <button class="btn-ai" onclick="aiGenerate('answer')" type="button">Generate Answer</button>
-                                <button class="btn-ai" onclick="aiGenerate('memory')" type="button">Generate Memory Aid</button>
-                            </div>
-                            <div class="ai-result" id="aiResult" style="display:none;"></div>
-                            <div class="ai-actions" id="aiApplyBtns" style="display:none;">
-                                <button class="btn-primary" onclick="aiApplyTo('cardQuestion')" type="button">Apply to Question</button>
-                                <button class="btn-primary" onclick="aiApplyTo('cardAnswer')" type="button">Apply to Answer</button>
-                                <button class="btn-primary" onclick="aiApplyTo('cardMemory')" type="button">Apply to Memory Aid</button>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="form-group">
@@ -170,8 +166,13 @@
 
                     <div class="form-group">
                         <label for="cardMemory">Memory Aid</label>
-                        <div class="hint">A mnemonic or analogy to help remember</div>
+                        <div class="hint">A mnemonic or analogy to help remember. Use AI helper to generate.</div>
                         <textarea id="cardMemory" placeholder="PERCEIVE (eyes) → THINK (brain) → ACT (hands) → REPEAT" style="min-height:60px;"></textarea>
+                    </div>
+
+                    <!-- AI Helper Button -->
+                    <div class="form-group">
+                        <button class="btn-ai" onclick="openAiPopup()" type="button">&#10024; AI Writing Helper</button>
                     </div>
 
                     <div class="form-group">
@@ -194,6 +195,7 @@
                                 &#128228; Upload to GitHub
                             </button>
                         </div>
+                        <div class="image-url-display" id="imageUrlDisplay"></div>
                         <input type="file" id="imageFileInput" accept="image/*" style="display:none;" onchange="handleImageFile(this)">
                     </div>
                 </div>
@@ -234,6 +236,28 @@
         </div>
     </div>
 
+    <!-- AI Popup Overlay -->
+    <div class="ai-overlay" id="aiOverlay" onclick="closeAiPopup(event)">
+        <div class="ai-popup" onclick="event.stopPropagation()">
+            <h3>&#10024; AI Writing Helper</h3>
+            <textarea id="aiPrompt" placeholder="Describe what you want to write about, e.g., 'Explain the agentic loop pattern for a certification exam'"></textarea>
+            <div class="ai-actions">
+                <button class="btn-ai" onclick="aiGenerate('title')" type="button">Generate Title</button>
+                <button class="btn-ai" onclick="aiGenerate('question')" type="button">Generate Question</button>
+                <button class="btn-ai" onclick="aiGenerate('answer')" type="button">Generate Answer</button>
+                <button class="btn-ai" onclick="aiGenerate('memory')" type="button">Generate Memory Aid</button>
+            </div>
+            <div class="ai-result" id="aiResult"></div>
+            <div class="ai-apply-btns" id="aiApplyBtns">
+                <button class="btn-primary" onclick="aiApplyTo('cardTitle')" type="button">Apply to Title</button>
+                <button class="btn-primary" onclick="aiApplyTo('cardQuestion')" type="button">Apply to Question</button>
+                <button class="btn-primary" onclick="aiApplyTo('cardAnswer')" type="button">Apply to Answer</button>
+                <button class="btn-primary" onclick="aiApplyTo('cardMemory')" type="button">Apply to Memory Aid</button>
+            </div>
+            <button class="close-btn" onclick="closeAiPopup()">Close</button>
+        </div>
+    </div>
+
     <footer class="app-footer">
         <p>Claude Developer Certification Study App</p>
         <p>Created by Rifat Erdem Sahin</p>
@@ -253,38 +277,110 @@
         // ================== CONFIG ==================
         const WORKER_URL = 'https://content-worker.polished-boat-17b2.workers.dev';
         const REPO = 'rifaterdemsahin/claude_certification_exam';
-        const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
         // ================== EMOJI DATA ==================
+        const emojiData = {
+            'brain': ['🧠'], 'robot': ['🤖'], 'lightning': ['⚡'], 'target': ['🎯'], 'rocket': ['🚀'],
+            'bulb': ['💡'], 'crystal': ['🔮'], 'wrench': ['🛠️'], 'gear': ['⚙️'], 'link': ['🔗'],
+            'satellite': ['📡'], 'puzzle': ['🧩'], 'magic': ['🪄'], 'loop': ['🔄'], 'building': ['🏗️'],
+            'pillar': ['🏛️'], 'ruler': ['📐'], 'tools': ['🔧'], 'bolt': ['🔩'], 'knot': ['🪢'],
+            'clipboard': ['📋'], 'folder': ['🗂️'], 'package': ['📦'], 'archive': ['🗃️'], 'shuffle': ['🔀'],
+            'refresh': ['🔃'], 'fast-forward': ['⏩'], 'repeat': ['🔁'], 'computer': ['💻'], 'monitor': ['🖥️'],
+            'keyboard': ['⌨️'], 'pencil': ['✏️'], 'pen': ['🖊️'], 'memo': ['📝'], 'document': ['📄'],
+            'bookmark': ['📑'], 'hammer': ['🔨'], 'toolbox': ['🧰'], 'magnet': ['🧲'], 'book': ['📖'],
+            'books': ['📚'], 'graduation': ['🎓'], 'school': ['🏫'], 'microscope': ['🔬'], 'telescope': ['🔭'],
+            'test-tube': ['🧪'], 'dna': ['🧬'], 'pill': ['💊'], 'speech': ['💬'], 'speaker': ['🗣️'],
+            'ear': ['👂'], 'megaphone': ['📢'], 'bell': ['🔔'], 'thought': ['💭'], 'check': ['✅'],
+            'cross': ['❌'], 'warning': ['⚠️'], 'question': ['❓'], 'exclamation': ['❗'], 'green': ['🟢'],
+            'yellow': ['🟡'], 'red': ['🔴'], 'blue': ['🔵'], 'purple': ['🟣'], 'orange': ['🟠'],
+            'up': ['⬆️'], 'down': ['⬇️'], 'right': ['➡️'], 'left': ['⬅️'], 'wave': ['👋'],
+            'hand': ['🤚'], 'palm': ['🖐️'], 'ok': ['👌'], 'peace': ['✌️'], 'key': ['🔑'],
+            'lock': ['🔒'], 'unlock': ['🔓'], 'shield': ['🛡️'], 'sword': ['⚔️'], 'trophy': ['🏆'],
+            'gold': ['🥇'], 'silver': ['🥈'], 'bronze': ['🥉'], 'medal': ['🎖️'], 'star': ['⭐'],
+            'fire': ['🔥'], 'sparkle': ['✨'], 'diamond': ['💎'], 'crown': ['👑'], 'eye': ['👁️'],
+            'magnify': ['🔍'], 'chart': ['📊'], 'graph': ['📈'], 'calendar': ['📅'], 'clock': ['⏰'],
+            'pin': ['📌'], 'paperclip': ['📎'], 'scissors': ['✂️'], 'paint': ['🎨'], 'palette': ['🎭'],
+        };
+
         const emojiCategories = {
             'Agent & AI': ['🤖','🧠','🔄','⚡','🎯','🚀','💡','🔮','🛠️','⚙️','🔗','📡','🎪','🧩','🎭','🪄'],
             'Architecture': ['🏗️','🏛️','📐','🔧','🔩','🪢','📋','🗂️','📦','🗃️','🔀','🔃','⏩','⏯️','🔁','🔂'],
             'Tools & Code': ['💻','🖥️','⌨️','📝','📄','📑','🖊️','✏️','🪛','🔨','🪓','⛏️','🪚','🧰','🪤','🧲'],
             'Learning': ['📚','📖','🎓','🏫','✏️','🖊️','📝','🧮','📏','📐','🔬','🔭','🧪','🧫','🧬','💊'],
-            'Communication': ['💬','🗣️','👂','📢','📣','🔔','🔕','💭','🗯️','🗳️','✅','❌','⚠️','❓','❗','💬'],
+            'Communication': ['💬','🗣️','👂','📢','📣','🔔','🔕','💭','🗯️','🗳️','✅','❌','⚠️','❓','❗'],
             'Status': ['🟢','🟡','🔴','🔵','⚪','⚫','🟣','🟠','⬆️','⬇️','➡️','⬅️','↗️','↘️','↙️','↖️'],
-            'Hands & Action': ['👋','🤚','🖐️','✋','🖖','👌','🤌','🤏','✌️','🤞','🫰','🤟','🤘','🤙','👈','👉'],
-            'Objects': ['🔑','🗝️','🔒','🔓','🛡️','⚔️','🗡️','🎯','🏆','🥇','🥈','🥉','🎖️','🏅','🏵️','🎗️'],
+            'Objects': ['🔑','🗝️','🔒','🔓','🛡️','⚔️','🗡️','🎯','🏆','🥇','🥈','🥉','🎖️','🏅','⭐','🔥'],
+            'Other': ['✨','💎','👑','👁️','🔍','📊','📈','📅','⏰','📌','📎','✂️','🎨','🎭','🪄','💡'],
         };
 
         let selectedEmojis = [];
 
         function initEmojiPicker() {
-            const picker = document.getElementById('emojiPicker');
+            const grid = document.getElementById('emojiGrid');
             let html = '';
             for (const [cat, emojis] of Object.entries(emojiCategories)) {
-                html += `<div class="emoji-cat-label">${cat}</div>`;
+                html += `<div class="emoji-cat-label" data-cat="${cat}">${cat}</div>`;
                 html += '<div class="emoji-grid">';
                 emojis.forEach(e => {
-                    html += `<button class="emoji-btn" type="button" onclick="toggleEmoji('${e}')">${e}</button>`;
+                    html += `<button class="emoji-btn" type="button" data-emoji="${e}" onclick="toggleEmoji('${e}')">${e}</button>`;
                 });
                 html += '</div>';
             }
-            picker.innerHTML = html;
+            grid.innerHTML = html;
+        }
+
+        function filterEmojis(query) {
+            const q = query.toLowerCase().trim();
+            const grid = document.getElementById('emojiGrid');
+            const buttons = grid.querySelectorAll('.emoji-btn');
+            const catLabels = grid.querySelectorAll('.emoji-cat-label');
+
+            if (!q) {
+                buttons.forEach(b => b.classList.remove('hidden'));
+                catLabels.forEach(l => l.classList.remove('hidden'));
+                return;
+            }
+
+            // Find matching emojis by keyword
+            const matches = new Set();
+            for (const [keyword, emojis] of Object.entries(emojiData)) {
+                if (keyword.includes(q)) {
+                    emojis.forEach(e => matches.add(e));
+                }
+            }
+
+            // Also match by category name
+            for (const [cat, emojis] of Object.entries(emojiCategories)) {
+                if (cat.toLowerCase().includes(q)) {
+                    emojis.forEach(e => matches.add(e));
+                }
+            }
+
+            buttons.forEach(b => {
+                const emoji = b.dataset.emoji;
+                if (matches.has(emoji) || emoji.includes(q)) {
+                    b.classList.remove('hidden');
+                } else {
+                    b.classList.add('hidden');
+                }
+            });
+
+            // Hide empty category labels
+            catLabels.forEach(label => {
+                const nextGrid = label.nextElementSibling;
+                if (nextGrid) {
+                    const visibleBtns = nextGrid.querySelectorAll('.emoji-btn:not(.hidden)');
+                    label.classList.toggle('hidden', visibleBtns.length === 0);
+                }
+            });
         }
 
         function toggleEmojiPicker() {
-            document.getElementById('emojiPicker').classList.toggle('open');
+            const picker = document.getElementById('emojiPicker');
+            picker.classList.toggle('open');
+            if (picker.classList.contains('open')) {
+                document.getElementById('emojiSearch').focus();
+            }
         }
 
         function toggleEmoji(emoji) {
@@ -298,7 +394,6 @@
 
         function renderEmojiDisplay() {
             const display = document.getElementById('emojiDisplay');
-            const placeholder = document.getElementById('emojiPlaceholder');
             if (selectedEmojis.length === 0) {
                 display.innerHTML = '<span style="color:var(--text-muted);font-size:0.85em;" id="emojiPlaceholder">Click to add emojis...</span>';
             } else {
@@ -308,7 +403,6 @@
             }
         }
 
-        // Close picker on outside click
         document.addEventListener('click', function(e) {
             const picker = document.getElementById('emojiPicker');
             const display = document.getElementById('emojiDisplay');
@@ -358,9 +452,15 @@
             renderConcepts();
         }
 
-        // ================== AI WRITING HELPER ==================
-        function toggleAiPanel() {
-            document.getElementById('aiPanel').classList.toggle('open');
+        // ================== AI WRITING HELPER (POPUP) ==================
+        function openAiPopup() {
+            document.getElementById('aiOverlay').classList.add('open');
+            document.getElementById('aiPrompt').focus();
+        }
+
+        function closeAiPopup(e) {
+            if (e && e.target !== document.getElementById('aiOverlay')) return;
+            document.getElementById('aiOverlay').classList.remove('open');
         }
 
         async function aiGenerate(type) {
@@ -372,6 +472,7 @@
             btn.textContent = 'Generating...';
 
             const systemPrompts = {
+                title: 'Generate a short, descriptive title (2-5 words) for a memory card about the given topic. Return ONLY the title, nothing else.',
                 question: 'Generate a clear, exam-style question about the given topic for the Claude Developer Certification. Return ONLY the question text, nothing else.',
                 answer: 'Generate a concise, accurate answer for the Claude Developer Certification exam. Include key points. Return ONLY the answer text.',
                 memory: 'Generate a creative mnemonic or memory aid to help remember the concept. Use analogies, visual imagery, or wordplay. Return ONLY the memory aid text.',
@@ -405,10 +506,12 @@
             } catch (e) {
                 document.getElementById('aiResult').textContent = 'Failed: ' + e.message;
                 document.getElementById('aiResult').style.display = 'block';
+                document.getElementById('aiApplyBtns').style.display = 'none';
             }
 
             btn.disabled = false;
-            btn.textContent = type === 'question' ? 'Generate Question' : type === 'answer' ? 'Generate Answer' : 'Generate Memory Aid';
+            const labels = { title: 'Generate Title', question: 'Generate Question', answer: 'Generate Answer', memory: 'Generate Memory Aid' };
+            btn.textContent = labels[type];
         }
 
         function aiApplyTo(fieldId) {
@@ -421,8 +524,7 @@
 
         // ================== IMAGE UPLOAD ==================
         function uploadImage() {
-            const fileInput = document.getElementById('imageFileInput');
-            fileInput.click();
+            document.getElementById('imageFileInput').click();
         }
 
         async function handleImageFile(input) {
@@ -430,47 +532,62 @@
             if (!file) return;
 
             const padId = String(nextId).padStart(3, '0');
-            const ext = file.name.split('.').pop();
+            const ext = file.name.split('.').pop().toLowerCase();
             const filename = `MEM-Q${padId}_v1.${ext}`;
             const path = `assets/memory/${filename}`;
 
-            showStatus('Uploading image to GitHub...', 'info');
-            document.getElementById('uploadBtn').textContent = 'Uploading...';
-            document.getElementById('uploadBtn').disabled = true;
+            const uploadBtn = document.getElementById('uploadBtn');
+            uploadBtn.textContent = 'Reading file...';
+            uploadBtn.disabled = true;
+            showStatus('Reading image file...', 'info');
 
             try {
-                const reader = new FileReader();
-                reader.onload = async function() {
-                    const base64 = reader.result.split(',')[1];
+                const base64 = await readFileAsBase64(file);
+                uploadBtn.textContent = 'Uploading...';
+                showStatus('Uploading to GitHub...', 'info');
 
-                    const resp = await fetch(WORKER_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            action: 'upload-image',
-                            path: path,
-                            content: base64,
-                            message: `Add image ${filename}`,
-                        }),
-                    });
+                const resp = await fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'upload-image',
+                        path: path,
+                        content: base64,
+                        message: `Add image ${filename}`,
+                    }),
+                });
 
-                    const data = await resp.json();
-                    if (data.ok) {
-                        const url = `https://raw.githubusercontent.com/${REPO}/main/${path}`;
-                        document.getElementById('cardImage').value = url;
-                        showStatus('Image uploaded! URL set automatically.', 'ok');
-                    } else {
-                        showStatus('Upload error: ' + data.error, 'err');
-                    }
-                    document.getElementById('uploadBtn').textContent = 'Upload to GitHub';
-                    document.getElementById('uploadBtn').disabled = false;
-                };
-                reader.readAsDataURL(file);
+                const data = await resp.json();
+
+                if (data.ok) {
+                    const url = `https://raw.githubusercontent.com/${REPO}/main/${path}`;
+                    document.getElementById('cardImage').value = url;
+
+                    // Show clickable URL
+                    const urlDisplay = document.getElementById('imageUrlDisplay');
+                    urlDisplay.innerHTML = '&#9989; Uploaded: <a href="' + url + '" target="_blank">' + filename + '</a>';
+                    urlDisplay.style.display = 'block';
+
+                    showStatus('Image uploaded! URL set automatically.', 'ok');
+                } else {
+                    showStatus('Upload error: ' + (data.error || 'Unknown error'), 'err');
+                }
             } catch (e) {
                 showStatus('Upload failed: ' + e.message, 'err');
-                document.getElementById('uploadBtn').textContent = 'Upload to GitHub';
-                document.getElementById('uploadBtn').disabled = false;
             }
+
+            uploadBtn.textContent = 'Upload to GitHub';
+            uploadBtn.disabled = false;
+            input.value = ''; // Reset file input
+        }
+
+        function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = () => reject(new Error('Failed to read file'));
+                reader.readAsDataURL(file);
+            });
         }
 
         // ================== FORM ==================
@@ -509,9 +626,7 @@ ${(d.cardConcepts || '').split(',').map(c => '- ' + c.trim()).filter(c => c.leng
 `;
         }
 
-        function generateFilename(d) {
-            const match = d.cardId.match(/CAT(\d+)-Q(\d+)/);
-            if (!match) return null;
+        function generateFilename() {
             return `MEM-Q${String(nextId).padStart(3, '0')}.md`;
         }
 
@@ -528,7 +643,7 @@ ${(d.cardConcepts || '').split(',').map(c => '- ' + c.trim()).filter(c => c.leng
                 return;
             }
 
-            const filename = `MEM-Q${String(nextId).padStart(3, '0')}.md`;
+            const filename = generateFilename();
             const catColors = { 1: '#ef4444', 2: '#3b82f6', 3: '#10b981', 4: '#f59e0b', 5: '#a855f7' };
             const catNames = { 1: 'Agentic Architecture', 2: 'Tool Design & MCP', 3: 'Claude Code', 4: 'Prompt Engineering', 5: 'Context & Reliability' };
 
@@ -541,7 +656,6 @@ ${(d.cardConcepts || '').split(',').map(c => '- ' + c.trim()).filter(c => c.leng
             btn.disabled = false;
         }
 
-        // Live preview
         form.forEach(id => {
             document.getElementById(id).addEventListener('input', updatePreview);
         });
@@ -570,11 +684,12 @@ ${(d.cardConcepts || '').split(',').map(c => '- ' + c.trim()).filter(c => c.leng
             renderConcepts();
             updatePreview();
             document.getElementById('statusMsg').className = 'status-msg';
+            document.getElementById('imageUrlDisplay').style.display = 'none';
         }
 
         async function commitCard() {
             const d = getFormData();
-            const filename = `MEM-Q${String(nextId).padStart(3, '0')}.md`;
+            const filename = generateFilename();
             if (!d.cardQuestion || !d.cardAnswer) {
                 showStatus('Fill in Question and Answer first.', 'err');
                 return;
@@ -633,8 +748,6 @@ ${(d.cardConcepts || '').split(',').map(c => '- ' + c.trim()).filter(c => c.leng
                     .filter(f => f.name.match(/MEM-Q\d+\.md/))
                     .map(f => parseInt(f.name.match(/MEM-Q(\d+)\.md/)[1]));
                 nextId = ids.length > 0 ? Math.max(...ids) + 1 : 101;
-
-                // Store existing IDs for uniqueness check
                 window._existingIds = new Set(ids);
             } catch {
                 document.getElementById('cardCount').textContent = 'Could not load card count';
