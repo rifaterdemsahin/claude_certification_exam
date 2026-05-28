@@ -1,7 +1,7 @@
 // Test suite for the Vote Worker
 // Run: node tests/test_vote_worker.js
 
-const WORKER_URL = 'https://tiny-mode-1370.polished-boat-17b2.workers.dev';
+const WORKER_URL = 'https://vote-worker.polished-boat-17b2.workers.dev';
 
 async function test(name, fn) {
     try {

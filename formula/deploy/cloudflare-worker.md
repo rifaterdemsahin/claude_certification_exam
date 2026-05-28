@@ -37,6 +37,13 @@ flowchart TD
 | Vote Worker | `scripts/vote-worker.js` | Vote read/write/reset | `gist` |
 | Content Worker | `scripts/content-worker.js` | Cards, images, AI | `repo` |
 
+## Worker URLs
+
+| Worker | URL |
+|--------|-----|
+| Vote Worker | https://vote-worker.polished-boat-17b2.workers.dev |
+| Content Worker | https://content-worker.polished-boat-17b2.workers.dev |
+
 ## Prerequisites
 
 | Item | Where to get it |

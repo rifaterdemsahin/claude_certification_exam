@@ -37,8 +37,8 @@ flowchart LR
 | Resource | URL |
 |----------|-----|
 | Cloudflare Dashboard | https://dash.cloudflare.com/3683d1886e0a3a3152242c84f226ba3f/workers-and-pages |
-| Vote Worker | https://tiny-mode-1370.polished-boat-17b2.workers.dev |
-| Content Worker | (deploy and paste URL here) |
+| Vote Worker | https://vote-worker.polished-boat-17b2.workers.dev |
+| Content Worker | https://content-worker.polished-boat-17b2.workers.dev |
 | GitHub Gist (votes) | https://gist.github.com/rifaterdemsahin/2bfb092b05e08669b092f8371ac9c018 |
 | GitHub Repo | https://github.com/rifaterdemsahin/claude_certification_exam |
 | GitHub Pages | https://rifaterdemsahin.github.io/claude_certification_exam |
