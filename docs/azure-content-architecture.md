@@ -215,8 +215,9 @@ curl https://claude-cert-api.azurewebsites.net/api/cards
 - Check Function App logs in Azure Portal
 
 ### CORS Errors
-- Function code includes `Access-Control-Allow-Origin: *`
-- If still failing, add origin in Function App CORS settings
+- Ensure `function.json` for **every HTTP trigger** includes `"options"` in the `methods` array (e.g. `["post", "options"]`). Without it, the Azure Functions runtime blocks the browser's preflight `OPTIONS` request before the function code can respond with CORS headers.
+- Function code already returns `Access-Control-Allow-Origin: *` and handles `OPTIONS` at the top of each function.
+- If still failing, add the calling origin in the Function App's CORS settings in the Azure Portal.
 
 ### Cold Start Delays
 - Expected behavior for Y1 Consumption Plan
