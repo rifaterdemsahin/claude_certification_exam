@@ -185,8 +185,8 @@
                     <!-- Image Upload -->
                     <div class="form-group">
                         <label>Image</label>
-                        <div class="hint">Create an image in Canva, then upload to GitHub</div>
-                        <input type="text" id="cardImage" placeholder="https://raw.githubusercontent.com/.../assets/memory/MEM-Q006_v1.svg">
+                        <div class="hint">Create an image in Canva, upload to GitHub. Path: <code>assets/memory/MEM-Q006_v1.png</code></div>
+                        <input type="text" id="cardImage" placeholder="https://raw.githubusercontent.com/.../assets/memory/MEM-Q006_v1.png">
                         <div class="image-actions">
                             <a href="https://www.canva.com/design/create?template=blank" target="_blank" class="btn-canva">
                                 &#127912; Open Canva
@@ -194,6 +194,9 @@
                             <button class="btn-upload" onclick="uploadImage()" type="button" id="uploadBtn">
                                 &#128228; Upload to GitHub
                             </button>
+                            <a href="https://github.com/rifaterdemsahin/claude_certification_exam/tree/main/assets/memory" target="_blank" class="btn-canva">
+                                &#128193; View Upload Folder
+                            </a>
                         </div>
                         <div class="image-url-display" id="imageUrlDisplay"></div>
                         <input type="file" id="imageFileInput" accept="image/*" style="display:none;" onchange="handleImageFile(this)">
@@ -242,13 +245,40 @@
             <h3>&#10024; AI Writing Helper</h3>
             <textarea id="aiPrompt" placeholder="Describe what you want to write about, e.g., 'Explain the agentic loop pattern for a certification exam'"></textarea>
             <div class="ai-actions">
-                <button class="btn-ai" onclick="aiGenerate('title')" type="button">Generate Title</button>
-                <button class="btn-ai" onclick="aiGenerate('question')" type="button">Generate Question</button>
-                <button class="btn-ai" onclick="aiGenerate('answer')" type="button">Generate Answer</button>
-                <button class="btn-ai" onclick="aiGenerate('memory')" type="button">Generate Memory Aid</button>
+                <button class="btn-ai" onclick="aiGenerate('all')" type="button" id="aiGenAllBtn">Generate All</button>
+                <button class="btn-ai" onclick="aiGenerate('title')" type="button">Title</button>
+                <button class="btn-ai" onclick="aiGenerate('question')" type="button">Question</button>
+                <button class="btn-ai" onclick="aiGenerate('answer')" type="button">Answer</button>
+                <button class="btn-ai" onclick="aiGenerate('memory')" type="button">Memory Aid</button>
             </div>
-            <div class="ai-result" id="aiResult"></div>
-            <div class="ai-apply-btns" id="aiApplyBtns">
+
+            <!-- Individual Results (editable) -->
+            <div id="aiResults" style="display:none;">
+                <div style="margin-bottom:12px;">
+                    <label style="font-size:0.85em;color:var(--accent-purple);font-weight:600;">Title</label>
+                    <textarea id="aiTitleResult" style="width:100%;min-height:36px;padding:8px;background:var(--bg-primary);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);font-family:inherit;font-size:0.9em;resize:vertical;"></textarea>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label style="font-size:0.85em;color:var(--accent-purple);font-weight:600;">Question</label>
+                    <textarea id="aiQuestionResult" style="width:100%;min-height:60px;padding:8px;background:var(--bg-primary);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);font-family:inherit;font-size:0.9em;resize:vertical;"></textarea>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label style="font-size:0.85em;color:var(--accent-purple);font-weight:600;">Answer</label>
+                    <textarea id="aiAnswerResult" style="width:100%;min-height:80px;padding:8px;background:var(--bg-primary);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);font-family:inherit;font-size:0.9em;resize:vertical;"></textarea>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label style="font-size:0.85em;color:var(--accent-purple);font-weight:600;">Memory Aid</label>
+                    <textarea id="aiMemoryResult" style="width:100%;min-height:60px;padding:8px;background:var(--bg-primary);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);font-family:inherit;font-size:0.9em;resize:vertical;"></textarea>
+                </div>
+                <div class="ai-actions" style="margin-top:12px;">
+                    <button class="btn-primary" onclick="aiApplyAll()" type="button">Apply All to Form</button>
+                    <button class="btn-copy" onclick="aiCopyAll()" type="button">Copy All</button>
+                </div>
+            </div>
+
+            <!-- Single Result (for individual generate) -->
+            <div class="ai-result" id="aiResult" style="display:none;"></div>
+            <div class="ai-apply-btns" id="aiApplyBtns" style="display:none;">
                 <button class="btn-primary" onclick="aiApplyTo('cardTitle')" type="button">Apply to Title</button>
                 <button class="btn-primary" onclick="aiApplyTo('cardQuestion')" type="button">Apply to Question</button>
                 <button class="btn-primary" onclick="aiApplyTo('cardAnswer')" type="button">Apply to Answer</button>
@@ -300,6 +330,40 @@
             'fire': ['🔥'], 'sparkle': ['✨'], 'diamond': ['💎'], 'crown': ['👑'], 'eye': ['👁️'],
             'magnify': ['🔍'], 'chart': ['📊'], 'graph': ['📈'], 'calendar': ['📅'], 'clock': ['⏰'],
             'pin': ['📌'], 'paperclip': ['📎'], 'scissors': ['✂️'], 'paint': ['🎨'], 'palette': ['🎭'],
+            'money': ['💰','💵','💸','🤑'], 'dollar': ['💲','💵','💰'], 'coin': ['🪙','💰','💵'],
+            'bank': ['🏦','💰'], 'wallet': ['👛','💰'], 'credit': ['💳','💰'], 'cash': ['💵','💸','💰'],
+            'rich': ['🤑','💎','👑'], 'profit': ['📈','💰','🤑'], 'invest': ['📊','💰','📈'],
+            'cost': ['💲','💰','🏷️'], 'price': ['🏷️','💰','💲'], 'budget': ['📋','💰','📊'],
+            'payment': ['💳','💵','💰'], 'salary': ['💵','💰','🤑'], 'tax': ['📋','💰','🏛️'],
+            'savings': ['🏦','💰','🐖'], 'piggy': ['🐷','💰'], 'gift': ['🎁','🎀'],
+            'discount': ['🏷️','💰','✂️'], 'sale': ['🏷️','💰','🔥'], 'shopping': ['🛒','🛍️','💰'],
+            'cart': ['🛒','💰'], 'bag': ['🛍️','💰'], 'ticket': ['🎫','🎟️'],
+            'contract': ['📜','✍️','📋'], 'sign': ['✍️','📝'], 'deal': ['🤝','💰','📋'],
+            'growth': ['📈','🌱','🚀'], 'scale': ['⚖️','📊'], 'balance': ['⚖️','💰'],
+            'risk': ['🎲','⚠️','🎯'], 'security': ['🔒','🛡️','🔐'], 'safe': ['🔐','🔒','🛡️'],
+            'idea': ['💡','🧠','✨'], 'think': ['🧠','💭','🤔'], 'plan': ['📋','📐','🗺️'],
+            'strategy': ['♟️','🎯','📋'], 'goal': ['🎯','🏆','🏁'], 'win': ['🏆','🥇','🎉'],
+            'success': ['✅','🏆','🎉'], 'fail': ['❌','💥','😵'], 'bug': ['🐛','🔴'],
+            'fix': ['🔧','🔨','✅'], 'code': ['💻','⌨️','👨‍💻'], 'deploy': ['🚀','📦','✅'],
+            'test': ['🧪','✅','📋'], 'debug': ['🐛','🔍','🔧'], 'merge': ['🔀','✅','📦'],
+            'branch': ['🌿','🔀','📁'], 'commit': ['💾','✅','📝'], 'push': ['⬆️','📤','🚀'],
+            'pull': ['⬇️','📥','🔄'], 'review': ['👀','📋','✅'], 'approve': ['✅','👍','🎉'],
+            'reject': ['❌','👎','🚫'], 'team': ['👥','🤝','💪'], 'meeting': ['📅','👥','💬'],
+            'deadline': ['⏰','📅','🔥'], 'priority': ['🔴','🟡','🟢'], 'urgent': ['🚨','🔥','⚡'],
+            'important': ['❗','⭐','🔴'], 'new': ['🆕','✨','💡'], 'update': ['🔄','📝','⬆️'],
+            'delete': ['🗑️','❌','💥'], 'create': ['✨','🆕','📝'], 'search': ['🔍','🔎'],
+            'find': ['🔍','📍'], 'data': ['📊','💾','📈'], 'api': ['🔌','🔗','📡'],
+            'server': ['🖥️','🗄️'], 'cloud': ['☁️','🖥️'], 'database': ['🗄️','💾','📊'],
+            'network': ['🌐','🔗','📡'], 'speed': ['⚡','🏎️','💨'], 'performance': ['⚡','📈','🏎️'],
+            'memory': ['🧠','💾'], 'storage': ['💾','🗄️'], 'cache': ['💾','⚡'],
+            'config': ['⚙️','🔧','📋'], 'setting': ['⚙️','🔧'], 'permission': ['🔐','🔑','🛡️'],
+            'access': ['🔑','🔐','🚪'], 'user': ['👤','👥'], 'admin': ['👑','🔧','⚙️'],
+            'notification': ['🔔','📢'], 'alert': ['🚨','⚠️','🔔'], 'report': ['📊','📋','📈'],
+            'log': ['📝','📋','📊'], 'monitor': ['👁️','📊','🖥️'], 'health': ['💚','❤️','🩺'],
+            'recovery': ['🔄','💚','🛡️'], 'backup': ['💾','🔒','🔄'], 'migration': ['🔀','📦','🔄'],
+            'integration': ['🔗','🔌','🤝'], 'workflow': ['🔄','📋','⚡'], 'pipeline': ['🔧','🔄','⚡'],
+            'automation': ['🤖','⚡','🔄'], 'efficiency': ['⚡','📈','🎯'], 'quality': ['✅','⭐','🏆'],
+            'reliability': ['🛡️','✅','🔒'], 'scalability': ['📈','🔄','⚡'],
         };
 
         const emojiCategories = {
@@ -308,9 +372,12 @@
             'Tools & Code': ['💻','🖥️','⌨️','📝','📄','📑','🖊️','✏️','🪛','🔨','🪓','⛏️','🪚','🧰','🪤','🧲'],
             'Learning': ['📚','📖','🎓','🏫','✏️','🖊️','📝','🧮','📏','📐','🔬','🔭','🧪','🧫','🧬','💊'],
             'Communication': ['💬','🗣️','👂','📢','📣','🔔','🔕','💭','🗯️','🗳️','✅','❌','⚠️','❓','❗'],
+            'Money & Finance': ['💰','💵','💸','🤑','💲','🪙','🏦','👛','💳','🏷️','📈','📊','🎁','🎀','🛒','🛍️'],
+            'Business': ['📋','🤝','📜','✍️','♟️','⚖️','🎲','🔐','🔒','🛡️','🏆','🎯','💰','📈','👥','📅'],
+            'DevOps': ['🚀','🔀','🌿','💾','⬆️','⬇️','📤','📥','👀','🐛','🧪','✅','❌','🔀','📦','🔧'],
             'Status': ['🟢','🟡','🔴','🔵','⚪','⚫','🟣','🟠','⬆️','⬇️','➡️','⬅️','↗️','↘️','↙️','↖️'],
             'Objects': ['🔑','🗝️','🔒','🔓','🛡️','⚔️','🗡️','🎯','🏆','🥇','🥈','🥉','🎖️','🏅','⭐','🔥'],
-            'Other': ['✨','💎','👑','👁️','🔍','📊','📈','📅','⏰','📌','📎','✂️','🎨','🎭','🪄','💡'],
+            'Misc': ['✨','💎','👑','👁️','🔍','📊','📈','📅','⏰','📌','📎','✂️','🎨','🎭','🪄','💡'],
         };
 
         let selectedEmojis = [];
@@ -469,6 +536,7 @@
 
             const btn = event.target;
             btn.disabled = true;
+            const origText = btn.textContent;
             btn.textContent = 'Generating...';
 
             const systemPrompts = {
@@ -478,40 +546,73 @@
                 memory: 'Generate a creative mnemonic or memory aid to help remember the concept. Use analogies, visual imagery, or wordplay. Return ONLY the memory aid text.',
             };
 
-            try {
-                const resp = await fetch(WORKER_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'ai-generate',
-                        prompt: prompt,
-                        system: systemPrompts[type],
-                    }),
-                });
-
-                const data = await resp.json();
-                const result = document.getElementById('aiResult');
-                const applyBtns = document.getElementById('aiApplyBtns');
-
-                if (data.text) {
-                    result.textContent = data.text;
-                    result.style.display = 'block';
-                    applyBtns.style.display = 'flex';
-                    window._aiResult = data.text;
-                } else {
-                    result.textContent = 'Error: ' + (data.error || 'Unknown error');
-                    result.style.display = 'block';
-                    applyBtns.style.display = 'none';
-                }
-            } catch (e) {
-                document.getElementById('aiResult').textContent = 'Failed: ' + e.message;
-                document.getElementById('aiResult').style.display = 'block';
+            if (type === 'all') {
+                // Generate all 4 fields sequentially
+                const fields = ['title', 'question', 'answer', 'memory'];
+                const resultsDiv = document.getElementById('aiResults');
+                resultsDiv.style.display = 'block';
+                document.getElementById('aiResult').style.display = 'none';
                 document.getElementById('aiApplyBtns').style.display = 'none';
+
+                for (const field of fields) {
+                    btn.textContent = `Generating ${field}...`;
+                    try {
+                        const resp = await fetch(WORKER_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                action: 'ai-generate',
+                                prompt: prompt,
+                                system: systemPrompts[field],
+                            }),
+                        });
+                        const data = await resp.json();
+                        if (data.text) {
+                            document.getElementById(`ai${field.charAt(0).toUpperCase() + field.slice(1)}Result`).value = data.text;
+                        } else {
+                            document.getElementById(`ai${field.charAt(0).toUpperCase() + field.slice(1)}Result`).value = 'Error: ' + (data.error || 'Unknown');
+                        }
+                    } catch (e) {
+                        document.getElementById(`ai${field.charAt(0).toUpperCase() + field.slice(1)}Result`).value = 'Failed: ' + e.message;
+                    }
+                }
+            } else {
+                // Generate single field
+                document.getElementById('aiResults').style.display = 'none';
+                try {
+                    const resp = await fetch(WORKER_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'ai-generate',
+                            prompt: prompt,
+                            system: systemPrompts[type],
+                        }),
+                    });
+
+                    const data = await resp.json();
+                    const result = document.getElementById('aiResult');
+                    const applyBtns = document.getElementById('aiApplyBtns');
+
+                    if (data.text) {
+                        result.textContent = data.text;
+                        result.style.display = 'block';
+                        applyBtns.style.display = 'flex';
+                        window._aiResult = data.text;
+                    } else {
+                        result.textContent = 'Error: ' + (data.error || 'Unknown error');
+                        result.style.display = 'block';
+                        applyBtns.style.display = 'none';
+                    }
+                } catch (e) {
+                    document.getElementById('aiResult').textContent = 'Failed: ' + e.message;
+                    document.getElementById('aiResult').style.display = 'block';
+                    document.getElementById('aiApplyBtns').style.display = 'none';
+                }
             }
 
             btn.disabled = false;
-            const labels = { title: 'Generate Title', question: 'Generate Question', answer: 'Generate Answer', memory: 'Generate Memory Aid' };
-            btn.textContent = labels[type];
+            btn.textContent = origText;
         }
 
         function aiApplyTo(fieldId) {
@@ -522,7 +623,33 @@
             }
         }
 
+        function aiApplyAll() {
+            const title = document.getElementById('aiTitleResult').value;
+            const question = document.getElementById('aiQuestionResult').value;
+            const answer = document.getElementById('aiAnswerResult').value;
+            const memory = document.getElementById('aiMemoryResult').value;
+            if (title) document.getElementById('cardTitle').value = title;
+            if (question) document.getElementById('cardQuestion').value = question;
+            if (answer) document.getElementById('cardAnswer').value = answer;
+            if (memory) document.getElementById('cardMemory').value = memory;
+            updatePreview();
+            showStatus('Applied all fields to form!', 'ok');
+        }
+
+        function aiCopyAll() {
+            const title = document.getElementById('aiTitleResult').value;
+            const question = document.getElementById('aiQuestionResult').value;
+            const answer = document.getElementById('aiAnswerResult').value;
+            const memory = document.getElementById('aiMemoryResult').value;
+            const text = `Title: ${title}\n\nQuestion: ${question}\n\nAnswer: ${answer}\n\nMemory Aid: ${memory}`;
+            navigator.clipboard.writeText(text).then(() => {
+                showStatus('Copied all to clipboard!', 'ok');
+            });
+        }
+
         // ================== IMAGE UPLOAD ==================
+        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB limit for GitHub API
+
         function uploadImage() {
             document.getElementById('imageFileInput').click();
         }
@@ -531,20 +658,28 @@
             const file = input.files[0];
             if (!file) return;
 
+            // Check file size
+            if (file.size > MAX_FILE_SIZE) {
+                showStatus(`File too large (${(file.size/1024/1024).toFixed(1)}MB). Max 5MB. Compress the image first.`, 'err');
+                input.value = '';
+                return;
+            }
+
             const padId = String(nextId).padStart(3, '0');
             const ext = file.name.split('.').pop().toLowerCase();
             const filename = `MEM-Q${padId}_v1.${ext}`;
             const path = `assets/memory/${filename}`;
 
             const uploadBtn = document.getElementById('uploadBtn');
-            uploadBtn.textContent = 'Reading file...';
+            uploadBtn.textContent = 'Reading...';
             uploadBtn.disabled = true;
-            showStatus('Reading image file...', 'info');
+            showStatus(`Reading ${file.name} (${(file.size/1024).toFixed(0)}KB)...`, 'info');
 
             try {
                 const base64 = await readFileAsBase64(file);
+                const base64Size = Math.round(base64.length * 0.75);
                 uploadBtn.textContent = 'Uploading...';
-                showStatus('Uploading to GitHub...', 'info');
+                showStatus(`Uploading ${filename} (${(base64Size/1024).toFixed(0)}KB) to GitHub...`, 'info');
 
                 const resp = await fetch(WORKER_URL, {
                     method: 'POST',
@@ -557,13 +692,21 @@
                     }),
                 });
 
+                if (!resp.ok) {
+                    const errText = await resp.text();
+                    showStatus(`Upload failed (HTTP ${resp.status}): ${errText}`, 'err');
+                    uploadBtn.textContent = 'Upload to GitHub';
+                    uploadBtn.disabled = false;
+                    input.value = '';
+                    return;
+                }
+
                 const data = await resp.json();
 
                 if (data.ok) {
                     const url = `https://raw.githubusercontent.com/${REPO}/main/${path}`;
                     document.getElementById('cardImage').value = url;
 
-                    // Show clickable URL
                     const urlDisplay = document.getElementById('imageUrlDisplay');
                     urlDisplay.innerHTML = '&#9989; Uploaded: <a href="' + url + '" target="_blank">' + filename + '</a>';
                     urlDisplay.style.display = 'block';
@@ -573,19 +716,23 @@
                     showStatus('Upload error: ' + (data.error || 'Unknown error'), 'err');
                 }
             } catch (e) {
-                showStatus('Upload failed: ' + e.message, 'err');
+                showStatus('Upload failed: ' + e.message + '. Check worker is deployed.', 'err');
             }
 
             uploadBtn.textContent = 'Upload to GitHub';
             uploadBtn.disabled = false;
-            input.value = ''; // Reset file input
+            input.value = '';
         }
 
         function readFileAsBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
-                reader.onload = () => resolve(reader.result.split(',')[1]);
-                reader.onerror = () => reject(new Error('Failed to read file'));
+                reader.onload = () => {
+                    const base64 = reader.result.split(',')[1];
+                    if (!base64) reject(new Error('Failed to encode file'));
+                    else resolve(base64);
+                };
+                reader.onerror = () => reject(new Error('Failed to read file: ' + reader.error));
                 reader.readAsDataURL(file);
             });
         }
