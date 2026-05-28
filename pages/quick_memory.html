@@ -28,11 +28,14 @@
             background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
+        }
+        .page-wrap {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 24px;
+            min-height: calc(100vh - 48px);
         }
         .quick-card {
             background: var(--bg-secondary);
@@ -194,32 +197,35 @@
     </style>
 </head>
 <body>
+    <script src="../js/nav.js"></script>
 
-    <div class="quick-card">
-        <h1>Quick Memory Card</h1>
-        <p class="subtitle">Paste an image, add a title, push.</p>
+    <div class="page-wrap">
+        <div class="quick-card">
+            <h1>Quick Memory Card</h1>
+            <p class="subtitle">Paste an image, add a title, push. AI fills the rest.</p>
 
-        <div class="id-badge" id="idBadge">MEM-Q---</div>
+            <div class="id-badge" id="idBadge">MEM-Q---</div>
 
-        <label for="cardTitle">Title</label>
-        <input type="text" class="title-input" id="cardTitle" placeholder="Agentic Loop" autofocus>
+            <label for="cardTitle">Title</label>
+            <input type="text" class="title-input" id="cardTitle" placeholder="Agentic Loop" autofocus>
 
-        <label>Image</label>
-        <div class="paste-zone" id="pasteZone" tabindex="0">
-            <button class="remove-btn" id="removeBtn" onclick="removeImage(event)" title="Remove image">&times;</button>
-            <div class="hint-icon" id="hintIcon">&#128203;</div>
-            <div class="hint-text" id="hintText">Click here &amp; paste an image</div>
-            <div class="hint-sub" id="hintSub">Ctrl+V / Cmd+V from clipboard</div>
+            <label>Image</label>
+            <div class="paste-zone" id="pasteZone" tabindex="0">
+                <button class="remove-btn" id="removeBtn" onclick="removeImage(event)" title="Remove image">&times;</button>
+                <div class="hint-icon" id="hintIcon">&#128203;</div>
+                <div class="hint-text" id="hintText">Click here &amp; paste an image</div>
+                <div class="hint-sub" id="hintSub">Ctrl+V / Cmd+V from clipboard</div>
+            </div>
+
+            <button class="push-btn" id="pushBtn" onclick="pushCard()" disabled>
+                <span id="pushIcon">&#128640;</span> Push to GitHub
+            </button>
+
+            <div class="status" id="status"></div>
         </div>
 
-        <button class="push-btn" id="pushBtn" onclick="pushCard()" disabled>
-            <span id="pushIcon">&#128640;</span> Push to GitHub
-        </button>
-
-        <div class="status" id="status"></div>
+        <a class="home-link" href="../index.html">&larr; Back to Home</a>
     </div>
-
-    <a class="home-link" href="../index.html">&larr; Back to Home</a>
 
     <script>
         const WORKER_URL = 'https://content-worker.polished-boat-17b2.workers.dev';
@@ -229,29 +235,48 @@
         let imageData = null;   // base64
         let imageExt = 'png';
 
-        // ================== CALCULATE NEXT ID ==================
+        // ================== CALCULATE NEXT ID (via worker) ==================
         async function calculateNextId() {
             const badge = document.getElementById('idBadge');
             try {
-                const resp = await fetch(`https://api.github.com/repos/${REPO}/contents/formula/memory`);
-                const files = await resp.json();
-                const ids = files
-                    .filter(f => f.name.match(/MEM-Q\d+\.md/))
-                    .map(f => parseInt(f.name.match(/MEM-Q(\d+)\.md/)[1]));
-                nextId = ids.length > 0 ? Math.max(...ids) + 1 : 101;
+                const resp = await fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'list-cards' }),
+                });
+                const data = await resp.json();
+                if (data.files && data.files.length > 0) {
+                    const ids = data.files
+                        .filter(f => f.match(/MEM-Q\d+\.md/))
+                        .map(f => parseInt(f.match(/MEM-Q(\d+)\.md/)[1]));
+                    nextId = ids.length > 0 ? Math.max(...ids) + 1 : 101;
+                }
             } catch {
                 nextId = 101;
             }
             badge.textContent = `MEM-Q${String(nextId).padStart(3, '0')}`;
         }
 
+        // ================== AI GENERATE ==================
+        async function aiGenerate(systemPrompt, userPrompt) {
+            const resp = await fetch(WORKER_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'ai-generate',
+                    prompt: userPrompt,
+                    system: systemPrompt,
+                }),
+            });
+            const data = await resp.json();
+            return data.text || '';
+        }
+
         // ================== PASTE HANDLING ==================
         const pasteZone = document.getElementById('pasteZone');
 
-        // Focus so keyboard paste works
         pasteZone.addEventListener('click', () => pasteZone.focus());
 
-        // Paste from clipboard
         document.addEventListener('paste', (e) => {
             const items = e.clipboardData?.items;
             if (!items) return;
@@ -265,7 +290,6 @@
             }
         });
 
-        // Also support drag & drop
         pasteZone.addEventListener('dragover', (e) => { e.preventDefault(); pasteZone.style.borderColor = 'var(--accent-blue)'; });
         pasteZone.addEventListener('dragleave', () => { pasteZone.style.borderColor = ''; });
         pasteZone.addEventListener('drop', (e) => {
@@ -334,7 +358,6 @@
             const btn = document.getElementById('pushBtn');
             const origHTML = btn.innerHTML;
             btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span> Uploading image...';
 
             const padId = String(nextId).padStart(3, '0');
             const filename = `MEM-Q${padId}`;
@@ -343,6 +366,7 @@
 
             try {
                 // Step 1: Upload image
+                btn.innerHTML = '<span class="spinner"></span> Uploading image...';
                 const imgResp = await fetch(WORKER_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -358,15 +382,35 @@
 
                 const imageUrl = `https://raw.githubusercontent.com/${REPO}/main/${imagePath}`;
 
-                // Step 2: Create markdown card
+                // Step 2: AI generate question, answer, memory aid
+                btn.innerHTML = '<span class="spinner"></span> Generating metadata...';
+                const [question, answer, memoryAid] = await Promise.all([
+                    aiGenerate(
+                        'Generate a clear, exam-style question about the given topic for the Claude Developer Certification. Return ONLY the question text.',
+                        title
+                    ),
+                    aiGenerate(
+                        'Generate a concise, accurate answer for the Claude Developer Certification exam about the given topic. Include key points. Return ONLY the answer text.',
+                        title
+                    ),
+                    aiGenerate(
+                        'Generate a creative mnemonic or memory aid to help remember the given concept. Use analogies, visual imagery, or wordplay. Return ONLY the memory aid text.',
+                        title
+                    ),
+                ]);
+
+                // Step 3: Create markdown card
                 btn.innerHTML = '<span class="spinner"></span> Creating card...';
                 const md = `# Memory Card: CAT01-Q${padId}
 
 ## Question
-${title}
+${question || title}
 
 ## Answer
-(see image)
+${answer || '(see image)'}
+
+## Memory Aid
+${memoryAid || 'No memory aid provided.'}
 
 ## Image
 ![${title}](${imageUrl})
