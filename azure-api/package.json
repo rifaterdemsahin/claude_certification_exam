@@ -2,7 +2,6 @@
   "name": "claude-cert-api",
   "version": "1.0.0",
   "description": "Azure Functions for Claude Certification memory cards",
-  "main": "src/functions/*.js",
   "scripts": {
     "start": "func start",
     "test": "echo \"No tests yet\""
