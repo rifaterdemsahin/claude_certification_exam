@@ -1,7 +1,7 @@
 // Content Worker — Handles memory card creation, image upload, and AI writing
 // Deploy to Cloudflare Workers
 const GITHUB_TOKEN = 'PASTE_YOUR_TOKEN_HERE'; // Classic token with `repo` scope
-const ALLOWED_ORIGIN = 'https://rifaterdemsahin.github.io';
+const ALLOWED_ORIGIN = '*'; // Allow all origins (GitHub Pages + local testing)
 const REPO = 'rifaterdemsahin/claude_certification_exam';
 const OPENROUTER_KEY = 'PASTE_OPENROUTER_KEY_HERE'; // OpenRouter API key
 
