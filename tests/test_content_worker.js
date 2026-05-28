@@ -1,7 +1,7 @@
-// Test suite for the Vote Worker
-// Run: node tests/test_vote_worker.js
+// Test suite for the Content Worker
+// Run: node tests/test_content_worker.js
 
-const WORKER_URL = 'https://tiny-mode-1370.polished-boat-17b2.workers.dev';
+const WORKER_URL = 'PASTE_CONTENT_WORKER_URL_HERE'; // e.g. https://claude-cert-content.xxx.workers.dev
 
 async function test(name, fn) {
     try {
@@ -17,112 +17,109 @@ function assert(condition, msg) {
 }
 
 async function runTests() {
-    console.log('\n=== Vote Worker Tests ===\n');
+    console.log('\n=== Content Worker Tests ===\n');
 
     console.log('[GET endpoint]');
-    await test('GET returns vote JSON', async () => {
+    await test('GET returns status ok', async () => {
         const resp = await fetch(WORKER_URL);
         assert(resp.ok, `HTTP ${resp.status}`);
         const data = await resp.json();
-        assert(typeof data === 'object', 'Response is not JSON');
-        assert('1' in data, 'Missing key "1"');
+        assert(data.status === 'ok', 'status is not ok');
+        assert(data.worker === 'content', 'worker is not content');
     });
 
-    await test('GET has all 16 vote keys', async () => {
-        const resp = await fetch(WORKER_URL);
-        const data = await resp.json();
-        for (let i = 1; i <= 16; i++) {
-            assert(String(i) in data, `Missing key "${i}"`);
-        }
-    });
-
-    console.log('\n[POST vote endpoint]');
-    await test('POST valid single vote', async () => {
+    console.log('\n[Create Card]');
+    await test('POST create-card rejects missing path', async () => {
         const resp = await fetch(WORKER_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ids: [1] }),
-        });
-        assert(resp.ok, `HTTP ${resp.status}`);
-        const data = await resp.json();
-        assert(data.ok === true, 'ok is not true');
-        assert(typeof data.votes === 'object', 'Missing votes');
-    });
-
-    await test('POST valid multi vote (3 ids)', async () => {
-        const resp = await fetch(WORKER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ids: [1, 5, 16] }),
-        });
-        assert(resp.ok, `HTTP ${resp.status}`);
-    });
-
-    await test('POST rejects empty ids array', async () => {
-        const resp = await fetch(WORKER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ids: [] }),
+            body: JSON.stringify({ action: 'create-card', content: '# Test' }),
         });
         assert(resp.status === 400, `Expected 400, got ${resp.status}`);
     });
 
-    await test('POST rejects ids > 16', async () => {
+    await test('POST create-card rejects missing content', async () => {
         const resp = await fetch(WORKER_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ids: [17] }),
+            body: JSON.stringify({ action: 'create-card', path: 'formula/memory/MEM-Q999.md' }),
         });
         assert(resp.status === 400, `Expected 400, got ${resp.status}`);
     });
 
-    await test('POST rejects ids < 1', async () => {
+    await test('POST create-card rejects invalid path', async () => {
         const resp = await fetch(WORKER_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ids: [0] }),
+            body: JSON.stringify({ action: 'create-card', path: 'bad/path.md', content: '# Test' }),
         });
         assert(resp.status === 400, `Expected 400, got ${resp.status}`);
     });
 
-    await test('POST rejects 4 ids', async () => {
+    await test('POST create-card rejects wrong extension', async () => {
         const resp = await fetch(WORKER_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ids: [1, 2, 3, 4] }),
+            body: JSON.stringify({ action: 'create-card', path: 'formula/memory/MEM-Q999.txt', content: '# Test' }),
         });
         assert(resp.status === 400, `Expected 400, got ${resp.status}`);
     });
 
-    await test('POST rejects missing ids', async () => {
+    console.log('\n[Upload Image]');
+    await test('POST upload-image rejects non-image path', async () => {
         const resp = await fetch(WORKER_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ foo: 'bar' }),
+            body: JSON.stringify({ action: 'upload-image', path: 'bad/file.txt', content: 'dGVzdA==' }),
         });
         assert(resp.status === 400, `Expected 400, got ${resp.status}`);
     });
 
-    await test('POST accepts single number (not array)', async () => {
+    await test('POST upload-image rejects wrong directory', async () => {
         const resp = await fetch(WORKER_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ids: 3 }),
+            body: JSON.stringify({ action: 'upload-image', path: 'other/test.png', content: 'dGVzdA==' }),
         });
-        assert(resp.ok, `HTTP ${resp.status}`);
+        assert(resp.status === 400, `Expected 400, got ${resp.status}`);
     });
 
-    console.log('\n[Reset]');
-    await test('POST reset action works', async () => {
+    await test('POST upload-image rejects missing content', async () => {
         const resp = await fetch(WORKER_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'reset' }),
+            body: JSON.stringify({ action: 'upload-image', path: 'assets/memory/test.png' }),
         });
-        assert(resp.ok, `HTTP ${resp.status}`);
-        const data = await resp.json();
-        assert(data.ok === true, 'ok is not true');
-        assert(data.votes['1'] === 0, 'Votes not reset');
+        assert(resp.status === 400, `Expected 400, got ${resp.status}`);
+    });
+
+    console.log('\n[AI Generate]');
+    await test('POST ai-generate rejects empty prompt', async () => {
+        const resp = await fetch(WORKER_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'ai-generate', prompt: '' }),
+        });
+        assert(resp.status === 400, `Expected 400, got ${resp.status}`);
+    });
+
+    await test('POST ai-generate rejects missing prompt', async () => {
+        const resp = await fetch(WORKER_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'ai-generate' }),
+        });
+        assert(resp.status === 400, `Expected 400, got ${resp.status}`);
+    });
+
+    console.log('\n[Unknown Action]');
+    await test('POST unknown action returns 400', async () => {
+        const resp = await fetch(WORKER_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'nonexistent' }),
+        });
+        assert(resp.status === 400, `Expected 400, got ${resp.status}`);
     });
 
     console.log('\n[CORS]');
@@ -140,7 +137,7 @@ async function runTests() {
         assert(resp.status === 405, `Expected 405, got ${resp.status}`);
     });
 
-    console.log('\n=== Vote Worker Tests Complete ===\n');
+    console.log('\n=== Content Worker Tests Complete ===\n');
 }
 
 runTests().catch(console.error);

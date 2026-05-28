@@ -1,6 +1,6 @@
 # Cloudflare Worker Deployment Guide
 
-Complete guide for deploying the Claude Certification vote worker to Cloudflare.
+Two workers power the Claude Certification Study App: one for voting, one for content.
 
 ## Dashboard URL
 
@@ -10,28 +10,32 @@ Complete guide for deploying the Claude Certification vote worker to Cloudflare.
 
 ```mermaid
 flowchart TD
-    A[Browser] -->|GET /| B[Cloudflare Worker]
-    A -->|POST / vote| B
-    A -->|POST / create-card| B
-    A -->|POST / upload-image| B
-    A -->|POST / ai-generate| B
+    A[Browser] -->|"GET/POST votes"| VW[Vote Worker]
+    A -->|"POST create/upload/ai"| CW[Content Worker]
 
-    B -->|Read votes| C[GitHub Gist]
-    B -->|Write votes| C
-    B -->|Commit files| D[GitHub Repo]
-    B -->|Upload images| D
-    B -->|Generate text| E[OpenRouter API]
+    VW -->|"Read/Write votes"| GIST[GitHub Gist]
+    CW -->|"Commit files"| REPO[GitHub Repo]
+    CW -->|"Generate text"| OR[OpenRouter API]
 
-    C -->|Store| F[(claude-cert-votes.json)]
-    D -->|Store| G[(formula/memory/*.md)]
-    D -->|Store| H[(assets/memory/*.{svg,png})]
+    GIST --> F[(claude-cert-votes.json)]
+    REPO --> G[(formula/memory/*.md)]
+    REPO --> H[(assets/memory/*.svg)]
+    OR --> I[(AI Responses)]
 
     style A fill:#38bdf8,stroke:#333,color:#fff
-    style B fill:#a855f7,stroke:#333,color:#fff
-    style C fill:#10b981,stroke:#333,color:#fff
-    style D fill:#10b981,stroke:#333,color:#fff
-    style E fill:#f59e0b,stroke:#333,color:#fff
+    style VW fill:#10b981,stroke:#333,color:#fff
+    style CW fill:#a855f7,stroke:#333,color:#fff
+    style GIST fill:#f59e0b,stroke:#333,color:#fff
+    style REPO fill:#f59e0b,stroke:#333,color:#fff
+    style OR fill:#ec4899,stroke:#333,color:#fff
 ```
+
+## Worker Overview
+
+| Worker | File | Purpose | Token Scope |
+|--------|------|---------|-------------|
+| Vote Worker | `scripts/vote-worker.js` | Vote read/write/reset | `gist` |
+| Content Worker | `scripts/content-worker.js` | Cards, images, AI | `repo` |
 
 ## Prerequisites
 
@@ -39,30 +43,7 @@ flowchart TD
 |------|-----------------|
 | GitHub Classic Token | github.com/settings/tokens → check `repo` + `gist` |
 | OpenRouter API Key | openrouter.ai/keys |
-| Cloudflare Account | dash.cloudflare.com (free tier works) |
-
-## Worker Actions
-
-```mermaid
-flowchart LR
-    subgraph POST Actions
-        V[Vote] -->|ids: 1-16| GIST[Gist]
-        R[Reset] -->|action: reset| GIST
-        C[Create Card] -->|action: create-card| REPO[GitHub Repo]
-        U[Upload Image] -->|action: upload-image| REPO
-        A[AI Generate] -->|action: ai-generate| OR[OpenRouter]
-    end
-
-    subgraph GET
-        RD[Read] -->|fetch votes| GIST
-    end
-
-    style V fill:#38bdf8,stroke:#333,color:#fff
-    style R fill:#ef4444,stroke:#333,color:#fff
-    style C fill:#10b981,stroke:#333,color:#fff
-    style U fill:#f59e0b,stroke:#333,color:#fff
-    style A fill:#a855f7,stroke:#333,color:#fff
-```
+| Cloudflare Account | dash.cloudflare.com (free tier) |
 
 ## Step-by-Step Deployment
 
@@ -73,166 +54,90 @@ flowchart LR
 2. Click **Generate new token** → **Classic**
 3. Name: `claude-cert-worker`
 4. Expiration: 90 days
-5. Check these scopes:
-   - `repo` (full control of repositories)
-   - `gist` (full control of gists)
-6. Click **Generate token**
-7. **Copy immediately** — you won't see it again
+5. Check: `repo` + `gist`
+6. Click **Generate token** → **Copy immediately**
 
 #### OpenRouter API Key
 1. Go to **openrouter.ai/keys**
-2. Click **Create Key**
-3. Name: `claude-cert-worker`
-4. **Copy the key**
+2. Click **Create Key** → **Copy**
 
-### Step 2: Open Cloudflare Dashboard
+### Step 2: Deploy Vote Worker
 
 1. Go to: **https://dash.cloudflare.com/3683d1886e0a3a3152242c84f226ba3f/workers-and-pages**
-2. Find **tiny-mode-1370** in the workers list
-3. Click on it to open the worker
+2. Find **tiny-mode-1370** (existing vote worker)
+3. Click **Edit Code**
+4. Open `scripts/vote-worker.js` from the project
+5. Replace `PASTE_YOUR_TOKEN_HERE` with your GitHub token
+6. Select all → paste into Cloudflare editor → **Save and Deploy**
+7. Test: `curl https://tiny-mode-1370.polished-boat-17b2.workers.dev/`
 
-### Step 3: Edit the Worker Code
+### Step 3: Deploy Content Worker
 
-1. Click **Edit Code** (top right button)
-2. The code editor opens with the current worker code
-3. **Select all** the existing code (Cmd+A / Ctrl+A)
-4. **Delete** it
-5. Open `scripts/vote-worker.js` from the project:
-   ```bash
-   open scripts/vote-worker.js
-   ```
-6. **Copy the entire file** content
-7. **Paste** into the Cloudflare code editor
+1. Go to: **https://dash.cloudflare.com/3683d1886e0a3a3152242c84f226ba3f/workers-and-pages**
+2. Click **Create** → **Hello World** → **Deploy**
+3. Name it: `claude-cert-content`
+4. Click **Edit Code**
+5. Open `scripts/content-worker.js` from the project
+6. Replace placeholders:
+   - `PASTE_YOUR_TOKEN_HERE` → GitHub token
+   - `PASTE_OPENROUTER_KEY_HERE` → OpenRouter key
+7. Select all → paste into Cloudflare editor → **Save and Deploy**
+8. Copy the new worker URL (e.g., `https://claude-cert-content.xxx.workers.dev`)
 
-### Step 4: Replace Placeholder Tokens
+### Step 4: Update Client Code
 
-In the Cloudflare editor, find and replace these two lines:
-
-```javascript
-// FIND these lines:
-const GITHUB_TOKEN = 'PASTE_YOUR_TOKEN_HERE';
-const OPENROUTER_KEY = 'PASTE_OPENROUTER_KEY_HERE';
-
-// REPLACE with your actual tokens:
-const GITHUB_TOKEN = 'github_pat_XXXX...';  // Your GitHub token
-const OPENROUTER_KEY = 'sk-or-XXXX...';      // Your OpenRouter key
-```
-
-**Important:** Do NOT share these tokens. They are only stored in the Cloudflare Worker (server-side).
-
-### Step 5: Deploy
-
-1. Click **Save and Deploy** (top right)
-2. Wait for deployment confirmation
-3. The worker is now live at: `https://tiny-mode-1370.polished-boat-17b2.workers.dev`
-
-### Step 6: Verify Deployment
-
-Run the test suite from the project root:
+Update the content worker URL in these files:
 
 ```bash
+# Find and replace in these files:
+# - pages/add_memory_card.html
+# - tests/test_content_worker.js
+```
+
+Replace `PASTE_CONTENT_WORKER_URL_HERE` with the actual content worker URL.
+
+### Step 5: Verify
+
+```bash
+# Test vote worker
 node tests/test_vote_worker.js
+
+# Test content worker (after updating URL in test file)
+node tests/test_content_worker.js
 ```
 
-Expected output — all 19 tests should pass:
+## Worker Endpoints
 
-```
-=== Vote Worker Tests ===
+### Vote Worker
 
-[GET endpoint]
-  PASS: GET returns vote JSON
-  PASS: GET has all 16 vote keys
+| Action | Body | Description |
+|--------|------|-------------|
+| GET | — | Read all votes |
+| POST | `{ "ids": [1, 5] }` | Cast vote (1-3 ids, each 1-16) |
+| POST | `{ "action": "reset" }` | Reset all votes to 0 |
 
-[POST vote endpoint]
-  PASS: POST valid single vote
-  PASS: POST valid multi vote (3 ids)
-  PASS: POST rejects empty ids array
-  PASS: POST rejects ids > 16
-  PASS: POST rejects ids < 1
-  PASS: POST rejects 4 ids
-  PASS: POST rejects missing ids
-  PASS: POST accepts single number (not array)
+### Content Worker
 
-[CORS]
-  PASS: OPTIONS returns CORS headers
-
-[Reset]
-  PASS: POST reset action works
-
-[Create Card]
-  PASS: POST create-card rejects invalid path
-  PASS: POST create-card rejects missing content
-
-[Upload Image]
-  PASS: POST upload-image rejects non-image path
-
-[AI Generate]
-  PASS: POST ai-generate rejects empty prompt
-
-[Methods]
-  PASS: PUT returns 405
-  PASS: DELETE returns 405
-
-=== Tests Complete ===
-```
-
-### Step 7: Test Each Feature
-
-#### Test Vote
-```bash
-curl -X POST https://tiny-mode-1370.polished-boat-17b2.workers.dev/ \
-  -H "Content-Type: application/json" \
-  -d '{"ids": [1]}'
-```
-Expected: `{"ok":true,"votes":{"1":1,...}}`
-
-#### Test Create Card
-```bash
-curl -X POST https://tiny-mode-1370.polished-boat-17b2.workers.dev/ \
-  -H "Content-Type: application/json" \
-  -d '{"action":"create-card","path":"formula/memory/MEM-Q999.md","content":"# Test\nHello","message":"Test"}'
-```
-Expected: `{"ok":true,"sha":"...","name":"MEM-Q999.md"}`
-
-#### Test AI Generate
-```bash
-curl -X POST https://tiny-mode-1370.polished-boat-17b2.workers.dev/ \
-  -H "Content-Type: application/json" \
-  -d '{"action":"ai-generate","prompt":"What is an agentic loop?"}'
-```
-Expected: `{"text":"An agentic loop is..."}`
-
-#### Test Reset
-```bash
-curl -X POST https://tiny-mode-1370.polished-boat-17b2.workers.dev/ \
-  -H "Content-Type: application/json" \
-  -d '{"action":"reset"}'
-```
-Expected: `{"ok":true,"votes":{"1":0,...}}`
+| Action | Body | Description |
+|--------|------|-------------|
+| GET | — | Health check |
+| POST | `{ "action": "create-card", "path": "...", "content": "..." }` | Commit memory card |
+| POST | `{ "action": "upload-image", "path": "...", "content": "base64" }` | Upload image |
+| POST | `{ "action": "ai-generate", "prompt": "...", "system": "..." }` | Generate text via AI |
 
 ## Troubleshooting
 
 | Error | Cause | Fix |
 |-------|-------|-----|
-| `Invalid vote` | Missing or malformed `ids` field | Send `{ "ids": [1, 5] }` |
-| `Missing ids field` | POST body has no `ids` key | Add `ids` array to request |
-| `Resource not accessible` | Fine-grained token | Use classic token with `repo` + `gist` |
-| `GitHub PATCH failed` | Token expired or wrong scopes | Regenerate token with correct scopes |
-| `OpenRouter key not configured` | Placeholder not replaced | Paste real key in worker code |
-| CORS error | Origin not allowed | Check `ALLOWED_ORIGIN` in worker code |
+| `Invalid vote` | Missing/malformed `ids` | Send `{ "ids": [1, 5] }` |
+| `Missing ids field` | No `ids` in body | Add `ids` array |
+| `Resource not accessible` | Fine-grained token | Use classic token |
+| `OpenRouter key not configured` | Placeholder not replaced | Paste real key |
+| CORS error | Origin mismatch | Check `ALLOWED_ORIGIN` |
+| `Unknown action` | Typo in action name | Check action spelling |
 
 ## Token Rotation
 
-Tokens expire. When they do:
-
 1. Generate new token at github.com/settings/tokens
-2. Go to Cloudflare dashboard → tiny-mode-1370 → Edit Code
-3. Replace `GITHUB_TOKEN` value
-4. Save and Deploy
-5. Run tests to verify
-
-## Related Documentation
-
-- [Vote Worker Setup](../../docs/vote-worker-setup.md) — Original setup guide
-- [GitHub Token Permissions](../../docs/github-token-permissions.md) — Token scopes explained
-- [Vote Worker Tests](../../tests/test_vote_worker.js) — Test suite
+2. For each worker: Cloudflare → Edit Code → Replace token → Save and Deploy
+3. Run tests to verify
