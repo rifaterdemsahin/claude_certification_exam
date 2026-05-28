@@ -3,11 +3,29 @@
 // Collaboration between Claude 4.6 and Gemini 3.5 Flash.
 const { BlobServiceClient } = require("@azure/storage-blob");
 
+// Validate admin token
+function validateToken(req) {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return false;
+    }
+    const token = authHeader.substring(7);
+    if (!global.adminTokens || !global.adminTokens[token]) {
+        return false;
+    }
+    // Check if token is expired
+    if (global.adminTokens[token] < Date.now()) {
+        delete global.adminTokens[token];
+        return false;
+    }
+    return true;
+}
+
 module.exports = async function (context, req) {
     const corsHeaders = {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type"
+        "Access-Control-Allow-Headers": "Content-Type, Authorization"
     };
 
     if (req.method === "OPTIONS") {
@@ -26,7 +44,7 @@ module.exports = async function (context, req) {
         const containerClient = blobServiceClient.getContainerClient("memory-cards");
 
         if (req.method === "GET") {
-            // Handle ListCards logic
+            // Handle ListCards logic (public)
             const files = [];
             for await (const blob of containerClient.listBlobsFlat()) {
                 files.push(blob.name);
@@ -38,6 +56,14 @@ module.exports = async function (context, req) {
                 body: { files }
             };
             return;
+        }
+
+        // Require authentication for POST and DELETE
+        if (req.method === "POST" || req.method === "DELETE") {
+            if (!validateToken(req)) {
+                context.res = { status: 401, headers: corsHeaders, body: { error: "Unauthorized. Please login first." } };
+                return;
+            }
         }
 
         if (req.method === "POST") {

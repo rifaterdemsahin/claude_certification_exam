@@ -1,15 +1,39 @@
 // Guidance for CORS preflight OPTIONS mapping and handling in this function was obtained from Claude 4.6.
 const { BlobServiceClient } = require("@azure/storage-blob");
 
+// Validate admin token
+function validateToken(req) {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return false;
+    }
+    const token = authHeader.substring(7);
+    if (!global.adminTokens || !global.adminTokens[token]) {
+        return false;
+    }
+    // Check if token is expired
+    if (global.adminTokens[token] < Date.now()) {
+        delete global.adminTokens[token];
+        return false;
+    }
+    return true;
+}
+
 module.exports = async function (context, req) {
     const corsHeaders = {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type"
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization"
     };
 
     if (req.method === "OPTIONS") {
         context.res = { status: 204, headers: corsHeaders };
+        return;
+    }
+
+    // Require authentication for image uploads
+    if (!validateToken(req)) {
+        context.res = { status: 401, headers: corsHeaders, body: { error: "Unauthorized. Please login first." } };
         return;
     }
 

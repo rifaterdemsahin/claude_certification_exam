@@ -324,6 +324,53 @@
             updatePushBtn();
         }
 
+        // ================== ADMIN AUTH ==================
+        let adminToken = localStorage.getItem('adminToken');
+        let tokenExpiry = localStorage.getItem('tokenExpiry');
+
+        function isTokenValid() {
+            if (!adminToken || !tokenExpiry) return false;
+            return new Date(tokenExpiry) > new Date();
+        }
+
+        async function login() {
+            const password = prompt('Enter admin password:');
+            if (!password) return false;
+
+            try {
+                const resp = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password }),
+                });
+
+                const data = await resp.json();
+                if (data.ok) {
+                    adminToken = data.token;
+                    tokenExpiry = data.expiresAt;
+                    localStorage.setItem('adminToken', adminToken);
+                    localStorage.setItem('tokenExpiry', tokenExpiry);
+                    return true;
+                } else {
+                    alert('Invalid password');
+                    return false;
+                }
+            } catch (e) {
+                alert('Login failed: ' + e.message);
+                return false;
+            }
+        }
+
+        function getAuthHeaders() {
+            if (!isTokenValid()) {
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('tokenExpiry');
+                adminToken = null;
+                return {};
+            }
+            return { 'Authorization': `Bearer ${adminToken}` };
+        }
+
         // ================== PUSH ==================
         function updatePushBtn() {
             const title = document.getElementById('cardTitle').value.trim();
@@ -335,6 +382,12 @@
         async function pushCard() {
             const title = document.getElementById('cardTitle').value.trim();
             if (!title || !imageData) return;
+
+            // Check authentication
+            if (!isTokenValid()) {
+                const loggedIn = await login();
+                if (!loggedIn) return;
+            }
 
             const btn = document.getElementById('pushBtn');
             const origHTML = btn.innerHTML;
@@ -351,7 +404,10 @@
                 try {
                     imgResp = await fetch(`${API_BASE}/images`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            ...getAuthHeaders()
+                        },
                         body: JSON.stringify({
                             filename: imageFilename,
                             content: imageData,
@@ -391,7 +447,10 @@ No memory aid provided.
                 try {
                     cardResp = await fetch(`${API_BASE}/cards`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            ...getAuthHeaders()
+                        },
                         body: JSON.stringify({
                             filename: `${filename}.md`,
                             content: md,

@@ -348,16 +348,75 @@
             `;
         }
 
+        // Admin authentication
+        let adminToken = localStorage.getItem('adminToken');
+        let tokenExpiry = localStorage.getItem('tokenExpiry');
+
+        // Check if token is expired
+        function isTokenValid() {
+            if (!adminToken || !tokenExpiry) return false;
+            return new Date(tokenExpiry) > new Date();
+        }
+
+        // Login function
+        async function login() {
+            const password = prompt('Enter admin password:');
+            if (!password) return false;
+
+            try {
+                const resp = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password }),
+                });
+
+                const data = await resp.json();
+                if (data.ok) {
+                    adminToken = data.token;
+                    tokenExpiry = data.expiresAt;
+                    localStorage.setItem('adminToken', adminToken);
+                    localStorage.setItem('tokenExpiry', tokenExpiry);
+                    return true;
+                } else {
+                    alert('Invalid password');
+                    return false;
+                }
+            } catch (e) {
+                alert('Login failed: ' + e.message);
+                return false;
+            }
+        }
+
+        // Get auth headers
+        function getAuthHeaders() {
+            if (!isTokenValid()) {
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('tokenExpiry');
+                adminToken = null;
+                return {};
+            }
+            return { 'Authorization': `Bearer ${adminToken}` };
+        }
+
         // Save memory card
         async function saveCard(filename) {
             const textarea = document.getElementById('editContent');
             if (!textarea) return;
 
+            // Check authentication
+            if (!isTokenValid()) {
+                const loggedIn = await login();
+                if (!loggedIn) return;
+            }
+
             const content = textarea.value;
             try {
                 const resp = await fetch(`${API_BASE}/cards`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...getAuthHeaders()
+                    },
                     body: JSON.stringify({ filename, content }),
                 });
 
@@ -365,6 +424,12 @@
                 if (data.ok) {
                     alert('Card saved successfully!');
                     loadNote(`${BLOB_BASE}/memory-cards/${filename}`, filename);
+                } else if (resp.status === 401) {
+                    // Token expired, try again
+                    localStorage.removeItem('adminToken');
+                    localStorage.removeItem('tokenExpiry');
+                    alert('Session expired. Please login again.');
+                    saveCard(filename);
                 } else {
                     alert('Error saving card: ' + (data.error || 'Unknown error'));
                 }
@@ -377,9 +442,16 @@
         async function deleteCard(filename) {
             if (!confirm(`Are you sure you want to delete ${filename}?`)) return;
 
+            // Check authentication
+            if (!isTokenValid()) {
+                const loggedIn = await login();
+                if (!loggedIn) return;
+            }
+
             try {
                 const resp = await fetch(`${API_BASE}/cards?filename=${filename}`, {
                     method: 'DELETE',
+                    headers: getAuthHeaders(),
                 });
 
                 const data = await resp.json();
@@ -387,6 +459,12 @@
                     alert('Card deleted successfully!');
                     // Reload the page
                     window.location.reload();
+                } else if (resp.status === 401) {
+                    // Token expired, try again
+                    localStorage.removeItem('adminToken');
+                    localStorage.removeItem('tokenExpiry');
+                    alert('Session expired. Please login again.');
+                    deleteCard(filename);
                 } else {
                     alert('Error deleting card: ' + (data.error || 'Unknown error'));
                 }
