@@ -297,6 +297,18 @@
                 content.className = 'markdown-body';
                 content.innerHTML = html;
 
+                // Add edit/delete buttons for memory cards from Azure
+                if (filePath.includes('claudecertstore.blob.core.windows.net/memory-cards/')) {
+                    const filename = filePath.split('/').pop();
+                    const actionBar = document.createElement('div');
+                    actionBar.style.cssText = 'display:flex;gap:8px;margin-bottom:16px;padding:12px;background:var(--bg-primary);border-radius:8px;border:1px solid var(--border);';
+                    actionBar.innerHTML = `
+                        <button onclick="editCard('${filename}')" style="padding:8px 16px;border:1px solid var(--accent-blue);border-radius:6px;background:transparent;color:var(--accent-blue);cursor:pointer;font-family:inherit;">Edit</button>
+                        <button onclick="deleteCard('${filename}')" style="padding:8px 16px;border:1px solid var(--accent-red);border-radius:6px;background:transparent;color:var(--accent-red);cursor:pointer;font-family:inherit;">Delete</button>
+                    `;
+                    content.insertBefore(actionBar, content.firstChild);
+                }
+
                 // Update active state in sidebar
                 document.querySelectorAll('.sidebar-item').forEach(item => {
                     item.classList.toggle('active', item.dataset.file === filePath);
@@ -310,6 +322,76 @@
                         <p style="margin-top:12px;color:var(--text-secondary);">${filePath}</p>
                     </div>
                 `;
+            }
+        }
+
+        // Edit memory card
+        async function editCard(filename) {
+            const content = document.getElementById('content');
+            const markdownBody = content.querySelector('.markdown-body');
+            if (!markdownBody) return;
+
+            // Get current content
+            const response = await fetch(`${BLOB_BASE}/memory-cards/${filename}`);
+            const text = await response.text();
+
+            // Replace with editor
+            markdownBody.innerHTML = `
+                <div style="margin-bottom:16px;">
+                    <h3 style="color:var(--accent-blue);margin-bottom:12px;">Editing: ${filename}</h3>
+                    <textarea id="editContent" style="width:100%;min-height:400px;padding:12px;background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-family:monospace;font-size:0.95em;resize:vertical;">${text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+                    <div style="display:flex;gap:8px;margin-top:12px;">
+                        <button onclick="saveCard('${filename}')" style="padding:10px 20px;border:none;border-radius:8px;background:linear-gradient(135deg,var(--accent-green),#059669);color:#fff;font-weight:600;cursor:pointer;font-family:inherit;">Save</button>
+                        <button onclick="loadNote('${BLOB_BASE}/memory-cards/${filename}', '${filename}')" style="padding:10px 20px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text-secondary);cursor:pointer;font-family:inherit;">Cancel</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Save memory card
+        async function saveCard(filename) {
+            const textarea = document.getElementById('editContent');
+            if (!textarea) return;
+
+            const content = textarea.value;
+            try {
+                const resp = await fetch(`${API_BASE}/cards`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ filename, content }),
+                });
+
+                const data = await resp.json();
+                if (data.ok) {
+                    alert('Card saved successfully!');
+                    loadNote(`${BLOB_BASE}/memory-cards/${filename}`, filename);
+                } else {
+                    alert('Error saving card: ' + (data.error || 'Unknown error'));
+                }
+            } catch (e) {
+                alert('Failed to save card: ' + e.message);
+            }
+        }
+
+        // Delete memory card
+        async function deleteCard(filename) {
+            if (!confirm(`Are you sure you want to delete ${filename}?`)) return;
+
+            try {
+                const resp = await fetch(`${API_BASE}/cards?filename=${filename}`, {
+                    method: 'DELETE',
+                });
+
+                const data = await resp.json();
+                if (data.ok) {
+                    alert('Card deleted successfully!');
+                    // Reload the page
+                    window.location.reload();
+                } else {
+                    alert('Error deleting card: ' + (data.error || 'Unknown error'));
+                }
+            } catch (e) {
+                alert('Failed to delete card: ' + e.message);
             }
         }
 

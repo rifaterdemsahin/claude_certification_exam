@@ -478,8 +478,54 @@
             setTimeout(() => reward.remove(), 1200);
         }
 
+        // Load new memory cards from Azure Blob Storage
+        async function loadNewCards() {
+            try {
+                const resp = await fetch('https://claude-cert-api.azurewebsites.net/api/cards');
+                const data = await resp.json();
+                const files = (data.files || [])
+                    .filter(f => f.match(/MEM-Q\d+\.md/) && parseInt(f.match(/MEM-Q(\d+)\.md/)[1]) > 100)
+                    .sort();
+
+                // Add new cards to the grid
+                const container = document.getElementById('cards-container');
+                for (const file of files) {
+                    const id = file.replace('.md', '');
+                    const num = parseInt(id.replace('MEM-Q', ''));
+                    const cat = num <= 27 ? 1 : num <= 45 ? 2 : num <= 65 ? 3 : num <= 85 ? 4 : 5;
+
+                    const card = document.createElement('div');
+                    card.className = 'flip-card new-card';
+                    card.setAttribute('data-id', `azure-${num}`);
+                    card.innerHTML = `
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <div class="card-number">NEW-${String(num).padStart(3, '0')}</div>
+                                <div class="card-category cat-${cat}">${categories[cat].name}</div>
+                                <div class="card-question">Memory Card ${String(num).padStart(3, '0')}</div>
+                                <button class="hint-btn" onclick="event.stopPropagation(); window.open('markdown_renderer.html?url=https://claudecertstore.blob.core.windows.net/memory-cards/${file}&title=Memory Card ${String(num).padStart(3, '0')}', '_blank')">View</button>
+                            </div>
+                            <div class="flip-card-back">
+                                <div class="card-number">NEW-${String(num).padStart(3, '0')}</div>
+                                <div class="card-answer">Click to view this memory card</div>
+                                <button class="mastery-btn" onclick="event.stopPropagation(); window.open('markdown_renderer.html?url=https://claudecertstore.blob.core.windows.net/memory-cards/${file}&title=Memory Card ${String(num).padStart(3, '0')}', '_blank')">Open Card</button>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+
+                // Update stats
+                const totalCount = document.getElementById('total-count');
+                totalCount.textContent = parseInt(totalCount.textContent) + files.length;
+            } catch (e) {
+                console.error('Failed to load new cards:', e);
+            }
+        }
+
         // Initialize
         renderCards();
+        loadNewCards();
     </script>
 </body>
 </html>
