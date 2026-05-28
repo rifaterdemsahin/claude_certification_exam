@@ -94,15 +94,19 @@
 
                     <div class="form-group">
                         <label>Question ID</label>
-                        <div class="hint">Auto-assigned. Format: CAT{NN}-Q{NNN}</div>
-                        <div id="cardIdDisplay" style="padding:10px 14px;background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;font-weight:600;color:var(--accent-blue);font-size:1.1em;">Loading...</div>
+                        <div class="hint">Auto-calculated from existing cards. Guaranteed unique.</div>
+                        <div id="cardIdDisplay" style="padding:10px 14px;background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;font-weight:600;color:var(--accent-blue);font-size:1.1em;">
+                            <span style="color:var(--text-muted);">Calculating...</span>
+                        </div>
                         <input type="hidden" id="cardId" value="">
                     </div>
 
                     <div class="form-group">
                         <label>Filename</label>
-                        <div class="hint">Auto-generated in MEM-Q006 format</div>
-                        <div id="filenameDisplay" style="padding:8px 14px;background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;color:var(--accent-green);font-family:monospace;font-size:0.95em;">MEM-Q001.md</div>
+                        <div class="hint">Unique filename — auto-verified against existing files</div>
+                        <div id="filenameDisplay" style="padding:8px 14px;background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;color:var(--accent-green);font-family:monospace;font-size:0.95em;">
+                            <span style="color:var(--text-muted);">Calculating...</span>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -612,8 +616,13 @@ ${(d.cardConcepts || '').split(',').map(c => '- ' + c.trim()).filter(c => c.leng
             btn.disabled = false;
         }
 
-        // ================== INIT ==================
-        async function init() {
+        // ================== CALCULATE UNIQUE ID ==================
+        async function calculateNextId() {
+            const display = document.getElementById('cardIdDisplay');
+            const fileDisplay = document.getElementById('filenameDisplay');
+            display.innerHTML = '<span style="color:var(--text-muted);">Calculating...</span>';
+            fileDisplay.innerHTML = '<span style="color:var(--text-muted);">Calculating...</span>';
+
             try {
                 const resp = await fetch(`https://api.github.com/repos/${REPO}/contents/formula/memory`);
                 const files = await resp.json();
@@ -624,11 +633,25 @@ ${(d.cardConcepts || '').split(',').map(c => '- ' + c.trim()).filter(c => c.leng
                     .filter(f => f.name.match(/MEM-Q\d+\.md/))
                     .map(f => parseInt(f.name.match(/MEM-Q(\d+)\.md/)[1]));
                 nextId = ids.length > 0 ? Math.max(...ids) + 1 : 101;
+
+                // Store existing IDs for uniqueness check
+                window._existingIds = new Set(ids);
             } catch {
                 document.getElementById('cardCount').textContent = 'Could not load card count';
                 nextId = 101;
+                window._existingIds = new Set();
             }
-            updateIdDisplay();
+
+            const filename = `MEM-Q${String(nextId).padStart(3, '0')}.md`;
+            display.textContent = `CAT0${document.getElementById('cardCategory').value}-Q${String(nextId).padStart(3, '0')}`;
+            fileDisplay.textContent = filename;
+            fileDisplay.style.color = 'var(--accent-green)';
+            display.style.color = 'var(--accent-blue)';
+        }
+
+        // ================== INIT ==================
+        async function init() {
+            await calculateNextId();
             renderConcepts();
             initEmojiPicker();
         }

@@ -18,7 +18,14 @@ export default {
     }
 
     if (request.method === 'GET') {
-      return new Response(JSON.stringify({ status: 'ok', worker: 'content' }), {
+      return new Response(JSON.stringify({
+        status: 'ok',
+        worker: 'content',
+        config: {
+          github_token: GITHUB_TOKEN && GITHUB_TOKEN !== 'PASTE_YOUR_TOKEN_HERE' ? 'configured' : 'missing',
+          openrouter_key: OPENROUTER_KEY && OPENROUTER_KEY !== 'PASTE_OPENROUTER_KEY_HERE' ? 'configured' : 'missing',
+        },
+      }), {
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': ALLOWED_ORIGIN },
       });
     }
@@ -152,8 +159,9 @@ export default {
           });
         }
 
-        if (!OPENROUTER_KEY || OPENROUTER_KEY === 'PASTE_OPENROUTER_KEY_HERE') {
-          return new Response(JSON.stringify({ error: 'OpenRouter key not configured' }), {
+        const orKey = OPENROUTER_KEY.trim().replace(/^['"]|['"]$/g, '');
+        if (!orKey || orKey === 'PASTE_OPENROUTER_KEY_HERE' || orKey.length < 10) {
+          return new Response(JSON.stringify({ error: 'OpenRouter key not configured', hint: 'Check OPENROUTER_KEY in worker code' }), {
             status: 500,
             headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': ALLOWED_ORIGIN },
           });
@@ -163,7 +171,7 @@ export default {
           const aiResp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
             method: 'POST',
             headers: {
-              'Authorization': `Bearer ${OPENROUTER_KEY}`,
+              'Authorization': `Bearer ${orKey}`,
               'Content-Type': 'application/json',
               'HTTP-Referer': 'https://rifaterdemsahin.github.io',
               'X-Title': 'Claude Certification Study App',
