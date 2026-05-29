@@ -59,12 +59,12 @@
         .subtitle {
             font-size: 1.05em;
             color: var(--text-secondary);
-            max-width: 800px;
+            max-width: 900px;
         }
 
         .layout {
             display: grid;
-            grid-template-columns: 1fr 2fr;
+            grid-template-columns: 1fr 3fr;
             gap: 30px;
             margin-bottom: 40px;
         }
@@ -75,7 +75,7 @@
             }
         }
 
-        /* Sidebar - Input & User Info */
+        /* Sidebar */
         .sidebar {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
@@ -88,7 +88,7 @@
 
         .section-title {
             font-size: 1.2em;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -109,8 +109,7 @@
             font-weight: 500;
         }
 
-        .form-group input,
-        .form-group textarea {
+        .form-group input {
             width: 100%;
             padding: 12px 14px;
             background: var(--bg-primary);
@@ -122,23 +121,10 @@
             transition: border-color 0.3s;
         }
 
-        .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group input:focus {
             outline: none;
             border-color: var(--accent-blue);
             box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .button-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 20px;
         }
 
         button {
@@ -155,6 +141,7 @@
         .btn-primary {
             background: var(--accent-blue);
             color: #fff;
+            width: 100%;
         }
 
         .btn-primary:hover {
@@ -166,7 +153,7 @@
         .btn-success {
             background: var(--accent-green);
             color: #fff;
-            grid-column: 1 / -1;
+            width: 100%;
         }
 
         .btn-success:hover:not(:disabled) {
@@ -184,11 +171,19 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             color: var(--text-secondary);
+            width: 100%;
         }
 
         .btn-secondary:hover {
             background: var(--border);
             color: var(--text-primary);
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
         }
 
         /* Main Content */
@@ -209,9 +204,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
             border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .section-header h2 {
@@ -221,13 +218,14 @@
             gap: 8px;
         }
 
-        .select-controls {
+        .section-controls {
             display: flex;
             gap: 12px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
-        .select-btn {
+        .control-btn {
             padding: 8px 14px;
             font-size: 0.85em;
         }
@@ -236,9 +234,10 @@
             font-size: 0.9em;
             color: var(--text-secondary);
             background: var(--bg-primary);
-            padding: 6px 12px;
+            padding: 8px 14px;
             border-radius: 6px;
             border: 1px solid var(--border);
+            white-space: nowrap;
         }
 
         .questions-grid {
@@ -304,19 +303,18 @@
             flex-wrap: wrap;
         }
 
-        .concept-badge {
-            display: inline-block;
-            background: var(--accent-purple);
+        .question-id {
+            font-size: 0.75em;
+            background: var(--accent-orange);
             color: #fff;
             padding: 4px 10px;
             border-radius: 12px;
-            font-size: 0.75em;
             font-weight: 600;
         }
 
-        .question-number {
+        .category-badge {
             font-size: 0.75em;
-            background: var(--accent-orange);
+            background: var(--accent-purple);
             color: #fff;
             padding: 4px 10px;
             border-radius: 12px;
@@ -328,6 +326,7 @@
             color: var(--text-primary);
             margin-bottom: 12px;
             font-weight: 500;
+            line-height: 1.5;
         }
 
         .question-options {
@@ -345,6 +344,12 @@
             color: var(--text-secondary);
         }
 
+        .correct-answer {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: var(--accent-green);
+            color: #86efac;
+        }
+
         .explanation {
             background: rgba(56, 189, 248, 0.05);
             border-left: 3px solid var(--accent-blue);
@@ -352,6 +357,7 @@
             border-radius: 4px;
             font-size: 0.8em;
             color: var(--text-secondary);
+            margin-top: 8px;
         }
 
         .empty-state {
@@ -370,7 +376,6 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 12px;
-            margin-bottom: 20px;
         }
 
         @media (max-width: 768px) {
@@ -460,10 +465,6 @@
             margin-left: 8px;
         }
 
-        .badge.orange {
-            background: var(--accent-orange);
-        }
-
         .modal {
             display: none;
             position: fixed;
@@ -515,6 +516,47 @@
             padding: 10px 16px;
             font-size: 0.9em;
         }
+
+        .filter-group {
+            margin-bottom: 16px;
+        }
+
+        .filter-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            display: block;
+            font-weight: 500;
+        }
+
+        .filter-input {
+            width: 100%;
+            padding: 8px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.85em;
+        }
+
+        .filter-input[type="text"] {
+            font-family: inherit;
+        }
+
+        .filter-input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+        }
+
+        select.filter-input {
+            cursor: pointer;
+        }
+
+        select.filter-input option {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
     </style>
 </head>
 <body>
@@ -522,39 +564,50 @@
         <a href="../index.html" class="back-link">← Back to Home</a>
 
         <header>
-            <h1>🎯 Questions for Discussion <span class="badge orange">Community Learning</span></h1>
-            <p class="subtitle">Generate questions from your unknown concepts, curate them, and commit to the discussion board for collaborative learning with other exam participants.</p>
+            <h1>🎯 Questions for Discussion <span class="badge">Community Learning</span></h1>
+            <p class="subtitle">Browse all exam questions, select ones for discussion, and commit them to the board for collaborative learning with other exam participants.</p>
         </header>
 
         <div class="layout">
-            <!-- Sidebar: Concept Generator & User Info -->
+            <!-- Sidebar: User Info & Submit -->
             <div class="sidebar">
                 <!-- User Information -->
                 <div class="form-group">
-                    <div class="section-title">👤 Your Information</div>
-                    <input type="text" id="userName" placeholder="Your full name" value="">
-                    <input type="email" id="userEmail" placeholder="your@email.com" style="margin-top: 10px;" value="">
+                    <div class="section-title">👤 Your Profile</div>
+                    <label>Full Name</label>
+                    <input type="text" id="userName" placeholder="Your name" value="">
+                    <label style="margin-top: 12px;">Email</label>
+                    <input type="email" id="userEmail" placeholder="your@email.com" value="">
                 </div>
 
-                <!-- Concept Collector -->
+                <!-- Filters -->
                 <div class="form-group">
-                    <div class="section-title">💡 Generate Questions</div>
-                    <label>Enter a concept or question:</label>
-                    <textarea id="conceptInput" placeholder="What don't you understand?&#10;e.g., 'How does MCP handle tool orchestration?'"></textarea>
-                    <div class="button-group" style="margin-top: 10px;">
-                        <button class="btn-primary" onclick="addConcept()">Generate</button>
-                        <button class="btn-secondary" onclick="clearAllConcepts()">Clear</button>
+                    <div class="section-title">🔍 Filters</div>
+                    <div class="filter-group">
+                        <label class="filter-label">Search Questions</label>
+                        <input type="text" id="searchInput" class="filter-input" placeholder="Search by text...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Category</label>
+                        <select id="categoryFilter" class="filter-input">
+                            <option value="">All Categories</option>
+                            <option value="CAT01">CAT01 - Agentic Architecture</option>
+                            <option value="CAT02">CAT02 - Tool Design & MCP</option>
+                            <option value="CAT03">CAT03 - Configuration & Workflows</option>
+                            <option value="CAT04">CAT04 - Prompt Engineering</option>
+                            <option value="CAT05">CAT05 - Context Management</option>
+                        </select>
                     </div>
                 </div>
 
-                <!-- Submit Questions -->
+                <!-- Submit Section -->
                 <div class="form-group">
-                    <div class="section-title">📤 Commit to Discussion</div>
+                    <div class="section-title">📤 Commit</div>
                     <button class="btn-success" id="submitBtn" onclick="submitQuestions()" disabled>
-                        Commit Selected (0)
+                        Submit Selected (0)
                     </button>
                     <p style="font-size: 0.8em; color: var(--text-muted); margin-top: 10px; text-align: center;">
-                        Select questions to commit them to the discussion board
+                        Select questions to submit for discussion
                     </p>
                 </div>
 
@@ -573,20 +626,20 @@
                         <div class="stat-label">Submitted</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" id="conceptCount">0</div>
-                        <div class="stat-label">Concepts</div>
+                        <div class="stat-value" id="displayedCount">0</div>
+                        <div class="stat-label">Displayed</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Main Content: Generated Questions -->
+            <!-- Main Content: Questions -->
             <div class="main-content">
                 <div class="content-section">
                     <div class="section-header">
-                        <h2>📋 All Generated Questions</h2>
-                        <div class="select-controls">
-                            <button class="btn-primary select-btn" onclick="selectAllQuestions()">Select All</button>
-                            <button class="btn-secondary select-btn" onclick="deselectAllQuestions()">Deselect</button>
+                        <h2>📋 All Exam Questions</h2>
+                        <div class="section-controls">
+                            <button class="btn-primary control-btn" onclick="selectAllVisible()">Select All</button>
+                            <button class="btn-secondary control-btn" onclick="deselectAllQuestions()">Deselect</button>
                             <span class="select-indicator" id="selectIndicator">0 / 0 selected</span>
                         </div>
                     </div>
@@ -596,8 +649,8 @@
 
                     <div class="questions-grid" id="questionsContainer">
                         <div class="empty-state">
-                            <div class="empty-state-icon">📝</div>
-                            <p>Generate your first question to get started</p>
+                            <div class="loading-spinner"></div>
+                            <p>Loading exam questions...</p>
                         </div>
                     </div>
                 </div>
@@ -608,44 +661,56 @@
     <!-- Submission Confirmation Modal -->
     <div class="modal" id="confirmModal">
         <div class="modal-content">
-            <div class="modal-header">✅ Ready to Commit</div>
+            <div class="modal-header">✅ Ready to Submit</div>
             <div class="modal-body">
                 <p>You're about to submit <strong id="confirmCount">0</strong> question(s) to the discussion board.</p>
                 <p style="margin-top: 10px; color: var(--text-secondary);">These will be visible to other exam participants and can be discussed collaboratively.</p>
                 <div style="background: var(--bg-primary); padding: 12px; border-radius: 8px; margin-top: 16px; font-size: 0.9em;">
                     <div><strong>Submitted by:</strong> <span id="confirmName">Loading...</span></div>
                     <div><strong>Email:</strong> <span id="confirmEmail">Loading...</span></div>
-                    <div style="margin-top: 8px; color: var(--text-secondary);">This information will be shared with the discussion community.</div>
+                    <div style="margin-top: 8px; color: var(--text-secondary);">This information will be shared with the community.</div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn-secondary" onclick="closeModal()">Cancel</button>
-                <button class="btn-success" onclick="confirmSubmit()">Confirm & Commit</button>
+                <button class="btn-success" onclick="confirmSubmit()">Confirm & Submit</button>
             </div>
         </div>
     </div>
 
     <script>
-        // API Configuration
-        const API_ENDPOINT = 'https://api.rifaterdemsahin.com/api/discussion-questions';
-        
         // State Management
-        let concepts = [];
-        let generatedQuestions = [];
+        let allQuestions = [];
+        let filteredQuestions = [];
         let selectedQuestions = new Set();
-        let submittedQuestions = 0;
+        let submittedCount = 0;
         let userInfo = { name: '', email: '' };
 
         // Initialize
-        window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', async () => {
             loadFromStorage();
-            renderQuestions();
+            await loadQuestions();
+            setupEventListeners();
             updateStats();
-            setupInputListeners();
         });
 
-        // Setup input listeners for real-time sync
-        function setupInputListeners() {
+        // Load questions from exam database
+        async function loadQuestions() {
+            try {
+                const response = await fetch('../data/exam.json');
+                if (!response.ok) throw new Error('Failed to load questions');
+                allQuestions = await response.json();
+                filteredQuestions = [...allQuestions];
+                renderQuestions();
+                updateStats();
+            } catch (error) {
+                document.getElementById('errorContainer').innerHTML = 
+                    `<div class="error-state">❌ Error loading questions: ${error.message}</div>`;
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
             document.getElementById('userName').addEventListener('change', (e) => {
                 userInfo.name = e.target.value;
                 saveToStorage();
@@ -654,117 +719,54 @@
                 userInfo.email = e.target.value;
                 saveToStorage();
             });
+            document.getElementById('searchInput').addEventListener('input', filterQuestions);
+            document.getElementById('categoryFilter').addEventListener('change', filterQuestions);
         }
 
-        // Add concept and generate question
-        async function addConcept() {
-            const input = document.getElementById('conceptInput');
-            const concept = input.value.trim();
-            const errorContainer = document.getElementById('errorContainer');
+        // Filter questions by search and category
+        function filterQuestions() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
 
-            if (!concept) {
-                errorContainer.innerHTML = '<div class="error-state">⚠️ Please enter a concept or question</div>';
-                return;
-            }
+            filteredQuestions = allQuestions.filter(q => {
+                const matchesSearch = !searchText || 
+                    q.question.toLowerCase().includes(searchText) ||
+                    q.options.some(opt => opt.toLowerCase().includes(searchText)) ||
+                    q.explanation.toLowerCase().includes(searchText);
+                
+                const matchesCategory = !category || getCategoryId(q.id) === category;
 
-            errorContainer.innerHTML = '';
-            input.disabled = true;
+                return matchesSearch && matchesCategory;
+            });
 
-            try {
-                const question = await generateQuestion(concept);
-                if (question) {
-                    generatedQuestions.push(question);
-                    concepts.push(concept);
-                    input.value = '';
-                    saveToStorage();
-                    renderQuestions();
-                    updateStats();
-                }
-            } catch (error) {
-                errorContainer.innerHTML = `<div class="error-state">❌ Error: ${error.message}</div>`;
-            } finally {
-                input.disabled = false;
-            }
+            renderQuestions();
+            updateStats();
         }
 
-        // Generate question using AI
-        async function generateQuestion(concept) {
-            const prompt = `You are an expert for the Claude Developer Certification exam. Generate ONE high-quality exam-style multiple-choice question about this concept: "${concept}"
-
-Respond ONLY with valid JSON (no markdown, no extra text):
-{
-  "concept": "concept name",
-  "text": "question text",
-  "options": ["A) option 1", "B) option 2", "C) option 3", "D) option 4"],
-  "correctAnswer": "A",
-  "explanation": "explanation text"
-}`;
-
-            try {
-                // Mock response - replace with actual API call
-                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('openrouter_api_key') || 'sk-or-v1-'}`,
-                    },
-                    body: JSON.stringify({
-                        model: 'anthropic/claude-3.5-sonnet',
-                        messages: [{ role: 'user', content: prompt }],
-                        temperature: 0.7,
-                        max_tokens: 1000,
-                    })
-                });
-
-                if (!response.ok) {
-                    // If API fails, create a placeholder question
-                    return createPlaceholderQuestion(concept);
-                }
-
-                const data = await response.json();
-                const content = data.choices[0].message.content;
-                const jsonMatch = content.match(/\{[\s\S]*\}/);
-                if (jsonMatch) {
-                    return JSON.parse(jsonMatch[0]);
-                }
-                return createPlaceholderQuestion(concept);
-            } catch (error) {
-                return createPlaceholderQuestion(concept);
-            }
-        }
-
-        // Create placeholder question for demo
-        function createPlaceholderQuestion(concept) {
-            return {
-                concept: concept,
-                text: `Which of the following best describes "${concept}"?`,
-                options: [
-                    "A) The primary mechanism for handling API requests",
-                    "B) A key concept in Claude's tool orchestration system",
-                    "C) An essential component of prompt engineering",
-                    "D) All of the above"
-                ],
-                correctAnswer: "B",
-                explanation: `This question explores the concept of "${concept}" which is central to the Claude certification exam.`
-            };
+        // Get category ID based on question ID
+        function getCategoryId(questionId) {
+            const ratio = questionId / 100;
+            if (ratio <= 0.27) return 'CAT01';
+            if (ratio <= 0.45) return 'CAT02';
+            if (ratio <= 0.65) return 'CAT03';
+            if (ratio <= 0.85) return 'CAT04';
+            return 'CAT05';
         }
 
         // Toggle question selection
-        function toggleQuestion(index) {
-            if (selectedQuestions.has(index)) {
-                selectedQuestions.delete(index);
+        function toggleQuestion(id) {
+            if (selectedQuestions.has(id)) {
+                selectedQuestions.delete(id);
             } else {
-                selectedQuestions.add(index);
+                selectedQuestions.add(id);
             }
             updateStats();
             renderQuestions();
         }
 
-        // Select all questions
-        function selectAllQuestions() {
-            for (let i = 0; i < generatedQuestions.length; i++) {
-                selectedQuestions.add(i);
-            }
+        // Select all visible questions
+        function selectAllVisible() {
+            filteredQuestions.forEach(q => selectedQuestions.add(q.id));
             updateStats();
             renderQuestions();
         }
@@ -776,44 +778,55 @@ Respond ONLY with valid JSON (no markdown, no extra text):
             renderQuestions();
         }
 
-        // Render all questions
+        // Render questions
         function renderQuestions() {
             const container = document.getElementById('questionsContainer');
 
-            if (generatedQuestions.length === 0) {
+            if (filteredQuestions.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="empty-state-icon">📝</div>
-                        <p>Generate your first question to get started</p>
+                        <div class="empty-state-icon">📭</div>
+                        <p>No questions match your filters</p>
                     </div>
                 `;
                 return;
             }
 
-            container.innerHTML = generatedQuestions.map((q, index) => `
-                <div class="question-item ${selectedQuestions.has(index) ? 'selected' : ''}" onclick="toggleQuestion(${index})">
-                    <div class="question-header">
-                        <div style="flex: 1;">
-                            <div class="question-meta">
-                                <span class="question-number">Q${index + 1}</span>
-                                <span class="concept-badge">${escapeHtml(q.concept)}</span>
+            container.innerHTML = filteredQuestions.map(q => {
+                const isSelected = selectedQuestions.has(q.id);
+                const category = getCategoryId(q.id);
+                const correctOption = q.options.find(opt => opt.startsWith(q.answer));
+
+                return `
+                    <div class="question-item ${isSelected ? 'selected' : ''}" onclick="toggleQuestion(${q.id})">
+                        <div class="question-header">
+                            <div style="flex: 1;">
+                                <div class="question-meta">
+                                    <span class="question-id">Q${q.id}</span>
+                                    <span class="category-badge">${category}</span>
+                                </div>
                             </div>
+                            <div class="checkbox">${isSelected ? '✓' : ''}</div>
                         </div>
-                        <div class="checkbox">${selectedQuestions.has(index) ? '✓' : ''}</div>
+                        <div class="question-text">${escapeHtml(q.question)}</div>
+                        <div class="question-options">
+                            ${q.options.map(opt => `
+                                <div class="option ${opt === correctOption ? 'correct-answer' : ''}">
+                                    ${escapeHtml(opt)}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="explanation">
+                            <strong>💡 Answer: ${q.answer}</strong><br>
+                            ${escapeHtml(q.explanation)}
+                        </div>
                     </div>
-                    <div class="question-text">${escapeHtml(q.text)}</div>
-                    <div class="question-options">
-                        ${q.options.map(opt => `<div class="option">${escapeHtml(opt)}</div>`).join('')}
-                    </div>
-                    <div class="explanation">
-                        <strong>💡 Explanation:</strong> ${escapeHtml(q.explanation)}
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
-        // Submit selected questions for discussion
-        async function submitQuestions() {
+        // Submit questions for discussion
+        function submitQuestions() {
             if (selectedQuestions.size === 0) {
                 alert('Please select at least one question');
                 return;
@@ -824,7 +837,6 @@ Respond ONLY with valid JSON (no markdown, no extra text):
                 return;
             }
 
-            // Show confirmation modal
             document.getElementById('confirmCount').textContent = selectedQuestions.size;
             document.getElementById('confirmName').textContent = userInfo.name;
             document.getElementById('confirmEmail').textContent = userInfo.email;
@@ -839,31 +851,33 @@ Respond ONLY with valid JSON (no markdown, no extra text):
 
             closeModal();
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="loading-spinner"></span>Committing...';
+            submitBtn.innerHTML = '<span class="loading-spinner"></span>Submitting...';
 
-            const selectedQs = Array.from(selectedQuestions).map(i => generatedQuestions[i]);
+            const selectedQs = Array.from(selectedQuestions)
+                .map(id => allQuestions.find(q => q.id === id))
+                .filter(Boolean);
 
             try {
                 const payload = {
                     submittedBy: userInfo.name,
                     email: userInfo.email,
+                    questionIds: Array.from(selectedQuestions),
                     questions: selectedQs,
                     timestamp: new Date().toISOString(),
                     totalQuestions: selectedQs.length
                 };
 
-                // Send to backend - for now, just log and save locally
                 console.log('Submitting:', payload);
 
-                // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                // Simulate API submission
+                await new Promise(resolve => setTimeout(resolve, 1000));
 
-                submittedQuestions += selectedQs.length;
+                submittedCount += selectedQs.length;
                 selectedQuestions.clear();
                 
                 successContainer.innerHTML = `
                     <div class="success-state">
-                        ✅ Successfully committed ${selectedQs.length} question(s) to the discussion board! 
+                        ✅ Successfully submitted ${selectedQs.length} question(s) to the discussion board! 
                         Others can now see and discuss these questions.
                     </div>
                 `;
@@ -872,67 +886,53 @@ Respond ONLY with valid JSON (no markdown, no extra text):
                 renderQuestions();
                 updateStats();
 
-                // Clear success message after 5 seconds
                 setTimeout(() => {
                     successContainer.innerHTML = '';
                 }, 5000);
 
             } catch (error) {
-                errorContainer.innerHTML = `<div class="error-state">❌ Error submitting: ${error.message}</div>`;
+                errorContainer.innerHTML = `<div class="error-state">❌ Error: ${error.message}</div>`;
             } finally {
                 submitBtn.disabled = selectedQuestions.size === 0;
-                submitBtn.innerHTML = `Commit Selected (${selectedQuestions.size})`;
-            }
-        }
-
-        // Clear all concepts
-        function clearAllConcepts() {
-            if (confirm('Clear all questions? This cannot be undone.')) {
-                generatedQuestions = [];
-                concepts = [];
-                selectedQuestions.clear();
-                submittedQuestions = 0;
-                saveToStorage();
-                renderQuestions();
-                updateStats();
+                submitBtn.innerHTML = `Submit Selected (${selectedQuestions.size})`;
             }
         }
 
         // Update statistics
         function updateStats() {
-            document.getElementById('totalQuestions').textContent = generatedQuestions.length;
+            document.getElementById('totalQuestions').textContent = allQuestions.length;
             document.getElementById('selectedCount').textContent = selectedQuestions.size;
-            document.getElementById('submittedCount').textContent = submittedQuestions;
-            document.getElementById('conceptCount').textContent = concepts.length;
-            document.getElementById('selectIndicator').textContent = `${selectedQuestions.size} / ${generatedQuestions.length} selected`;
-            document.getElementById('submitBtn').innerHTML = `Commit Selected (${selectedQuestions.size})`;
+            document.getElementById('submittedCount').textContent = submittedCount;
+            document.getElementById('displayedCount').textContent = filteredQuestions.length;
+            document.getElementById('selectIndicator').textContent = 
+                `${selectedQuestions.size} / ${filteredQuestions.length} selected`;
+            document.getElementById('submitBtn').innerHTML = `Submit Selected (${selectedQuestions.size})`;
             document.getElementById('submitBtn').disabled = selectedQuestions.size === 0;
         }
 
-        // Local storage management
+        // Local storage
         function saveToStorage() {
-            localStorage.setItem('discussion_concepts', JSON.stringify(concepts));
-            localStorage.setItem('discussion_questions', JSON.stringify(generatedQuestions));
-            localStorage.setItem('discussion_submitted', submittedQuestions.toString());
+            localStorage.setItem('discussion_submitted', submittedCount.toString());
             localStorage.setItem('discussion_user', JSON.stringify(userInfo));
+            localStorage.setItem('discussion_selected', JSON.stringify(Array.from(selectedQuestions)));
         }
 
         function loadFromStorage() {
-            concepts = JSON.parse(localStorage.getItem('discussion_concepts') || '[]');
-            generatedQuestions = JSON.parse(localStorage.getItem('discussion_questions') || '[]');
-            submittedQuestions = parseInt(localStorage.getItem('discussion_submitted') || '0');
+            submittedCount = parseInt(localStorage.getItem('discussion_submitted') || '0');
             userInfo = JSON.parse(localStorage.getItem('discussion_user') || '{"name":"","email":""}');
+            const selected = JSON.parse(localStorage.getItem('discussion_selected') || '[]');
+            selectedQuestions = new Set(selected);
 
             document.getElementById('userName').value = userInfo.name;
             document.getElementById('userEmail').value = userInfo.email;
         }
 
-        // Modal functions
+        // Modal
         function closeModal() {
             document.getElementById('confirmModal').classList.remove('show');
         }
 
-        // Utility: Escape HTML
+        // Utility
         function escapeHtml(text) {
             const map = {
                 '&': '&amp;',
@@ -943,13 +943,6 @@ Respond ONLY with valid JSON (no markdown, no extra text):
             };
             return text.replace(/[&<>"']/g, m => map[m]);
         }
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.key === 'Enter') {
-                addConcept();
-            }
-        });
     </script>
 </body>
 </html>
