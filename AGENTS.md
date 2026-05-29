@@ -42,7 +42,7 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
   - CAT05: Context Management & Reliability (15%)
 - **Assets:** All visual media lives in `assets/`.
   - `assets/exam/` — Exam question images.
-  - `assets/concepts/` — Concept diagrams.
+  - `assets/concepts/` — Concept diagrams (Moved to Azure Blob Storage).
 - **Azure API:** Azure Function App for memory card operations in `azure-api/`.
 - **Data:** Raw data and source material in `data/`.
   - `data/exam.json` — Question data source.

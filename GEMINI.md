@@ -21,7 +21,7 @@ This file serves as a foundational mandate for Gemini CLI and other AI tools wor
   4. Prompt Engineering & Structured Output (20%)
   5. Context Management & Reliability (15%)
 - **Directory Usage:**
-  - `assets/`: Visual media — `assets/exam/` for question images, `assets/concepts/` for concept diagrams.
+  - `assets/`: Visual media — `assets/exam/` for question images, `assets/concepts/` for concept diagrams (Moved to Azure).
   - `azure-api/`: Azure Function App for memory card API.
   - `data/`: Raw data — `data/exam.json`, `data/exam_source.pdf`.
   - `docs/`: Markdown files for detailed study content.

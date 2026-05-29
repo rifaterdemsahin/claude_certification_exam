@@ -1,6 +1,6 @@
 # 10 Tips to Save Claude AI Tokens & Cost
 
-![10 Tips to Save AI Tokens](../../assets/concepts/10_tips_to_save_ai_token.jpg)
+![10 Tips to Save AI Tokens](https://claudecertstore.blob.core.windows.net/concepts/10_tips_to_save_ai_token.jpg)
 
 ## Overview
 

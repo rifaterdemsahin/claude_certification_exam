@@ -6,7 +6,7 @@ Claude Code supports **skills** — reusable prompt fragments that teach Claude 
 
 ## Visual: Skills Location Hierarchy
 
-![Skills Location Hierarchy](https://raw.githubusercontent.com/rifaterdemsahin/claude_certification_exam/main/assets/concepts/skills-location.png)
+![Skills Location Hierarchy](https://claudecertstore.blob.core.windows.net/concepts/skills-location.png)
 
 ## The Two Locations
 

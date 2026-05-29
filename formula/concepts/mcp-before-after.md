@@ -22,7 +22,7 @@ MCP introduces a universal adapter pattern — one protocol, any tool:
 
 ## Visual: The MCP Inflection Point
 
-![Before and After MCP](https://raw.githubusercontent.com/rifaterdemsahin/claude_certification_exam/main/assets/concepts/mcp-before-after.png)
+![Before and After MCP](https://claudecertstore.blob.core.windows.net/concepts/mcp-before-after.png)
 
 ## Before vs After Comparison
 

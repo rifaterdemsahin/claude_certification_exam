@@ -6,7 +6,7 @@ The journey from early statistical NLP to modern agentic AI systems spans severa
 
 ## Visual Timeline
 
-![Evolution of Large Language Models](https://raw.githubusercontent.com/rifaterdemsahin/claude_certification_exam/main/assets/concepts/llm-evolution.png)
+![Evolution of Large Language Models](https://claudecertstore.blob.core.windows.net/concepts/llm-evolution.png)
 
 ## Key Stages
 
