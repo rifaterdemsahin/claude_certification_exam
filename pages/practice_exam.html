@@ -546,7 +546,7 @@
 
                     <div style="margin-top:16px;padding:16px;background:var(--bg-primary);border-radius:12px;border:1px solid var(--border);">
                         <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
-                            <a href="https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q.question + ' claude llm')}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(239,68,68,0.1);border:1px solid var(--accent-red);border-radius:8px;color:var(--accent-red);text-decoration:none;font-size:0.9em;font-weight:500;transition:all 0.2s;">
+                            <a href="https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q.question + ' ' + (q.options.find(opt => opt.startsWith(q.answer + ')')) || q.answer) + ' claude llm')}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(239,68,68,0.1);border:1px solid var(--accent-red);border-radius:8px;color:var(--accent-red);text-decoration:none;font-size:0.9em;font-weight:500;transition:all 0.2s;">
                                 Google Images
                             </a>
                             <a href="https://rifaterdemsahin.github.io/claude_certification_exam/pages/practice_exam.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(168,85,247,0.1);border:1px solid var(--accent-purple);border-radius:8px;color:var(--accent-purple);text-decoration:none;font-size:0.9em;font-weight:500;transition:all 0.2s;">
