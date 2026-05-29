@@ -71,8 +71,12 @@ This file provides guidelines for Mimo AI working on the **Claude Developer Cert
 ```
 .
 ├── index.html              # Main app (single-file React)
-├── exercises/              # Hands-on coding challenges
-├── 1_Real_Unknown/         # OKRs and problem definitions
+├── 1_Real_Unknown/         # Problem definitions, OKRs, core questions, and hypotheses
+│   ├── README.md           # Stage overview
+│   ├── problem_statement.md # The core problem this project solves
+│   ├── okrs.md             # Objectives and Key Results
+│   ├── questions.md        # Open questions driving the work
+│   └── hypotheses.md       # Assumptions to validate
 ├── 2_Environment/          # Setup and configuration guidelines
 ├── 3_Simulation/           # UI mockups and design vision
 ├── 4_Formula/              # Concepts, exam questions, and checklists
