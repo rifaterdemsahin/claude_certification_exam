@@ -28,6 +28,7 @@ This folder documents the **setup, constraints, and operating context** of the p
 | `fly_io.md` | Backend hosting — Python APIs, databases, WebSockets |
 | `github_pages.md` | Frontend static hosting — docs, SPAs, landing pages |
 | `navigation.md` | Two-menu system: Project Menu + Debug Menu (bottom-right) |
+| `azure.md` | Cloud integration — serverless API, Blob storage, Key Vault |
 
 ## AI Stack Setup
 
@@ -58,4 +59,5 @@ docker run -p 6333:6333 qdrant/qdrant
 - [ ] Ollama `nomic-embed-text` model pulls successfully
 - [ ] Qdrant starts and responds on port 6333
 - [ ] Azure Key Vault created and secrets synced
+- [ ] Azure storage containers and Function endpoints configured
 - [ ] Architecture diagram renders via Mermaid

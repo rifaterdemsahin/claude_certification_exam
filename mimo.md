@@ -78,6 +78,12 @@ This file provides guidelines for Mimo AI working on the **Claude Developer Cert
 │   ├── questions.md        # Open questions driving the work
 │   └── hypotheses.md       # Assumptions to validate
 ├── 2_Environment/          # Setup and configuration guidelines
+│   ├── README.md           # Stage overview
+│   ├── azure.md            # Azure cloud integration
+│   ├── cloudflare_workers.md # Cloudflare Workers edge configuration
+│   ├── fly_io.md           # Backend hosting guide
+│   ├── github_pages.md     # Frontend static hosting guide
+│   └── navigation.md       # Navigation components
 ├── 3_Simulation/           # UI mockups and design vision
 ├── 4_Formula/              # Concepts, exam questions, and checklists
 ├── 5_Symbols/              # Implementation code and assets
