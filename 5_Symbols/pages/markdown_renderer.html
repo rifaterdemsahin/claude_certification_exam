@@ -333,6 +333,42 @@
                     content.insertBefore(actionBar, content.firstChild);
                 }
 
+                // Add check off checkbox for core concepts
+                if (filePath.includes('4_Formula/concepts/')) {
+                    const conceptId = filePath.split('/').pop().replace('.md', '');
+                    const cookieMatch = document.cookie.split(';').find(c => c.trim().startsWith('claude_cert_mastered_concepts='));
+                    let checked = [];
+                    if (cookieMatch) {
+                        try { checked = JSON.parse(decodeURIComponent(cookieMatch.split('=')[1])); } catch(e) {}
+                    }
+                    const isChecked = checked.includes(conceptId);
+                    const actionBar = document.createElement('div');
+                    actionBar.style.cssText = 'display:flex;align-items:center;gap:12px;margin-bottom:16px;padding:12px;background:var(--bg-primary);border-radius:8px;border:1px solid var(--border);';
+                    actionBar.innerHTML = `
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--accent-green);font-size:0.9em;font-weight:600;margin:0;">
+                            <input type="checkbox" id="concept-check-toggle" ${isChecked ? 'checked' : ''} style="width:18px;height:18px;cursor:pointer;">
+                            <span>Mastered Concept (Analyse)</span>
+                        </label>
+                    `;
+                    content.insertBefore(actionBar, content.firstChild);
+
+                    actionBar.querySelector('#concept-check-toggle').addEventListener('change', function(e) {
+                        const innerCookieMatch = document.cookie.split(';').find(c => c.trim().startsWith('claude_cert_mastered_concepts='));
+                        let currentChecked = [];
+                        if (innerCookieMatch) {
+                            try { currentChecked = JSON.parse(decodeURIComponent(innerCookieMatch.split('=')[1])); } catch(e) {}
+                        }
+                        if (e.target.checked) {
+                            if (!currentChecked.includes(conceptId)) currentChecked.push(conceptId);
+                        } else {
+                            currentChecked = currentChecked.filter(c => c !== conceptId);
+                        }
+                        const expires = new Date();
+                        expires.setTime(expires.getTime() + (365 * 24 * 60 * 60 * 1000));
+                        document.cookie = 'claude_cert_mastered_concepts=' + encodeURIComponent(JSON.stringify(currentChecked)) + ';expires=' + expires.toUTCString() + ';path=/;SameSite=Strict';
+                    });
+                }
+
                 // Update active state in sidebar
                 document.querySelectorAll('.sidebar-item').forEach(item => {
                     item.classList.toggle('active', item.dataset.file === filePath);

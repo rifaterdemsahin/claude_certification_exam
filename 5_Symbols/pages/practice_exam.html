@@ -662,6 +662,9 @@
 
         function showResults() {
             stopTimer();
+            if (typeof window.incrementBloomTracker === 'function') {
+                window.incrementBloomTracker('understand', 1);
+            }
             const container = document.getElementById('practice-content');
             const questions = filteredQuestions;
             let correct = 0;

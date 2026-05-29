@@ -352,6 +352,36 @@
         setCookie('debug', isOpen ? 'true' : 'false', 30);
     };
 
+    // Bloom's Taxonomy Self-Learning Tracker Helpers
+    window.getBloomTracker = function() {
+        const tracker = getCookie('claude_cert_bloom_tracker');
+        if (tracker) {
+            try {
+                return JSON.parse(tracker);
+            } catch(e) {}
+        }
+        return {
+            remember: 0,
+            understand: 0,
+            analyse: 0,
+            evaluate: 0,
+            create: 0
+        };
+    };
+
+    window.saveBloomTracker = function(tracker) {
+        setCookie('claude_cert_bloom_tracker', JSON.stringify(tracker), 365);
+    };
+
+    window.incrementBloomTracker = function(field, value = 1) {
+        const tracker = window.getBloomTracker();
+        tracker[field] = Math.max(0, (tracker[field] || 0) + value);
+        window.saveBloomTracker(tracker);
+        if (typeof window.updateDashboard === 'function') {
+            window.updateDashboard();
+        }
+    };
+
     // Close search results when clicking outside
     document.addEventListener('click', function(e) {
         const results = document.getElementById('nav-search-results');

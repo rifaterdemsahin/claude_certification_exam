@@ -560,6 +560,7 @@
     </style>
 </head>
 <body>
+    <script src="../js/nav.js"></script>
     <div class="container">
         <!-- Header -->
         <header>
@@ -893,6 +894,13 @@
             document.getElementById('correctCount').textContent = correct;
             document.getElementById('scorePercent').textContent = score + '%';
             document.getElementById('progressFill').style.width = percent + '%';
+
+            if (percent === 100 && !window.proExamCompletedIncremented) {
+                window.proExamCompletedIncremented = true;
+                if (typeof window.incrementBloomTracker === 'function') {
+                    window.incrementBloomTracker('understand', 1);
+                }
+            }
         }
 
         function resetAll() {
