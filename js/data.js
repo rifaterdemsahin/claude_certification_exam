@@ -116,8 +116,7 @@ questionsData.forEach(q => {
     const ext = (q.id >= 16) ? 'svg' : 'png';
     q.imageUrl = q.imageUrl || `https://claudecertstore.blob.core.windows.net/memory-images/${memId}_v1.${ext}`;
 
-    const correctOption = (q.options || []).find(opt => opt.startsWith(q.answer + ')'));
-    q.googleImageUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q.question + ' ' + (correctOption || q.answer) + ' claude llm')}`;
+    q.googleImageUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q.question + ' ' + q.answer + ' claude llm')}`;
     q.relatedVideoUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(q.question + ' tutorial')}`;
 
     // Azure Blob URL for image
