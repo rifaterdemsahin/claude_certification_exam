@@ -18,7 +18,7 @@ flowchart TD
     CW -->|"Generate text"| OR[OpenRouter API]
 
     GIST --> F[(claude-cert-votes.json)]
-    REPO --> G[(formula/memory/*.md)]
+    REPO --> G[(4_Formula/memory/*.md)]
     REPO --> H[(assets/memory/*.svg)]
     OR --> I[(AI Responses)]
 

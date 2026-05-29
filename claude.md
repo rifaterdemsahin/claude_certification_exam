@@ -50,6 +50,8 @@ Pattern: `CAT{NN}-Q{NNN}` (e.g., `CAT01-Q005`)
 ├── agents.md               # Multi-agent guidelines
 ├── claude.md               # This file (Claude Code config)
 ├── gemini.md               # Gemini-specific guidelines
+├── copilot.md              # GitHub Copilot guidelines
+├── kilocode.md             # Kilo Code guidelines
 ├── mimo.md                 # Mimo-specific guidelines
 ├── README.md               # Human-facing project overview
 ├── assets/                 # Visual media

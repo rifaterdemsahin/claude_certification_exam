@@ -76,14 +76,13 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
 ```
 .
 ├── index.html              # Main application (single-file React app)
-├── agents.md               # This file
+├── agents.md               # Multi-agent guidelines (this file)
 ├── README.md               # Human-facing project overview
-├── .kilo/
-│   └── agent/
-│       ├── claude.md       # Claude-specific guidelines
-│       ├── gemini.md       # Gemini-specific guidelines
-│       ├── opencode.md     # OpenCode-specific guidelines
-│       └── mimo.md         # Mimo (Xiaomi MiMo) guidelines
+├── claude.md               # Claude-specific guidelines
+├── gemini.md               # Gemini-specific guidelines
+├── copilot.md              # GitHub Copilot guidelines
+├── kilocode.md             # Kilo Code guidelines
+├── mimo.md                 # Mimo-specific guidelines
 ├── assets/                 # All visual media
 │   ├── exam/               # Exam question images
 │   ├── memory/             # Memory card visual aids (PNG/SVG)

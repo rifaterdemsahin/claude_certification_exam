@@ -14,13 +14,16 @@ def update_markdown_files():
                 
                 new_content = content
                 
-                # Replace edit and blob URLs
-                if 'edit/main/formula/' in new_content:
-                    new_content = new_content.replace('edit/main/formula/', 'edit/main/4_Formula/')
-                if 'blob/main/formula/' in new_content:
-                    new_content = new_content.replace('blob/main/formula/', 'blob/main/4_Formula/')
+                # Replace edit links paths
+                has_updates = False
+                if 'formula/concepts/' in new_content:
+                    new_content = new_content.replace('formula/concepts/', '4_Formula/concepts/')
+                    has_updates = True
+                if 'formula/exam/' in new_content:
+                    new_content = new_content.replace('formula/exam/', '4_Formula/exam/')
+                    has_updates = True
                 
-                if new_content != content:
+                if has_updates and new_content != content:
                     with open(file_path, 'w', encoding='utf-8') as f:
                         f.write(new_content)
                     print(f"Updated: {os.path.relpath(file_path, base_dir)}")
