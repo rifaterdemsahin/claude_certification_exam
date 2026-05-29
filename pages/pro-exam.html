@@ -141,45 +141,32 @@
             text-align: center;
             margin-bottom: 24px;
             position: relative;
-            min-height: 300px;
+            min-height: 200px;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .image-placeholder {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: 10px;
-            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
-            opacity: 0.9;
-            z-index: 1;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .image-placeholder:hover {
-            opacity: 1;
-            transform: scale(1.02);
+        .image-container:hover {
+            border-color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.05);
         }
 
-        .image-placeholder.revealed {
-            display: none;
+        .image-placeholder {
+            text-align: center;
+            z-index: 1;
+        }
+
+        .placeholder-icon {
+            font-size: 3em;
+            margin-bottom: 12px;
         }
 
         .placeholder-text {
-            color: #fff;
+            color: var(--text-secondary);
             text-align: center;
-            z-index: 2;
-        }
-
-        .placeholder-text .icon {
-            font-size: 3em;
-            margin-bottom: 12px;
         }
 
         .placeholder-text p {
@@ -193,27 +180,116 @@
             margin-top: 8px;
         }
 
-        .question-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
+        /* Modal */
+        .modal {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
         }
 
-        .question-image.loaded {
-            display: block;
-            animation: slideIn 0.4s ease;
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        @keyframes slideIn {
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            font-size: 1.5em;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .modal-image {
+            width: 100%;
+            max-height: 500px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+        }
+
+        .modal-loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Options */
@@ -291,6 +367,17 @@
         .answer-section.revealed {
             display: block;
             animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .answer-title {
@@ -444,10 +531,6 @@
                 padding: 20px;
             }
 
-            .image-container {
-                min-height: 250px;
-            }
-
             .controls {
                 flex-direction: column;
             }
@@ -464,6 +547,15 @@
             .filter-section select {
                 width: 100%;
             }
+
+            .modal-content {
+                max-width: 95%;
+                padding: 20px;
+            }
+
+            .modal-image {
+                max-height: 300px;
+            }
         }
     </style>
 </head>
@@ -474,14 +566,14 @@
             <div class="breadcrumb">
                 <a href="../index.html">Home</a> / <a href="understand.html">Understand</a> / Pro Exam
             </div>
-            <h1>🎯 Pro Exam - Advanced Questions</h1>
-            <p class="subtitle">Test your mastery with advanced-level questions covering multi-agent orchestration, error handling, and code generation with Claude Code. Each question includes visual diagrams to reinforce concepts.</p>
+            <h1>🎯 Pro Exam - 57 Advanced Questions</h1>
+            <p class="subtitle">Master the Claude Developer Certification with 57 advanced questions covering multi-agent orchestration, error handling, and Claude Code configuration. Each question includes visual diagrams to reinforce concepts.</p>
         </header>
 
         <!-- Progress Stats -->
         <div class="stats">
             <div class="stat-card">
-                <div class="stat-value" id="totalQuestions">0</div>
+                <div class="stat-value" id="totalQuestions">57</div>
                 <div class="stat-label">Total Questions</div>
             </div>
             <div class="stat-card">
@@ -516,19 +608,49 @@
         <div id="questionsContainer"></div>
     </div>
 
+    <!-- Image Modal -->
+    <div class="modal" id="imageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Diagram</div>
+                <button class="modal-close" onclick="closeImageModal()">✕</button>
+            </div>
+            <div id="modalBody">
+                <div class="modal-loading">
+                    <div class="spinner"></div>
+                    <p style="margin-top: 16px;">Loading diagram...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Load pro-exam data
         let examData = [];
         let userAnswers = {};
-        let correctAnswers = {};
 
         async function loadExamData() {
             try {
-                const response = await fetch('../data/pro-exam.json');
-                if (!response.ok) throw new Error('Failed to load exam data');
+                console.log('Fetching pro-exam.json...');
+                const response = await fetch('../data/pro-exam.json', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
                 
                 const data = await response.json();
+                
+                console.log(`Loaded ${data.questions?.length || 0} questions`);
                 examData = data.questions || [];
+                
+                if (examData.length === 0) {
+                    throw new Error('No questions found in data');
+                }
                 
                 // Load user progress from localStorage
                 const saved = localStorage.getItem('proExamProgress');
@@ -536,18 +658,25 @@
                     userAnswers = JSON.parse(saved);
                 }
                 
+                console.log('Rendering questions...');
                 renderQuestions();
                 updateStats();
                 populateScenarioFilter();
+                console.log('✓ Data loaded successfully');
             } catch (error) {
                 console.error('Error loading exam data:', error);
+                const errorMsg = error.message || 'Unknown error';
                 document.getElementById('questionsContainer').innerHTML = 
-                    '<div class="question-card" style="color: var(--accent-red);">Error loading exam data. Please refresh the page.</div>';
+                    `<div class="question-card" style="color: var(--accent-red);">
+                        <strong>❌ Error loading exam data</strong>
+                        <p style="margin-top: 8px; font-size: 0.9em;">${errorMsg}</p>
+                        <p style="margin-top: 8px; font-size: 0.85em; color: var(--text-secondary);">Check browser console (F12) for details. Try refreshing the page.</p>
+                    </div>`;
             }
         }
 
         function populateScenarioFilter() {
-            const scenarios = [...new Set(examData.map(q => q.scenario))];
+            const scenarios = [...new Set(examData.map(q => q.scenario))].sort();
             const select = document.getElementById('scenarioFilter');
             scenarios.forEach(scenario => {
                 const option = document.createElement('option');
@@ -569,7 +698,7 @@
                 container.appendChild(card);
             });
 
-            document.getElementById('totalQuestions').textContent = filtered.length;
+            document.getElementById('totalQuestions').textContent = examData.length;
         }
 
         function createQuestionCard(question) {
@@ -596,15 +725,14 @@
                 <div class="question-text">${question.question}</div>
                 
                 <!-- Image Container -->
-                <div class="image-container">
-                    <div class="image-placeholder" onclick="revealImage(${question.question_number})">
+                <div class="image-container" onclick="openImageModal(${question.question_number})">
+                    <div class="image-placeholder">
+                        <div class="placeholder-icon">🖼️</div>
                         <div class="placeholder-text">
-                            <div class="icon">🖼️</div>
-                            <p>Click to reveal diagram</p>
-                            <p class="hint">${question.image_prompt ? 'Helpful visual aid' : 'No image available'}</p>
+                            <p>Click to view diagram</p>
+                            <p class="hint">${question.image_prompt ? 'Visual aid' : 'No image available'}</p>
                         </div>
                     </div>
-                    ${question.image_prompt ? `<img src="" alt="Diagram for question ${question.question_number}" class="question-image" data-question="${question.question_number}">` : ''}
                 </div>
                 
                 <!-- Options -->
@@ -638,55 +766,84 @@
             return card;
         }
 
-        function revealImage(questionNumber) {
+        function openImageModal(questionNumber) {
             const question = examData.find(q => q.question_number === questionNumber);
             if (!question) return;
             
-            const placeholder = document.querySelector(`#question-${questionNumber} .image-placeholder`);
-            const img = document.querySelector(`#question-${questionNumber} .question-image`);
+            const modal = document.getElementById('imageModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
             
-            if (placeholder && img) {
-                placeholder.classList.add('revealed');
-                
-                // Generate a placeholder image using a data URL (in production, would load actual image)
-                if (!img.src) {
-                    // Create a simple placeholder SVG for demonstration
-                    const svg = createDiagramSVG(question.image_prompt, questionNumber);
-                    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-                }
-                
-                img.classList.add('loaded');
+            modalTitle.textContent = `Question ${question.question_number} - Diagram`;
+            
+            if (!question.image_prompt) {
+                modalBody.innerHTML = '<div style="padding: 40px; color: var(--text-secondary); text-align: center;">No diagram available for this question.</div>';
+                modal.classList.add('show');
+                return;
             }
+            
+            // Show loading state
+            modalBody.innerHTML = `
+                <div class="modal-loading">
+                    <div class="spinner"></div>
+                    <p style="margin-top: 16px;">Loading diagram...</p>
+                </div>
+            `;
+            modal.classList.add('show');
+            
+            // Try to load from Azure, fallback to placeholder
+            loadImageForQuestion(questionNumber, modalBody);
         }
 
-        function createDiagramSVG(prompt, questionNumber) {
-            // Create a simple SVG diagram based on the prompt
-            // In production, this would be replaced with actual generated images from Gemini
+        function loadImageForQuestion(questionNumber, container) {
+            const filename = `q${String(questionNumber).padStart(3, '0')}.svg`;
+            const azureUrl = `https://claudecertstore.blob.core.windows.net/pro-exam-images/${filename}`;
             
-            const width = 600;
-            const height = 400;
-            
-            let svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <style>
-                        .svg-bg { fill: #1e293b; }
-                        .svg-text { fill: #e2e8f0; font-family: Inter, sans-serif; font-size: 12px; }
-                        .svg-title { fill: #38bdf8; font-size: 16px; font-weight: 600; }
-                        .svg-box { fill: #0f172a; stroke: #38bdf8; stroke-width: 2; }
-                        .svg-arrow { stroke: #a855f7; stroke-width: 2; fill: none; }
-                    </style>
-                </defs>
-                <rect class="svg-bg" width="${width}" height="${height}"/>
-                <text class="svg-title" x="20" y="30">Question ${questionNumber}</text>
-                <rect class="svg-box" x="50" y="80" width="150" height="60" rx="8"/>
-                <text class="svg-text" x="75" y="115">Component</text>
-                <rect class="svg-box" x="350" y="80" width="150" height="60" rx="8"/>
-                <text class="svg-text" x="370" y="115">Result</text>
-                <line class="svg-arrow" x1="200" y1="110" x2="350" y2="110" marker-end="url(#arrowhead)"/>
-                <text class="svg-text" x="20" y="200">${prompt.substring(0, 100)}...</text>
-            </svg>`;
-            
-            return svg;
+            const img = new Image();
+            img.onload = () => {
+                container.innerHTML = `<img src="${azureUrl}" class="modal-image" alt="Question ${questionNumber} diagram">`;
+            };
+            img.onerror = () => {
+                // Fallback to placeholder
+                const question = examData.find(q => q.question_number === questionNumber);
+                const svg = createPlaceholderDiagram(question.image_prompt, questionNumber);
+                container.innerHTML = `<div>${svg}</div>`;
+            };
+            img.src = azureUrl;
+        }
+
+        function createPlaceholderDiagram(prompt, questionNumber) {
+            return `
+                <svg width="100%" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid var(--border); border-radius: 12px;">
+                    <defs>
+                        <style>
+                            .bg { fill: #1e293b; }
+                            .title { fill: #38bdf8; font-size: 18px; font-weight: bold; font-family: Inter, sans-serif; }
+                            .label { fill: #e2e8f0; font-size: 12px; font-family: Inter, sans-serif; }
+                            .box { fill: #0f172a; stroke: #38bdf8; stroke-width: 2; }
+                            .arrow { stroke: #a855f7; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+                            .circle { fill: #a855f7; stroke: #38bdf8; stroke-width: 2; }
+                        </style>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#a855f7" />
+                        </marker>
+                    </defs>
+                    <rect class="bg" width="800" height="400"/>
+                    <text class="title" x="20" y="40">Question ${questionNumber}</text>
+                    <rect class="box" x="50" y="80" width="200" height="60" rx="10"/>
+                    <text class="label" x="80" y="115">Component A</text>
+                    <path class="arrow" d="M 250 110 L 330 110"/>
+                    <circle class="circle" cx="370" cy="110" r="30"/>
+                    <path class="arrow" d="M 400 110 L 480 110"/>
+                    <rect class="box" x="480" y="80" width="200" height="60" rx="10"/>
+                    <text class="label" x="510" y="115">Component B</text>
+                    <text class="label" x="20" y="210" style="font-size: 11px; color: #94a3b8;">${prompt.substring(0, 80)}...</text>
+                </svg>
+            `;
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.remove('show');
         }
 
         function selectAnswer(questionNumber, selectedOption) {
@@ -713,7 +870,6 @@
         }
 
         function skipQuestion(questionNumber) {
-            const question = examData.find(q => q.question_number === questionNumber);
             revealAnswer(questionNumber);
         }
 
@@ -725,7 +881,7 @@
                 return q && userAnswers[qNum] === q.answer;
             }).length;
             
-            const percent = filtered > 0 ? Math.round((answered / filtered) * 100) : 0;
+            const percent = examData.length > 0 ? Math.round((answered / examData.length) * 100) : 0;
             const score = answered > 0 ? Math.round((correct / answered) * 100) : 0;
             
             document.getElementById('answeredCount').textContent = answered;
@@ -742,6 +898,13 @@
                 updateStats();
             }
         }
+
+        // Close modal on outside click
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeImageModal();
+            }
+        });
 
         // Event listeners
         document.getElementById('scenarioFilter').addEventListener('change', renderQuestions);
