@@ -85,6 +85,8 @@ This file provides guidelines for Mimo AI working on the **Claude Developer Cert
 │   ├── github_pages.md     # Frontend static hosting guide
 │   └── navigation.md       # Navigation components
 ├── 3_Simulation/           # UI mockups and design vision
+│   ├── README.md           # Stage overview
+│   └── user_experience.md  # UX mockups and documentation
 ├── 4_Formula/              # Concepts, exam questions, and checklists
 ├── 5_Symbols/              # Implementation code and assets
 │   ├── assets/             # Visual media

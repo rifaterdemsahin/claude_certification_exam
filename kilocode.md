@@ -41,6 +41,8 @@ delivery-pilot-template/
 │   ├── github_pages.md     # Frontend static hosting guide
 │   └── navigation.md       # Navigation components
 ├── 3_Simulation/           # UI mockups and design vision
+│   ├── README.md           # Stage overview
+│   └── user_experience.md  # UX mockups and documentation
 ├── 4_Formula/              # Concepts, exam questions, and checklists
 │   ├── concepts/           # Concept explanations
 │   ├── exam/               # Exam question notes

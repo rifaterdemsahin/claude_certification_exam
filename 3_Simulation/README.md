@@ -2,6 +2,8 @@
 
 > **Stage 3 of 7:** Make the invisible visible before writing production code.
 
+- We reserve engineer the symbols if we need to see where we need to go.
+
 ## Purpose
 
 This folder holds **visual representations** of what the project will look like and how it will behave. Mockups, wireframes, and screenshots live here. The image carousel on `index.html` auto-loads from this folder.
@@ -21,6 +23,10 @@ This folder holds **visual representations** of what the project will look like 
 | `mockup_navigation.png` | Navigation menu mockup |
 | `flow_user_journey.md` | User journey flow diagram |
 | `carousel_config.json` | Image list for the auto-updating carousel |
+| `user_experience.md` | User experience guides and mockups explaining the system |
+| `study_dashboard.png` | Study dashboard mockup image (active recall grid) |
+| `memory_palace_mindmap.png` | Memory palace mindmap mockup image |
+| `flashcard_recall_view.png` | Flashcard recall view mockup image |
 
 ## Image Carousel
 
