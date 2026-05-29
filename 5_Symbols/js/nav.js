@@ -24,7 +24,7 @@
     // Menu 1: Project Menu (Always Visible) - Bloom Taxonomy Links
     const navItems = [
         {
-            label: '🧠 Remember ◀️',
+            label: '🧠 1. Remember (Start Point)',
             sublabel: 'Visuals',
             items: [
                 { emoji: '🃏', label: 'Play Cards', href: 'cards.html' },
@@ -37,7 +37,7 @@
             ]
         },
         {
-            label: '📝 Understand',
+            label: '📝 2. Understand',
             sublabel: 'Apply',
             items: [
                 { emoji: '📋', label: 'Mock Exam Cards', href: 'exam.html' },
@@ -46,7 +46,7 @@
             ]
         },
         {
-            label: '📊 Analyse ▶️',
+            label: '📊 3. Analyse',
             sublabel: 'Connect',
             items: [
                 { emoji: '🏗️', label: 'BMAD', href: 'bmad.html' },
@@ -71,7 +71,7 @@
             ]
         },
         {
-            label: '🔍 Evaluate',
+            label: '🔍 4. Evaluate',
             sublabel: 'Collaborate',
             items: [
                 { emoji: '💬', label: 'Discussion Board', href: 'understand.html' },
@@ -80,7 +80,7 @@
             ]
         },
         {
-            label: '🎨 Create ◀️',
+            label: '🎨 5. Create',
             sublabel: 'Build',
             items: [
                 { emoji: '🗳️', label: 'Vote for Videos', href: 'create.html' },
@@ -123,6 +123,109 @@
         const renderer = isIndex ? '5_Symbols/pages/markdown_renderer.html' : 'markdown_renderer.html';
         return `${renderer}?url=../../${item.url}&title=${encodeURIComponent(item.label)}`;
     }
+
+    function buildLearningLoopBanner() {
+        const currentPage = getCurrentPage();
+        let activeIndex = 0; // Default: Remember
+        
+        // Determine active step based on page
+        const rememberPages = ['cards.html', 'remember.html', 'mastery.html', 'quiz.html', 'memory_cards.html', 'add_memory_card.html', 'quick_memory.html'];
+        const understandPages = ['exam.html', 'practice_exam.html', 'pro-exam.html'];
+        const analysePages = ['bmad.html', 'agi-path.html', 'claude_cli.html', 'claude_architecture.html', 'llm_mental_model.html', 'context_compression.html', 'explicit_criteria.html', 'dictionary.html', 'evaluate.html', 'mcp_python.html', 'mindmap.html', 'multi_turn.html', 'prompt_caching.html', 'structured_reasoning.html', 'resources.html', 'swe_bench.html', 'skills.html', 'analyse.html', 'tactics.html'];
+        const evaluatePages = ['understand.html', 'claude_pricing.html', 'multiplayer.html'];
+        const createPages = ['create.html', 'creator.html', 'markdown_renderer.html'];
+
+        if (rememberPages.some(p => currentPage.includes(p))) activeIndex = 0;
+        else if (understandPages.some(p => currentPage.includes(p))) activeIndex = 1;
+        else if (analysePages.some(p => currentPage.includes(p))) activeIndex = 2;
+        else if (evaluatePages.some(p => currentPage.includes(p))) activeIndex = 3;
+        else if (createPages.some(p => currentPage.includes(p))) activeIndex = 4;
+
+        const loopOpenCookie = getCookie('learning_loop_open');
+        const isOpen = loopOpenCookie === 'true' || loopOpenCookie === null; // Open by default initially
+        const showClass = isOpen ? ' show' : '';
+        const arrowChar = isOpen ? '▲' : '▼';
+
+        const steps = [
+            { name: "1. Remember", desc: "Start Point (Flashcards)" },
+            { name: "2. Understand", desc: "Practice & Mock Exams" },
+            { name: "3. Analyse", desc: "Deep Concept Maps" },
+            { name: "4. Evaluate", desc: "Collaborate & Price" },
+            { name: "5. Create", desc: "Build Prompts & Tools" }
+        ];
+
+        let beforeAfterHtml = '';
+        if (activeIndex > 0) {
+            beforeAfterHtml += `⏮️ <strong>Before (Previous Step):</strong> ${steps[activeIndex - 1].name}`;
+        }
+        if (activeIndex < 4) {
+            if (beforeAfterHtml) beforeAfterHtml += ' &nbsp;&nbsp;➔&nbsp;&nbsp; ';
+            beforeAfterHtml += `⏭️ <strong>After (Next Step):</strong> ${steps[activeIndex + 1].name}`;
+        }
+
+        let html = `
+        <div class="learning-loop-banner">
+            <div class="learning-loop-header" onclick="toggleLearningLoop()">
+                <span>🧠 Bloom's Self-Learning Loop Guide (Current: ${steps[activeIndex].name})</span>
+                <span class="loop-toggle-icon">${arrowChar}</span>
+            </div>
+            <div class="learning-loop-body${showClass}" id="learning-loop-body">
+                <div class="loop-steps">
+                    <div class="loop-step${activeIndex === 0 ? ' active-step' : ''}">
+                        <span class="step-num">1</span>
+                        <span class="step-label">Remember</span>
+                        <span class="step-desc">Start Point (Flashcards)</span>
+                    </div>
+                    <div class="loop-arrow">➔</div>
+                    <div class="loop-step${activeIndex === 1 ? ' active-step' : ''}">
+                        <span class="step-num">2</span>
+                        <span class="step-label">Understand</span>
+                        <span class="step-desc">Practice & Mock Exams</span>
+                    </div>
+                    <div class="loop-arrow">➔</div>
+                    <div class="loop-step${activeIndex === 2 ? ' active-step' : ''}">
+                        <span class="step-num">3</span>
+                        <span class="step-label">Analyse</span>
+                        <span class="step-desc">Deep Concept Maps</span>
+                    </div>
+                    <div class="loop-arrow">➔</div>
+                    <div class="loop-step${activeIndex === 3 ? ' active-step' : ''}">
+                        <span class="step-num">4</span>
+                        <span class="step-label">Evaluate</span>
+                        <span class="step-desc">Collaborate & Price</span>
+                    </div>
+                    <div class="loop-arrow">➔</div>
+                    <div class="loop-step${activeIndex === 4 ? ' active-step' : ''}">
+                        <span class="step-num">5</span>
+                        <span class="step-label">Create</span>
+                        <span class="step-desc">Build Prompts & Tools</span>
+                    </div>
+                </div>
+                ${beforeAfterHtml ? `<div class="loop-navigation-guide">${beforeAfterHtml}</div>` : ''}
+                <div class="loop-logic">
+                    <div class="logic-box logic-back">
+                        <strong>⚠️ If Understand has Issues:</strong>
+                        <span>The self-learner goes back to <strong>1. Remember</strong> to reinforce foundational retention.</span>
+                    </div>
+                    <div class="logic-box logic-next">
+                        <strong>✅ When Understand is Done:</strong>
+                        <span>The self-learner should proceed to <strong>3. Analyse</strong> to evaluate relationships.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+        return html;
+    }
+
+    window.toggleLearningLoop = function() {
+        const body = document.getElementById('learning-loop-body');
+        const icon = document.querySelector('.loop-toggle-icon');
+        if (!body) return;
+        const isShow = body.classList.toggle('show');
+        icon.textContent = isShow ? '▲' : '▼';
+        setCookie('learning_loop_open', isShow ? 'true' : 'false', 30);
+    };
 
     function buildNav() {
         let html = '<nav class="site-nav"><div class="nav-inner">';
@@ -583,13 +686,152 @@
                 right: -100%;
             }
         }
+        
+        /* Learning Loop Banner Styles */
+        .learning-loop-banner {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
+            border-bottom: 1px solid var(--border, #334155);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-primary, #e2e8f0);
+            width: 100%;
+            z-index: 999;
+            position: relative;
+        }
+        .learning-loop-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 600;
+            background: rgba(56, 189, 248, 0.05);
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .learning-loop-header:hover {
+            background: rgba(56, 189, 248, 0.1);
+        }
+        .learning-loop-body {
+            display: none;
+            padding: 16px;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .learning-loop-body.show {
+            display: flex;
+        }
+        .loop-steps {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .loop-step {
+            flex: 1;
+            min-width: 140px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border, #334155);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .loop-step.active-step {
+            border-color: var(--accent-blue, #38bdf8);
+            background: rgba(56, 189, 248, 0.08);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.2);
+        }
+        .step-num {
+            background: var(--border, #334155);
+            color: var(--text-primary, #e2e8f0);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8em;
+            margin-bottom: 6px;
+        }
+        .loop-step.active-step .step-num {
+            background: var(--accent-blue, #38bdf8);
+            color: #0f172a;
+        }
+        .step-label {
+            font-weight: 600;
+            font-size: 0.8em;
+            color: var(--text-primary, #e2e8f0);
+        }
+        .step-desc {
+            font-size: 0.7em;
+            color: var(--text-secondary, #94a3b8);
+        }
+        .loop-arrow {
+            font-size: 1.2em;
+            color: var(--text-muted, #64748b);
+        }
+        .loop-navigation-guide {
+            background: rgba(56, 189, 248, 0.03);
+            border: 1px solid rgba(56, 189, 248, 0.1);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 0.8em;
+            text-align: center;
+            color: var(--accent-blue, #38bdf8);
+        }
+        .loop-logic {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .logic-box {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            line-height: 1.4;
+        }
+        .logic-back {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px dashed var(--accent-red, #ef4444);
+        }
+        .logic-back strong {
+            color: var(--accent-red, #ef4444);
+            display: block;
+            margin-bottom: 4px;
+        }
+        .logic-next {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px dashed var(--accent-green, #10b981);
+        }
+        .logic-next strong {
+            color: var(--accent-green, #10b981);
+            display: block;
+            margin-bottom: 4px;
+        }
     `;
     document.head.appendChild(style);
-
+ 
     // Insert nav at start of body
-    const navContainer = document.createElement('div');
-    navContainer.innerHTML = buildNav();
-    document.body.insertBefore(navContainer.firstElementChild, document.body.firstChild);
+    const navEl = document.createElement('div');
+    navEl.innerHTML = buildNav();
+    const navNode = navEl.firstElementChild;
+    document.body.insertBefore(navNode, document.body.firstChild);
+ 
+    // Insert learning loop banner directly after nav
+    const bannerEl = document.createElement('div');
+    bannerEl.innerHTML = buildLearningLoopBanner();
+    const bannerNode = bannerEl.firstElementChild;
+    document.body.insertBefore(bannerNode, navNode.nextSibling);
 
     // Insert debug drawer at end of body
     const debugContainer = document.createElement('div');
