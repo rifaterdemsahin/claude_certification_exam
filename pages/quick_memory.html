@@ -204,7 +204,12 @@
             <h1>Quick Memory Card</h1>
             <p class="subtitle">Paste an image, add a title, push. AI fills the rest.</p>
 
-            <div class="id-badge" id="idBadge">MEM-Q---</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                <div class="id-badge" id="idBadge">MEM-Q---</div>
+                <button id="loginBtn" onclick="handleLogin()" style="padding:8px 16px;border:1px solid var(--accent-purple);border-radius:8px;background:rgba(168,85,247,0.1);color:var(--accent-purple);cursor:pointer;font-family:inherit;font-size:0.85em;font-weight:500;transition:all 0.2s;">
+                    🔐 Login
+                </button>
+            </div>
 
             <label for="cardTitle">Title</label>
             <input type="text" class="title-input" id="cardTitle" placeholder="Agentic Loop" autofocus>
@@ -333,6 +338,35 @@
             return new Date(tokenExpiry) > new Date();
         }
 
+        function updateLoginButton() {
+            const btn = document.getElementById('loginBtn');
+            if (isTokenValid()) {
+                btn.innerHTML = '✅ Logged In';
+                btn.style.borderColor = 'var(--accent-green)';
+                btn.style.background = 'rgba(16, 185, 129, 0.1)';
+                btn.style.color = 'var(--accent-green)';
+            } else {
+                btn.innerHTML = '🔐 Login';
+                btn.style.borderColor = 'var(--accent-purple)';
+                btn.style.background = 'rgba(168, 85, 247, 0.1)';
+                btn.style.color = 'var(--accent-purple)';
+            }
+        }
+
+        async function handleLogin() {
+            if (isTokenValid()) {
+                // Logout
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('tokenExpiry');
+                adminToken = null;
+                tokenExpiry = null;
+                updateLoginButton();
+                showStatus('Logged out successfully', 'info');
+                return;
+            }
+            await login();
+        }
+
         async function login() {
             const password = prompt('Enter admin password:');
             if (!password) return false;
@@ -350,6 +384,8 @@
                     tokenExpiry = data.expiresAt;
                     localStorage.setItem('adminToken', adminToken);
                     localStorage.setItem('tokenExpiry', tokenExpiry);
+                    updateLoginButton();
+                    showStatus('Login successful!', 'ok');
                     return true;
                 } else {
                     alert('Invalid password');
@@ -491,6 +527,7 @@ No memory aid provided.
 
         // ================== INIT ==================
         calculateNextId();
+        updateLoginButton();
     </script>
 </body>
 </html>
