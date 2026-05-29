@@ -36,4 +36,4 @@ Claude Code supports **skills** — reusable prompt fragments that teach Claude 
 - [Custom Slash Commands](claude-code.md#slash-commands) — Often defined within skills
 
 ## Edit Link
-[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/formula/concepts/skills-location.md)
+[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/4_Formula/concepts/skills-location.md)

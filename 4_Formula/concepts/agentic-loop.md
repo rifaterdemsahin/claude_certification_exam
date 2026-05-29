@@ -13,4 +13,4 @@ Claude implements this through sequential message exchanges. The developer manag
 See Memory Cards #MEM-Q002, #MEM-Q008.
 
 ## Edit Link
-[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/formula/concepts/agentic-loop.md)
+[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/4_Formula/concepts/agentic-loop.md)

@@ -640,3 +640,9 @@ Fix broken mermaid diagrams by sanitizing answer text (removing special characte
 ## Commit 104: (pending) — Refactor project structure to follow Delivery Pilot Template
 
 Reorganize project folders into the 7-stage Delivery Pilot Template structure. Created stages 1-7, renamed agent files to lowercase in git, migrated formula notes to 4_Formula with a symlink fallback, implemented the two-menu navigation system (top Project navigation and bottom-right floating toggle debug drawer) with persistence, and updated markdown_renderer.html to browse framework stages and agents.
+
+---
+
+## Commit 105: (pending) — Perform sanity check and execute suggestions
+
+Created sanity_check_review_v1.md in 6_Semblance folder. Wrote and ran Python automation scripts to recursively sanitize and update 54 files under 4_Formula/ changing github edit/blob links to the correct 4_Formula path, and updated agent rule files (agents.md, claude.md, gemini.md, mimo.md) to reference agent names in lowercase.

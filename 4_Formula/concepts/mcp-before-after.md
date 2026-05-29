@@ -52,4 +52,4 @@ MCP introduces a universal adapter pattern — one protocol, any tool:
 - [Interoperability](mcp.md#interoperability) — Why standardization matters
 
 ## Edit Link
-[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/formula/concepts/mcp-before-after.md)
+[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/4_Formula/concepts/mcp-before-after.md)

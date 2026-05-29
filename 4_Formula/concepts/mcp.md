@@ -13,4 +13,4 @@ Claude supports MCP through the Claude Desktop app and various SDKs (TypeScript,
 See Memory Cards #MEM-Q030, #MEM-Q035.
 
 ## Edit Link
-[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/formula/concepts/mcp.md)
+[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/4_Formula/concepts/mcp.md)

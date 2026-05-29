@@ -13,4 +13,4 @@ Implementation in Claude-based systems often involves a "Search" tool that allow
 See Memory Cards #MEM-Q070, #MEM-Q075.
 
 ## Edit Link
-[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/formula/concepts/long-term-memory.md)
+[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/4_Formula/concepts/long-term-memory.md)

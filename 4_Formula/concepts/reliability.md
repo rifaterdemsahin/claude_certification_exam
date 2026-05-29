@@ -13,4 +13,4 @@ Implemented via robust error handling in the client-side code and by using featu
 See Memory Cards #MEM-Q090, #MEM-Q100.
 
 ## Edit Link
-[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/formula/concepts/reliability.md)
+[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/4_Formula/concepts/reliability.md)

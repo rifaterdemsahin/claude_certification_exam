@@ -13,4 +13,4 @@ Claude excels with XML-tagged structures. Effective implementation uses tags lik
 See Memory Cards #MEM-Q080, #MEM-Q085.
 
 ## Edit Link
-[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/formula/concepts/prompt-engineering.md)
+[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/4_Formula/concepts/prompt-engineering.md)

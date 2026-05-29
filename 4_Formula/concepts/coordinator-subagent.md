@@ -13,4 +13,4 @@ This is often realized by using a highly capable model like Claude 3.5 Sonnet as
 See Memory Cards #MEM-Q015, #MEM-Q022.
 
 ## Edit Link
-[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/formula/concepts/coordinator-subagent.md)
+[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/4_Formula/concepts/coordinator-subagent.md)

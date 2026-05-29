@@ -13,4 +13,4 @@ Claude can be used as a powerful validator. A common implementation involves a m
 See Memory Cards #MEM-Q060, #MEM-Q065.
 
 ## Edit Link
-[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/formula/concepts/validation-loops.md)
+[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/4_Formula/concepts/validation-loops.md)

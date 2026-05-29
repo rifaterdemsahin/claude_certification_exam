@@ -13,4 +13,4 @@ Claude is natively trained to handle "Thinking" processes. Implementation often 
 See Memory Cards #MEM-Q050, #MEM-Q055.
 
 ## Edit Link
-[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/formula/concepts/chain-of-thought.md)
+[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/4_Formula/concepts/chain-of-thought.md)

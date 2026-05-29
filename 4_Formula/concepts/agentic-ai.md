@@ -13,4 +13,4 @@ In the Claude ecosystem, Agentic AI is implemented primarily through the `tools`
 See Memory Cards #MEM-Q001, #MEM-Q005, #MEM-Q010.
 
 ## Edit Link
-[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/formula/concepts/agentic-ai.md)
+[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/4_Formula/concepts/agentic-ai.md)

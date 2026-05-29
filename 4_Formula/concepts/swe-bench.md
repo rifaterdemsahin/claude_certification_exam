@@ -40,4 +40,4 @@ As top models saturate existing benchmarks, the gap narrows. New benchmarks like
 - Tasks from 91 repositories across 5 languages
 
 ## Edit Link
-[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/formula/concepts/swe-bench.md)
+[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/4_Formula/concepts/swe-bench.md)

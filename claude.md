@@ -47,9 +47,9 @@ Pattern: `CAT{NN}-Q{NNN}` (e.g., `CAT01-Q005`)
 
 ```
 ├── index.html              # Main single-file React app
-├── AGENTS.md               # Multi-agent guidelines
-├── CLAUDE.md               # This file (Claude Code config)
-├── GEMINI.md               # Gemini-specific guidelines
+├── agents.md               # Multi-agent guidelines
+├── claude.md               # This file (Claude Code config)
+├── gemini.md               # Gemini-specific guidelines
 ├── mimo.md                 # Mimo-specific guidelines
 ├── README.md               # Human-facing project overview
 ├── assets/                 # Visual media
@@ -58,7 +58,7 @@ Pattern: `CAT{NN}-Q{NNN}` (e.g., `CAT01-Q005`)
 ├── azure-api/              # Azure Function App (memory cards API)
 ├── data/                   # Raw data & source material
 ├── docs/                   # Study documentation by competency
-├── formula/                # Concepts, exam questions
+├── 4_Formula/                # Concepts, exam questions
 ├── pages/                  # Auxiliary HTML pages
 ├── scripts/                # Automation scripts
 └── tests/                  # Test files

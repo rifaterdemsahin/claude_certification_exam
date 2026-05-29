@@ -13,4 +13,4 @@ Claude Code is implemented as a specialized wrapper around the Claude API, utili
 See Memory Cards #MEM-Q040, #MEM-Q045.
 
 ## Edit Link
-[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/formula/concepts/claude-code.md)
+[Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/4_Formula/concepts/claude-code.md)

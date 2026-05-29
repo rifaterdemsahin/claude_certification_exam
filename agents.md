@@ -49,9 +49,9 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
   - `data/exam_source.pdf` — Exam source material.
 - **Docs Directory:** Keep study materials in `docs/` organized by competency.
 - **Exercises:** Add hands-on challenges to the `exercises/` folder.
-- **Formula:** Concept explanations and exam questions live in `formula/`.
-  - `formula/concepts/`
-  - `formula/exam/`
+- **Formula:** Concept explanations and exam questions live in `4_Formula/`.
+  - `4_Formula/concepts/`
+  - `4_Formula/exam/`
   - Memory cards stored in Azure Blob Storage.
 - **Pages:** Auxiliary HTML pages in `pages/`.
   - `pages/dictionary.html`
@@ -66,17 +66,17 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
   - `pages/context_compression.html` — Context window compression and summary techniques
 - **Scripts:** Automation scripts in `scripts/`.
 - **AI Guidelines:** Agent-specific instructions in project root.
-  - `CLAUDE.md` — Claude-specific guidelines
-  - `GEMINI.md` — Gemini CLI guidelines
+  - `claude.md` — Claude-specific guidelines
+  - `gemini.md` — Gemini CLI guidelines
   - `mimo.md` — Mimo (Xiaomi MiMo) guidelines
-  - `AGENTS.md` — Multi-agent guidelines (this file)
+  - `agents.md` — Multi-agent guidelines (this file)
 
 ## File Layout
 
 ```
 .
 ├── index.html              # Main application (single-file React app)
-├── AGENTS.md               # This file
+├── agents.md               # This file
 ├── README.md               # Human-facing project overview
 ├── .kilo/
 │   └── agent/
@@ -93,7 +93,7 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
 │   └── exam_source.pdf     # Exam source material
 ├── docs/                   # Study documentation by competency
 ├── exercises/              # Hands-on coding challenges
-├── formula/                # Concepts and exam questions
+├── 4_Formula/                # Concepts and exam questions
 │   ├── concepts/
 │   ├── exam/
 │   └── memory/
@@ -125,5 +125,5 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
 
 ## Related Files
 
-- `CLAUDE.md` — Original project guidelines (kept for reference).
+- `claude.md` — Original project guidelines (kept for reference).
 - `README.md` — Human-facing project overview.

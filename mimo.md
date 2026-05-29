@@ -77,7 +77,7 @@ This file provides guidelines for Mimo AI working on the **Claude Developer Cert
 │   └── concepts/           # Concept diagrams
 ├── data/                   # Source data (exam.json, exam_source.pdf)
 ├── docs/                   # Study documentation by competency
-├── formula/                # Concepts, exam questions, memory cards
+├── 4_Formula/                # Concepts, exam questions, memory cards
 │   ├── concepts/
 │   ├── exam/
 │   └── memory/

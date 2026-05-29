@@ -26,10 +26,10 @@ This file serves as a foundational mandate for Gemini CLI and other AI tools wor
   - `data/`: Raw data — `data/exam.json`, `data/exam_source.pdf`.
   - `docs/`: Markdown files for detailed study content.
   - `exercises/`: Hands-on coding challenges.
-  - `formula/`: Concepts (`concepts/`), exam questions (`exam/`). Memory cards stored in Azure Blob Storage.
+  - `4_Formula/`: Concepts (`concepts/`), exam questions (`exam/`). Memory cards stored in Azure Blob Storage.
   - `pages/`: Auxiliary HTML pages (`dictionary.html`, `markdown_renderer.html`, `memory_cards.html`).
   - `scripts/`: Utility scripts.
-  - `CLAUDE.md`, `GEMINI.md`, `mimo.md`: AI-specific guideline files in project root.
+  - `claude.md`, `gemini.md`, `mimo.md`: AI-specific guideline files in project root.
 
 ## 🔗 Unique URLs & Accessibility
 - All memory cards are stored in Azure Blob Storage and accessible via unique URLs.
