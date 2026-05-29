@@ -394,6 +394,7 @@
         let selectedAnswer = null;
         let showExplanation = false;
         let activeDomain = 0; // 0 = all
+        let showIncorrectOnly = false; // Filter for incorrect answers
         let startTime = Date.now();
         let elapsedSeconds = 0;
         let timerInterval = null;
@@ -413,7 +414,7 @@
 
         function saveCookie() {
             const state = {
-                answers, currentIndex, activeDomain,
+                answers, currentIndex, activeDomain, showIncorrectOnly,
                 startTime, elapsedSeconds,
                 questionOrder: filteredQuestions.map(q => q.id)
             };
@@ -457,20 +458,39 @@
 
         function renderDomainFilters() {
             const container = document.getElementById('domain-filters');
-            let html = `<button class="domain-btn ${activeDomain === 0 ? 'active' : ''}" onclick="filterDomain(0)">All (${allQuestions.length})</button>`;
+            const incorrectCount = allQuestions.filter(q => answers[q.id] !== undefined && answers[q.id] !== q.answer).length;
+            let html = `<button class="domain-btn ${!showIncorrectOnly && activeDomain === 0 ? 'active' : ''}" onclick="filterDomain(0)">All (${allQuestions.length})</button>`;
             for (const [d, info] of Object.entries(DOMAINS)) {
                 const count = allQuestions.filter(q => getDomainForQuestion(q) === parseInt(d)).length;
-                html += `<button class="domain-btn ${activeDomain === parseInt(d) ? 'active' : ''}" onclick="filterDomain(${d})" style="${activeDomain === parseInt(d) ? `border-color:${info.color};color:${info.color};background:${info.color}15` : ''}">Domain ${d} (${count})</button>`;
+                html += `<button class="domain-btn ${!showIncorrectOnly && activeDomain === parseInt(d) ? 'active' : ''}" onclick="filterDomain(${d})" style="${!showIncorrectOnly && activeDomain === parseInt(d) ? `border-color:${info.color};color:${info.color};background:${info.color}15` : ''}">Domain ${d} (${count})</button>`;
             }
+            html += `<button class="domain-btn ${showIncorrectOnly ? 'active' : ''}" onclick="toggleIncorrectFilter()" style="${showIncorrectOnly ? 'border-color:var(--accent-red);color:var(--accent-red);background:rgba(239,68,68,0.15)' : ''}">❌ Incorrect (${incorrectCount})</button>`;
             container.innerHTML = html;
         }
 
         function filterDomain(d) {
+            showIncorrectOnly = false;
             activeDomain = d;
             if (d === 0) {
                 filteredQuestions = [...allQuestions];
             } else {
                 filteredQuestions = allQuestions.filter(q => getDomainForQuestion(q) === d);
+            }
+            currentIndex = 0;
+            selectedAnswer = null;
+            showExplanation = false;
+            renderDomainFilters();
+            renderQuestion();
+            saveCookie();
+        }
+
+        function toggleIncorrectFilter() {
+            showIncorrectOnly = !showIncorrectOnly;
+            activeDomain = 0;
+            if (showIncorrectOnly) {
+                filteredQuestions = allQuestions.filter(q => answers[q.id] !== undefined && answers[q.id] !== q.answer);
+            } else {
+                filteredQuestions = [...allQuestions];
             }
             currentIndex = 0;
             selectedAnswer = null;
@@ -788,9 +808,14 @@
                 allQuestions.sort((a, b) => (orderMap[a.id] || 0) - (orderMap[b.id] || 0));
                 answers = saved.answers || {};
                 activeDomain = saved.activeDomain || 0;
+                showIncorrectOnly = saved.showIncorrectOnly || false;
                 startTime = saved.startTime || Date.now();
                 elapsedSeconds = saved.elapsedSeconds || 0;
-                filteredQuestions = activeDomain === 0 ? [...allQuestions] : allQuestions.filter(q => getDomainForQuestion(q) === activeDomain);
+                if (showIncorrectOnly) {
+                    filteredQuestions = allQuestions.filter(q => answers[q.id] !== undefined && answers[q.id] !== q.answer);
+                } else {
+                    filteredQuestions = activeDomain === 0 ? [...allQuestions] : allQuestions.filter(q => getDomainForQuestion(q) === activeDomain);
+                }
                 currentIndex = Math.min(saved.currentIndex || 0, filteredQuestions.length - 1);
                 const q = filteredQuestions[currentIndex];
                 selectedAnswer = q ? (answers[q.id] || null) : null;
