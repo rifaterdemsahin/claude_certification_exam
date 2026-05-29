@@ -25,72 +25,8 @@ async function runTests() {
         assert(resp.ok, `HTTP ${resp.status}`);
         const data = await resp.json();
         assert(data.status === 'ok', 'status is not ok');
-        assert(data.worker === 'content', 'worker is not content');
-    });
-
-    console.log('\n[Create Card]');
-    await test('POST create-card rejects missing path', async () => {
-        const resp = await fetch(WORKER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'create-card', content: '# Test' }),
-        });
-        assert(resp.status === 400, `Expected 400, got ${resp.status}`);
-    });
-
-    await test('POST create-card rejects missing content', async () => {
-        const resp = await fetch(WORKER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'create-card', path: 'formula/memory/MEM-Q999.md' }),
-        });
-        assert(resp.status === 400, `Expected 400, got ${resp.status}`);
-    });
-
-    await test('POST create-card rejects invalid path', async () => {
-        const resp = await fetch(WORKER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'create-card', path: 'bad/path.md', content: '# Test' }),
-        });
-        assert(resp.status === 400, `Expected 400, got ${resp.status}`);
-    });
-
-    await test('POST create-card rejects wrong extension', async () => {
-        const resp = await fetch(WORKER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'create-card', path: 'formula/memory/MEM-Q999.txt', content: '# Test' }),
-        });
-        assert(resp.status === 400, `Expected 400, got ${resp.status}`);
-    });
-
-    console.log('\n[Upload Image]');
-    await test('POST upload-image rejects non-image path', async () => {
-        const resp = await fetch(WORKER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'upload-image', path: 'bad/file.txt', content: 'dGVzdA==' }),
-        });
-        assert(resp.status === 400, `Expected 400, got ${resp.status}`);
-    });
-
-    await test('POST upload-image rejects wrong directory', async () => {
-        const resp = await fetch(WORKER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'upload-image', path: 'other/test.png', content: 'dGVzdA==' }),
-        });
-        assert(resp.status === 400, `Expected 400, got ${resp.status}`);
-    });
-
-    await test('POST upload-image rejects missing content', async () => {
-        const resp = await fetch(WORKER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'upload-image', path: 'assets/memory/test.png' }),
-        });
-        assert(resp.status === 400, `Expected 400, got ${resp.status}`);
+        assert(data.worker === 'content-ai', 'worker is not content-ai');
+        assert(data.note && data.note.includes('Azure'), 'should note Azure migration');
     });
 
     console.log('\n[AI Generate]');
