@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understand - Unknown Concepts & AI-Driven Learning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --border: #334155;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444;
+            --accent-orange: #f59e0b;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .subtitle {
+            font-size: 1.05em;
+            color: var(--text-secondary);
+            max-width: 700px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 1024px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Left Panel - Concept Collector */
+        .concept-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .panel-title {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-blue);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.95em;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-add {
+            background: var(--accent-blue);
+            color: #fff;
+        }
+
+        .btn-add:hover {
+            background: #06b6d4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+        }
+
+        .btn-clear {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .btn-clear:hover {
+            background: var(--border);
+            color: var(--text-primary);
+        }
+
+        .concepts-list {
+            max-height: 500px;
+            overflow-y: auto;
+            border-top: 1px solid var(--border);
+            padding-top: 16px;
+        }
+
+        .concept-tag {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-primary);
+            border: 1px solid var(--accent-blue);
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 10px;
+            gap: 12px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .concept-text {
+            flex: 1;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+        }
+
+        .concept-remove {
+            background: var(--accent-red);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: background 0.2s;
+        }
+
+        .concept-remove:hover {
+            background: #dc2626;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 2.5em;
+            margin-bottom: 12px;
+            opacity: 0.6;
+        }
+
+        /* Right Panel - AI-Generated Questions */
+        .questions-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .panel-controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .btn-generate {
+            flex: 1;
+            background: var(--accent-purple);
+            color: #fff;
+        }
+
+        .btn-generate:hover:not(:disabled) {
+            background: #9333ea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+        }
+
+        .btn-generate:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .question-container {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .question-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+        }
+
+        .question-card:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.1);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .question-concept {
+            display: inline-block;
+            background: var(--accent-purple);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+
+        .question-text {
+            font-size: 0.95em;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .question-options {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .option {
+            padding: 10px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+        }
+
+        .option:hover {
+            border-color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.05);
+        }
+
+        .option.selected {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: #fff;
+        }
+
+        .question-explanation {
+            background: rgba(56, 189, 248, 0.05);
+            border-left: 3px solid var(--accent-blue);
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            display: none;
+        }
+
+        .question-explanation.show {
+            display: block;
+        }
+
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .error-state {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--accent-red);
+            border-radius: 8px;
+            padding: 16px;
+            color: #fca5a5;
+            margin-bottom: 16px;
+            font-size: 0.9em;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-blue);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            transition: gap 0.3s;
+        }
+
+        .back-link:hover {
+            gap: 12px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--accent-green);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">← Back to Home</a>
+
+        <header>
+            <h1>🎯 Understand <span class="badge">AI-Powered</span></h1>
+            <p class="subtitle">Collect unknown concepts and let our AI engine generate targeted questions to deepen your understanding of exam topics.</p>
+        </header>
+
+        <div class="layout">
+            <!-- Left Panel: Concept Collector -->
+            <div class="concept-panel">
+                <h2 class="panel-title">📝 Unknown Concepts</h2>
+                
+                <div class="input-group">
+                    <label for="conceptInput">Add a concept you don't understand:</label>
+                    <textarea id="conceptInput" placeholder="e.g., 'How does MCP handle tool orchestration?' or 'Explain prompt caching mechanism'"></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-add" onclick="addConcept()">Add Concept</button>
+                    <button class="btn-clear" onclick="clearAllConcepts()">Clear All</button>
+                </div>
+
+                <div class="concepts-list" id="conceptsList">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🤔</div>
+                        <p>Add concepts you want to understand better</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: AI-Generated Questions -->
+            <div class="questions-panel">
+                <h2 class="panel-title">🤖 AI-Generated Questions</h2>
+                
+                <div class="panel-controls">
+                    <button class="btn-generate" id="generateBtn" onclick="generateQuestions()">
+                        Generate Questions
+                    </button>
+                </div>
+
+                <div id="errorContainer"></div>
+                <div class="question-container" id="questionsContainer">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✨</div>
+                        <p>Add concepts to generate targeted questions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-value" id="conceptCount">0</div>
+                <div class="stat-label">Concepts Added</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="questionCount">0</div>
+                <div class="stat-label">Questions Generated</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="answeredCount">0</div>
+                <div class="stat-label">Questions Answered</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const OPENROUTER_API_KEY = localStorage.getItem('openrouter_api_key') || 'YOUR_OPENROUTER_API_KEY_HERE';
+        const API_ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
+
+        // State Management
+        let concepts = [];
+        let generatedQuestions = [];
+        let answeredQuestions = 0;
+
+        // Load from localStorage on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadFromStorage();
+            renderConcepts();
+            updateStats();
+        });
+
+        // Add concept to list
+        function addConcept() {
+            const input = document.getElementById('conceptInput');
+            const concept = input.value.trim();
+
+            if (!concept) {
+                alert('Please enter a concept');
+                return;
+            }
+
+            if (concepts.includes(concept)) {
+                alert('This concept is already added');
+                return;
+            }
+
+            concepts.push(concept);
+            input.value = '';
+            saveToStorage();
+            renderConcepts();
+            updateStats();
+        }
+
+        // Remove concept
+        function removeConcept(index) {
+            concepts.splice(index, 1);
+            saveToStorage();
+            renderConcepts();
+            updateStats();
+        }
+
+        // Clear all concepts
+        function clearAllConcepts() {
+            if (confirm('Are you sure? This will clear all concepts.')) {
+                concepts = [];
+                generatedQuestions = [];
+                answeredQuestions = 0;
+                saveToStorage();
+                renderConcepts();
+                document.getElementById('questionsContainer').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✨</div>
+                        <p>Add concepts to generate targeted questions</p>
+                    </div>
+                `;
+                updateStats();
+            }
+        }
+
+        // Render concepts list
+        function renderConcepts() {
+            const container = document.getElementById('conceptsList');
+            
+            if (concepts.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🤔</div>
+                        <p>Add concepts you want to understand better</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = concepts.map((concept, index) => `
+                <div class="concept-tag">
+                    <span class="concept-text">${escapeHtml(concept)}</span>
+                    <button class="concept-remove" onclick="removeConcept(${index})">✕</button>
+                </div>
+            `).join('');
+        }
+
+        // Generate AI questions based on concepts
+        async function generateQuestions() {
+            if (concepts.length === 0) {
+                alert('Please add at least one concept');
+                return;
+            }
+
+            const generateBtn = document.getElementById('generateBtn');
+            const errorContainer = document.getElementById('errorContainer');
+            const questionsContainer = document.getElementById('questionsContainer');
+
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<span class="loading-spinner"></span>Generating...';
+            errorContainer.innerHTML = '';
+
+            try {
+                // Create prompt for Claude to generate exam-style questions
+                const prompt = createGenerationPrompt(concepts);
+
+                // Call OpenRouter API with Claude model
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                    },
+                    body: JSON.stringify({
+                        model: 'anthropic/claude-3.5-sonnet',
+                        messages: [
+                            {
+                                role: 'user',
+                                content: prompt
+                            }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 3000,
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const content = data.choices[0].message.content;
+
+                // Parse questions from AI response
+                generatedQuestions = parseQuestionsFromResponse(content);
+                saveToStorage();
+                renderQuestions();
+                updateStats();
+
+                if (generatedQuestions.length === 0) {
+                    errorContainer.innerHTML = '<div class="error-state">⚠️ Could not generate questions. Please try again.</div>';
+                }
+
+            } catch (error) {
+                console.error('Error generating questions:', error);
+                errorContainer.innerHTML = `<div class="error-state">❌ Error: ${error.message}. Please try again.</div>`;
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = 'Generate Questions';
+            }
+        }
+
+        // Create prompt for AI to generate questions
+        function createGenerationPrompt(concepts) {
+            const conceptsList = concepts.map((c, i) => `${i + 1}. ${c}`).join('\n');
+            
+            return `You are an expert exam question generator for the Claude Developer Certification exam. 
+
+Based on the following unknown concepts provided by the student, generate 3-5 multiple-choice exam-style questions to help them understand these concepts better.
+
+Unknown Concepts:
+${conceptsList}
+
+For each question, provide:
+1. A clear, exam-style question
+2. Four options (A, B, C, D) with one correct answer
+3. A brief explanation of why the answer is correct
+
+Format your response as JSON with this structure:
+{
+  "questions": [
+    {
+      "concept": "concept name",
+      "text": "question text",
+      "options": ["A) option 1", "B) option 2", "C) option 3", "D) option 4"],
+      "correctAnswer": "A",
+      "explanation": "explanation text"
+    }
+  ]
+}
+
+Make sure the questions are directly relevant to the Claude certification exam and test deep understanding of the concepts.`;
+        }
+
+        // Parse AI response to extract questions
+        function parseQuestionsFromResponse(content) {
+            try {
+                // Try to find JSON in the response
+                const jsonMatch = content.match(/\{[\s\S]*\}/);
+                if (!jsonMatch) {
+                    console.error('No JSON found in response');
+                    return [];
+                }
+
+                const parsed = JSON.parse(jsonMatch[0]);
+                return parsed.questions || [];
+            } catch (error) {
+                console.error('Error parsing questions:', error);
+                return [];
+            }
+        }
+
+        // Render generated questions
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+
+            if (generatedQuestions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✨</div>
+                        <p>Add concepts to generate targeted questions</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = generatedQuestions.map((q, index) => `
+                <div class="question-card" data-index="${index}">
+                    <div class="question-header">
+                        <span class="question-concept">${escapeHtml(q.concept)}</span>
+                    </div>
+                    <div class="question-text">${escapeHtml(q.text)}</div>
+                    <div class="question-options">
+                        ${q.options.map((opt, optIndex) => `
+                            <div class="option" onclick="selectOption(${index}, '${opt.charAt(0)}')">
+                                ${escapeHtml(opt)}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="question-explanation" id="explanation-${index}">
+                        <strong>Explanation:</strong> ${escapeHtml(q.explanation)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Handle option selection and show explanation
+        function selectOption(questionIndex, optionLetter) {
+            const card = document.querySelector(`[data-index="${questionIndex}"]`);
+            const options = card.querySelectorAll('.option');
+            const explanation = document.getElementById(`explanation-${questionIndex}`);
+            const question = generatedQuestions[questionIndex];
+
+            // Remove previous selection
+            options.forEach(opt => opt.classList.remove('selected'));
+
+            // Mark selected option
+            const selectedOption = Array.from(options).find(opt => opt.textContent.charAt(0) === optionLetter);
+            if (selectedOption) {
+                selectedOption.classList.add('selected');
+                explanation.classList.add('show');
+
+                // Track if answer is correct
+                if (optionLetter === question.correctAnswer) {
+                    answeredQuestions++;
+                    saveToStorage();
+                    updateStats();
+                }
+            }
+        }
+
+        // Save state to localStorage
+        function saveToStorage() {
+            localStorage.setItem('understand_concepts', JSON.stringify(concepts));
+            localStorage.setItem('understand_questions', JSON.stringify(generatedQuestions));
+            localStorage.setItem('understand_answered', answeredQuestions.toString());
+        }
+
+        // Load state from localStorage
+        function loadFromStorage() {
+            concepts = JSON.parse(localStorage.getItem('understand_concepts') || '[]');
+            generatedQuestions = JSON.parse(localStorage.getItem('understand_questions') || '[]');
+            answeredQuestions = parseInt(localStorage.getItem('understand_answered') || '0');
+            
+            if (generatedQuestions.length > 0) {
+                renderQuestions();
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('conceptCount').textContent = concepts.length;
+            document.getElementById('questionCount').textContent = generatedQuestions.length;
+            document.getElementById('answeredCount').textContent = answeredQuestions;
+        }
+
+        // Utility: Escape HTML
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                addConcept();
+            }
+        });
+    </script>
+</body>
+</html>
