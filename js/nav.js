@@ -21,7 +21,6 @@
             label: '📝 Understand',
             sublabel: 'Apply',
             items: [
-                { emoji: '💡', label: 'AI Deep Dive', href: 'understand.html' },
                 { emoji: '📋', label: 'Mock Exam Cards', href: 'exam.html' },
                 { emoji: '🎯', label: 'Practice Exam', href: 'practice_exam.html' }
             ]
@@ -55,6 +54,7 @@
             label: '🔍 Evaluate',
             sublabel: 'Collaborate',
             items: [
+                { emoji: '💬', label: 'Discussion Board', href: 'understand.html' },
                 { emoji: '📊', label: 'Pricing', href: 'claude_pricing.html' },
                 { emoji: '🎮', label: 'Multiplayer', href: 'multiplayer.html' }
             ]
