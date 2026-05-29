@@ -797,18 +797,34 @@
 
         function loadImageForQuestion(questionNumber, container) {
             const filename = `q${String(questionNumber).padStart(3, '0')}.svg`;
-            const azureUrl = `https://claudecertstore.blob.core.windows.net/pro-exam-images/${filename}`;
+            
+            // Try Azure first
+            const azureUrl = `https://claudecertstore.blob.core.windows.net/exam-images/${filename}`;
+            
+            // Fallback to local assets
+            const localUrl = `../assets/exam-images/${filename}`;
             
             const img = new Image();
+            
             img.onload = () => {
-                container.innerHTML = `<img src="${azureUrl}" class="modal-image" alt="Question ${questionNumber} diagram">`;
+                container.innerHTML = `<img src="${img.src}" class="modal-image" alt="Question ${questionNumber} diagram">`;
             };
+            
             img.onerror = () => {
-                // Fallback to placeholder
-                const question = examData.find(q => q.question_number === questionNumber);
-                const svg = createPlaceholderDiagram(question.image_prompt, questionNumber);
-                container.innerHTML = `<div>${svg}</div>`;
+                // Try local fallback
+                const img2 = new Image();
+                img2.onload = () => {
+                    container.innerHTML = `<img src="${localUrl}" class="modal-image" alt="Question ${questionNumber} diagram">`;
+                };
+                img2.onerror = () => {
+                    // Show placeholder
+                    const question = examData.find(q => q.question_number === questionNumber);
+                    const svg = createPlaceholderDiagram(question.image_prompt, questionNumber);
+                    container.innerHTML = `<div>${svg}</div>`;
+                };
+                img2.src = localUrl;
             };
+            
             img.src = azureUrl;
         }
 

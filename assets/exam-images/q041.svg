@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .title { fill: #1a1a1a; font-size: 36px; font-weight: 700; font-family: 'Segoe UI', 'Helvetica Neue', sans-serif; }
+      .label { fill: #2c3e50; font-size: 16px; font-weight: 600; font-family: 'Segoe UI', 'Helvetica Neue', sans-serif; }
+      .desc { fill: #555555; font-size: 13px; font-family: 'Segoe UI', sans-serif; }
+      .box { fill: #f0f4ff; stroke: #3498db; stroke-width: 2.5; }
+      .box-primary { fill: #3498db; stroke: #2980b9; stroke-width: 2; }
+      .box-success { fill: #27ae60; stroke: #229954; stroke-width: 2; }
+      .box-error { fill: #e74c3c; stroke: #c0392b; stroke-width: 2; }
+      .box-warn { fill: #f39c12; stroke: #d68910; stroke-width: 2; }
+      .arrow { stroke: #34495e; stroke-width: 2.5; fill: none; }
+      .arrow-success { stroke: #27ae60; stroke-width: 2.5; fill: none; }
+      .arrow-error { stroke: #e74c3c; stroke-width: 2.5; fill: none; }
+      .circle { fill: #3498db; stroke: #2980b9; stroke-width: 2; }
+      .circle-success { fill: #27ae60; stroke: #229954; stroke-width: 2; }
+      .circle-error { fill: #e74c3c; stroke: #c0392b; stroke-width: 2; }
+      .text-white { fill: #ffffff; font-weight: 600; font-size: 14px; }
+      .grid { stroke: #ecf0f1; stroke-width: 0.5; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#34495e" />
+    </marker>
+    <marker id="arrowhead-success" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#27ae60" />
+    </marker>
+    <marker id="arrowhead-error" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#e74c3c" />
+    </marker>
+  </defs>
+  
+  <!-- Background with grid -->
+  <rect class="bg" width="1200" height="800"/>
+  <defs>
+    <pattern id="smallgrid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path class="grid" d="M 20 0 L 0 0 0 20" fill="none"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="800" fill="url(#smallgrid)" opacity="0.3"/>
+  
+  <!-- Header -->
+  <rect x="0" y="0" width="1200" height="90" fill="#f8f9fa" stroke="#e0e0e0" stroke-width="1"/>
+  <text class="title" x="40" y="65">Question 41</text>
+
+  <!-- Architecture Components -->
+  <rect class="box" x="80" y="140" width="200" height="90" rx="10"/>
+  <text class="label" x="110" y="175">Agent A</text>
+  <text class="desc" x="110" y="200">Input/Search</text>
+  
+  <rect class="box" x="880" y="140" width="200" height="90" rx="10"/>
+  <text class="label" x="910" y="175">Agent B</text>
+  <text class="desc" x="910" y="200">Analysis</text>
+  
+  <!-- Central Coordinator -->
+  <circle class="circle" cx="540" cy="185" r="50"/>
+  <text class="label text-white" x="510" y="195">Coordinator</text>
+  
+  <!-- Arrows to coordinator -->
+  <path class="arrow" d="M 280 185 L 490 185" marker-end="url(#arrowhead)"/>
+  <path class="arrow" d="M 880 185 L 590 185" marker-end="url(#arrowhead)"/>
+  
+  <!-- Output -->
+  <rect class="box-success" x="420" y="320" width="240" height="90" rx="10"/>
+  <text class="label text-white" x="450" y="355">Synthesis Agent</text>
+  <text class="desc text-white" x="445" y="380">Output Generation</text>
+  
+  <!-- Arrow to output -->
+  <path class="arrow-success" d="M 540 235 L 540 320" marker-end="url(#arrowhead-success)"/>
+
+  <!-- Description -->
+  <rect x="50" y="520" width="1100" height="240" fill="#f8f9fa" stroke="#d0d0d0" stroke-width="1" rx="8"/>
+  <text class="label" x="70" y="550" font-size="16">Concept:</text>
+  
+  <foreignObject x="70" y="570" width="1060" height="180">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: 'Segoe UI', sans-serif; color: #555555; font-size: 12px; line-height: 1.7; word-wrap: break-word; overflow: hidden;">
+      <p style="margin: 0; white-space: pre-wrap; font-size: 13px;">A loop diagram showing an agent writing a draft message, sending it through an internal evaluation step labeled 'Self-Critique Verification Checklist', catching a missing 'Next Steps' requirement, and refining the text into a polished final copy.</p>
+    </div>
+  </foreignObject>
+  
+  <!-- Footer -->
+  <text class="desc" x="50" y="785" font-size="11">Pro Exam Study Guide • Question 41</text>
+</svg>
