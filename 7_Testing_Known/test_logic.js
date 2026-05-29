@@ -79,12 +79,12 @@ try {
 
     // Check for stages presence inside the drawer
     const debugMenuItems = debugDrawer.querySelectorAll('.debug-menu-item');
-    assert(debugMenuItems.length === 13, `Expected 13 Debug menu items (7 stages + 6 agent/prompt files), found ${debugMenuItems.length}`);
+    assert(debugMenuItems.length === 14, `Expected 14 Debug menu items (7 stages + 7 agent/prompt/simulation files), found ${debugMenuItems.length}`);
     
     // Verify stages are listed in order
     const firstStage = debugMenuItems[0].textContent;
     assert(firstStage.includes('1. Real Unknown'), `First stage should be '1. Real Unknown', found: ${firstStage}`);
-    console.log("✓ PASS: Debug Menu contains all 7 stages and 6 agent/prompt files in order.");
+    console.log("✓ PASS: Debug Menu contains all 7 stages and 7 agent/prompt/simulation files in order.");
 
     // Test 5: Verify cookie-based toggle persistence
     console.log("Test 5: Checking Debug Toggle Behavior & Cookie Persistence...");
