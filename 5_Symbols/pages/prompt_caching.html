@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Understanding Prompt Caching in Claude - Efficiency, impact, and best practices">
+    <title>Prompt Caching - Claude Developer Certification</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💾</text></svg>">
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        .caching-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .caching-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .caching-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .caching-header p {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+        }
+        .section {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+        .section h2 {
+            font-size: 1.5em;
+            color: var(--accent-blue);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section h3 {
+            font-size: 1.2em;
+            color: var(--accent-purple);
+            margin: 20px 0 12px;
+        }
+        .section p {
+            color: var(--text-primary);
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+        .section ul {
+            margin-left: 20px;
+            margin-bottom: 16px;
+        }
+        .section li {
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        .highlight-box {
+            background: rgba(56,189,248,0.1);
+            border-left: 4px solid var(--accent-blue);
+            padding: 16px 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 16px 0;
+        }
+        .highlight-box strong {
+            color: var(--accent-blue);
+        }
+        .warning-box {
+            background: rgba(239,68,68,0.1);
+            border-left: 4px solid var(--accent-red);
+            padding: 16px 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 16px 0;
+        }
+        .warning-box strong {
+            color: var(--accent-red);
+        }
+        .success-box {
+            background: rgba(16,185,129,0.1);
+            border-left: 4px solid var(--accent-green);
+            padding: 16px 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 16px 0;
+        }
+        .success-box strong {
+            color: var(--accent-green);
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .comparison-table th {
+            background: var(--bg-primary);
+            color: var(--accent-blue);
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border);
+        }
+        .comparison-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+        .comparison-table tr:nth-child(even) {
+            background: rgba(255,255,255,0.02);
+        }
+        .comparison-table tr:hover {
+            background: rgba(56,189,248,0.05);
+        }
+        .concept-card {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 16px 0;
+            border: 1px solid var(--border);
+        }
+        .concept-card h4 {
+            color: var(--accent-green);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        @media (max-width: 768px) {
+            .caching-header h1 { font-size: 2rem; }
+            .section { padding: 20px; }
+            .comparison-table { font-size: 0.9em; }
+            .comparison-table th, .comparison-table td { padding: 10px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <script src="../js/nav.js"></script>
+
+    <div class="caching-container">
+        <header class="caching-header">
+            <h1>Prompt Caching & Efficiency</h1>
+            <p>Understanding how prompt caching works in Claude and why it matters</p>
+        </header>
+
+        <div class="section">
+            <h2>What is Prompt Caching?</h2>
+            <p>Prompt caching is a technique that stores and reuses portions of prompts that have been previously processed by the model. Instead of re-processing the same content every time, the system can retrieve cached results, significantly reducing latency and costs.</p>
+
+            <div class="highlight-box">
+                <strong>Key Insight:</strong> In Claude, prompt caching allows you to cache frequently used context (like system prompts, tool definitions, or reference materials) so they don't need to be re-processed on every API call.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Why Does Prompt Caching Matter?</h2>
+            <p>Prompt caching is crucial for several reasons:</p>
+
+            <div class="concept-card">
+                <h4>Cost Efficiency</h4>
+                <p>Without caching, every API call processes the entire prompt from scratch. With caching, repeated context is processed once and reused, reducing costs by up to 90% for cached tokens.</p>
+            </div>
+
+            <div class="concept-card">
+                <h4>Reduced Latency</h4>
+                <p>Cached prompts are retrieved instantly rather than being re-processed by the model. This can reduce response times by 50-80% for requests with large cached contexts.</p>
+            </div>
+
+            <div class="concept-card">
+                <h4>Better User Experience</h4>
+                <p>Faster responses mean more responsive applications. Users experience near-instant responses when the cached context matches their request.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Impact of NOT Having Prompt Caching</h2>
+            <p>Without prompt caching, operations face significant challenges:</p>
+
+            <div class="warning-box">
+                <strong>Higher Costs:</strong> Every API call processes the full prompt, leading to exponential cost increases for applications with repetitive context.
+            </div>
+
+            <div class="warning-box">
+                <strong>Increased Latency:</strong> Processing large prompts from scratch on every call creates noticeable delays, especially for complex agentic workflows.
+            </div>
+
+            <div class="warning-box">
+                <strong>Rate Limiting:</strong> Higher token consumption means hitting rate limits faster, potentially blocking critical operations during peak usage.
+            </div>
+
+            <div class="warning-box">
+                <strong>Poor Scalability:</strong> Applications cannot efficiently scale when every request requires full prompt processing, limiting the number of concurrent users.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Operational Impact</h2>
+            <p>The presence or absence of prompt caching directly affects operational efficiency:</p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Without Caching</th>
+                        <th>With Caching</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Cost per Request</strong></td>
+                        <td>Full price for all tokens</td>
+                        <td>Reduced price for cached tokens (up to 90% savings)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Response Time</strong></td>
+                        <td>Full processing time</td>
+                        <td>Significantly reduced (50-80% faster)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rate Limit Impact</strong></td>
+                        <td>High token consumption</td>
+                        <td>Lower effective token usage</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Scalability</strong></td>
+                        <td>Limited by processing capacity</td>
+                        <td>Higher concurrent user support</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Agentic Workflows</strong></td>
+                        <td>Expensive multi-step operations</td>
+                        <td>Cost-effective iterative processes</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>How to Implement Prompt Caching</h2>
+            <p>Implementing prompt caching in Claude involves several strategies:</p>
+
+            <div class="concept-card">
+                <h4>1. Cache System Prompts</h4>
+                <p>Place stable, reusable content at the beginning of your prompt. This includes system instructions, tool definitions, and reference materials that don't change between requests.</p>
+            </div>
+
+            <div class="concept-card">
+                <h4>2. Use Cache Breakpoints</h4>
+                <p>Mark specific points in your prompt where caching should occur. Content before these breakpoints is cached, while content after is processed fresh each time.</p>
+            </div>
+
+            <div class="concept-card">
+                <h4>3. Structure Prompts Strategically</h4>
+                <p>Organize your prompt with static content first, followed by dynamic content. This maximizes the portion of the prompt that can be cached.</p>
+            </div>
+
+            <div class="concept-card">
+                <h4>4. Monitor Cache Hit Rates</h4>
+                <p>Track how often your cache is being used. Low hit rates indicate opportunities to restructure your prompts for better caching efficiency.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Best Practices</h2>
+            <ul>
+                <li><strong>Keep cached content stable:</strong> Frequently changing content reduces cache effectiveness</li>
+                <li><strong>Place static content first:</strong> Maximize the cacheable portion of your prompts</li>
+                <li><strong>Use meaningful cache keys:</strong> Ensure cache lookups are efficient and accurate</li>
+                <li><strong>Monitor and optimize:</strong> Regularly review cache hit rates and adjust strategies</li>
+                <li><strong>Consider cache expiration:</strong> Set appropriate TTL for cached content based on update frequency</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Conclusion</h2>
+            <p>Prompt caching is not just an optimization—it's a fundamental requirement for building efficient, scalable, and cost-effective AI applications. Without it, organizations face exponential costs, poor performance, and limited scalability.</p>
+
+            <div class="success-box">
+                <strong>Bottom Line:</strong> Implementing prompt caching can reduce costs by up to 90%, improve response times by 50-80%, and enable applications to scale significantly further than non-cached alternatives.
+            </div>
+        </div>
+    </div>
+
+    <footer class="app-footer">
+        <p>Claude Developer Certification Study App</p>
+        <p>Created by Rifat Erdem Sahin</p>
+        <div class="footer-links">
+            <a href="../../index.html">🏠 Home</a>
+            <a href="cards.html">🃏 Cards</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="exam.html">📋 Exam</a>
+            <a href="mastery.html">🎯 Mastery</a>
+            <a href="https://github.com/rifaterdemsahin/claude_certification_exam" target="_blank">GitHub</a>
+        </div>
+    </footer>
+
+    <script src="nav.js"></script>
+</body>
+</html>

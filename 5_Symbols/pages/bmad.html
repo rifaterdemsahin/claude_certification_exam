@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BMAD methodology and how it connects to Claude agents for building full agentic agile worlds.">
+    <title>BMAD - Claude Developer Certification</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏗️</text></svg>">
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        .bmad-hero {
+            text-align: center;
+            padding: 40px 24px;
+            background: linear-gradient(135deg, rgba(245,158,11,0.08) 0%, rgba(168,85,247,0.08) 100%);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            margin-bottom: 32px;
+        }
+        .bmad-hero h2 {
+            font-size: 1.8em;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .bmad-hero p {
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+        .bmad-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .bmad-section h3 {
+            color: var(--accent-blue);
+            margin-bottom: 16px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .bmad-section p, .bmad-section li {
+            color: var(--text-secondary);
+            font-size: 0.95em;
+            line-height: 1.7;
+        }
+        .bmad-section ul { margin: 8px 0 8px 20px; }
+        .bmad-section li { margin-bottom: 8px; }
+
+        /* BMAD Cycle */
+        .cycle-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+        @media (max-width: 700px) {
+            .cycle-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        .cycle-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            transition: all 0.2s;
+        }
+        .cycle-card:hover {
+            border-color: var(--accent-orange);
+            transform: translateY(-2px);
+        }
+        .cycle-letter {
+            font-size: 2.5em;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        .cycle-label {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+        .cycle-desc {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+        .cycle-arrow {
+            position: absolute;
+            right: -18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-orange);
+            font-size: 1.2em;
+            z-index: 1;
+        }
+        @media (max-width: 700px) {
+            .cycle-arrow { display: none; }
+        }
+
+        /* Phase Detail */
+        .phase-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .phase-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            gap: 16px;
+        }
+        .phase-icon {
+            font-size: 1.8em;
+            min-width: 40px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .phase-content strong {
+            color: var(--text-primary);
+            font-size: 0.95em;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .phase-content p {
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            line-height: 1.5;
+        }
+        .phase-content .agent-role {
+            margin-top: 8px;
+            padding: 6px 10px;
+            background: rgba(168,85,247,0.1);
+            border-radius: 6px;
+            font-size: 0.8em;
+            color: var(--accent-purple);
+            display: inline-block;
+        }
+
+        /* Comparison Table */
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            font-size: 0.9em;
+        }
+        .compare-table th {
+            background: var(--bg-primary);
+            color: var(--accent-blue);
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            font-weight: 600;
+        }
+        .compare-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+            vertical-align: top;
+        }
+        .compare-table tr:hover td {
+            background: rgba(56,189,248,0.03);
+        }
+        .compare-table .highlight {
+            color: var(--accent-green);
+            font-weight: 500;
+        }
+
+        /* Architecture */
+        .arch-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+            padding: 20px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        .arch-box {
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-align: center;
+            min-width: 100px;
+        }
+        .arch-arrow {
+            color: var(--accent-orange);
+            font-size: 1.2em;
+        }
+
+        /* World Cards */
+        .world-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .world-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s;
+        }
+        .world-card:hover {
+            border-color: var(--accent-purple);
+            transform: translateY(-2px);
+        }
+        .world-card .icon { font-size: 1.8em; margin-bottom: 10px; }
+        .world-card strong { color: var(--text-primary); font-size: 0.95em; display: block; margin-bottom: 6px; }
+        .world-card p { color: var(--text-secondary); font-size: 0.85em; line-height: 1.5; }
+
+        /* Steps */
+        .step-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+        .step-num {
+            min-width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--accent-orange);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85em;
+            flex-shrink: 0;
+        }
+        .step-content strong { color: var(--text-primary); font-size: 0.9em; display: block; }
+        .step-content p { color: var(--text-secondary); font-size: 0.85em; margin-top: 2px; }
+    </style>
+</head>
+<body>
+    <script src="../js/nav.js"></script>
+
+    <header class="app-header">
+        <h1>BMAD</h1>
+        <p>Build, Model, Apply, Deliver — The Agentic Agile Framework</p>
+    </header>
+
+    <div class="container">
+        <!-- Hero -->
+        <div class="bmad-hero">
+            <h2>From Agile to Agentic Agile</h2>
+            <p>BMAD is a framework for building software where AI agents don't just assist — they own entire phases of the development lifecycle. It connects business requirements to working software through orchestrated agent teams.</p>
+        </div>
+
+        <!-- What is BMAD -->
+        <div class="bmad-section">
+            <h3>What is BMAD?</h3>
+            <p>BMAD stands for <strong>Build, Model, Apply, Deliver</strong> — a development methodology designed for the agentic era. Traditional agile has humans at every ceremony. BMAD replaces repetitive, low-judgment work with agent loops while keeping humans in the critical decision points.</p>
+            <div class="cycle-grid">
+                <div class="cycle-card">
+                    <div class="cycle-letter" style="color:var(--accent-blue)">B</div>
+                    <div class="cycle-label">Build</div>
+                    <div class="cycle-desc">Define requirements, break down epics, create specs</div>
+                    <span class="cycle-arrow">&#8594;</span>
+                </div>
+                <div class="cycle-card">
+                    <div class="cycle-letter" style="color:var(--accent-purple)">M</div>
+                    <div class="cycle-label">Model</div>
+                    <div class="cycle-desc">Design architecture, model data flows, plan interfaces</div>
+                    <span class="cycle-arrow">&#8594;</span>
+                </div>
+                <div class="cycle-card">
+                    <div class="cycle-letter" style="color:var(--accent-green)">A</div>
+                    <div class="cycle-label">Apply</div>
+                    <div class="cycle-desc">Implement code, run tests, validate against specs</div>
+                    <span class="cycle-arrow">&#8594;</span>
+                </div>
+                <div class="cycle-card">
+                    <div class="cycle-letter" style="color:var(--accent-orange)">D</div>
+                    <div class="cycle-label">Deliver</div>
+                    <div class="cycle-desc">Deploy, monitor, gather feedback, iterate</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How Claude Agents Map to BMAD -->
+        <div class="bmad-section">
+            <h3>Claude Agents in Each BMAD Phase</h3>
+            <p>Each phase has a primary agent role. The Coordinator orchestrates; sub-agents specialize.</p>
+            <div class="phase-grid">
+                <div class="phase-card">
+                    <span class="phase-icon">&#127919;</span>
+                    <div class="phase-content">
+                        <strong>Build — Product Agent</strong>
+                        <p>Reads business requirements, generates user stories, creates acceptance criteria, breaks epics into tasks. Uses chain-of-thought to reason about priority and dependencies.</p>
+                        <span class="agent-role">Coordinator + Research Sub-agent</span>
+                    </div>
+                </div>
+                <div class="phase-card">
+                    <span class="phase-icon">&#128295;</span>
+                    <div class="phase-content">
+                        <strong>Model — Architecture Agent</strong>
+                        <p>Designs system architecture, defines API contracts, models database schemas, creates sequence diagrams. Validates designs against constraints in CLAUDE.md.</p>
+                        <span class="agent-role">Coordinator + Design Sub-agent</span>
+                    </div>
+                </div>
+                <div class="phase-card">
+                    <span class="phase-icon">&#128187;</span>
+                    <div class="phase-content">
+                        <strong>Apply — Engineering Agent</strong>
+                        <p>Writes code, runs tests, fixes bugs, refactors. Uses TDD with validation loops. Calls MCP tools for file system, test runner, linter, and compiler.</p>
+                        <span class="agent-role">Coordinator + Coder + Tester Sub-agents (parallel)</span>
+                    </div>
+                </div>
+                <div class="phase-card">
+                    <span class="phase-icon">&#128640;</span>
+                    <div class="phase-content">
+                        <strong>Deliver — DevOps Agent</strong>
+                        <p>Runs CI/CD pipelines, deploys to staging, monitors metrics, creates release notes, rolls back on failure. Uses circuit breaker patterns for reliability.</p>
+                        <span class="agent-role">Coordinator + Deploy + Monitor Sub-agents</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Traditional Agile vs Agentic Agile -->
+        <div class="bmad-section">
+            <h3>Traditional Agile vs Agentic Agile</h3>
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th>Ceremony</th>
+                        <th>Traditional Agile</th>
+                        <th>Agentic Agile (BMAD)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Backlog Grooming</td>
+                        <td>PM writes stories, team estimates</td>
+                        <td class="highlight">Agent generates stories from requirements, human approves</td>
+                    </tr>
+                    <tr>
+                        <td>Sprint Planning</td>
+                        <td>Team picks items, discusses scope</td>
+                        <td class="highlight">Agent decomposes tasks, suggests priority, human decides</td>
+                    </tr>
+                    <tr>
+                        <td>Daily Standup</td>
+                        <td>Each person reports progress</td>
+                        <td class="highlight">Agent summarizes all sub-agent status in one report</td>
+                    </tr>
+                    <tr>
+                        <td>Implementation</td>
+                        <td>Developer writes code</td>
+                        <td class="highlight">Agent writes code, runs tests, human reviews PR</td>
+                    </tr>
+                    <tr>
+                        <td>Code Review</td>
+                        <td>Peer reviews PR</td>
+                        <td class="highlight">Agent reviews first, human approves edge cases</td>
+                    </tr>
+                    <tr>
+                        <td>Retrospective</td>
+                        <td>Team discusses what went well</td>
+                        <td class="highlight">Agent analyzes metrics, suggests improvements, human decides</td>
+                    </tr>
+                    <tr>
+                        <td>Deployment</td>
+                        <td>DevOps runs pipeline</td>
+                        <td class="highlight">Agent triggers deploy, monitors, auto-rollback on failure</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Connection to Claude Certification Concepts -->
+        <div class="bmad-section">
+            <h3>How Certification Concepts Power BMAD</h3>
+            <div class="arch-flow">
+                <div class="arch-box" style="background:rgba(239,68,68,0.15);color:var(--accent-red);">CLAUDE.md<br><small>Constraints</small></div>
+                <span class="arch-arrow">&#8594;</span>
+                <div class="arch-box" style="background:rgba(168,85,247,0.15);color:var(--accent-purple);">Coordinator<br><small>Orchestration</small></div>
+                <span class="arch-arrow">&#8594;</span>
+                <div class="arch-box" style="background:rgba(59,130,246,0.15);color:var(--accent-blue);">Sub-agents<br><small>Specialization</small></div>
+                <span class="arch-arrow">&#8594;</span>
+                <div class="arch-box" style="background:rgba(16,185,129,0.15);color:var(--accent-green);">MCP Tools<br><small>Execution</small></div>
+                <span class="arch-arrow">&#8594;</span>
+                <div class="arch-box" style="background:rgba(245,158,11,0.15);color:var(--accent-orange);">Validation<br><small>Quality</small></div>
+            </div>
+            <div class="phase-grid">
+                <div class="phase-card">
+                    <span class="phase-icon">&#128220;</span>
+                    <div class="phase-content">
+                        <strong>CLAUDE.md (CAT03)</strong>
+                        <p>The constitution. Defines coding standards, architectural constraints, and rules agents must never violate. Keeps the entire BMAD pipeline aligned.</p>
+                    </div>
+                </div>
+                <div class="phase-card">
+                    <span class="phase-icon">&#128260;</span>
+                    <div class="phase-content">
+                        <strong>Agentic Loop (CAT01)</strong>
+                        <p>Every BMAD phase runs as a Perceive-Think-Act loop. The agent observes the current state, reasons about next steps, acts, then verifies.</p>
+                    </div>
+                </div>
+                <div class="phase-card">
+                    <span class="phase-icon">&#129489;</span>
+                    <div class="phase-content">
+                        <strong>Coordinator-Subagent (CAT01)</strong>
+                        <p>The Coordinator assigns Build/Model/Apply/Deliver tasks to specialized sub-agents. Parallel execution where possible, sequential where dependent.</p>
+                    </div>
+                </div>
+                <div class="phase-card">
+                    <span class="phase-icon">&#128268;</span>
+                    <div class="phase-content">
+                        <strong>MCP Tools (CAT02)</strong>
+                        <p>Agents call tools: file system for code, test runner for validation, deploy script for delivery, monitoring API for observability. Standardized via MCP.</p>
+                    </div>
+                </div>
+                <div class="phase-card">
+                    <span class="phase-icon">&#128200;</span>
+                    <div class="phase-content">
+                        <strong>Validation Loops (CAT04)</strong>
+                        <p>Every output is checked against criteria. Code must pass tests. Architecture must meet constraints. Deployments must pass health checks. Retry on failure.</p>
+                    </div>
+                </div>
+                <div class="phase-card">
+                    <span class="phase-icon">&#128736;</span>
+                    <div class="phase-content">
+                        <strong>Reliability (CAT05)</strong>
+                        <p>Circuit breakers prevent cascade failures. Context compression keeps long sprints within token limits. Graceful degradation when tools fail.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- What Needs to Happen -->
+        <div class="bmad-section">
+            <h3>What Needs to Happen for Full Agentic Agile</h3>
+            <p>The vision is clear but the infrastructure is still being built. Here's what's needed:</p>
+            <div class="step-list">
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <strong>Reliable Long-Horizon Agents</strong>
+                        <p>Current agents lose context over long sessions. Need persistent memory (CAT05), better context compression, and agents that can maintain state across multi-day sprints.</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <strong>Standardized Tool Ecosystem (MCP)</strong>
+                        <p>Every tool in the dev lifecycle — git, CI/CD, monitoring, issue trackers — needs MCP servers. The protocol exists (CAT02), but coverage is incomplete.</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <strong>Trust Boundaries & Human-in-the-Loop</strong>
+                        <p>Agents need clear escalation patterns (CAT01). When should an agent decide alone? When should it ask? Production deployments, architectural changes, and budget decisions need human gates.</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">4</div>
+                    <div class="step-content">
+                        <strong>Evaluation Benchmarks for Agents</strong>
+                        <p>SWE-bench and DeepSWE measure coding ability. We need benchmarks for the full BMAD cycle — can an agent plan a sprint? Design an architecture? Run a retrospective?</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">5</div>
+                    <div class="step-content">
+                        <strong>Multi-Agent Coordination Protocols</strong>
+                        <p>Current Coordinator-Subagent patterns are simple. Need protocols for agent negotiation, conflict resolution, and shared state management across teams of agents.</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">6</div>
+                    <div class="step-content">
+                        <strong>Observability & Debugging</strong>
+                        <p>When an agent team fails, you need to understand why. Distributed tracing across agent loops, decision logging, and replay capabilities for debugging.</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">7</div>
+                    <div class="step-content">
+                        <strong>Organizational Change Management</strong>
+                        <p>Teams need to learn how to work with agents. New roles emerge: Agent Orchestrator, Prompt Engineer, Agent QA. The agile manifesto gets an agentic addendum.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Agentic Agile World -->
+        <div class="bmad-section">
+            <h3>The Agentic Agile World</h3>
+            <p>When BMAD is fully realized, the development lifecycle looks fundamentally different:</p>
+            <div class="world-grid">
+                <div class="world-card">
+                    <div class="icon">&#128640;</div>
+                    <strong>Sprint 0 is Instant</strong>
+                    <p>An agent reads the business brief, generates the backlog, designs the architecture, and scaffolds the project — in minutes, not weeks.</p>
+                </div>
+                <div class="world-card">
+                    <div class="icon">&#128260;</div>
+                    <strong>Continuous Agent Loops</strong>
+                    <p>Agents work 24/7. While humans sleep, the Apply agent implements features, runs tests, and opens PRs for morning review.</p>
+                </div>
+                <div class="world-card">
+                    <div class="icon">&#129489;</div>
+                    <strong>Humans Focus on Judgment</strong>
+                    <p>Humans do what agents can't: make ethical decisions, negotiate with stakeholders, handle ambiguity, and approve production changes.</p>
+                </div>
+                <div class="world-card">
+                    <div class="icon">&#128200;</div>
+                    <strong>Data-Driven Retrospectives</strong>
+                    <p>Agents analyze commit patterns, test coverage, bug rates, and deployment metrics to suggest concrete improvements — not just "communicate better."</p>
+                </div>
+                <div class="world-card">
+                    <div class="icon">&#128268;</div>
+                    <strong>Tool Ecosystem Explosion</strong>
+                    <p>MCP servers for every SaaS tool. Agents can query Jira, update Confluence, trigger PagerDuty, and post to Slack — all through standardized protocols.</p>
+                </div>
+                <div class="world-card">
+                    <div class="icon">&#128736;</div>
+                    <strong>Self-Healing Systems</strong>
+                    <p>Production issues trigger agent loops: detect anomaly, diagnose root cause, implement fix, deploy, verify. Humans are notified, not paged.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="app-footer">
+        <p>Claude Developer Certification Study App</p>
+        <p>Created by Rifat Erdem Sahin</p>
+        <div class="footer-links">
+            <a href="../../index.html">Home</a>
+            <a href="cards.html">Cards</a>
+            <a href="quiz.html">Quiz</a>
+            <a href="practice_exam.html">Practice Exam</a>
+            <a href="exam.html">Mock Exam</a>
+            <a href="mastery.html">Mastery</a>
+            <a href="https://github.com/rifaterdemsahin/claude_certification_exam" target="_blank">GitHub</a>
+        </div>
+    </footer>
+</body>
+</html>

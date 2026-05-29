@@ -97,8 +97,8 @@ Update the content worker URL in these files:
 
 ```bash
 # Find and replace in these files:
-# - pages/add_memory_card.html
-# - tests/test_content_worker.js
+# - 5_Symbols/pages/add_memory_card.html
+# - 7_Testing_Known/test_content_worker.js
 ```
 
 Replace `PASTE_CONTENT_WORKER_URL_HERE` with the actual content worker URL.
@@ -107,10 +107,10 @@ Replace `PASTE_CONTENT_WORKER_URL_HERE` with the actual content worker URL.
 
 ```bash
 # Test vote worker
-node tests/test_vote_worker.js
+node 7_Testing_Known/test_vote_worker.js
 
 # Test content worker (after updating URL in test file)
-node tests/test_content_worker.js
+node 7_Testing_Known/test_content_worker.js
 ```
 
 ## Worker Endpoints

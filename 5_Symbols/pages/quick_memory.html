@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Quick memory card creator — paste an image, add a title, push.">
+    <title>Quick Memory Card — Claude Dev Cert</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --border: #334155;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444;
+            --accent-orange: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        .page-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            min-height: calc(100vh - 48px);
+        }
+        .quick-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 480px;
+            width: 100%;
+        }
+        .quick-card h1 {
+            font-size: 1.4em;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+        .quick-card .subtitle {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            margin-bottom: 24px;
+        }
+        .id-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85em;
+            color: var(--accent-blue);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+        .title-input {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 20px;
+        }
+        .title-input:focus { border-color: var(--accent-blue); }
+
+        /* Paste Zone */
+        .paste-zone {
+            width: 100%;
+            min-height: 200px;
+            border: 2px dashed var(--border);
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.25s;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .paste-zone:hover, .paste-zone:focus-within {
+            border-color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.04);
+        }
+        .paste-zone.has-image {
+            border-style: solid;
+            border-color: var(--accent-green);
+            padding: 0;
+        }
+        .paste-zone .hint-icon { font-size: 2.5em; }
+        .paste-zone .hint-text { color: var(--text-muted); font-size: 0.9em; }
+        .paste-zone .hint-sub { color: var(--text-muted); font-size: 0.75em; opacity: 0.7; }
+        .paste-zone img {
+            max-width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            display: block;
+            border-radius: 12px;
+        }
+        .paste-zone .remove-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(239, 68, 68, 0.85);
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+        .paste-zone.has-image .remove-btn { display: flex; }
+
+        /* Push Button */
+        .push-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.05em;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .push-btn:hover { transform: scale(1.02); box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35); }
+        .push-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+        .push-btn:active:not(:disabled) { transform: scale(0.98); }
+
+        /* Status */
+        .status {
+            margin-top: 14px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.85em;
+            display: none;
+            word-break: break-word;
+        }
+        .status.ok { display: block; background: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent-green); color: var(--accent-green); }
+        .status.err { display: block; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--accent-red); color: var(--accent-red); }
+        .status.info { display: block; background: rgba(56, 189, 248, 0.1); border: 1px solid var(--accent-blue); color: var(--accent-blue); }
+
+        /* Link */
+        .home-link {
+            margin-top: 20px;
+            color: var(--text-muted);
+            font-size: 0.8em;
+            text-decoration: none;
+        }
+        .home-link:hover { color: var(--accent-blue); }
+
+        /* Spinner */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; }
+    </style>
+</head>
+<body>
+    <script src="../js/nav.js"></script>
+
+    <div class="page-wrap">
+        <div class="quick-card">
+            <h1>Quick Memory Card</h1>
+            <p class="subtitle">Paste an image, add a title, push. AI fills the rest.</p>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                <div class="id-badge" id="idBadge">MEM-Q---</div>
+                <button id="loginBtn" onclick="handleLogin()" style="padding:8px 16px;border:1px solid var(--accent-purple);border-radius:8px;background:rgba(168,85,247,0.1);color:var(--accent-purple);cursor:pointer;font-family:inherit;font-size:0.85em;font-weight:500;transition:all 0.2s;">
+                    🔐 Login
+                </button>
+            </div>
+
+            <label for="cardTitle">Title</label>
+            <input type="text" class="title-input" id="cardTitle" placeholder="Agentic Loop" autofocus>
+
+            <label>Image</label>
+            <div class="paste-zone" id="pasteZone" tabindex="0">
+                <button class="remove-btn" id="removeBtn" onclick="removeImage(event)" title="Remove image">&times;</button>
+                <div class="hint-icon" id="hintIcon">&#128203;</div>
+                <div class="hint-text" id="hintText">Click here &amp; paste an image</div>
+                <div class="hint-sub" id="hintSub">Ctrl+V / Cmd+V from clipboard</div>
+            </div>
+
+            <button class="push-btn" id="pushBtn" onclick="pushCard()" disabled>
+                <span id="pushIcon">&#128640;</span> Push to Azure
+            </button>
+
+            <div class="status" id="status"></div>
+        </div>
+
+        <a class="home-link" href="../../index.html">&larr; Back to Home</a>
+    </div>
+
+    <script>
+        const API_BASE = 'https://claude-cert-api.azurewebsites.net/api';
+        const BLOB_BASE = 'https://claudecertstore.blob.core.windows.net';
+
+        let nextId = 101;
+        let imageData = null;   // base64
+        let imageExt = 'png';
+
+        // ================== CALCULATE NEXT ID ==================
+        async function calculateNextId() {
+            const badge = document.getElementById('idBadge');
+            try {
+                const resp = await fetch(`${API_BASE}/cards`);
+                const data = await resp.json();
+                if (data.files && data.files.length > 0) {
+                    const ids = data.files
+                        .filter(f => f.match(/MEM-Q\d+\.md/))
+                        .map(f => parseInt(f.match(/MEM-Q(\d+)\.md/)[1]));
+                    nextId = ids.length > 0 ? Math.max(...ids) + 1 : 101;
+                }
+            } catch {
+                nextId = 101;
+            }
+            badge.textContent = `MEM-Q${String(nextId).padStart(3, '0')}`;
+        }
+
+        // ================== PASTE HANDLING ==================
+        const pasteZone = document.getElementById('pasteZone');
+
+        pasteZone.addEventListener('click', () => pasteZone.focus());
+
+        document.addEventListener('paste', (e) => {
+            const items = e.clipboardData?.items;
+            if (!items) return;
+            for (const item of items) {
+                if (item.type.startsWith('image/')) {
+                    e.preventDefault();
+                    const file = item.getAsFile();
+                    handleImageFile(file);
+                    return;
+                }
+            }
+        });
+
+        pasteZone.addEventListener('dragover', (e) => { e.preventDefault(); pasteZone.style.borderColor = 'var(--accent-blue)'; });
+        pasteZone.addEventListener('dragleave', () => { pasteZone.style.borderColor = ''; });
+        pasteZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            pasteZone.style.borderColor = '';
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) handleImageFile(file);
+        });
+
+        function handleImageFile(file) {
+            if (file.size > 5 * 1024 * 1024) {
+                showStatus('Image too large (max 5MB). Compress it first.', 'err');
+                return;
+            }
+
+            imageExt = file.name.split('.').pop().toLowerCase();
+            if (!['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(imageExt)) imageExt = 'png';
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                imageData = reader.result.split(',')[1];
+                showImagePreview(reader.result);
+                updatePushBtn();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function showImagePreview(dataUrl) {
+            pasteZone.classList.add('has-image');
+            document.getElementById('hintIcon').style.display = 'none';
+            document.getElementById('hintText').style.display = 'none';
+            document.getElementById('hintSub').style.display = 'none';
+
+            let img = pasteZone.querySelector('img');
+            if (!img) {
+                img = document.createElement('img');
+                pasteZone.insertBefore(img, document.getElementById('removeBtn'));
+            }
+            img.src = dataUrl;
+        }
+
+        function removeImage(e) {
+            e.stopPropagation();
+            imageData = null;
+            pasteZone.classList.remove('has-image');
+            document.getElementById('hintIcon').style.display = '';
+            document.getElementById('hintText').style.display = '';
+            document.getElementById('hintSub').style.display = '';
+            const img = pasteZone.querySelector('img');
+            if (img) img.remove();
+            updatePushBtn();
+        }
+
+        // ================== ADMIN AUTH ==================
+        let adminToken = localStorage.getItem('adminToken');
+        let tokenExpiry = localStorage.getItem('tokenExpiry');
+
+        function isTokenValid() {
+            if (!adminToken || !tokenExpiry) return false;
+            return new Date(tokenExpiry) > new Date();
+        }
+
+        function updateLoginButton() {
+            const btn = document.getElementById('loginBtn');
+            if (isTokenValid()) {
+                btn.innerHTML = '✅ Logged In';
+                btn.style.borderColor = 'var(--accent-green)';
+                btn.style.background = 'rgba(16, 185, 129, 0.1)';
+                btn.style.color = 'var(--accent-green)';
+            } else {
+                btn.innerHTML = '🔐 Login';
+                btn.style.borderColor = 'var(--accent-purple)';
+                btn.style.background = 'rgba(168, 85, 247, 0.1)';
+                btn.style.color = 'var(--accent-purple)';
+            }
+        }
+
+        async function handleLogin() {
+            if (isTokenValid()) {
+                // Logout
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('tokenExpiry');
+                adminToken = null;
+                tokenExpiry = null;
+                updateLoginButton();
+                showStatus('Logged out successfully', 'info');
+                return;
+            }
+            await login();
+        }
+
+        async function login() {
+            const password = prompt('Enter admin password:');
+            if (!password) return false;
+
+            try {
+                const resp = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password }),
+                });
+
+                const data = await resp.json();
+                if (data.ok) {
+                    adminToken = data.token;
+                    tokenExpiry = data.expiresAt;
+                    localStorage.setItem('adminToken', adminToken);
+                    localStorage.setItem('tokenExpiry', tokenExpiry);
+                    updateLoginButton();
+                    showStatus('Login successful!', 'ok');
+                    return true;
+                } else {
+                    alert('Invalid password');
+                    return false;
+                }
+            } catch (e) {
+                alert('Login failed: ' + e.message);
+                return false;
+            }
+        }
+
+        function getAuthHeaders() {
+            if (!isTokenValid()) {
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('tokenExpiry');
+                adminToken = null;
+                return {};
+            }
+            return { 'Authorization': `Bearer ${adminToken}` };
+        }
+
+        // ================== PUSH ==================
+        function updatePushBtn() {
+            const title = document.getElementById('cardTitle').value.trim();
+            document.getElementById('pushBtn').disabled = !title || !imageData;
+        }
+
+        document.getElementById('cardTitle').addEventListener('input', updatePushBtn);
+
+        async function pushCard() {
+            const title = document.getElementById('cardTitle').value.trim();
+            if (!title || !imageData) return;
+
+            // Check authentication
+            if (!isTokenValid()) {
+                const loggedIn = await login();
+                if (!loggedIn) return;
+            }
+
+            const btn = document.getElementById('pushBtn');
+            const origHTML = btn.innerHTML;
+            btn.disabled = true;
+
+            const padId = String(nextId).padStart(3, '0');
+            const filename = `MEM-Q${padId}`;
+            const imageFilename = `${filename}_v1.${imageExt}`;
+
+            try {
+                // Step 1: Upload image to Azure
+                btn.innerHTML = '<span class="spinner"></span> Uploading image...';
+                let imgResp;
+                try {
+                    imgResp = await fetch(`${API_BASE}/images`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            ...getAuthHeaders()
+                        },
+                        body: JSON.stringify({
+                            filename: imageFilename,
+                            content: imageData,
+                            contentType: `image/${imageExt}`,
+                        }),
+                    });
+                } catch (fetchErr) {
+                    throw new Error(`Step 1 — Network error uploading image: ${fetchErr.message}`);
+                }
+                if (!imgResp.ok) {
+                    const errBody = await imgResp.text();
+                    throw new Error(`Step 1 — Image upload HTTP ${imgResp.status}: ${errBody}`);
+                }
+                const imgData = await imgResp.json();
+                if (!imgData.ok) throw new Error('Step 1 — Image upload failed: ' + (imgData.error || JSON.stringify(imgData)));
+                console.log('[push] Image uploaded:', imgData);
+
+                const imageUrl = `${BLOB_BASE}/memory-images/${imageFilename}`;
+
+                // Step 2: Create markdown card in Azure
+                btn.innerHTML = '<span class="spinner"></span> Creating card...';
+                const md = `# Memory Card: CAT01-Q${padId}
+
+## Question
+${title}
+
+## Answer
+(see image)
+
+## Memory Aid
+No memory aid provided.
+
+## Image
+![${title}](${imageUrl})
+`;
+                let cardResp;
+                try {
+                    cardResp = await fetch(`${API_BASE}/cards`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            ...getAuthHeaders()
+                        },
+                        body: JSON.stringify({
+                            filename: `${filename}.md`,
+                            content: md,
+                        }),
+                    });
+                } catch (fetchErr) {
+                    throw new Error(`Step 2 — Network error creating card: ${fetchErr.message}`);
+                }
+                if (!cardResp.ok) {
+                    const errBody = await cardResp.text();
+                    throw new Error(`Step 2 — Card creation HTTP ${cardResp.status}: ${errBody}`);
+                }
+                const cardData = await cardResp.json();
+                if (!cardData.ok) throw new Error('Step 2 — Card creation failed: ' + (cardData.error || JSON.stringify(cardData)));
+                console.log('[push] Card created:', cardData);
+
+                showStatus(`Pushed! ${filename} &amp; image saved to Azure.`, 'ok');
+
+                // Reset for next card
+                nextId++;
+                document.getElementById('idBadge').textContent = `MEM-Q${String(nextId).padStart(3, '0')}`;
+                document.getElementById('cardTitle').value = '';
+                removeImage(new Event('click'));
+
+            } catch (e) {
+                showStatus(e.message, 'err');
+            }
+
+            btn.innerHTML = origHTML;
+            updatePushBtn();
+        }
+
+        function showStatus(msg, type) {
+            const el = document.getElementById('status');
+            el.className = 'status ' + type;
+            el.innerHTML = msg;
+        }
+
+        // ================== INIT ==================
+        calculateNextId();
+        updateLoginButton();
+    </script>
+</body>
+</html>

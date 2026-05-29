@@ -3,12 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claude Developer Certification - 100 Question Mastery</title>
+    <meta name="description" content="Exam tactics and study strategy for the Claude Developer Certification. Time management tips, question approaches, and competency weightings.">
+    <title>Exam Tactics & Study Strategy — Claude Dev Cert</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
-    <link rel="stylesheet" href="5_Symbols/css/styles.css">
     <style>
-        /* Tactics Styles */
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --border: #334155;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444;
+            --accent-orange: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        header {
+            text-align: center;
+            padding: 30px 16px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        header h1 {
+            font-size: clamp(1.4rem, 3vw, 2.2rem);
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+        header p { color: var(--text-secondary); font-size: 0.95em; margin-top: 8px; }
+        .back-btn {
+            display: inline-block;
+            margin: 0 auto 24px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .container { max-width: 960px; margin: 0 auto; padding: 0 20px 60px; }
+
+        /* Sections */
         .tactic-section {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
@@ -98,7 +149,7 @@
         .palace-content strong { color: var(--text-primary); font-size: 0.95em; }
         .palace-content p { font-size: 0.85em; margin-top: 4px; }
 
-        /* Prompt box */
+        /* Gemini prompt box */
         .prompt-box {
             background: #0b1220;
             border: 1px dashed var(--accent-blue);
@@ -140,123 +191,48 @@
         .threshold.red .pct { color: var(--accent-red); }
         .threshold.yellow .pct { color: var(--accent-yellow); }
 
-        /* Training Links */
-        .training-links {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 16px;
-            margin-top: 16px;
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-left: 8px;
         }
-        .training-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 16px;
+        .badge-green { background: rgba(16,185,129,0.15); color: var(--accent-green); }
+        .badge-yellow { background: rgba(251,191,36,0.15); color: var(--accent-yellow); }
+        .badge-red { background: rgba(239,68,68,0.15); color: var(--accent-red); }
+
+        /* Footer links */
+        .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+        .actions a, .actions button {
+            padding: 10px 18px;
+            border-radius: 10px;
             background: var(--bg-primary);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            color: var(--accent-blue);
             text-decoration: none;
-            color: var(--text-primary);
-            transition: all 0.2s;
+            font-size: 0.9em;
+            cursor: pointer;
         }
-        .training-link:hover {
-            border-color: var(--accent-blue);
-            background: rgba(56,189,248,0.05);
-        }
-        .training-link .icon { font-size: 1.5em; }
-        .training-link .info strong { display: block; font-size: 0.95em; }
-        .training-link .info span { font-size: 0.8em; color: var(--text-secondary); }
+        .actions a:hover, .actions button:hover { border-color: var(--accent-blue); }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
     </style>
 </head>
 <body>
-    <script src="5_Symbols/js/nav.js"></script>
-    <header class="app-header">
-        <h1>Claude Developer Certification</h1>
-        <p>100 Question Mastery with Visual Hints & Memory Aids</p>
-        <p style="margin-top:8px;font-size:0.85em;color:var(--accent-yellow);">🔨 Building the tools is the way to learn while creating the notes — that is the active self-learning process</p>
+    <script src="../js/nav.js"></script>
+    <header>
+        <h1>🎯 Exam Tactics & Study Strategy</h1>
+        <p>Know when you're ready. Train with all senses. Build memory palaces. Use AI as your guide.</p>
     </header>
 
     <div class="container">
-        <!-- Stats Overview -->
-        <div class="stats-grid">
-            <div class="stat-card"><div class="stat-number" id="total-count">100</div><div class="stat-label">Total Questions</div></div>
-            <div class="stat-card"><div class="stat-number" id="mastered-count">0</div><div class="stat-label">Mastered</div></div>
-            <div class="stat-card"><div class="stat-number" id="completion-pct">0%</div><div class="stat-label">Completion</div></div>
-            <div class="stat-card"><div class="stat-number" id="remaining-count">100</div><div class="stat-label">Remaining</div></div>
-        </div>
 
-        <!-- Progress Section -->
-        <div class="progress-section">
-            <h2>Overall Progress</h2>
-            <div class="progress-text" id="progress-text">0 of 100 mastered (0%)</div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
-            </div>
-            <div id="category-progress"></div>
-        </div>
-
-        <!-- Quick Start Guide -->
-        <div class="resources-section">
-            <h3>🚀 Quick Start Guide</h3>
-            <div class="resource-category">
-                <h4>How to Use This App</h4>
-                <ul class="resource-list">
-                    <li><strong>🃏 Memory Cards</strong> - Visual flashcards with hints and mnemonics. Click to flip!</li>
-                    <li><strong>📝 Quiz</strong> - Interactive quiz with immediate feedback and scoring</li>
-                    <li><strong>🧠 Remember</strong> - Quick flashcard review for rapid recall practice</li>
-                    <li><strong>📋 Exam</strong> - Mock exam with 20 random questions and detailed results</li>
-                    <li><strong>🎯 Mastery</strong> - Track your progress through all 100 questions</li>
-                    <li><strong>📊 Analyse</strong> - Review performance statistics and weak areas</li>
-                    <li><strong>🔍 Evaluate</strong> - Visual concept maps and architecture diagrams</li>
-                    <li><strong>📚 Resources</strong> - Curated learning materials and videos</li>
-                    <li><strong>🎮 Multiplayer</strong> - Quiz with friends (requires MQTT connection)</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Exam Categories -->
-        <div class="resources-section">
-            <h3>📊 Exam Categories</h3>
-            <div id="exam-categories"></div>
-        </div>
-
-        <!-- External Training Links -->
-        <div class="tactic-section">
-            <h2><span>🎓</span> Official Training & Resources</h2>
-            <p style="margin-bottom:16px">Enhance your preparation with official resources and extra training materials.</p>
-            <div class="training-links">
-                <a href="https://claude.ai" target="_blank" class="training-link">
-                    <span class="icon">🤖</span>
-                    <div class="info">
-                        <strong>Claude by Anthropic</strong>
-                        <span>Try Claude directly — practice with the actual AI you're certifying for</span>
-                    </div>
-                </a>
-                <a href="https://www.anthropic.com/claude-certification" target="_blank" class="training-link">
-                    <span class="icon">📋</span>
-                    <div class="info">
-                        <strong>Claude Certification Exam</strong>
-                        <span>Official exam registration and certification details from Anthropic</span>
-                    </div>
-                </a>
-                <a href="https://skilljar.com" target="_blank" class="training-link">
-                    <span class="icon">📚</span>
-                    <div class="info">
-                        <strong>Skilljar Training</strong>
-                        <span>Extra training courses and learning paths for deeper preparation</span>
-                    </div>
-                </a>
-                <a href="https://docs.anthropic.com" target="_blank" class="training-link">
-                    <span class="icon">📖</span>
-                    <div class="info">
-                        <strong>Anthropic Documentation</strong>
-                        <span>Official API docs, guides, and reference materials</span>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <!-- Readiness Checklist -->
+        <!-- READINESS -->
         <div class="tactic-section">
             <h2><span>✅</span> Readiness Checklist</h2>
             <p style="margin-bottom:16px">Do not book the exam until <strong>all</strong> of these are true. The exam costs money and has a cooldown between retakes.</p>
@@ -297,9 +273,12 @@
                     </div>
                 </div>
             </div>
+            <div class="actions" style="margin-top:20px">
+                <a href="../../index.html">Open App to Check Progress</a>
+            </div>
         </div>
 
-        <!-- Score Thresholds -->
+        <!-- SCORE THRESHOLDS -->
         <div class="tactic-section">
             <h2><span>📊</span> Score Thresholds</h2>
             <div class="threshold red">
@@ -320,7 +299,7 @@
             </div>
         </div>
 
-        <!-- Multi-Sensory Training -->
+        <!-- MULTI-SENSORY -->
         <div class="tactic-section">
             <h2><span>🧠</span> Multi-Sensory Training</h2>
             <p>The brain encodes memories more deeply when multiple senses are engaged. Do not just read — see, hear, speak, and move.</p>
@@ -358,7 +337,7 @@
             </div>
         </div>
 
-        <!-- Memory Palace -->
+        <!-- MEMORY PALACE -->
         <div class="tactic-section">
             <h2><span>🏛️</span> Memory Palace Method</h2>
             <p>Use a real-world location you know well (your home, commute, gym). Assign each category to a room or area. Place cards as objects in that space.</p>
@@ -401,14 +380,14 @@
 
             <h3>🔗 Open the Interactive Mindmap</h3>
             <p>The mindmap shows every relationship between cards. Use it to plan your palace interactions.</p>
-            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;">
-                <a href="5_Symbols/pages/mindmap.html" target="_blank" style="padding:10px 18px;border-radius:10px;background:var(--bg-primary);border:1px solid var(--border);color:var(--accent-blue);text-decoration:none;font-size:0.9em;">🗺️ Launch Memory Palace Mindmap</a>
+            <div class="actions">
+                <a href="mindmap.html" target="_blank">🗺️ Launch Memory Palace Mindmap</a>
             </div>
         </div>
 
-        <!-- Live AI Study Sessions -->
+        <!-- LIVE GEMINI SESSIONS -->
         <div class="tactic-section">
-            <h2><span>🤖</span> Live AI Study Sessions</h2>
+            <h2><span>🤖</span> Live AI Study Sessions (Gemini / Claude)</h2>
             <p>Use an LLM as an interactive tutor. Give it the memory card content and ask it to quiz you, tell stories, or challenge your understanding. Below are ready-to-use prompts.</p>
 
             <h3>Prompt 1 — Story Mode Memory Palace</h3>
@@ -463,7 +442,7 @@ At the end, rank my weak categories and suggest which memory cards to review fir
             </div>
         </div>
 
-        <!-- Exam Day Protocol -->
+        <!-- EXAM DAY -->
         <div class="tactic-section">
             <h2><span>🎓</span> Exam Day Protocol</h2>
             <ul>
@@ -477,7 +456,7 @@ At the end, rank my weak categories and suggest which memory cards to review fir
             </ul>
         </div>
 
-        <!-- Tidy-Up Checklist -->
+        <!-- TIDY UP -->
         <div class="tactic-section">
             <h2><span>🧹</span> Tidy-Up Checklist (Pre-Exam Week)</h2>
             <div class="checklist">
@@ -507,90 +486,10 @@ At the end, rank my weak categories and suggest which memory cards to review fir
                 </div>
             </div>
         </div>
+
     </div>
 
-    <footer class="app-footer">
-        <p>Claude Developer Certification Study App</p>
-        <p style="margin-top:8px;">
-            Created by <a href="https://www.linkedin.com/in/rifaterdemsahin/" target="_blank">Rifat Erdem Sahin</a>
-        </p>
-        <div class="footer-links">
-            <a href="https://github.com/rifaterdemsahin/claude_certification_exam" target="_blank">GitHub</a>
-        </div>
-    </footer>
-
-    <script src="5_Symbols/js/data.js"></script>
-    <script src="5_Symbols/js/state.js"></script>
     <script>
-        function updateDashboard() {
-            const totalMastered = Object.keys(state.progress).length;
-            const total = questionsData.length;
-            const percentage = Math.round((totalMastered / total) * 100);
-
-            document.getElementById('total-count').textContent = total;
-            document.getElementById('mastered-count').textContent = totalMastered;
-            document.getElementById('completion-pct').textContent = percentage + '%';
-            document.getElementById('remaining-count').textContent = total - totalMastered;
-            document.getElementById('progress-text').textContent = `${totalMastered} of ${total} mastered (${percentage}%)`;
-            document.getElementById('progress-fill').style.width = percentage + '%';
-
-            renderCategoryProgress();
-            renderExamCategories();
-        }
-
-        function renderCategoryProgress() {
-            const container = document.getElementById('category-progress');
-            const catProg = {};
-
-            questionsData.forEach(q => {
-                if (!catProg[q.category]) catProg[q.category] = { total: 0, mastered: 0 };
-                catProg[q.category].total++;
-                if (state.progress[q.id]) catProg[q.category].mastered++;
-            });
-
-            container.innerHTML = Object.entries(catProg).map(([catId, stats]) => {
-                const cat = categories[catId];
-                const percentage = Math.round((stats.mastered / stats.total) * 100);
-                return `
-                    <div class="category-progress">
-                        <div class="category-header">
-                            <span>${cat.name} (${cat.weight})</span>
-                            <span>${stats.mastered}/${stats.total} (${percentage}%)</span>
-                        </div>
-                        <div class="category-bar">
-                            <div class="category-fill" style="width:${percentage}%;background:${cat.color}"></div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderExamCategories() {
-            const container = document.getElementById('exam-categories');
-
-            container.innerHTML = Object.entries(categories).map(([catId, cat]) => {
-                const catQuestions = questionsData.filter(q => q.category === parseInt(catId));
-                const mastered = catQuestions.filter(q => state.progress[q.id]).length;
-                const percentage = Math.round((mastered / catQuestions.length) * 100);
-
-                return `
-                    <div class="category-progress">
-                        <div class="category-header">
-                            <span>${cat.name}</span>
-                            <span>${mastered}/${catQuestions.length} mastered (${percentage}%)</span>
-                        </div>
-                        <div class="category-bar">
-                            <div class="category-fill" style="width:${percentage}%;background:${cat.color}"></div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Initialize
-        updateDashboard();
-
-        // Tactics: copy prompt
         function copyPrompt(btn, id) {
             const text = document.getElementById(id).innerText;
             navigator.clipboard.writeText(text).then(() => {
@@ -599,15 +498,17 @@ At the end, rank my weak categories and suggest which memory cards to review fir
                 setTimeout(() => btn.textContent = old, 1500);
             });
         }
-
-        // Tactics: auto-check readiness boxes based on progress
+        // Auto-check boxes based on app cookie (if same domain)
         try {
-            const totalMastered = Object.keys(state.progress).length;
-            if (totalMastered >= 100) {
-                const chk1 = document.getElementById('chk1');
-                if (chk1) { chk1.textContent = '✓'; chk1.classList.add('done'); }
+            const match = document.cookie.match(/claude_cert_progress_v2=([^;]+)/);
+            if (match) {
+                const prog = JSON.parse(decodeURIComponent(match[1]));
+                const total = Object.values(prog).flat().length;
+                if (total >= 100) document.getElementById('chk1').textContent = '✓';
+                if (total >= 100) document.getElementById('chk1').classList.add('done');
             }
         } catch(e) {}
     </script>
+<script src="nav.js"></script>
 </body>
 </html>

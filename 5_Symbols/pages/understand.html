@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questions for Discussion - Collaborative Learning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --border: #334155;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444;
+            --accent-orange: #f59e0b;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .subtitle {
+            font-size: 1.05em;
+            color: var(--text-secondary);
+            max-width: 900px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 1200px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            height: fit-content;
+            position: sticky;
+            top: 80px;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-blue);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.95em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+        }
+
+        button {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            color: #fff;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: #06b6d4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+        }
+
+        .btn-success {
+            background: var(--accent-green);
+            color: #fff;
+            width: 100%;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-success:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            width: 100%;
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+            color: var(--text-primary);
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .content-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .section-header h2 {
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 8px 14px;
+            font-size: 0.85em;
+        }
+
+        .select-indicator {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            background: var(--bg-primary);
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .questions-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .question-item {
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .question-item:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.15);
+        }
+
+        .question-item.selected {
+            border-color: var(--accent-green);
+            background: rgba(16, 185, 129, 0.05);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+            cursor: pointer;
+            background: var(--bg-secondary);
+            transition: all 0.2s;
+            font-weight: 700;
+            font-size: 0.85em;
+            color: #fff;
+        }
+
+        .question-item.selected .checkbox {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+        }
+
+        .question-meta {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .question-id {
+            font-size: 0.75em;
+            background: var(--accent-orange);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .category-badge {
+            font-size: 0.75em;
+            background: var(--accent-purple);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .question-text {
+            font-size: 0.95em;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .question-options {
+            display: grid;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .option {
+            padding: 8px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.8em;
+            color: var(--text-secondary);
+        }
+
+        .correct-answer {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: var(--accent-green);
+            color: #86efac;
+        }
+
+        .explanation {
+            background: rgba(56, 189, 248, 0.05);
+            border-left: 3px solid var(--accent-blue);
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 12px;
+            opacity: 0.6;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 2px;
+        }
+
+        .stat-label {
+            font-size: 0.75em;
+            color: var(--text-secondary);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-state {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--accent-red);
+            border-radius: 8px;
+            padding: 16px;
+            color: #fca5a5;
+            margin-bottom: 16px;
+            font-size: 0.9em;
+        }
+
+        .success-state {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--accent-green);
+            border-radius: 8px;
+            padding: 16px;
+            color: #86efac;
+            margin-bottom: 16px;
+            font-size: 0.9em;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-blue);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            transition: gap 0.3s;
+        }
+
+        .back-link:hover {
+            gap: 12px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--accent-green);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .modal-footer button {
+            padding: 10px 16px;
+            font-size: 0.9em;
+        }
+
+        .filter-group {
+            margin-bottom: 16px;
+        }
+
+        .filter-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            display: block;
+            font-weight: 500;
+        }
+
+        .filter-input {
+            width: 100%;
+            padding: 8px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.85em;
+        }
+
+        .filter-input[type="text"] {
+            font-family: inherit;
+        }
+
+        .filter-input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+        }
+
+        select.filter-input {
+            cursor: pointer;
+        }
+
+        select.filter-input option {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">← Back to Home</a>
+
+        <header>
+            <h1>🎯 Questions for Discussion <span class="badge">Community Learning</span></h1>
+            <p class="subtitle">Browse all exam questions, select ones for discussion, and commit them to the board for collaborative learning with other exam participants.</p>
+        </header>
+
+        <div class="layout">
+            <!-- Sidebar: User Info & Submit -->
+            <div class="sidebar">
+                <!-- User Information -->
+                <div class="form-group">
+                    <div class="section-title">👤 Your Profile</div>
+                    <label>Full Name</label>
+                    <input type="text" id="userName" placeholder="Your name" value="">
+                    <label style="margin-top: 12px;">Email</label>
+                    <input type="email" id="userEmail" placeholder="your@email.com" value="">
+                </div>
+
+                <!-- Filters -->
+                <div class="form-group">
+                    <div class="section-title">🔍 Filters</div>
+                    <div class="filter-group">
+                        <label class="filter-label">Search Questions</label>
+                        <input type="text" id="searchInput" class="filter-input" placeholder="Search by text...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Category</label>
+                        <select id="categoryFilter" class="filter-input">
+                            <option value="">All Categories</option>
+                            <option value="CAT01">CAT01 - Agentic Architecture</option>
+                            <option value="CAT02">CAT02 - Tool Design & MCP</option>
+                            <option value="CAT03">CAT03 - Configuration & Workflows</option>
+                            <option value="CAT04">CAT04 - Prompt Engineering</option>
+                            <option value="CAT05">CAT05 - Context Management</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Submit Section -->
+                <div class="form-group">
+                    <div class="section-title">📤 Commit</div>
+                    <button class="btn-success" id="submitBtn" onclick="submitQuestions()" disabled>
+                        Submit Selected (0)
+                    </button>
+                    <p style="font-size: 0.8em; color: var(--text-muted); margin-top: 10px; text-align: center;">
+                        Select questions to submit for discussion
+                    </p>
+                </div>
+
+                <!-- Statistics -->
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalQuestions">0</div>
+                        <div class="stat-label">Total Questions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="selectedCount">0</div>
+                        <div class="stat-label">Selected</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="submittedCount">0</div>
+                        <div class="stat-label">Submitted</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="displayedCount">0</div>
+                        <div class="stat-label">Displayed</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content: Questions -->
+            <div class="main-content">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2>📋 All Exam Questions</h2>
+                        <div class="section-controls">
+                            <button class="btn-primary control-btn" onclick="selectAllVisible()">Select All</button>
+                            <button class="btn-secondary control-btn" onclick="deselectAllQuestions()">Deselect</button>
+                            <span class="select-indicator" id="selectIndicator">0 / 0 selected</span>
+                        </div>
+                    </div>
+
+                    <div id="errorContainer"></div>
+                    <div id="successContainer"></div>
+
+                    <div class="questions-grid" id="questionsContainer">
+                        <div class="empty-state">
+                            <div class="loading-spinner"></div>
+                            <p>Loading exam questions...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submission Confirmation Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <div class="modal-header">✅ Ready to Submit</div>
+            <div class="modal-body">
+                <p>You're about to submit <strong id="confirmCount">0</strong> question(s) to the discussion board.</p>
+                <p style="margin-top: 10px; color: var(--text-secondary);">These will be visible to other exam participants and can be discussed collaboratively.</p>
+                <div style="background: var(--bg-primary); padding: 12px; border-radius: 8px; margin-top: 16px; font-size: 0.9em;">
+                    <div><strong>Submitted by:</strong> <span id="confirmName">Loading...</span></div>
+                    <div><strong>Email:</strong> <span id="confirmEmail">Loading...</span></div>
+                    <div style="margin-top: 8px; color: var(--text-secondary);">This information will be shared with the community.</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn-success" onclick="confirmSubmit()">Confirm & Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        let allQuestions = [];
+        let filteredQuestions = [];
+        let selectedQuestions = new Set();
+        let submittedCount = 0;
+        let userInfo = { name: '', email: '' };
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', async () => {
+            loadFromStorage();
+            await loadQuestions();
+            setupEventListeners();
+            updateStats();
+        });
+
+        // Load questions from exam database
+        async function loadQuestions() {
+            try {
+                const response = await fetch('../data/exam.json');
+                if (!response.ok) throw new Error('Failed to load questions');
+                allQuestions = await response.json();
+                filteredQuestions = [...allQuestions];
+                renderQuestions();
+                updateStats();
+            } catch (error) {
+                document.getElementById('errorContainer').innerHTML = 
+                    `<div class="error-state">❌ Error loading questions: ${error.message}</div>`;
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.getElementById('userName').addEventListener('change', (e) => {
+                userInfo.name = e.target.value;
+                saveToStorage();
+            });
+            document.getElementById('userEmail').addEventListener('change', (e) => {
+                userInfo.email = e.target.value;
+                saveToStorage();
+            });
+            document.getElementById('searchInput').addEventListener('input', filterQuestions);
+            document.getElementById('categoryFilter').addEventListener('change', filterQuestions);
+        }
+
+        // Filter questions by search and category
+        function filterQuestions() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+
+            filteredQuestions = allQuestions.filter(q => {
+                const matchesSearch = !searchText || 
+                    q.question.toLowerCase().includes(searchText) ||
+                    q.options.some(opt => opt.toLowerCase().includes(searchText)) ||
+                    q.explanation.toLowerCase().includes(searchText);
+                
+                const matchesCategory = !category || getCategoryId(q.id) === category;
+
+                return matchesSearch && matchesCategory;
+            });
+
+            renderQuestions();
+            updateStats();
+        }
+
+        // Get category ID based on question ID
+        function getCategoryId(questionId) {
+            const ratio = questionId / 100;
+            if (ratio <= 0.27) return 'CAT01';
+            if (ratio <= 0.45) return 'CAT02';
+            if (ratio <= 0.65) return 'CAT03';
+            if (ratio <= 0.85) return 'CAT04';
+            return 'CAT05';
+        }
+
+        // Toggle question selection
+        function toggleQuestion(id) {
+            if (selectedQuestions.has(id)) {
+                selectedQuestions.delete(id);
+            } else {
+                selectedQuestions.add(id);
+            }
+            updateStats();
+            renderQuestions();
+        }
+
+        // Select all visible questions
+        function selectAllVisible() {
+            filteredQuestions.forEach(q => selectedQuestions.add(q.id));
+            updateStats();
+            renderQuestions();
+        }
+
+        // Deselect all questions
+        function deselectAllQuestions() {
+            selectedQuestions.clear();
+            updateStats();
+            renderQuestions();
+        }
+
+        // Render questions
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+
+            if (filteredQuestions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <p>No questions match your filters</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredQuestions.map(q => {
+                const isSelected = selectedQuestions.has(q.id);
+                const category = getCategoryId(q.id);
+                const correctOption = q.options.find(opt => opt.startsWith(q.answer));
+
+                return `
+                    <div class="question-item ${isSelected ? 'selected' : ''}" onclick="toggleQuestion(${q.id})">
+                        <div class="question-header">
+                            <div style="flex: 1;">
+                                <div class="question-meta">
+                                    <span class="question-id">Q${q.id}</span>
+                                    <span class="category-badge">${category}</span>
+                                </div>
+                            </div>
+                            <div class="checkbox">${isSelected ? '✓' : ''}</div>
+                        </div>
+                        <div class="question-text">${escapeHtml(q.question)}</div>
+                        <div class="question-options">
+                            ${q.options.map(opt => `
+                                <div class="option ${opt === correctOption ? 'correct-answer' : ''}">
+                                    ${escapeHtml(opt)}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="explanation">
+                            <strong>💡 Answer: ${q.answer}</strong><br>
+                            ${escapeHtml(q.explanation)}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Submit questions for discussion
+        function submitQuestions() {
+            if (selectedQuestions.size === 0) {
+                alert('Please select at least one question');
+                return;
+            }
+
+            if (!userInfo.name || !userInfo.email) {
+                alert('Please fill in your name and email');
+                return;
+            }
+
+            document.getElementById('confirmCount').textContent = selectedQuestions.size;
+            document.getElementById('confirmName').textContent = userInfo.name;
+            document.getElementById('confirmEmail').textContent = userInfo.email;
+            document.getElementById('confirmModal').classList.add('show');
+        }
+
+        // Confirm and send submission
+        async function confirmSubmit() {
+            const submitBtn = document.getElementById('submitBtn');
+            const errorContainer = document.getElementById('errorContainer');
+            const successContainer = document.getElementById('successContainer');
+
+            closeModal();
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading-spinner"></span>Submitting...';
+
+            const selectedQs = Array.from(selectedQuestions)
+                .map(id => allQuestions.find(q => q.id === id))
+                .filter(Boolean);
+
+            try {
+                const payload = {
+                    submittedBy: userInfo.name,
+                    email: userInfo.email,
+                    questionIds: Array.from(selectedQuestions),
+                    questions: selectedQs,
+                    timestamp: new Date().toISOString(),
+                    totalQuestions: selectedQs.length
+                };
+
+                console.log('Submitting:', payload);
+
+                // Simulate API submission
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                submittedCount += selectedQs.length;
+                selectedQuestions.clear();
+                
+                successContainer.innerHTML = `
+                    <div class="success-state">
+                        ✅ Successfully submitted ${selectedQs.length} question(s) to the discussion board! 
+                        Others can now see and discuss these questions.
+                    </div>
+                `;
+
+                saveToStorage();
+                renderQuestions();
+                updateStats();
+
+                setTimeout(() => {
+                    successContainer.innerHTML = '';
+                }, 5000);
+
+            } catch (error) {
+                errorContainer.innerHTML = `<div class="error-state">❌ Error: ${error.message}</div>`;
+            } finally {
+                submitBtn.disabled = selectedQuestions.size === 0;
+                submitBtn.innerHTML = `Submit Selected (${selectedQuestions.size})`;
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('totalQuestions').textContent = allQuestions.length;
+            document.getElementById('selectedCount').textContent = selectedQuestions.size;
+            document.getElementById('submittedCount').textContent = submittedCount;
+            document.getElementById('displayedCount').textContent = filteredQuestions.length;
+            document.getElementById('selectIndicator').textContent = 
+                `${selectedQuestions.size} / ${filteredQuestions.length} selected`;
+            document.getElementById('submitBtn').innerHTML = `Submit Selected (${selectedQuestions.size})`;
+            document.getElementById('submitBtn').disabled = selectedQuestions.size === 0;
+        }
+
+        // Local storage
+        function saveToStorage() {
+            localStorage.setItem('discussion_submitted', submittedCount.toString());
+            localStorage.setItem('discussion_user', JSON.stringify(userInfo));
+            localStorage.setItem('discussion_selected', JSON.stringify(Array.from(selectedQuestions)));
+        }
+
+        function loadFromStorage() {
+            submittedCount = parseInt(localStorage.getItem('discussion_submitted') || '0');
+            userInfo = JSON.parse(localStorage.getItem('discussion_user') || '{"name":"","email":""}');
+            const selected = JSON.parse(localStorage.getItem('discussion_selected') || '[]');
+            selectedQuestions = new Set(selected);
+
+            document.getElementById('userName').value = userInfo.name;
+            document.getElementById('userEmail').value = userInfo.email;
+        }
+
+        // Modal
+        function closeModal() {
+            document.getElementById('confirmModal').classList.remove('show');
+        }
+
+        // Utility
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+    </script>
+</body>
+</html>

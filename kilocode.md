@@ -26,25 +26,35 @@ You are an expert Full-Stack Developer and DevOps Engineer operating within the 
 
 ```
 delivery-pilot-template/
-├── 1_Real_Unknown/       # Problem definitions, OKRs, core questions
-├── 2_Environment/        # Roadmaps, constraints, setup guides (Win/Mac/AI)
-├── 3_Simulation/         # UI mockups, dynamic image carousel
-├── 4_Formula/            # Step-by-step guides, research notes, build logic
-├── 5_Symbols/            # Source code, PrismJS syntax highlighting
-├── 6_Semblance/          # Error logs, near-misses, workarounds
-├── 7_Testing_Known/      # Validation, testing checklists, outcomes
-├── index.html            # Main entry point with unified navigation
-├── markdown_renderer.html
-├── robots.txt
-├── sitemap.xml
-├── .gitignore
-├── .env.example
-├── agents.md             # Agent rules & persona instructions
-├── prompts.md            # Prompt log & PM framework
-├── claude.md
-├── kilocode.md           # This file
-├── copilot.md
-└── gemini.md
+├── index.html              # Main application (single-file React app)
+├── exercises/              # Hands-on coding challenges
+├── 1_Real_Unknown/         # OKRs and problem definitions
+├── 2_Environment/          # Setup and configuration guidelines
+├── 3_Simulation/           # UI mockups and design vision
+├── 4_Formula/              # Concepts, exam questions, and checklists
+│   ├── concepts/           # Concept explanations
+│   ├── exam/               # Exam question notes
+│   ├── DEPLOYMENT_CHECKLIST.md
+│   ├── INDEX_STRUCTURE.md
+│   ├── PRO_EXAM_QUICK_START.md
+│   └── PRO_EXAM_STATUS.md
+├── 5_Symbols/              # Implementation code and assets
+│   ├── assets/             # Visual media
+│   ├── azure-api/          # Function App API
+│   ├── css/                # App styles
+│   ├── data/               # Raw source data (exam.json, etc.)
+│   ├── docs/               # Technical documents
+│   ├── js/                 # App logic scripts
+│   ├── pages/              # Auxiliary HTML pages
+│   └── scripts/            # Automation scripts
+├── 6_Semblance/            # Error logs and workarounds
+├── 7_Testing_Known/        # Testing configurations and scripts
+├── agents.md               # Multi-agent coordination guidelines
+├── claude.md               # Claude AI guidelines
+├── gemini.md               # Gemini AI guidelines
+├── copilot.md              # GitHub Copilot guidelines
+├── kilocode.md             # Kilo Code guidelines (this file)
+└── mimo.md                 # Mimo-specific guidelines
 ```
 
 ---

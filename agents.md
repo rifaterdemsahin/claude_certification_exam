@@ -40,31 +40,31 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
   - CAT03: Claude Code Configuration & Workflows (20%)
   - CAT04: Prompt Engineering & Structured Output (20%)
   - CAT05: Context Management & Reliability (15%)
-- **Assets:** All visual media lives in `assets/`.
-  - `assets/exam/` — Exam question images.
-  - `assets/concepts/` — Concept diagrams (Moved to Azure Blob Storage).
-- **Azure API:** Azure Function App for memory card operations in `azure-api/`.
-- **Data:** Raw data and source material in `data/`.
-  - `data/exam.json` — Question data source.
-  - `data/exam_source.pdf` — Exam source material.
-- **Docs Directory:** Keep study materials in `docs/` organized by competency.
+- **Assets:** All visual media lives in `5_Symbols/assets/`.
+  - `5_Symbols/assets/exam/` — Exam question images.
+  - `5_Symbols/assets/concepts/` — Concept diagrams (Moved to Azure Blob Storage).
+- **Azure API:** Azure Function App for memory card operations in `5_Symbols/azure-api/`.
+- **Data:** Raw data and source material in `5_Symbols/data/`.
+  - `5_Symbols/data/exam.json` — Question data source.
+  - `5_Symbols/data/exam_source.pdf` — Exam source material.
+- **Docs Directory:** Keep study materials in `5_Symbols/docs/` organized by competency.
 - **Exercises:** Add hands-on challenges to the `exercises/` folder.
 - **Formula:** Concept explanations and exam questions live in `4_Formula/`.
   - `4_Formula/concepts/`
   - `4_Formula/exam/`
   - Memory cards stored in Azure Blob Storage.
-- **Pages:** Auxiliary HTML pages in `pages/`.
-  - `pages/dictionary.html`
-  - `pages/markdown_renderer.html`
-  - `pages/mindmap.html`
-  - `pages/tactics.html`
-  - `pages/agi-path.html`
-  - `pages/skills.html` — AI skills, slash commands, and agent file guidance
-  - `pages/explicit_criteria.html` — Explicit output criteria and constraint examples
-  - `pages/structured_reasoning.html` — Chain-of-thought and structured reasoning patterns
-  - `pages/multi_turn.html` — Multi-turn prompting strategies and patterns
-  - `pages/context_compression.html` — Context window compression and summary techniques
-- **Scripts:** Automation scripts in `scripts/`.
+- **Pages:** Auxiliary HTML pages in `5_Symbols/pages/`.
+  - `5_Symbols/pages/dictionary.html`
+  - `5_Symbols/pages/markdown_renderer.html`
+  - `5_Symbols/pages/mindmap.html`
+  - `5_Symbols/pages/tactics.html`
+  - `5_Symbols/pages/agi-path.html`
+  - `5_Symbols/pages/skills.html` — AI skills, slash commands, and agent file guidance
+  - `5_Symbols/pages/explicit_criteria.html` — Explicit output criteria and constraint examples
+  - `5_Symbols/pages/structured_reasoning.html` — Chain-of-thought and structured reasoning patterns
+  - `5_Symbols/pages/multi_turn.html` — Multi-turn prompting strategies and patterns
+  - `5_Symbols/pages/context_compression.html` — Context window compression and summary techniques
+- **Scripts:** Automation scripts in `5_Symbols/scripts/`.
 - **AI Guidelines:** Agent-specific instructions in project root.
   - `claude.md` — Claude-specific guidelines
   - `gemini.md` — Gemini CLI guidelines
@@ -83,33 +83,28 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
 ├── copilot.md              # GitHub Copilot guidelines
 ├── kilocode.md             # Kilo Code guidelines
 ├── mimo.md                 # Mimo-specific guidelines
-├── assets/                 # All visual media
-│   ├── exam/               # Exam question images
-│   ├── memory/             # Memory card visual aids (PNG/SVG)
-│   └── concepts/           # Concept diagrams and illustrations
-├── data/                   # Raw data & source material
-│   ├── exam.json           # Question data source
-│   └── exam_source.pdf     # Exam source material
-├── docs/                   # Study documentation by competency
 ├── exercises/              # Hands-on coding challenges
-├── 4_Formula/                # Concepts and exam questions
-│   ├── concepts/
-│   ├── exam/
-│   └── memory/
-├── pages/                  # Auxiliary HTML pages
-│   ├── dictionary.html
-│   ├── markdown_renderer.html
-│   ├── mindmap.html
-│   ├── tactics.html
-│   ├── agi-path.html
-│   ├── skills.html         # AI skills and slash-command guide
-│   ├── explicit_criteria.html # Explicit output criteria examples
-│   ├── structured_reasoning.html # Chain-of-thought and structured reasoning
-│   ├── multi_turn.html      # Multi-turn prompting strategies
-│   ├── context_compression.html # Context compression and summary
-│   └── nav.js              # Shared navigation menu script
-├── scripts/                # Automation scripts
-│   └── generate_notes.py
+├── 1_Real_Unknown/         # OKRs and problem definitions
+├── 2_Environment/          # Setup and configuration guidelines
+├── 3_Simulation/           # UI mockups and design vision
+├── 4_Formula/              # Concepts, exam questions, and checklists
+│   ├── concepts/           # Concept explanations
+│   ├── exam/               # Exam question notes
+│   ├── DEPLOYMENT_CHECKLIST.md
+│   ├── INDEX_STRUCTURE.md
+│   ├── PRO_EXAM_QUICK_START.md
+│   └── PRO_EXAM_STATUS.md
+├── 5_Symbols/              # Implementation code and assets
+│   ├── assets/             # Visual media
+│   ├── azure-api/          # Function App API
+│   ├── css/                # App styles
+│   ├── data/               # Raw source data (exam.json, etc.)
+│   ├── docs/               # Technical documents
+│   ├── js/                 # App logic scripts
+│   ├── pages/              # Auxiliary HTML pages
+│   └── scripts/            # Automation scripts
+├── 6_Semblance/            # Error logs and workarounds
+├── 7_Testing_Known/        # Testing configurations and scripts
 ├── robots.txt
 └── sitemap.xml
 ```

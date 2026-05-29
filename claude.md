@@ -46,7 +46,7 @@ Pattern: `CAT{NN}-Q{NNN}` (e.g., `CAT01-Q005`)
 ## Directory Layout
 
 ```
-├── index.html              # Main single-file React app
+├── index.html              # Main application (single-file React app)
 ├── agents.md               # Multi-agent guidelines
 ├── claude.md               # This file (Claude Code config)
 ├── gemini.md               # Gemini-specific guidelines
@@ -54,16 +54,22 @@ Pattern: `CAT{NN}-Q{NNN}` (e.g., `CAT01-Q005`)
 ├── kilocode.md             # Kilo Code guidelines
 ├── mimo.md                 # Mimo-specific guidelines
 ├── README.md               # Human-facing project overview
-├── assets/                 # Visual media
-│   ├── exam/               # Exam question images
-│   └── concepts/           # Concept diagrams
-├── azure-api/              # Azure Function App (memory cards API)
-├── data/                   # Raw data & source material
-├── docs/                   # Study documentation by competency
-├── 4_Formula/                # Concepts, exam questions
-├── pages/                  # Auxiliary HTML pages
-├── scripts/                # Automation scripts
-└── tests/                  # Test files
+├── exercises/              # Hands-on coding challenges
+├── 1_Real_Unknown/         # OKRs and problem definitions
+├── 2_Environment/          # Setup and configuration guidelines
+├── 3_Simulation/           # UI mockups and design vision
+├── 4_Formula/              # Concepts, exam questions, and checklists
+├── 5_Symbols/              # Implementation code and assets
+│   ├── assets/             # Visual media
+│   ├── azure-api/          # Function App API
+│   ├── css/                # App styles
+│   ├── data/               # Raw source data (exam.json, etc.)
+│   ├── docs/               # Technical documents
+│   ├── js/                 # App logic scripts
+│   ├── pages/              # Auxiliary HTML pages
+│   └── scripts/            # Automation scripts
+├── 6_Semblance/            # Error logs and workarounds
+└── 7_Testing_Known/        # Testing configurations and scripts
 ```
 
 ## Code Editing Rules
@@ -87,8 +93,8 @@ Pattern: `CAT{NN}-Q{NNN}` (e.g., `CAT01-Q005`)
 ## Content Guidelines
 
 - **Visuals:** Use SVG graphics and emojis for hints and mnemonics
-- **Memory Cards:** Stored in Azure Blob Storage, accessible via `pages/markdown_renderer.html`
-- **Pattern:** `pages/markdown_renderer.html?url=https://claudecertstore.blob.core.windows.net/memory-cards/MEM-Q{ID}.md&title=Memory Card {ID}`
+- **Memory Cards:** Stored in Azure Blob Storage, accessible via `5_Symbols/pages/markdown_renderer.html`
+- **Pattern:** `5_Symbols/pages/markdown_renderer.html?url=https://claudecertstore.blob.core.windows.net/memory-cards/MEM-Q{ID}.md&title=Memory Card {ID}`
 - **Images:** Stored in Azure Blob Storage at `https://claudecertstore.blob.core.windows.net/memory-images/`
 
 ## Testing & Verification
@@ -112,7 +118,7 @@ Pattern: `CAT{NN}-Q{NNN}` (e.g., `CAT01-Q005`)
 4. Add memory aid if applicable
 
 ### Creating Memory Cards
-1. Use `pages/quick_memory.html` or `pages/add_memory_card.html`
+1. Use `5_Symbols/pages/quick_memory.html` or `5_Symbols/pages/add_memory_card.html`
 2. Cards are stored in Azure Blob Storage (no GitHub deployment triggered)
 3. Use naming pattern: `MEM-Q{ID}.md`
 

@@ -16,7 +16,7 @@ Review of the refactored project structure and navigation. This document lists o
 - **Correction:** Update all inline edit links in these markdown files to reference `4_Formula` instead of `formula`.
 
 ### 3. JSDOM Test Automation File Loader
-- **Issue:** The test framework in `tests/test_logic.js` previously relied on manual parsing of inline script blocks and was broken because variables were declared as block-scoped `const`/`let` in separate files (`data.js` and `state.js`).
+- **Issue:** The test framework in `7_Testing_Known/test_logic.js` previously relied on manual parsing of inline script blocks and was broken because variables were declared as block-scoped `const`/`let` in separate files (`data.js` and `state.js`).
 - **Correction:** We have updated the script loader to attach variables to JSDOM's `window` context and initialized the DOM with standard HTTP localhost configurations to make cookie testing work cleanly.
 
 ---

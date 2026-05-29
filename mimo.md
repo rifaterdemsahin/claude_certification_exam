@@ -71,18 +71,22 @@ This file provides guidelines for Mimo AI working on the **Claude Developer Cert
 ```
 .
 ├── index.html              # Main app (single-file React)
-├── assets/                 # Visual media
-│   ├── exam/               # Exam question images
-│   ├── memory/             # Memory card visuals
-│   └── concepts/           # Concept diagrams
-├── data/                   # Source data (exam.json, exam_source.pdf)
-├── docs/                   # Study documentation by competency
-├── 4_Formula/                # Concepts, exam questions, memory cards
-│   ├── concepts/
-│   ├── exam/
-│   └── memory/
-├── pages/                  # Auxiliary HTML pages
-└── scripts/                # Utility scripts
+├── exercises/              # Hands-on coding challenges
+├── 1_Real_Unknown/         # OKRs and problem definitions
+├── 2_Environment/          # Setup and configuration guidelines
+├── 3_Simulation/           # UI mockups and design vision
+├── 4_Formula/              # Concepts, exam questions, and checklists
+├── 5_Symbols/              # Implementation code and assets
+│   ├── assets/             # Visual media
+│   ├── azure-api/          # Function App API
+│   ├── css/                # App styles
+│   ├── data/               # Raw source data (exam.json, etc.)
+│   ├── docs/               # Technical documents
+│   ├── js/                 # App logic scripts
+│   ├── pages/              # Auxiliary HTML pages
+│   └── scripts/            # Automation scripts
+├── 6_Semblance/            # Error logs and workarounds
+└── 7_Testing_Known/        # Testing configurations and scripts
 ```
 
 ## Quality Checklist
@@ -99,7 +103,7 @@ Before completing any task:
 
 ### URL Pattern
 ```
-pages/markdown_renderer.html?url=https://claudecertstore.blob.core.windows.net/memory-cards/MEM-Q{ID}.md&title=Memory Card {ID}
+5_Symbols/pages/markdown_renderer.html?url=https://claudecertstore.blob.core.windows.net/memory-cards/MEM-Q{ID}.md&title=Memory Card {ID}
 ```
 
 ### Storage

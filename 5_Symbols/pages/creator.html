@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Rifat Erdem Sahin - Creator of the Claude Developer Certification Study App. AI content creator, educator, and technologist.">
+    <title>Creator - Rifat Erdem Sahin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>">
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        .creator-hero {
+            text-align: center;
+            padding: 40px 24px;
+            background: linear-gradient(135deg, rgba(56,189,248,0.08) 0%, rgba(168,85,247,0.08) 100%);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            margin-bottom: 32px;
+        }
+        .creator-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            margin: 0 auto 20px;
+            border: 3px solid var(--accent-blue);
+        }
+        .creator-name {
+            font-size: 2em;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        .creator-title {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+            margin-bottom: 16px;
+        }
+        .creator-links {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .creator-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .creator-link:hover {
+            border-color: var(--accent-blue);
+            background: rgba(56,189,248,0.1);
+            transform: translateY(-2px);
+        }
+        .video-section {
+            margin-bottom: 32px;
+        }
+        .video-section h2 {
+            font-size: 1.3em;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+        .video-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+        .video-card:hover {
+            border-color: var(--accent-red);
+            background: rgba(239,68,68,0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(239,68,68,0.15);
+        }
+        .video-icon {
+            font-size: 2em;
+            min-width: 40px;
+            text-align: center;
+        }
+        .video-info strong {
+            display: block;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+        .video-info span {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+        }
+        .section-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 32px 0;
+        }
+    </style>
+</head>
+<body>
+    <script src="../js/nav.js"></script>
+    <header class="app-header">
+        <h1>Creator</h1>
+        <p>Meet the maker behind the study app</p>
+    </header>
+
+    <div class="container">
+        <div class="creator-hero">
+            <div class="creator-avatar">RE</div>
+            <div class="creator-name">Rifat Erdem Sahin</div>
+            <div class="creator-title">AI Content Creator & Educator</div>
+            <p style="color:var(--text-secondary);max-width:600px;margin:0 auto 20px;line-height:1.7;">
+                Building tools and content to help developers master AI technologies.
+                Creator of the Claude Developer Certification Study App and host of a YouTube channel
+                focused on AI learning, career development, and practical AI skills.
+            </p>
+            <div class="creator-links">
+                <a href="https://www.youtube.com/@RifatErdemSahin" target="_blank" rel="noopener noreferrer" class="creator-link">
+                    YouTube Channel
+                </a>
+                <a href="https://github.com/rifaterdemsahin/claude_certification_exam" target="_blank" rel="noopener noreferrer" class="creator-link">
+                    GitHub Repo
+                </a>
+                <a href="https://www.linkedin.com/in/rifaterdemsahin" target="_blank" rel="noopener noreferrer" class="creator-link">
+                    LinkedIn
+                </a>
+            </div>
+        </div>
+
+        <!-- AI & Career Development -->
+        <div class="video-section">
+            <h2>AI & Career Development</h2>
+            <div class="video-grid">
+                <a href="https://www.youtube.com/watch?v=yI5BIb74kVI" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>AI No-Code: Build AI Solutions</strong>
+                        <span>Build AI solutions without coding</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=c1UotPbvKoQ" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>The Agentic Era: Digital Workforce</strong>
+                        <span>Understanding the agentic AI revolution</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=Frty5ICAdOo" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>The New Professional Standard</strong>
+                        <span>What AI means for professional skills</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=YZqcACObMws" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>AI Agents vs Human Freelancers</strong>
+                        <span>Comparing AI and human work</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=j5lku3LYoK4" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>AI Career Guide: Start IT Career</strong>
+                        <span>Starting your career in AI</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=3bwaZ-xUJcs" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>Master AI, Stay Ahead</strong>
+                        <span>Stay competitive with AI skills</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- AI Learning & Self-Development -->
+        <div class="video-section">
+            <h2>AI Learning & Self-Development</h2>
+            <div class="video-grid">
+                <a href="https://www.youtube.com/watch?v=IYgcXAZkevY" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>How to Actually Learn AI</strong>
+                        <span>Effective strategies for AI learning</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=E52uDnN5FB0" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>Master Complex Topics with AI</strong>
+                        <span>Using AI to learn difficult subjects</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=MnYEZWflHDs" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>Mastering Self-Learning</strong>
+                        <span>Self-directed learning with AI tools</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=2EVPwgi8NZA" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>10 AI Tips to Learn Faster</strong>
+                        <span>Accelerate your learning with AI</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=DDuGVH_uPTA" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>Daily Skill Learning with AI</strong>
+                        <span>Build daily AI learning habits</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=DNQEQZPnpfg" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>Text Blaze for AI Self Learning</strong>
+                        <span>Productivity tools for AI learning</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=WK66w51UMrs" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>AI for Accountability</strong>
+                        <span>Using AI to stay accountable</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=3VgRz5GeYDA" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>Being Broken: Secret Weapon in AI</strong>
+                        <span>Embracing failure in AI learning</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- AI Tools & Integration -->
+        <div class="video-section">
+            <h2>AI Tools & Integration</h2>
+            <div class="video-grid">
+                <a href="https://www.youtube.com/watch?v=wtXDL0Vmr7A" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>MCP Explained: AI Integration</strong>
+                        <span>Model Context Protocol deep dive</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=QwFB7tvzLoA" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>RAISE: RAG with Copilot</strong>
+                        <span>RAG implementation with AI copilots</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=fxj1orsKpYM" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>The Rise of Personal AI</strong>
+                        <span>Personal AI assistants and tools</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=yKN0ParJ0fo" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>AI-Powered Emotional Intelligence</strong>
+                        <span>AI and emotional awareness</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- AI for Job Seekers -->
+        <div class="video-section">
+            <h2>AI for Job Seekers</h2>
+            <div class="video-grid">
+                <a href="https://www.youtube.com/watch?v=bsH-vBGNERE" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>10x Interview Rate: ChatGPT CV</strong>
+                        <span>Boost your CV with AI</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=qNJpDJ8yHu8" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>AI to Automate LinkedIn Job Hunt</strong>
+                        <span>Automate your job search with AI</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=pUf8wGV2NBU" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>AI CV Generator: Resumes Obsolete</strong>
+                        <span>The future of resumes with AI</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=EtpfGUGAFJw" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>Write Cover Letters with AI</strong>
+                        <span>AI-powered cover letter writing</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=dCU0GpriG1o" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>AI-Powered CV as Code</strong>
+                        <span>Treat your CV like code</span>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=VdnZI0PfscM" target="_blank" rel="noopener noreferrer" class="video-card">
+                    <div class="video-icon"></div>
+                    <div class="video-info">
+                        <strong>Authentic AI Content Creation</strong>
+                        <span>Create genuine content with AI</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="app-footer">
+        <p>Claude Developer Certification Study App</p>
+        <p>Created by Rifat Erdem Sahin</p>
+        <div class="footer-links">
+            <a href="../../index.html">Home</a>
+            <a href="cards.html">Cards</a>
+            <a href="quiz.html">Quiz</a>
+            <a href="practice_exam.html">Practice Exam</a>
+            <a href="exam.html">Mock Exam</a>
+            <a href="mastery.html">Mastery</a>
+            <a href="https://github.com/rifaterdemsahin/claude_certification_exam" target="_blank">GitHub</a>
+        </div>
+    </footer>
+</body>
+</html>

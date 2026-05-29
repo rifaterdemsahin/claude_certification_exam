@@ -21,20 +21,20 @@ This file serves as a foundational mandate for Gemini CLI and other AI tools wor
   4. Prompt Engineering & Structured Output (20%)
   5. Context Management & Reliability (15%)
 - **Directory Usage:**
-  - `assets/`: Visual media — `assets/exam/` for question images, `assets/concepts/` for concept diagrams (Moved to Azure).
-  - `azure-api/`: Azure Function App for memory card API.
-  - `data/`: Raw data — `data/exam.json`, `data/exam_source.pdf`.
-  - `docs/`: Markdown files for detailed study content.
+  - `5_Symbols/assets/`: Visual media — `5_Symbols/assets/exam/` for question images, `5_Symbols/assets/concepts/` for concept diagrams (Moved to Azure).
+  - `5_Symbols/azure-api/`: Azure Function App for memory card API.
+  - `5_Symbols/data/`: Raw data — `5_Symbols/data/exam.json`, `5_Symbols/data/exam_source.pdf`.
+  - `5_Symbols/docs/`: Markdown files for detailed study content.
   - `exercises/`: Hands-on coding challenges.
   - `4_Formula/`: Concepts (`concepts/`), exam questions (`exam/`). Memory cards stored in Azure Blob Storage.
-  - `pages/`: Auxiliary HTML pages (`dictionary.html`, `markdown_renderer.html`, `memory_cards.html`).
-  - `scripts/`: Utility scripts.
+  - `5_Symbols/pages/`: Auxiliary HTML pages (`dictionary.html`, `markdown_renderer.html`, `memory_cards.html`).
+  - `5_Symbols/scripts/`: Utility scripts.
   - `claude.md`, `gemini.md`, `mimo.md`: AI-specific guideline files in project root.
 
 ## 🔗 Unique URLs & Accessibility
 - All memory cards are stored in Azure Blob Storage and accessible via unique URLs.
-- Pattern: `pages/markdown_renderer.html?url=https://claudecertstore.blob.core.windows.net/memory-cards/MEM-Q{ID}.md&title=Memory Card {ID}`
-- A central index of these URLs is maintained in `pages/memory_cards.html` (loaded dynamically from Azure API).
+- Pattern: `5_Symbols/pages/markdown_renderer.html?url=https://claudecertstore.blob.core.windows.net/memory-cards/MEM-Q{ID}.md&title=Memory Card {ID}`
+- A central index of these URLs is maintained in `5_Symbols/pages/memory_cards.html` (loaded dynamically from Azure API).
 
 ## 🤖 AI Interaction Rules
 - **Surgical Edits:** Use targeted `replace` calls when modifying `index.html`.

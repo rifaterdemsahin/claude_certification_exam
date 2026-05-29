@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incorrect Answers Summary - Claude Developer Certification</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❌</text></svg>">
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        .incorrect-summary-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .summary-header {
+            text-align: center;
+            margin-bottom: 32px;
+            padding: 24px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-box {
+            background: var(--bg-primary);
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--accent-red);
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+        }
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .export-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+        .export-btn:hover {
+            border-color: var(--accent-blue);
+            background: rgba(56,189,248,0.1);
+            color: var(--accent-blue);
+        }
+        .incorrect-item {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--accent-red);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 16px;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .question-number {
+            display: inline-block;
+            background: rgba(239,68,68,0.15);
+            color: var(--accent-red);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .question-text {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        .answer-section {
+            background: var(--bg-primary);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-top: 12px;
+        }
+        .answer-label {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .answer-text {
+            font-size: 1em;
+            color: var(--accent-green);
+            line-height: 1.6;
+        }
+        .domain-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .domain-1 { background: rgba(239,68,68,0.15); color: #ef4444; }
+        .domain-2 { background: rgba(59,130,246,0.15); color: #3b82f6; }
+        .domain-3 { background: rgba(16,185,129,0.15); color: #10b981; }
+        .domain-4 { background: rgba(245,158,11,0.15); color: #f59e0b; }
+        .domain-5 { background: rgba(168,85,247,0.15); color: #a855f7; }
+        .domain-names {
+            1: "Fundamentals",
+            2: "Architecture",
+            3: "Tools & MCP",
+            4: "Implementation",
+            5: "Security & Optimization"
+        }
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--text-secondary);
+        }
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 12px;
+        }
+        .empty-state-text {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+        .domain-filter-section {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+        .domain-filter-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+        .domain-filter-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+        .domain-filter-btn.active {
+            border-color: var(--accent-blue);
+            background: rgba(56,189,248,0.15);
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <script src="../js/nav.js"></script>
+    <header class="app-header">
+        <h1>Incorrect Answers Summary</h1>
+        <p>Review all questions you answered incorrectly with correct answers</p>
+    </header>
+
+    <div class="container incorrect-summary-container">
+        <div class="summary-header">
+            <div class="summary-stats">
+                <div class="stat-box">
+                    <div class="stat-value" id="total-incorrect">0</div>
+                    <div class="stat-label">Total Incorrect</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="total-answered">0</div>
+                    <div class="stat-label">Total Answered</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="accuracy-pct">0%</div>
+                    <div class="stat-label">Accuracy</div>
+                </div>
+            </div>
+            <div class="export-buttons">
+                <button class="export-btn" onclick="exportAsText()">📄 Export as Text</button>
+                <button class="export-btn" onclick="exportAsJSON()">📋 Export as JSON</button>
+                <button class="export-btn" onclick="printSummary()">🖨️ Print</button>
+                <button class="export-btn" onclick="copyToClipboard()">📋 Copy to Clipboard</button>
+            </div>
+        </div>
+
+        <div class="domain-filter-section">
+            <button class="domain-filter-btn active" onclick="filterByDomain('all')">All Domains</button>
+            <button class="domain-filter-btn" onclick="filterByDomain(1)">Domain 1</button>
+            <button class="domain-filter-btn" onclick="filterByDomain(2)">Domain 2</button>
+            <button class="domain-filter-btn" onclick="filterByDomain(3)">Domain 3</button>
+            <button class="domain-filter-btn" onclick="filterByDomain(4)">Domain 4</button>
+            <button class="domain-filter-btn" onclick="filterByDomain(5)">Domain 5</button>
+        </div>
+
+        <div id="summary-content"></div>
+    </div>
+
+    <footer class="app-footer">
+        <p>Claude Developer Certification Study App</p>
+        <p>Created by Rifat Erdem Sahin</p>
+        <div class="footer-links">
+            <a href="../../index.html">Home</a>
+            <a href="cards.html">Cards</a>
+            <a href="quiz.html">Quiz</a>
+            <a href="practice_exam.html">Practice Exam</a>
+            <a href="exam.html">Mock Exam</a>
+            <a href="incorrect_summary.html">Incorrect Summary</a>
+            <a href="https://github.com/rifaterdemsahin/claude_certification_exam" target="_blank">GitHub</a>
+        </div>
+    </footer>
+
+    <script>
+        const DOMAINS = {
+            1: { name: 'Fundamentals of Claude & LLMs', color: '#ef4444' },
+            2: { name: 'Architecture & Design', color: '#3b82f6' },
+            3: { name: 'Tools & MCP Integration', color: '#10b981' },
+            4: { name: 'Implementation & Best Practices', color: '#f59e0b' },
+            5: { name: 'Security, Monitoring & Optimization', color: '#a855f7' }
+        };
+
+        let allQuestions = [];
+        let incorrectQuestions = [];
+        let answers = {};
+        let activeDomainFilter = 'all';
+
+        function getDomainForQuestion(id) {
+            const ranges = {
+                1: [1, 11],
+                2: [12, 21],
+                3: [22, 27],
+                4: [28, 33],
+                5: [34, 40]
+            };
+            for (const [d, range] of Object.entries(ranges)) {
+                if (id >= range[0] && id <= range[1]) return parseInt(d);
+            }
+            return 1;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function loadAnswers() {
+            const cookie = document.cookie.split(';').find(c => c.trim().startsWith('practice_exam='));
+            if (cookie) {
+                try {
+                    const state = JSON.parse(cookie.split('=')[1]);
+                    answers = state.answers || {};
+                } catch (e) {
+                    console.error('Failed to parse exam cookie:', e);
+                }
+            }
+        }
+
+        function getIncorrectQuestions() {
+            return allQuestions.filter(q => 
+                answers[q.id] !== undefined && answers[q.id] !== q.answer
+            );
+        }
+
+        function updateStats() {
+            const answered = Object.keys(answers).length;
+            const incorrect = incorrectQuestions.length;
+            const correct = answered - incorrect;
+            const accuracy = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+
+            document.getElementById('total-incorrect').textContent = incorrect;
+            document.getElementById('total-answered').textContent = answered;
+            document.getElementById('accuracy-pct').textContent = accuracy + '%';
+        }
+
+        function renderSummary() {
+            const container = document.getElementById('summary-content');
+            
+            let displayed = activeDomainFilter === 'all' 
+                ? incorrectQuestions 
+                : incorrectQuestions.filter(q => getDomainForQuestion(q.id) === activeDomainFilter);
+
+            if (displayed.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✓</div>
+                        <div class="empty-state-text">No incorrect answers found!</div>
+                        <p style="color:var(--text-secondary);font-size:0.9em;">Great job! Keep practicing to maintain your accuracy.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = displayed.map((q, idx) => {
+                const domain = getDomainForQuestion(q.id);
+                const domainInfo = DOMAINS[domain];
+                return `
+                    <div class="incorrect-item" style="animation-delay:${idx * 50}ms;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;">
+                            <span class="question-number">Q${q.id}</span>
+                            <span class="domain-badge domain-${domain}">${domainInfo.name}</span>
+                        </div>
+                        <div class="question-text">${escapeHtml(q.question)}</div>
+                        <div class="answer-section">
+                            <div class="answer-label">✓ Correct Answer:</div>
+                            <div class="answer-text">${escapeHtml(q.answer)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterByDomain(domain) {
+            activeDomainFilter = domain;
+            
+            // Update button states
+            document.querySelectorAll('.domain-filter-btn').forEach((btn, idx) => {
+                const btnDomain = idx === 0 ? 'all' : idx;
+                btn.classList.toggle('active', 
+                    (domain === 'all' && idx === 0) || 
+                    (domain !== 'all' && btnDomain === domain)
+                );
+            });
+            
+            renderSummary();
+        }
+
+        function exportAsText() {
+            let text = 'INCORRECT ANSWERS SUMMARY\n';
+            text += '=' .repeat(50) + '\n\n';
+
+            let displayed = activeDomainFilter === 'all' 
+                ? incorrectQuestions 
+                : incorrectQuestions.filter(q => getDomainForQuestion(q.id) === activeDomainFilter);
+
+            displayed.forEach((q, idx) => {
+                const domain = getDomainForQuestion(q.id);
+                text += `Q${idx + 1}. Q${q.id} - ${DOMAINS[domain].name}\n`;
+                text += `Question: ${q.question}\n`;
+                text += `Answer: ${q.answer}\n`;
+                text += '\n' + '-'.repeat(50) + '\n\n';
+            });
+
+            downloadFile(text, 'incorrect-answers.txt', 'text/plain');
+        }
+
+        function exportAsJSON() {
+            let displayed = activeDomainFilter === 'all' 
+                ? incorrectQuestions 
+                : incorrectQuestions.filter(q => getDomainForQuestion(q.id) === activeDomainFilter);
+
+            const data = {
+                summary: {
+                    total_incorrect: incorrectQuestions.length,
+                    shown_count: displayed.length,
+                    filter: activeDomainFilter,
+                    exported_at: new Date().toISOString()
+                },
+                questions: displayed.map(q => ({
+                    id: q.id,
+                    domain: getDomainForQuestion(q.id),
+                    question: q.question,
+                    answer: q.answer
+                }))
+            };
+
+            downloadFile(JSON.stringify(data, null, 2), 'incorrect-answers.json', 'application/json');
+        }
+
+        function downloadFile(content, filename, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function printSummary() {
+            window.print();
+        }
+
+        function copyToClipboard() {
+            let displayed = activeDomainFilter === 'all' 
+                ? incorrectQuestions 
+                : incorrectQuestions.filter(q => getDomainForQuestion(q.id) === activeDomainFilter);
+
+            let text = 'INCORRECT ANSWERS SUMMARY\n\n';
+            displayed.forEach((q, idx) => {
+                text += `${idx + 1}. ${q.question}\n`;
+                text += `Answer: ${q.answer}\n\n`;
+            });
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+
+        async function initialize() {
+            try {
+                const resp = await fetch('../data/exam.json');
+                allQuestions = await resp.json();
+                loadAnswers();
+                incorrectQuestions = getIncorrectQuestions();
+                updateStats();
+                renderSummary();
+            } catch (error) {
+                console.error('Failed to load data:', error);
+                document.getElementById('summary-content').innerHTML = 
+                    '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">Failed to load data</div></div>';
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', initialize);
+    </script>
+</body>
+</html>

@@ -49,10 +49,10 @@ flowchart LR
 
 | File | Purpose |
 |------|---------|
-| `scripts/vote-worker.js` | Vote read/write/reset |
-| `scripts/content-worker.js` | Cards, images, AI writing |
-| `tests/test_vote_worker.js` | Vote worker tests |
-| `tests/test_content_worker.js` | Content worker tests |
+| `5_Symbols/scripts/vote-worker.js` | Vote read/write/reset |
+| `5_Symbols/scripts/content-worker.js` | Cards, images, AI writing |
+| `7_Testing_Known/test_vote_worker.js` | Vote worker tests |
+| `7_Testing_Known/test_content_worker.js` | Content worker tests |
 
 ## Prerequisites
 
