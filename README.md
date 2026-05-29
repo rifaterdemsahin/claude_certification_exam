@@ -38,21 +38,25 @@ An interactive study guide for the **Claude Developer Certification** exam with 
 
 ```
 .
+├── 1_Real_Unknown/     # Problem definitions, OKRs, core questions
+├── 2_Environment/      # Roadmaps, constraints, setup guides
+├── 3_Simulation/       # UI mockups, concept diagrams
+├── 4_Formula/          # Concepts, exam questions, and memory card notes
+├── 5_Symbols/          # Core source code and implementation guides
+├── 6_Semblance/        # Error logs, near-misses, workarounds
+├── 7_Testing_Known/    # Validation checklists and testing protocols
 ├── index.html          # Main application (single-file React app)
 ├── assets/             # Visual media (exam & memory card images)
 ├── data/               # Question data and exam source material
-├── docs/               # Study documentation
-│   ├── 01_agentic_loops/
-│   ├── 02_tool_mcp/
-│   ├── 03_workflows/
-│   ├── 04_prompt_eng/
-│   └── 05_reliability/
+├── docs/               # Study documentation by competency area
 ├── exercises/          # Hands-on coding challenges
-├── formula/            # Concepts, exam questions, and memory card notes
 ├── pages/              # Auxiliary HTML pages
 ├── scripts/            # Automation scripts
-├── CLAUDE.md           # Claude-specific guidelines
-├── GEMINI.md           # Gemini-specific guidelines
+├── agents.md           # Multi-agent coordination guidelines
+├── claude.md           # Claude AI guidelines
+├── gemini.md           # Gemini AI guidelines
+├── copilot.md          # GitHub Copilot guidelines
+├── kilocode.md         # Kilo Code guidelines
 └── mimo.md             # Mimo-specific guidelines
 ```
 

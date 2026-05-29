@@ -634,3 +634,9 @@ Add CSS animations for correct answers (green pulse) and incorrect answers (red 
 ## Commit 103: (pending) — Fix mermaid diagram and add colors
 
 Fix broken mermaid diagrams by sanitizing answer text (removing special characters). Add colorful styling with blue concept nodes and green answer node. Improve mermaid initialization with better error handling and theme variables.
+
+---
+
+## Commit 104: (pending) — Refactor project structure to follow Delivery Pilot Template
+
+Reorganize project folders into the 7-stage Delivery Pilot Template structure. Created stages 1-7, renamed agent files to lowercase in git, migrated formula notes to 4_Formula with a symlink fallback, implemented the two-menu navigation system (top Project navigation and bottom-right floating toggle debug drawer) with persistence, and updated markdown_renderer.html to browse framework stages and agents.

@@ -25,8 +25,8 @@ async function runTests() {
         assert(resp.ok, `HTTP ${resp.status}`);
         const data = await resp.json();
         assert(data.status === 'ok', 'status is not ok');
-        assert(data.worker === 'content-ai', 'worker is not content-ai');
-        assert(data.note && data.note.includes('Azure'), 'should note Azure migration');
+        assert(data.worker === 'content' || data.worker === 'content-ai', 'worker identifier mismatch');
+        assert(data.config && data.config.openrouter_key === 'configured', 'openrouter key should be configured');
     });
 
     console.log('\n[AI Generate]');

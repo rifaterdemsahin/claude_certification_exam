@@ -204,6 +204,8 @@
 
     <div class="main-layout">
         <aside class="sidebar">
+            <h3>📋 Delivery Stages</h3>
+            <div class="sidebar-category" data-category="stages"></div>
 
             <h3>🧠 Memory Cards</h3>
             <div class="sidebar-category" data-category="memory"></div>
@@ -233,36 +235,47 @@
 
         // File structure mapping - memory cards will be loaded dynamically
         const notes = {
+            stages: [
+                { id: 'stage1', title: '1. Real Unknown', file: '../1_Real_Unknown/README.md' },
+                { id: 'stage2', title: '2. Environment', file: '../2_Environment/README.md' },
+                { id: 'stage3', title: '3. Simulation', file: '../3_Simulation/README.md' },
+                { id: 'stage4', title: '4. Formula', file: '../4_Formula/README.md' },
+                { id: 'stage5', title: '5. Symbols', file: '../5_Symbols/README.md' },
+                { id: 'stage6', title: '6. Semblance', file: '../6_Semblance/README.md' },
+                { id: 'stage7', title: '7. Testing Known', file: '../7_Testing_Known/README.md' }
+            ],
             memory: [],
             concepts: [
-                { id: 'agentic-ai', title: 'Agentic AI', file: '../formula/concepts/agentic-ai.md' },
-                { id: 'agentic-loop', title: 'Agentic Loop', file: '../formula/concepts/agentic-loop.md' },
-                { id: '10-tips-save-tokens', title: '10 Tips to Save Tokens', file: '../formula/concepts/10-tips-save-tokens.md' },
-                { id: 'chain-of-thought', title: 'Chain of Thought', file: '../formula/concepts/chain-of-thought.md' },
-                { id: 'claude-code', title: 'Claude Code', file: '../formula/concepts/claude-code.md' },
-                { id: 'llm-context-size', title: 'LLM Context Size', file: '../formula/concepts/llm-context-size.md' },
-                { id: 'mcp', title: 'MCP (Model Context Protocol)', file: '../formula/concepts/mcp.md' },
-                { id: 'mcp-before-after', title: 'MCP Before/After', file: '../formula/concepts/mcp-before-after.md' },
-                { id: 'prompt-engineering', title: 'Prompt Engineering', file: '../formula/concepts/prompt-engineering.md' },
-                { id: 'reliability', title: 'Reliability', file: '../formula/concepts/reliability.md' },
-                { id: 'validation-loops', title: 'Validation Loops', file: '../formula/concepts/validation-loops.md' },
-                { id: 'skills-location', title: 'Skills Location', file: '../formula/concepts/skills-location.md' },
-                { id: 'coordinator-subagent', title: 'Coordinator-Subagent', file: '../formula/concepts/coordinator-subagent.md' },
-                { id: 'long-term-memory', title: 'Long-Term Memory', file: '../formula/concepts/long-term-memory.md' },
-                { id: 'llm-evolution', title: 'LLM Evolution', file: '../formula/concepts/llm-evolution.md' },
+                { id: 'agentic-ai', title: 'Agentic AI', file: '../4_Formula/concepts/agentic-ai.md' },
+                { id: 'agentic-loop', title: 'Agentic Loop', file: '../4_Formula/concepts/agentic-loop.md' },
+                { id: '10-tips-save-tokens', title: '10 Tips to Save Tokens', file: '../4_Formula/concepts/10-tips-save-tokens.md' },
+                { id: 'chain-of-thought', title: 'Chain of Thought', file: '../4_Formula/concepts/chain-of-thought.md' },
+                { id: 'claude-code', title: 'Claude Code', file: '../4_Formula/concepts/claude-code.md' },
+                { id: 'llm-context-size', title: 'LLM Context Size', file: '../4_Formula/concepts/llm-context-size.md' },
+                { id: 'mcp', title: 'MCP (Model Context Protocol)', file: '../4_Formula/concepts/mcp.md' },
+                { id: 'mcp-before-after', title: 'MCP Before/After', file: '../4_Formula/concepts/mcp-before-after.md' },
+                { id: 'prompt-engineering', title: 'Prompt Engineering', file: '../4_Formula/concepts/prompt-engineering.md' },
+                { id: 'reliability', title: 'Reliability', file: '../4_Formula/concepts/reliability.md' },
+                { id: 'validation-loops', title: 'Validation Loops', file: '../4_Formula/concepts/validation-loops.md' },
+                { id: 'skills-location', title: 'Skills Location', file: '../4_Formula/concepts/skills-location.md' },
+                { id: 'coordinator-subagent', title: 'Coordinator-Subagent', file: '../4_Formula/concepts/coordinator-subagent.md' },
+                { id: 'long-term-memory', title: 'Long-Term Memory', file: '../4_Formula/concepts/long-term-memory.md' },
+                { id: 'llm-evolution', title: 'LLM Evolution', file: '../4_Formula/concepts/llm-evolution.md' },
             ],
             exam: [
-                { id: 'CAT01-Q001', title: 'Q001 - Agentic Architecture', file: '../formula/exam/CAT01-Q001.md' },
-                { id: 'CAT01-Q002', title: 'Q002 - Tool Design', file: '../formula/exam/CAT01-Q002.md' },
-                { id: 'CAT01-Q003', title: 'Q003 - Claude Code', file: '../formula/exam/CAT01-Q003.md' },
-                { id: 'CAT01-Q004', title: 'Q004 - Prompt Engineering', file: '../formula/exam/CAT01-Q004.md' },
-                { id: 'CAT01-Q005', title: 'Q005 - Context Management', file: '../formula/exam/CAT01-Q005.md' },
+                { id: 'CAT01-Q001', title: 'Q001 - Agentic Architecture', file: '../4_Formula/exam/CAT01-Q001.md' },
+                { id: 'CAT01-Q002', title: 'Q002 - Tool Design', file: '../4_Formula/exam/CAT01-Q002.md' },
+                { id: 'CAT01-Q003', title: 'Q003 - Claude Code', file: '../4_Formula/exam/CAT01-Q003.md' },
+                { id: 'CAT01-Q004', title: 'Q004 - Prompt Engineering', file: '../4_Formula/exam/CAT01-Q004.md' },
+                { id: 'CAT01-Q005', title: 'Q005 - Context Management', file: '../4_Formula/exam/CAT01-Q005.md' },
             ],
             agents: [
-                { id: 'CLAUDE.md', title: 'Claude Agent Guidelines', file: '../CLAUDE.md' },
-                { id: 'GEMINI.md', title: 'Gemini Agent Guidelines', file: '../GEMINI.md' },
-                { id: 'mimo.md', title: 'Mimo Agent Guidelines', file: '../mimo.md' },
-                { id: 'AGENTS.md', title: 'Multi-Agent Guidelines', file: '../AGENTS.md' },
+                { id: 'agents.md', title: 'Agents Rules', file: '../agents.md' },
+                { id: 'claude.md', title: 'Claude AI Rules', file: '../claude.md' },
+                { id: 'gemini.md', title: 'Gemini AI Rules', file: '../gemini.md' },
+                { id: 'copilot.md', title: 'Copilot Rules', file: '../copilot.md' },
+                { id: 'kilocode.md', title: 'Kilo Code Rules', file: '../kilocode.md' },
+                { id: 'mimo.md', title: 'Mimo Rules', file: '../mimo.md' },
             ]
         };
 
