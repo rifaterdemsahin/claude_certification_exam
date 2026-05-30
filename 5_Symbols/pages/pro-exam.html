@@ -441,6 +441,16 @@
             background: rgba(56, 189, 248, 0.1);
         }
 
+        .btn-mastered {
+            background: var(--bg-primary);
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
+        }
+
+        .btn-mastered:hover {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
         /* Progress Bar */
         .progress-bar {
             display: flex;
@@ -578,6 +588,10 @@
                 <div class="stat-label">Total Questions</div>
             </div>
             <div class="stat-card">
+                <div class="stat-value" id="masteredCount">0</div>
+                <div class="stat-label">Mastered</div>
+            </div>
+            <div class="stat-card">
                 <div class="stat-value" id="answeredCount">0</div>
                 <div class="stat-label">Answered</div>
             </div>
@@ -602,6 +616,7 @@
             <select id="scenarioFilter">
                 <option value="">All Scenarios</option>
             </select>
+            <button class="btn-secondary" onclick="resetMastered()" style="margin-left: auto; border-color: var(--accent-green); color: var(--accent-green);">Reset Mastered</button>
             <button class="btn-secondary" onclick="resetAll()">Reset All</button>
         </div>
 
@@ -629,6 +644,42 @@
         // Load pro-exam data
         let examData = [];
         let userAnswers = {};
+        let masteredQuestions = [];
+
+        // Cookie helper functions
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+            }
+            return null;
+        }
+
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = name + '=' + encodeURIComponent(value) + ';expires=' + expires.toUTCString() + ';path=/;SameSite=Strict';
+        }
+
+        function loadMasteredState() {
+            const cookieVal = getCookie('claude_cert_pro_mastered');
+            if (cookieVal) {
+                try {
+                    masteredQuestions = JSON.parse(cookieVal);
+                } catch (e) {
+                    masteredQuestions = [];
+                }
+            } else {
+                masteredQuestions = [];
+            }
+        }
+
+        function saveMasteredState() {
+            setCookie('claude_cert_pro_mastered', JSON.stringify(masteredQuestions), 30);
+        }
 
         async function loadExamData() {
             try {
@@ -652,6 +703,9 @@
                 if (examData.length === 0) {
                     throw new Error('No questions found in data');
                 }
+                
+                // Load mastered progress
+                loadMasteredState();
                 
                 // Load user progress from localStorage
                 const saved = localStorage.getItem('proExamProgress');
@@ -689,15 +743,29 @@
 
         function renderQuestions() {
             const filter = document.getElementById('scenarioFilter').value;
-            const filtered = filter ? examData.filter(q => q.scenario === filter) : examData;
+            let filtered = filter ? examData.filter(q => q.scenario === filter) : examData;
+            
+            // Filter out mastered questions
+            filtered = filtered.filter(q => !masteredQuestions.includes(q.question_number));
             
             const container = document.getElementById('questionsContainer');
             container.innerHTML = '';
             
-            filtered.forEach(question => {
-                const card = createQuestionCard(question);
-                container.appendChild(card);
-            });
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="question-card" style="text-align: center; padding: 48px;">
+                        <span style="font-size: 3em;">🏆</span>
+                        <h3 style="margin-top: 16px; margin-bottom: 8px;">All Questions Mastered!</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95em; margin-bottom: 24px;">You have mastered all questions in this view.</p>
+                        <button class="btn-primary" onclick="resetMastered()" style="display: inline-block;">Reset Mastered</button>
+                    </div>
+                `;
+            } else {
+                filtered.forEach(question => {
+                    const card = createQuestionCard(question);
+                    container.appendChild(card);
+                });
+            }
 
             document.getElementById('totalQuestions').textContent = examData.length;
         }
@@ -761,6 +829,7 @@
                         ${isAnswered ? 'Show Answer Again' : 'Show Answer'}
                     </button>
                     <button class="btn-secondary" onclick="skipQuestion(${question.question_number})">Skip</button>
+                    <button class="btn-mastered" onclick="markMastered(${question.question_number})">🎓 Mastered</button>
                 </div>
             `;
             
@@ -880,7 +949,7 @@
         }
 
         function updateStats() {
-            const filtered = document.querySelectorAll('.question-card').length;
+            const masteredCount = masteredQuestions.length;
             const answered = Object.keys(userAnswers).length;
             const correct = Object.keys(userAnswers).filter(qNum => {
                 const q = examData.find(e => e.question_number == qNum);
@@ -890,6 +959,10 @@
             const percent = examData.length > 0 ? Math.round((answered / examData.length) * 100) : 0;
             const score = answered > 0 ? Math.round((correct / answered) * 100) : 0;
             
+            const masteredEl = document.getElementById('masteredCount');
+            if (masteredEl) {
+                masteredEl.textContent = masteredCount;
+            }
             document.getElementById('answeredCount').textContent = answered;
             document.getElementById('correctCount').textContent = correct;
             document.getElementById('scorePercent').textContent = score + '%';
@@ -903,10 +976,42 @@
             }
         }
 
+        function markMastered(questionNumber) {
+            if (!masteredQuestions.includes(questionNumber)) {
+                masteredQuestions.push(questionNumber);
+                saveMasteredState();
+            }
+            
+            // Instantly remove from view with a clean fade-out micro-animation
+            const card = document.getElementById(`question-${questionNumber}`);
+            if (card) {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    renderQuestions();
+                    updateStats();
+                }, 300);
+            } else {
+                renderQuestions();
+                updateStats();
+            }
+        }
+
+        function resetMastered() {
+            if (confirm('Bring back all mastered questions?')) {
+                masteredQuestions = [];
+                saveMasteredState();
+                renderQuestions();
+                updateStats();
+            }
+        }
+
         function resetAll() {
-            if (confirm('Reset all answers?')) {
+            if (confirm('Reset all answers and mastered state?')) {
                 userAnswers = {};
                 localStorage.removeItem('proExamProgress');
+                masteredQuestions = [];
+                saveMasteredState();
                 renderQuestions();
                 updateStats();
             }
