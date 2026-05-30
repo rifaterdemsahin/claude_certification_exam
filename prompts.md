@@ -646,3 +646,9 @@ Reorganize project folders into the 7-stage Delivery Pilot Template structure. C
 ## Commit 105: (pending) — Perform sanity check and execute suggestions
 
 Created sanity_check_review_v1.md in 6_Semblance folder. Wrote and ran Python automation scripts to recursively sanitize and update 54 files under 4_Formula/ changing github edit/blob links to the correct 4_Formula path, and updated agent rule files (agents.md, claude.md, gemini.md, mimo.md) to reference agent names in lowercase.
+
+---
+
+## Commit 106: (pending) — Find and remove duplicates, and create antigravity.md guidelines
+
+Created antigravity.md guidelines in the root folder. Identified and removed the duplicate navigation script pages/nav.js and stripped all redundant <script src="nav.js"></script> script tags across 13 HTML files in 5_Symbols/pages/ to prevent browser console 404 load errors. Updated the debug menu in nav.js and sidebar notes list in markdown_renderer.html to integrate antigravity.md. Updated logic tests to assert the correct 15 debug menu items.

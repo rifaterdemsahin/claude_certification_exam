@@ -70,6 +70,7 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
   - `gemini.md` — Gemini CLI guidelines
   - `mimo.md` — Mimo (Xiaomi MiMo) guidelines
   - `agents.md` — Multi-agent guidelines (this file)
+  - `antigravity.md` — Antigravity agent guidelines (deduplication & format)
 
 ## File Layout
 
@@ -83,6 +84,7 @@ Interactive study guide for the **Claude Developer Certification** exam. Single-
 ├── copilot.md              # GitHub Copilot guidelines
 ├── kilocode.md             # Kilo Code guidelines
 ├── mimo.md                 # Mimo-specific guidelines
+├── antigravity.md          # Antigravity agent guidelines (deduplication & format)
 ├── 1_Real_Unknown/         # Problem definitions, OKRs, core questions, and hypotheses
 │   ├── README.md           # Stage overview
 │   ├── problem_statement.md # The core problem this project solves

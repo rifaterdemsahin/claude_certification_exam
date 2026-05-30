@@ -106,6 +106,7 @@
         { label: "gemini.md", url: "gemini.md", icon: "♊" },
         { label: "copilot.md", url: "copilot.md", icon: "🧑‍✈️" },
         { label: "kilocode.md", url: "kilocode.md", icon: "🛠️" },
+        { label: "antigravity.md", url: "antigravity.md", icon: "🛸" },
         { label: "user_experience.md", url: "3_Simulation/user_experience.md", icon: "📱" }
     ];
 
