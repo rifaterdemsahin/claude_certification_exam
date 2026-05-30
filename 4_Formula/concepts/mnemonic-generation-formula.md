@@ -1,36 +1,33 @@
 # Mnemonic Generation Formula
 
 ## Description
-A programmatic formula for generating visual memory palace infographics to help candidates memorize and understand advanced Claude Developer Certification concepts.
+A visual generation formula using DALL-E (`generate_image`) to create surreal, abstract visual memory palace diagrams to help candidates memorize and understand advanced Claude Developer Certification concepts.
 
-## Architecture & Layout Recipe
-To maximize retrieval, each infographic is structured as a split-screen 1200x800 card following the teal-amber-white palette on a dark theme (`#0f172a`):
+## visual Mnemonic Prompt Recipe
+To maximize retention, each mnemonic image is generated using a structured visual recipe based on a De Chirico surreal memory palace style:
 
-1. **Left Section (The Mnemonic Palace):**
-   * **Space & Architecture:** Selects an architectural space matching the competency category:
-     * *Library Atrium* (scholarly) for Multi-Agent Research
-     * *Postal Sorting Hall* (bureaucracy) for Tool Design & MCP
-     * *Forge* (industrial) for Claude Code Workflows
-     * *Courtroom* (legal) for Prompt Engineering
-     * *Excavation Site* (archaeological) for Context & Reliability
-   * **Mechanism (Correct Path - Teal `#10b981`):** A primary center node describing the correct solution to the scenario.
-   * **Contrast Ghost (Wrong Path - Red `#ef4444`):** A secondary node illustrating the common failure mode or incorrect option.
-   * **Physical Metaphor (Amber `#f59e0b`):** A tactile physical symbol (Key, Scale, Stamp, Shield, Compass) mapped to the solution's core constraint.
+1. **Artistic Style:**
+   * **Style:** A surreal memory palace space, De Chirico stone architecture, dramatic chiaroscuro lighting, teal-amber-white palette, painterly cinematic render.
+   * **Typographic Overlays:** Bold sans-serif typographic overlays carved into stone architecture and physical objects throughout the scene.
 
-2. **Right Section (The Technical Data):**
-   * **Digest:** Short summary of the exam scenario.
-   * **Principle:** A single core guideline carved as a mnemonic rule.
-   * **Rationale:** Full technical explanation highlighting tradeoffs.
-   * **Balance Badge (Purple `#a855f7`):** The primary floating tradeoff axis (e.g., latency vs. accuracy).
+2. **Core Components (Center & Foreground):**
+   * **The Mechanism:** A central green-teal robed figure representing the competency (e.g., 'Code Generation with Claude Code') holding a glowing object representing the correct solution.
+   * **The Contrast Ghost (Wrong Path):** A ghostly shadow figure to the left, frozen mid-mistake, representing the failure mode, with cascading red light and debris/broken chains. Includes a caption "Incorrect Action" above the ghost.
+   * **The Physical Metaphor:** A massive glowing physical object (such as a *Golden Compass*, *Balancing Scale*, *Security Shield*, *Key*, or *Engraved Stamp*) with a teal/amber glow, corresponding to the scenario constraint.
 
-## Implementation in Python
-The programmatic generation is implemented in [generate_memory_palace_cards.py](file:///Users/rifaterdemsahin/projects/claude_certification_exam/5_Symbols/scripts/generate_memory_palace_cards.py) using the **Pillow** image drawing library. The script maps questions dynamically based on NLP keyword scans:
-* Detects scenario keywords (e.g. "allowed-tools" maps to a "Security Shield" metaphor).
-* Extracts correct vs. wrong option paths from the source `pro-exam.json` database.
-* Draws custom rounded rectangles, connection pathways, and text blocks.
+3. **Background & Atmosphere:**
+   * **Palace Corridors:** Sealed dark corridors representing wrong paths, contrasted with one lit teal corridor representing the correct architectural decision.
+   * **Trade-Off overlay:** A floating typographic badge (e.g. `'cost vs. context'`, `'latency vs. accuracy'`) floating above the scene.
 
-## Related Memory Cards
-All practice questions from `CAT01-Q018` to `CAT05-Q058` use this mnemonic layout.
+## Workflow Process
+1. **Prompts Database compilation:** Scenario details, correct/incorrect choices, and tradeoff axes are extracted and compiled into `mnemonic_prompts.json`.
+2. **Sequential Generation:** Invoke `generate_image` using the prompt. To avoid concurrent RPM limits, a 15-second delay is introduced between generations.
+3. **Local Sync & Cloud Storage:** The generated PNGs are copied to local assets (`5_Symbols/assets/exam-images/qXXX.png`) and uploaded to the Azure Blob Container (`exam-images`) using credentials.
+
+## Related Files
+* Visual Prompts: [mnemonic_prompts.json](file:///Users/rifaterdemsahin/projects/claude_certification_exam/5_Symbols/scripts/mnemonic_prompts.json)
+* Validation Test: [test_pro_exam_images.js](file:///Users/rifaterdemsahin/projects/claude_certification_exam/7_Testing_Known/test_pro_exam_images.js)
 
 ## Edit Link
 [Edit this page](https://github.com/rifaterdemsahin/claude_certification_exam/edit/main/4_Formula/concepts/mnemonic-generation-formula.md)
+

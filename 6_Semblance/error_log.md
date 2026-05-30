@@ -44,3 +44,44 @@ The model (agent) misinterpreted "create images using the template" as a request
 
 **Linked to:** [3_Simulation/memory_palace_prompt.md](file:///Users/rifaterdemsahin/projects/claude_certification_exam/3_Simulation/memory_palace_prompt.md) and [5_Symbols/scripts/generate_memory_palace_cards.py](file:///Users/rifaterdemsahin/projects/claude_certification_exam/5_Symbols/scripts/generate_memory_palace_cards.py)
 
+---
+
+## [2026-05-30] Image Generation Capacity Limit Block (HTTP 429 RESOURCE_EXHAUSTED)
+
+**Symptom:**
+Image generation calls for questions 30, 38, and 54 failed with:
+`failed to generate content: 429 Too Many Requests: You have exhausted your capacity on this model. Your quota will reset after 4h54m.`
+
+**Root cause:**
+The model `gemini-3.1-flash-image` has a capacity limit for daily/hourly requests that was hit due to parallel, bulk image generation loops across multiple concurrent agents.
+
+**Fix applied:**
+1. Successfully generated and copied Q19-Q29, Q32-Q39, and Q45-Q53.
+2. Logged the remaining questions (Q30-Q31, Q40-Q42, Q44, Q54-Q58) as blocked until the reset timestamp (2026-05-30T20:23:44Z).
+3. Created an automation script `copy_and_upload_images.sh` to copy and upload the remaining files in bulk once the quota is restored.
+
+**Workaround active:** Yes (Wait until 21:24 Local Time to generate the remaining 11 images).
+
+**Linked to:** [6_Semblance/mnemonic_generation_blockage.md](file:///Users/rifaterdemsahin/projects/claude_certification_exam/6_Semblance/mnemonic_generation_blockage.md)
+
+---
+
+## [2026-05-30] GitHub Push Protection Block for Hardcoded Credentials (GH013)
+
+**Symptom:**
+`git push` failed with:
+`remote: error: GH013: Repository rule violations found for refs/heads/main. Push cannot contain secrets (Azure Storage Account Access Key).`
+
+**Root cause:**
+The helper automation script `5_Symbols/scripts/copy_and_upload_images.sh` originally had the Azure Storage Account Access Key hardcoded for convenience.
+
+**Fix applied:**
+1. Reset the local commit using `git reset HEAD~1`.
+2. Modified the script to read the connection key from the environment variable `AZURE_STORAGE_KEY` rather than hardcoding it.
+3. Added checks and helpful error logs to guide developers on setting the environment variable before running the script.
+
+**Workaround active:** No
+
+**Linked to:** [5_Symbols/scripts/copy_and_upload_images.sh](file:///Users/rifaterdemsahin/projects/claude_certification_exam/5_Symbols/scripts/copy_and_upload_images.sh)
+
+
