@@ -5,39 +5,39 @@
   "images": [
     {
       "questionNumber": 1,
-      "filename": "q001.svg",
-      "localPath": "/Users/rifaterdemsahin/projects/claude_certification_exam/assets/exam-images/q001.svg",
-      "azureUrl": "https://claudecertstore.blob.core.windows.net/exam-images/q001.svg"
+      "filename": "q001.png",
+      "localPath": "/Users/rifaterdemsahin/projects/claude_certification_exam/assets/exam-images/q001.png",
+      "azureUrl": "https://claudecertstore.blob.core.windows.net/exam-images/q001.png"
     },
     {
       "questionNumber": 2,
-      "filename": "q002.svg",
-      "localPath": "/Users/rifaterdemsahin/projects/claude_certification_exam/assets/exam-images/q002.svg",
-      "azureUrl": "https://claudecertstore.blob.core.windows.net/exam-images/q002.svg"
+      "filename": "q002.png",
+      "localPath": "/Users/rifaterdemsahin/projects/claude_certification_exam/assets/exam-images/q002.png",
+      "azureUrl": "https://claudecertstore.blob.core.windows.net/exam-images/q002.png"
     },
     {
       "questionNumber": 3,
-      "filename": "q003.svg",
-      "localPath": "/Users/rifaterdemsahin/projects/claude_certification_exam/assets/exam-images/q003.svg",
-      "azureUrl": "https://claudecertstore.blob.core.windows.net/exam-images/q003.svg"
+      "filename": "q003.png",
+      "localPath": "/Users/rifaterdemsahin/projects/claude_certification_exam/assets/exam-images/q003.png",
+      "azureUrl": "https://claudecertstore.blob.core.windows.net/exam-images/q003.png"
     },
     {
       "questionNumber": 4,
-      "filename": "q004.svg",
-      "localPath": "/Users/rifaterdemsahin/projects/claude_certification_exam/assets/exam-images/q004.svg",
-      "azureUrl": "https://claudecertstore.blob.core.windows.net/exam-images/q004.svg"
+      "filename": "q004.png",
+      "localPath": "/Users/rifaterdemsahin/projects/claude_certification_exam/assets/exam-images/q004.png",
+      "azureUrl": "https://claudecertstore.blob.core.windows.net/exam-images/q004.png"
     },
     {
       "questionNumber": 5,
-      "filename": "q005.svg",
-      "localPath": "/Users/rifaterdemsahin/projects/claude_certification_exam/assets/exam-images/q005.svg",
-      "azureUrl": "https://claudecertstore.blob.core.windows.net/exam-images/q005.svg"
+      "filename": "q005.png",
+      "localPath": "/Users/rifaterdemsahin/projects/claude_certification_exam/assets/exam-images/q005.png",
+      "azureUrl": "https://claudecertstore.blob.core.windows.net/exam-images/q005.png"
     },
     {
       "questionNumber": 6,
-      "filename": "q006.svg",
-      "localPath": "/Users/rifaterdemsahin/projects/claude_certification_exam/assets/exam-images/q006.svg",
-      "azureUrl": "https://claudecertstore.blob.core.windows.net/exam-images/q006.svg"
+      "filename": "q006.png",
+      "localPath": "/Users/rifaterdemsahin/projects/claude_certification_exam/assets/exam-images/q006.png",
+      "azureUrl": "https://claudecertstore.blob.core.windows.net/exam-images/q006.png"
     },
     {
       "questionNumber": 7,

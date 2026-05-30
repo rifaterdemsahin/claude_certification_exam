@@ -866,7 +866,8 @@
         }
 
         function loadImageForQuestion(questionNumber, container) {
-            const filename = `q${String(questionNumber).padStart(3, '0')}.svg`;
+            const extension = (questionNumber >= 1 && questionNumber <= 6) ? 'png' : 'svg';
+            const filename = `q${String(questionNumber).padStart(3, '0')}.${extension}`;
             
             // Load directly from Azure Blob Storage
             const azureUrl = `https://claudecertstore.blob.core.windows.net/exam-images/${filename}`;

@@ -33,6 +33,7 @@ All collaborative study data (memory cards, concept diagrams, visual aids) is st
 |-----------|---------|----------------|-------------------|
 | `memory-cards` | Detailed markdown flashcard study guides | Public Read / Authenticated Write | `MEM-Q{ID}.md` (e.g., `MEM-Q005.md`) |
 | `memory-images` | Diagrams, sketches, visual mnemonics | Public Read / Authenticated Write | `MEM-Q{ID}_v{Version}.png` |
+| `exam-images` | Practice and Pro exam diagrams / visual aids | Public Read / Authenticated Write | `q{ID}.png` or `q{ID}.svg` (e.g., `q001.png`, `q007.svg`) |
 
 ---
 

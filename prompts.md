@@ -652,3 +652,10 @@ Created sanity_check_review_v1.md in 6_Semblance folder. Wrote and ran Python au
 ## Commit 106: (pending) — Find and remove duplicates, and create antigravity.md guidelines
 
 Created antigravity.md guidelines in the root folder. Identified and removed the duplicate navigation script pages/nav.js and stripped all redundant <script src="nav.js"></script> script tags across 13 HTML files in 5_Symbols/pages/ to prevent browser console 404 load errors. Updated the debug menu in nav.js and sidebar notes list in markdown_renderer.html to integrate antigravity.md. Updated logic tests to assert the correct 15 debug menu items.
+
+---
+
+## Commit 107: (pending) — Update hint images for questions 1 to 6 to PNG format
+
+Download the six new hint images from Azure Blob Storage (`exam-images` container), rename them to `q001.png` through `q006.png` locally in `5_Symbols/assets/exam-images/` and re-upload them to Azure. Delete the old placeholder SVGs (`q001.svg` to `q006.svg`) and the temporary JPEG blobs from Azure. Update `manifest.json` and `pro-exam.html` to support the new PNG format for the first six questions. Log errors/workarounds in `6_Semblance/error_log.md` and add automated tests to `7_Testing_Known/test_pro_exam_images.js` to verify.
+
