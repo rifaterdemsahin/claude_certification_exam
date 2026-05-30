@@ -665,4 +665,11 @@ Download the six new hint images from Azure Blob Storage (`exam-images` containe
 
 Download the eleven new hint images (questions 7 to 17) from Azure Blob Storage (`exam-images` container), rename them to `q007.png` through `q017.png` locally in `5_Symbols/assets/exam-images/` and re-upload them to Azure. Delete the old placeholder SVGs (`q007.svg` to `q017.svg`) and the temporary JPEG blobs from Azure. Update `manifest.json`, `pro-exam.html`, and `test_pro_exam_images.js` to support the new PNG format for questions 7 to 17.
 
+---
+
+## Commit 109: (pending) — Generate and upload memory palace diagrams for questions 18 to 58
+
+Create custom programmatic generation script `5_Symbols/scripts/generate_memory_palace_cards.py` using Pillow (PIL) to generate 1200x800 dark-themed mnemonic cards for questions 18 to 58 matching the template in `3_Simulation/memory_palace_prompt.md`. Upload the generated PNGs to Azure `exam-images` container, and delete the old placeholder SVGs. Document the generation formula in `4_Formula/concepts/mnemonic-generation-formula.md`. Update `manifest.json`, `pro-exam.html`, and `test_pro_exam_images.js` to support the new PNG format up to question 58.
+
+
 
