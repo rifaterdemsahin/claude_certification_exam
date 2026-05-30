@@ -670,3 +670,10 @@ Download the eleven new hint images (questions 7 to 17) from Azure Blob Storage 
 ## Commit 109: (in-progress) — Generate and upload memory palace diagrams for questions 18 to 58
 
 Compile the visual prompts for questions 18–58 into `mnemonic_prompts.json` using `generate_mnemonic_prompts_json.py`. Generate the surreal memory palace infographics using `generate_image` based on the De Chirico style. Copy the generated files to `5_Symbols/assets/exam-images/` and upload them to Azure Storage container `exam-images`. Update `manifest.json`, `pro-exam.html`, and `test_pro_exam_images.js` to map questions up to Q58 to the new PNG format. Create a helper automation script `copy_and_upload_images.sh` for bulk sync.
+
+---
+
+## Commit 110: (pending) — Create sanity check review v2 and identify gaps
+
+Conduct a full project scan of the self-learning system modules. Create `7_Testing_Known/sanity_check_review_v2.md` documenting functional gaps, asset limitation, navigation redundancy, and centralized reset requirements.
+
