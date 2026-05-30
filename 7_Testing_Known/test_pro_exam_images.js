@@ -17,7 +17,7 @@ try {
     console.log("Test 2: Verifying image filenames and URLs in manifest...");
     manifest.images.forEach(img => {
         const qNum = img.questionNumber;
-        const ext = qNum <= 6 ? 'png' : 'svg';
+        const ext = qNum <= 17 ? 'png' : 'svg';
         
         // Verify filename
         const expectedFilename = `q${String(qNum).padStart(3, '0')}.${ext}`;
@@ -31,16 +31,16 @@ try {
             throw new Error(`Question ${qNum}: Expected azureUrl "${expectedUrl}", found "${img.azureUrl}"`);
         }
     });
-    console.log("✓ PASS: Filenames and Azure URLs match expected types (.png for 1-6, .svg for others).");
+    console.log("✓ PASS: Filenames and Azure URLs match expected types (.png for 1-17, .svg for others).");
 
     console.log("Test 3: Checking that files exist on local disk...");
-    for (let i = 1; i <= 6; i++) {
-        const filePath = path.join(__dirname, '..', '5_Symbols', 'assets', 'exam-images', `q00${i}.png`);
+    for (let i = 1; i <= 17; i++) {
+        const filePath = path.join(__dirname, '..', '5_Symbols', 'assets', 'exam-images', `q${String(i).padStart(3, '0')}.png`);
         if (!fs.existsSync(filePath)) {
             throw new Error(`Local file not found: ${filePath}`);
         }
     }
-    console.log("✓ PASS: Local PNG files for questions 1 to 6 exist on disk.");
+    console.log("✓ PASS: Local PNG files for questions 1 to 17 exist on disk.");
 
     console.log("\n--- All Pro Exam Image Tests Passed Successfully! ---");
     process.exit(0);

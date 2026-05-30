@@ -659,3 +659,10 @@ Created antigravity.md guidelines in the root folder. Identified and removed the
 
 Download the six new hint images from Azure Blob Storage (`exam-images` container), rename them to `q001.png` through `q006.png` locally in `5_Symbols/assets/exam-images/` and re-upload them to Azure. Delete the old placeholder SVGs (`q001.svg` to `q006.svg`) and the temporary JPEG blobs from Azure. Update `manifest.json` and `pro-exam.html` to support the new PNG format for the first six questions. Log errors/workarounds in `6_Semblance/error_log.md` and add automated tests to `7_Testing_Known/test_pro_exam_images.js` to verify.
 
+---
+
+## Commit 108: (pending) — Update hint images for questions 7 to 17 to PNG format
+
+Download the eleven new hint images (questions 7 to 17) from Azure Blob Storage (`exam-images` container), rename them to `q007.png` through `q017.png` locally in `5_Symbols/assets/exam-images/` and re-upload them to Azure. Delete the old placeholder SVGs (`q007.svg` to `q017.svg`) and the temporary JPEG blobs from Azure. Update `manifest.json`, `pro-exam.html`, and `test_pro_exam_images.js` to support the new PNG format for questions 7 to 17.
+
+

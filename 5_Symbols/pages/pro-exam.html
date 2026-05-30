@@ -866,7 +866,7 @@
         }
 
         function loadImageForQuestion(questionNumber, container) {
-            const extension = (questionNumber >= 1 && questionNumber <= 6) ? 'png' : 'svg';
+            const extension = (questionNumber >= 1 && questionNumber <= 17) ? 'png' : 'svg';
             const filename = `q${String(questionNumber).padStart(3, '0')}.${extension}`;
             
             // Load directly from Azure Blob Storage
