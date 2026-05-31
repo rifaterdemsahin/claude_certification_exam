@@ -536,6 +536,8 @@ console.log(test);</code></pre>
 
                 const data = await resp.json();
                 if (resp.ok && data.ok) {
+                    sessionStorage.removeItem('claude_cert_nav_menu');
+                    sessionStorage.removeItem('claude_cert_search_index');
                     alert('Page saved successfully!');
                     isEditing = false;
                     // Update URL and reload page
@@ -580,6 +582,8 @@ console.log(test);</code></pre>
 
                 const data = await resp.json();
                 if (resp.ok && data.ok) {
+                    sessionStorage.removeItem('claude_cert_nav_menu');
+                    sessionStorage.removeItem('claude_cert_search_index');
                     alert('Page deleted successfully.');
                     window.location.href = 'analyse.html';
                 } else if (resp.status === 401) {

@@ -1,0 +1,75 @@
+[
+  {
+    "label": "🧠 1. Remember (Start Point)",
+    "sublabel": "Visuals",
+    "items": [
+      { "emoji": "🃏", "label": "Play Cards", "href": "cards.html" },
+      { "emoji": "🎬", "label": "Slideshow", "href": "remember.html" },
+      { "emoji": "🎯", "label": "Mastery", "href": "mastery.html" },
+      { "emoji": "📝", "label": "Quiz Mode", "href": "quiz.html" },
+      { "emoji": "🧠", "label": "Memory Cards", "href": "memory_cards.html" },
+      { "emoji": "➕", "label": "Add Memory Card", "href": "add_memory_card.html" },
+      { "emoji": "⚡", "label": "Quick Memory", "href": "quick_memory.html" }
+    ]
+  },
+  {
+    "label": "📝 2. Understand",
+    "sublabel": "Apply",
+    "items": [
+      { "emoji": "📋", "label": "Mock Exam Cards", "href": "exam.html" },
+      { "emoji": "🎯", "label": "Practice Exam", "href": "practice_exam.html" },
+      { "emoji": "🏆", "label": "Pro Exam", "href": "pro-exam.html" }
+    ]
+  },
+  {
+    "label": "📊 3. Analyse",
+    "sublabel": "Connect",
+    "items": [
+      { "isHeader": true, "label": "🏗️ Architectures & Loops" },
+      { "emoji": "🏗️", "label": "BMAD", "href": "analyse_renderer.html?page=bmad.html" },
+      { "emoji": "🚀", "label": "AGI Path", "href": "analyse_renderer.html?page=agi-path.html" },
+      { "emoji": "🏗️", "label": "Architecture", "href": "analyse_renderer.html?page=claude_architecture.html" },
+      { "emoji": "🧠", "label": "Mental Model", "href": "analyse_renderer.html?page=llm_mental_model.html" },
+      { "isHeader": true, "label": "🗜️ Prompt Engineering" },
+      { "emoji": "🗜️", "label": "Compression", "href": "analyse_renderer.html?page=context_compression.html" },
+      { "emoji": "📋", "label": "Criteria", "href": "analyse_renderer.html?page=explicit_criteria.html" },
+      { "emoji": "💬", "label": "Multi-Turn", "href": "analyse_renderer.html?page=multi_turn.html" },
+      { "emoji": "🧩", "label": "Reasoning", "href": "analyse_renderer.html?page=structured_reasoning.html" },
+      { "emoji": "💾", "label": "Prompt Caching", "href": "analyse_renderer.html?page=prompt_caching.html" },
+      { "isHeader": true, "label": "🖥️ Tools & Workflows" },
+      { "emoji": "🖥️", "label": "Claude CLI", "href": "analyse_renderer.html?page=claude_cli.html" },
+      { "emoji": "🐍", "label": "MCP Python", "href": "analyse_renderer.html?page=mcp_python.html" },
+      { "emoji": "🧪", "label": "SWE Benchmarks", "href": "analyse_renderer.html?page=swe_bench.html" },
+      { "emoji": "🛠️", "label": "Skills", "href": "analyse_renderer.html?page=skills.html" },
+      { "isHeader": true, "label": "📖 Reference & Dashboards" },
+      { "emoji": "📖", "label": "Dictionary", "href": "analyse_renderer.html?page=dictionary.html" },
+      { "emoji": "🔗", "label": "Evaluate", "href": "analyse_renderer.html?page=evaluate.html" },
+      { "emoji": "🗺️", "label": "Mindmap", "href": "analyse_renderer.html?page=mindmap.html" },
+      { "emoji": "📚", "label": "Resources", "href": "analyse_renderer.html?page=resources.html" },
+      { "emoji": "📊", "label": "Stats Hub", "href": "analyse.html" },
+      { "isHeader": true, "label": "⚙️ Admin Controls" },
+      { "emoji": "➕", "label": "New Analysis Page", "href": "analyse_renderer.html?action=new" },
+      { "emoji": "🃏", "label": "Add Memory Card", "href": "add_memory_card.html" }
+    ]
+  },
+  {
+    "label": "🔍 4. Evaluate",
+    "sublabel": "Collaborate",
+    "items": [
+      { "emoji": "💬", "label": "Discussion Board", "href": "understand.html" },
+      { "emoji": "📊", "label": "Pricing", "href": "claude_pricing.html" },
+      { "emoji": "🎮", "label": "Multiplayer", "href": "multiplayer.html" }
+    ]
+  },
+  {
+    "label": "🎨 5. Create",
+    "sublabel": "Build",
+    "items": [
+      { "emoji": "🗳️", "label": "Vote for Videos", "href": "create.html" },
+      { "emoji": "🎬", "label": "Creator", "href": "creator.html" },
+      { "emoji": "🏛️", "label": "Tactics", "href": "tactics.html" },
+      { "emoji": "📝", "label": "Prompts", "href": "markdown_renderer.html?url=../../prompts.md&title=Prompts" },
+      { "emoji": "📦", "label": "GitHub Repo", "href": "https://github.com/rifaterdemsahin/claude_certification_exam", "external": true }
+    ]
+  }
+]

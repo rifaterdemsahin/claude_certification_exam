@@ -34,6 +34,91 @@ async function streamToString(readableStream) {
     });
 }
 
+// Sync menu.json and search_index.json dynamically upon page updates
+async function syncMenuAndSearchIndex(containerClient, filename, content, isDelete, context) {
+    const MENU_BLOB = "menu.json";
+    const SEARCH_BLOB = "search_index.json";
+    const targetHref = `analyse_renderer.html?page=${filename}`;
+
+    try {
+        // --- 1. SYNC MENU.JSON ---
+        const menuBlobClient = containerClient.getBlockBlobClient(MENU_BLOB);
+        if (await menuBlobClient.exists()) {
+            const menuDownload = await menuBlobClient.download(0);
+            const menuText = await streamToString(menuDownload.readableStreamBody);
+            const menuJson = JSON.parse(menuText);
+
+            // Find group "3. Analyse"
+            const analyseGroup = menuJson.find(g => g.label && g.label.includes("3. Analyse"));
+            if (analyseGroup && analyseGroup.items) {
+                // Filter out the existing item first
+                analyseGroup.items = analyseGroup.items.filter(item => item.href !== targetHref);
+
+                if (!isDelete) {
+                    // Extract page title from <title> tag
+                    const titleMatch = content.match(/<title>([^<]+)<\/title>/i);
+                    let title = titleMatch ? titleMatch[1].trim() : filename.replace(".html", "");
+                    title = title.replace(" — Claude Dev Cert", "").replace("Claude Dev Cert — ", "");
+
+                    // Insert right before the "Admin Controls" group header
+                    const adminIndex = analyseGroup.items.findIndex(item => item.isHeader && item.label && item.label.includes("Admin Controls"));
+                    const newItem = { emoji: "📄", label: title, href: targetHref };
+
+                    if (adminIndex !== -1) {
+                        analyseGroup.items.splice(adminIndex, 0, newItem);
+                    } else {
+                        analyseGroup.items.push(newItem);
+                    }
+                }
+
+                // Upload the updated menu.json configuration
+                const updatedMenuText = JSON.stringify(menuJson, null, 2);
+                await menuBlobClient.upload(updatedMenuText, Buffer.byteLength(updatedMenuText), {
+                    blobHTTPHeaders: { blobContentType: "application/json" }
+                });
+                context.log(`Successfully synced menu.json for: ${filename}`);
+            }
+        }
+
+        // --- 2. SYNC SEARCH_INDEX.JSON ---
+        const searchBlobClient = containerClient.getBlockBlobClient(SEARCH_BLOB);
+        if (await searchBlobClient.exists()) {
+            const searchDownload = await searchBlobClient.download(0);
+            const searchText = await streamToString(searchDownload.readableStreamBody);
+            const searchJson = JSON.parse(searchText);
+
+            // Filter out existing index entry (handles folder prefixed and standard format paths)
+            let filteredSearch = searchJson.filter(item => item.href !== targetHref && item.href !== `5_Symbols/pages/${targetHref}`);
+
+            if (!isDelete) {
+                // Extract title and description metadata
+                const titleMatch = content.match(/<title>([^<]+)<\/title>/i);
+                let title = titleMatch ? titleMatch[1].trim() : filename.replace(".html", "");
+                title = title.replace(" — Claude Dev Cert", "").replace("Claude Dev Cert — ", "");
+
+                const descMatch = content.match(/<meta\s+name="description"\s+content="([^"]+)"/i) || 
+                                  content.match(/<meta\s+content="([^"]+)"\s+name="description"/i);
+                const desc = descMatch ? descMatch[1].trim() : `Analysis details for ${title}.`;
+
+                filteredSearch.push({
+                    title,
+                    desc,
+                    href: targetHref
+                });
+            }
+
+            // Upload updated search index
+            const updatedSearchText = JSON.stringify(filteredSearch, null, 2);
+            await searchBlobClient.upload(updatedSearchText, Buffer.byteLength(updatedSearchText), {
+                blobHTTPHeaders: { blobContentType: "application/json" }
+            });
+            context.log(`Successfully synced search_index.json for: ${filename}`);
+        }
+    } catch (e) {
+        context.log.error(`Failed to sync menu/search config indexes: ${e.message}`);
+    }
+}
+
 module.exports = async function (context, req) {
     const corsHeaders = {
         "Access-Control-Allow-Origin": "*",
@@ -63,31 +148,35 @@ module.exports = async function (context, req) {
             const filename = req.query.filename;
             if (filename) {
                 // Fetch specific page content
-                if (!filename.match(/^[a-z0-9_-]+\.html$/)) {
-                    context.res = { status: 400, headers: corsHeaders, body: { error: "Invalid filename. Must be lower-case alphanumeric with dashes/underscores and end with .html" } };
+                if (!filename.match(/^[a-z0-9_-]+\.html$/) && filename !== "menu.json" && filename !== "search_index.json") {
+                    context.res = { status: 400, headers: corsHeaders, body: { error: "Invalid filename format." } };
                     return;
                 }
 
                 const blockBlobClient = containerClient.getBlockBlobClient(filename);
                 if (!(await blockBlobClient.exists())) {
-                    context.res = { status: 404, headers: corsHeaders, body: { error: "Page not found" } };
+                    context.res = { status: 404, headers: corsHeaders, body: { error: "Resource not found" } };
                     return;
                 }
 
                 const downloadResponse = await blockBlobClient.download(0);
                 const content = await streamToString(downloadResponse.readableStreamBody);
 
+                const contentType = filename.endsWith(".json") ? "application/json" : "text/html";
+
                 context.res = {
                     status: 200,
-                    headers: { ...corsHeaders, "Content-Type": "text/html" },
+                    headers: { ...corsHeaders, "Content-Type": contentType },
                     body: content
                 };
                 return;
             } else {
-                // List all dynamic analysis pages
+                // List all dynamic analysis pages (exclude menu.json and search_index.json from directory lists)
                 const files = [];
                 for await (const blob of containerClient.listBlobsFlat()) {
-                    files.push(blob.name);
+                    if (blob.name !== "menu.json" && blob.name !== "search_index.json") {
+                        files.push(blob.name);
+                    }
                 }
 
                 context.res = {
@@ -116,7 +205,7 @@ module.exports = async function (context, req) {
             }
 
             if (!filename.match(/^[a-z0-9_-]+\.html$/)) {
-                context.res = { status: 400, headers: corsHeaders, body: { error: "Invalid filename. Must be lower-case alphanumeric with dashes/underscores and end with .html" } };
+                context.res = { status: 400, headers: corsHeaders, body: { error: "Invalid filename. Must end with .html" } };
                 return;
             }
 
@@ -124,6 +213,9 @@ module.exports = async function (context, req) {
             await blockBlobClient.upload(content, Buffer.byteLength(content), {
                 blobHTTPHeaders: { blobContentType: "text/html" }
             });
+
+            // Sync dynamic index configurations (menu and search)
+            await syncMenuAndSearchIndex(containerClient, filename, content, false, context);
 
             context.res = {
                 status: 200,
@@ -142,12 +234,17 @@ module.exports = async function (context, req) {
             }
 
             if (!filename.match(/^[a-z0-9_-]+\.html$/)) {
-                context.res = { status: 400, headers: corsHeaders, body: { error: "Invalid filename. Must be lower-case alphanumeric with dashes/underscores and end with .html" } };
+                context.res = { status: 400, headers: corsHeaders, body: { error: "Invalid filename. Must end with .html" } };
                 return;
             }
 
             const blockBlobClient = containerClient.getBlockBlobClient(filename);
             const deleteResponse = await blockBlobClient.deleteIfExists();
+
+            if (deleteResponse.succeeded) {
+                // Sync dynamic indexes (remove entry)
+                await syncMenuAndSearchIndex(containerClient, filename, "", true, context);
+            }
 
             context.res = {
                 status: 200,

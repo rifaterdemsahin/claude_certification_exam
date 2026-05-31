@@ -2,15 +2,30 @@
 
 ## 📥 Backlog
 - [ ] Add AI spend topic to the analysis menu: https://www.youtube.com/watch?v=NLrRDfGsZ5U
+- [ ] Add AI weak links topic to the analysis menu: https://youtu.be/xBpGn3BDcOY?t=1974
+- [ ] Add Jupiter Labs to manage ai code topic to the analysis menu: https://youtu.be/uWXgHi9m-GY?t=395
+- [ ] Add slash commands  to the analysis menu: https://youtu.be/52KBhQqqHuc?list=PL4cUxeGkcC9g4YJeBqChhFJwKQ9TRiivY
 - [ ] Add Debug Menu Dashboard in delivery pilot template
-- [ ] Implement local Kokoro, add audio for all content, and add a play button to play it from Azure
+- [ ] Implement local Kokoro indocker , add audio for all content, and add a play button to play it from Azure where it gets streamed.
 - [ ] Add AI mental health topic to the analysis menu : https://youtu.be/Ykvf3MunGf8
 - [ ] Add World model as Gemini Omni to the analsis menu : https://www.youtube.com/watch?v=KUyRq7szZsM 
+- [ ] Add debug on the console to make it easier to debug when there is an issue in the debug mode while developing the website to resolve the issues faster
+- [ ] Make analyse menu multi level open the sub menus when clicked
+- [ ] Auto collapse the Blooms guide in the closed more and interested parties should be able to open it. 
+- [ ] Add Category selection in the analyse menu > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/analyse_renderer.html?action=new
+- [ ] In the analyse page add a content generator button to create content using ai in html that is prompted.
+- [ ] Update the buttons https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/remember.html have better visual images 
+- [ ] Load all the cards https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/remember.html have one source of truth load them to azure there should be more than 125 in may 30 2026.
+- [ ] Load all the cards https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/mastery.html
+- [ ] Add alerting for the cost management https://portal.azure.com/#view/Microsoft_Azure_CostManagement/Menu/~/costanalysis/openedBy/AzurePortal
+
 
 ## ⚙️ In Progress
-- [ ] Move the Analyse pages to Azure
+### WIP 1 : Real time AI everything else goes to backlog
 
 ## ✅ Done
+- [x] Dynamic Azure-hosted menu.json and search_index.json synced automatically upon page saving/deletion.
+- [x] Move the Analyse pages to Azure
 - [x] Implement Delivery Pilot Template
 - [x] Update and rewrite bookmarks.md, register in layout trees, sidebar notes, and debug menus (`2c9bd58`)
 - [x] Create sanity check review v2 and document project gaps (`3ab086f`)

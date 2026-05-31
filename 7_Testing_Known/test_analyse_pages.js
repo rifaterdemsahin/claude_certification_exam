@@ -134,6 +134,26 @@ async function runTests() {
         assert(text === testContentV1, 'Retrieved page content does not match V1');
     });
 
+    await test('Verify menu.json contains the newly created page', async () => {
+        const resp = await fetch(`${API_BASE}/analyse-pages?filename=menu.json`);
+        assert(resp.ok, `GET menu failed with status ${resp.status}`);
+        const menu = await resp.json();
+        const analyseGroup = menu.find(g => g.label && g.label.includes("3. Analyse"));
+        assert(analyseGroup, 'Expected menu.json to contain "3. Analyse" group');
+        const newItem = analyseGroup.items.find(item => item.href && item.href.includes(TEST_FILENAME));
+        assert(newItem, 'Expected menu.json to contain the new test page item');
+        assert(newItem.label === 'Test V1', `Expected label "Test V1", got "${newItem.label}"`);
+    });
+
+    await test('Verify search_index.json contains the newly created page', async () => {
+        const resp = await fetch(`${API_BASE}/analyse-pages?filename=search_index.json`);
+        assert(resp.ok, `GET search index failed with status ${resp.status}`);
+        const index = await resp.json();
+        const searchRecord = index.find(item => item.href.includes(TEST_FILENAME));
+        assert(searchRecord, 'Expected search_index.json to contain the new search record');
+        assert(searchRecord.title === 'Test V1', 'Expected search record title to be "Test V1"');
+    });
+
     const testContentV2 = `<!DOCTYPE html>
 <html>
 <head><title>Test V2</title></head>
@@ -165,6 +185,14 @@ async function runTests() {
         assert(text === testContentV2, 'Retrieved page content does not match V2');
     });
 
+    await test('Verify menu.json has updated label', async () => {
+        const resp = await fetch(`${API_BASE}/analyse-pages?filename=menu.json`);
+        const menu = await resp.json();
+        const analyseGroup = menu.find(g => g.label && g.label.includes("3. Analyse"));
+        const item = analyseGroup.items.find(item => item.href && item.href.includes(TEST_FILENAME));
+        assert(item && item.label === 'Test V2', `Expected updated label "Test V2", got "${item ? item.label : 'none'}"`);
+    });
+
     await test('DELETE successfully removes the test page', async () => {
         assert(token, 'No token available');
         const resp = await fetch(`${API_BASE}/analyse-pages?filename=${TEST_FILENAME}`, {
@@ -176,6 +204,21 @@ async function runTests() {
         assert(resp.ok, `DELETE failed with status ${resp.status}`);
         const data = await resp.json();
         assert(data.ok === true && data.deleted === true, 'Delete was not successful');
+    });
+
+    await test('Verify menu.json no longer contains the page', async () => {
+        const resp = await fetch(`${API_BASE}/analyse-pages?filename=menu.json`);
+        const menu = await resp.json();
+        const analyseGroup = menu.find(g => g.label && g.label.includes("3. Analyse"));
+        const item = analyseGroup.items.find(item => item.href && item.href.includes(TEST_FILENAME));
+        assert(!item, 'Expected test page to be removed from menu.json');
+    });
+
+    await test('Verify search_index.json no longer contains the page', async () => {
+        const resp = await fetch(`${API_BASE}/analyse-pages?filename=search_index.json`);
+        const index = await resp.json();
+        const searchRecord = index.find(item => item.href.includes(TEST_FILENAME));
+        assert(!searchRecord, 'Expected test page to be removed from search_index.json');
     });
 
     await test('GET on deleted page returns 404', async () => {

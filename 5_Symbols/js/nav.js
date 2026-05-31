@@ -249,7 +249,7 @@
         let html = '<nav class="site-nav"><div class="nav-inner">';
         html += '<a href="' + (isIndex ? 'index.html' : '../../index.html') + '" class="nav-home">🧠 Home</a>';
         html += '<button class="nav-toggle" onclick="document.querySelector(\'.site-nav\').classList.toggle(\'open\')" aria-label="Toggle menu">☰</button>';
-        html += '<div class="nav-menu">';
+        html += '<div class="nav-menu" id="site-nav-menu">';
 
         // Bloom taxonomy dropdowns
         navItems.forEach(group => {
@@ -315,7 +315,7 @@
         return html;
     }
 
-    // Search functionality for Project Menu
+    // Search functionality for Project Menu querying dynamic search_index.json
     window.navSearch = function(query) {
         const resultsContainer = document.getElementById('nav-search-results');
         if (!query || query.length < 2) {
@@ -323,18 +323,41 @@
             return;
         }
 
-        const allItems = [];
-        navItems.forEach(group => {
-            group.items.forEach(item => {
-                allItems.push({ ...item, category: group.label });
-            });
-        });
+        // Use dynamically loaded search index if available
+        let searchIndex = [];
+        try {
+            const cachedIndex = sessionStorage.getItem('claude_cert_search_index');
+            if (cachedIndex) {
+                searchIndex = JSON.parse(cachedIndex);
+            }
+        } catch (e) {
+            console.error('Failed to parse cached search index:', e);
+        }
 
         const q = query.toLowerCase();
-        const matches = allItems.filter(item =>
-            item.label.toLowerCase().includes(q) ||
-            item.category.toLowerCase().includes(q)
-        ).slice(0, 8);
+        let matches = [];
+
+        if (searchIndex && searchIndex.length > 0) {
+            // Search using the fetched search_index.json
+            matches = searchIndex.filter(item =>
+                (item.title && item.title.toLowerCase().includes(q)) ||
+                (item.desc && item.desc.toLowerCase().includes(q))
+            ).slice(0, 8);
+        } else {
+            // Fallback: search using navItems
+            const allItems = [];
+            navItems.forEach(group => {
+                group.items.forEach(item => {
+                    if (!item.isHeader && !item.isDivider) {
+                        allItems.push({ ...item, title: item.label, category: group.label });
+                    }
+                });
+            });
+            matches = allItems.filter(item =>
+                item.title.toLowerCase().includes(q) ||
+                item.category.toLowerCase().includes(q)
+            ).slice(0, 8);
+        }
 
         if (matches.length === 0) {
             resultsContainer.style.display = 'none';
@@ -343,7 +366,10 @@
 
         let html = '';
         matches.forEach(item => {
-            html += '<a href="' + prefix + item.href + '" class="nav-search-item">' + item.emoji + ' ' + item.label + '</a>';
+            const itemEmoji = item.emoji || '📄';
+            const itemTitle = item.title || item.label;
+            const href = item.href.startsWith('http') || item.href.startsWith('//') ? item.href : prefix + item.href;
+            html += '<a href="' + href + '" class="nav-search-item">' + itemEmoji + ' ' + itemTitle + '</a>';
         });
         resultsContainer.innerHTML = html;
         resultsContainer.style.display = 'block';
@@ -911,6 +937,76 @@
     debugContainer.innerHTML = buildDebugDrawer();
     document.body.appendChild(debugContainer);
 
+    // Re-render dropdown navigation contents dynamically
+    function renderMenu(menuData) {
+        const menuContainer = document.getElementById('site-nav-menu');
+        if (!menuContainer) return;
+
+        let html = '';
+        menuData.forEach(group => {
+            html += '<div class="nav-dropdown">';
+            html += '<button class="nav-dropdown-btn">' + group.label + ' <span class="nav-sublabel">' + group.sublabel + '</span></button>';
+            html += '<div class="nav-dropdown-content">';
+            group.items.forEach(item => {
+                if (item.isHeader) {
+                    html += '<div class="nav-dropdown-group-header">' + item.label + '</div>';
+                } else if (item.isDivider) {
+                    html += '<div class="nav-dropdown-divider"></div>';
+                } else {
+                    const active = isActive(item.href) ? ' active' : '';
+                    const target = item.external ? ' target="_blank" rel="noopener noreferrer"' : '';
+                    const href = item.external ? item.href : prefix + item.href;
+                    html += '<a href="' + href + '" class="nav-link' + active + '"' + target + '>' + (item.emoji ? item.emoji + ' ' : '') + item.label + '</a>';
+                }
+            });
+            html += '</div></div>';
+        });
+        menuContainer.innerHTML = html;
+    }
+
+    // Load fresh menu and search index from Azure with fallback mechanisms
+    async function loadDynamicNav() {
+        const BLOB_BASE = 'https://claudecertstore.blob.core.windows.net/analyse-pages';
+        const API_BASE = 'https://claude-cert-api.azurewebsites.net/api';
+
+        // 1. Instantly render from sessionStorage cache if available
+        const cachedMenu = sessionStorage.getItem('claude_cert_nav_menu');
+        if (cachedMenu) {
+            try {
+                const parsed = JSON.parse(cachedMenu);
+                renderMenu(parsed);
+            } catch (e) {
+                console.error('Error parsing cached menu:', e);
+            }
+        }
+
+        // 2. Fetch fresh indices in background to revalidate (SWR pattern)
+        try {
+            // Fetch fresh menu structure
+            let menuResp = await fetch(`${BLOB_BASE}/menu.json`, { cache: 'no-store' });
+            if (!menuResp.ok) {
+                menuResp = await fetch(`${API_BASE}/analyse-pages?filename=menu.json`);
+            }
+            if (menuResp.ok) {
+                const menuJson = await menuResp.json();
+                sessionStorage.setItem('claude_cert_nav_menu', JSON.stringify(menuJson));
+                renderMenu(menuJson);
+            }
+
+            // Fetch fresh search index
+            let searchResp = await fetch(`${BLOB_BASE}/search_index.json`, { cache: 'no-store' });
+            if (!searchResp.ok) {
+                searchResp = await fetch(`${API_BASE}/analyse-pages?filename=search_index.json`);
+            }
+            if (searchResp.ok) {
+                const searchJson = await searchResp.json();
+                sessionStorage.setItem('claude_cert_search_index', JSON.stringify(searchJson));
+            }
+        } catch (e) {
+            console.warn('Failed to load dynamic nav/search index from Azure:', e);
+        }
+    }
+
     // Check debug cookie on load
     const debugCookie = getCookie('debug');
     if (debugCookie === 'true') {
@@ -921,5 +1017,8 @@
             if (btn) btn.classList.add('active');
         }, 100);
     }
+
+    // Run dynamic navbar loader
+    loadDynamicNav();
 })();
 
