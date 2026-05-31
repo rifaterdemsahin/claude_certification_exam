@@ -29,6 +29,7 @@ This folder documents the **setup, constraints, and operating context** of the p
 | `github_pages.md` | Frontend static hosting — docs, SPAs, landing pages |
 | `navigation.md` | Two-menu system: Project Menu + Debug Menu (bottom-right) |
 | `azure.md` | Cloud integration — serverless API, Blob storage, Key Vault |
+| `bookmarks.md` | Official bookmarks and study resources directory |
 
 ## AI Stack Setup
 

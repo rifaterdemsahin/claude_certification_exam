@@ -107,7 +107,8 @@
         { label: "copilot.md", url: "copilot.md", icon: "🧑‍✈️" },
         { label: "kilocode.md", url: "kilocode.md", icon: "🛠️" },
         { label: "antigravity.md", url: "antigravity.md", icon: "🛸" },
-        { label: "user_experience.md", url: "3_Simulation/user_experience.md", icon: "📱" }
+        { label: "user_experience.md", url: "3_Simulation/user_experience.md", icon: "📱" },
+        { label: "bookmarks.md", url: "2_Environment/bookmarks.md", icon: "🔗" }
     ];
 
     function getCurrentPage() {

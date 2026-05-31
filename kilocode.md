@@ -36,6 +36,7 @@ delivery-pilot-template/
 ├── 2_Environment/          # Setup and configuration guidelines
 │   ├── README.md           # Stage overview
 │   ├── azure.md            # Azure cloud integration
+│   ├── bookmarks.md        # Official bookmarks & study resources
 │   ├── cloudflare_workers.md # Cloudflare Workers edge configuration
 │   ├── fly_io.md           # Backend hosting guide
 │   ├── github_pages.md     # Frontend static hosting guide
