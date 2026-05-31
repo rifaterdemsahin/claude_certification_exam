@@ -154,6 +154,24 @@
         .shuffle-btn:hover {
             background: rgba(168,85,247,0.3) !important;
         }
+        .audio-btn {
+            background: rgba(56,189,248,0.1);
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            border-radius: 8px;
+            padding: 6px 14px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-family: inherit;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+        .audio-btn:hover { background: rgba(56,189,248,0.2); }
+        .audio-btn.playing {
+            background: rgba(239,68,68,0.15);
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
         .card-modal-image img {
             max-width: 100%;
             max-height: 300px;
@@ -297,6 +315,7 @@
                                         <div class="text">${escapeHtml(hint.memory)}</div>
                                     </div>
                                 ` : ''}
+                                ${q.audioUrl ? `<button class="audio-btn" id="audio-card-${q.id}" onclick="event.stopPropagation(); playAudio('${q.audioUrl}', 'audio-card-${q.id}')">🔊 Play</button>` : ''}
                                 <button class="mastery-btn ${isMastered ? 'mastered' : ''}" onclick="event.stopPropagation(); toggleMastery(${q.id})">
                                     ${isMastered ? '✓ Mastered' : 'Mark as Mastered'}
                                 </button>
@@ -344,6 +363,7 @@
                         </div>
                     ` : ''}
                     <div class="card-modal-actions">
+                        ${q.audioUrl ? `<button class="audio-btn" id="audio-modal-${q.id}" onclick="playAudio('${q.audioUrl}', 'audio-modal-${q.id}')">🔊 Play Audio</button>` : ''}
                         <button class="${isFavorite ? 'fav-active' : ''}" onclick="toggleFavorite(${q.id}); this.closest('.card-modal-overlay').remove(); openCardModal(${q.id});">
                             ${isFavorite ? '★ Favorited' : '☆ Favorite'}
                         </button>
@@ -523,6 +543,35 @@
             } catch (e) {
                 console.error('Failed to load new cards:', e);
             }
+        }
+
+        // Audio playback — shared instance, click to play / click again to stop
+        let currentAudio = null;
+        function playAudio(url, btnId) {
+            const btn = document.getElementById(btnId);
+            if (currentAudio && !currentAudio.paused) {
+                currentAudio.pause();
+                currentAudio = null;
+                document.querySelectorAll('.audio-btn').forEach(b => {
+                    b.classList.remove('playing');
+                    b.textContent = b.id.startsWith('audio-modal') ? '🔊 Play Audio' : '🔊 Play';
+                });
+                if (btn && btn.dataset.activeUrl === url) return;
+            }
+            currentAudio = new Audio(url);
+            currentAudio.play().catch(() => {});
+            if (btn) {
+                btn.dataset.activeUrl = url;
+                btn.classList.add('playing');
+                btn.textContent = '⏹ Stop';
+            }
+            currentAudio.onended = () => {
+                if (btn) {
+                    btn.classList.remove('playing');
+                    btn.textContent = btn.id.startsWith('audio-modal') ? '🔊 Play Audio' : '🔊 Play';
+                    delete btn.dataset.activeUrl;
+                }
+            };
         }
 
         // Initialize
