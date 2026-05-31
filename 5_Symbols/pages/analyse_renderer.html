@@ -362,6 +362,11 @@ console.log(test);</code></pre>
             viewActions.style.display = 'none';
             editorActions.style.display = 'none';
 
+            if (actionParam === 'new') {
+                initiateCreateNew();
+                return;
+            }
+
             if (!currentPage) {
                 // Render Page Directory / Empty State with Option to Create
                 mainContent.innerHTML = `
@@ -372,11 +377,6 @@ console.log(test);</code></pre>
                         <button class="btn btn-primary" onclick="initiateCreateNew()">+ Create New Analysis Page</button>
                     </div>
                 `;
-                return;
-            }
-
-            if (actionParam === 'new') {
-                initiateCreateNew();
                 return;
             }
 
