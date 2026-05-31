@@ -1,12 +1,9 @@
 # 📋 Claude Developer Certification - Kanban Board
 
 ## 📥 Backlog
-- [ ] Implement local Kokoro indocker , add audio for all content, and add a play button to play it from Azure where it gets streamed. > audio play button scaffold added to remember.html; wire up audioUrl in data.js once Azure audio files exist
-- [ ] I have this ghcr.io/remsky/kokoro-fastapi-cpu:latest > add to the environments and create the necessary audio on the 
-  local and upload them to azure and place it to the cards to be able to listen to them . commit push  
 - [ ] Add alerting for the cost management https://portal.azure.com/#view/Microsoft_Azure_CostManagement/Menu/~/costanalysis/openedBy/AzurePortal > requires manual Azure Portal setup
-- [ ] Move these pages to the create menu > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/quick_memory.html > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/add_memory_card.html  > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/analyse_renderer.html?action=new in Admin group and remove from other menus 
-- [ ] included kokoro audio in questions and answers > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/pro-exam.html
+- [ ] Move these pages to the create menu > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/quick_memory.html > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/add_memory_card.html  > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/analyse_renderer.html?action=new in Admin group and remove from other menus
+- [ ] Add Kokoro audio play button to pro-exam.html > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/pro-exam.html
 
 -> These backlog tasks are implemented in bulk by Claude and moved to done
 
@@ -16,7 +13,7 @@
 -> Manually getting implemented by Gemini and hands on implementation
 
 
-## ⚙️ Maintaince 
+## ⚙️ Maintenance
 
 - [ ] Update the environment folder > 1_Real_Unknown
 - [ ] Update the environment folder > 2_Environment
@@ -33,6 +30,11 @@
 - [x] Azure data loading: created data_loader.js (fetches questions.json from Azure, falls back to data.js); generated questions.json; remember.html and mastery.html now load via dataReady promise; loading state shown while fetching
 - [x] Add AI spend, AI weak links, Jupiter Labs AI code, slash commands, AI mental health, World model (Gemini Omni) to the Analyse menu as 📹 Video Resources section in menu.json and nav.js; also added to search_index.json
 - [x] Add history_of_ai_from_semi_conductors.html to the Analyse menu (Architectures & Loops section) and search_index.json
+- [x] Add maintenance checklist to claude.md and antigravity.md covering all 7 stage folders (`cf2b9b2`)
+- [x] Kokoro TTS pipeline: Dockerised `ghcr.io/remsky/kokoro-fastapi-cpu:latest`, generated all 100 MP3s, uploaded to Azure `memory-audio` container, wired `audioUrl` in data.js (`fabf3ca`)
+- [x] Add 🔊 Play Audio button to memory cards — flip card back and modal in cards.html (`3217eff`)
+- [x] Add `2_Environment/kokoro.md` (Docker setup, API ref, Azure config, troubleshooting) and `4_Formula/kokoro_audio_pipeline.md` (end-to-end pipeline formula)
+- [x] Update `2_Environment/azure.md` with `memory-audio` container row and portal link
 - [x] Add debug console logging (page, session keys, cookies) when debug mode is active
 - [x] Make analyse menu dropdowns open on click in addition to hover (click-toggle with .click-open class)
 - [x] Auto-collapse Blooms guide by default (closed unless user explicitly opens it; cookie persists preference)
