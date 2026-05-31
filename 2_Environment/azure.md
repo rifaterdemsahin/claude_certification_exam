@@ -19,6 +19,7 @@ graph TD
     AzBlob -->|Container 1| BlobCards[memory-cards/*.md]
     AzBlob -->|Container 2| BlobImages[memory-images/*.png]
     AzBlob -->|Container 3| BlobAnalyse[analyse-pages/*.html]
+    AzBlob -->|Container 4| BlobAudio[memory-audio/*.mp3]
     
     AzAPI -->|Retrieve Connection Strings| AzKV[Azure Key Vault]
 ```
@@ -36,6 +37,7 @@ All collaborative study data (memory cards, concept diagrams, visual aids) is st
 | `memory-images` | Diagrams, sketches, visual mnemonics | Public Read / Authenticated Write | `MEM-Q{ID}_v{Version}.png` |
 | `exam-images` | Practice and Pro exam diagrams / visual aids | Public Read / Authenticated Write | `q{ID}.png` or `q{ID}.svg` (e.g., `q001.png`, `q007.svg`) |
 | `analyse-pages` | Dynamic HTML competency analysis pages | Public Read / Authenticated Write | `{topic_name}.html` (e.g., `context_compression.html`) |
+| `memory-audio` | TTS MP3 audio for all 100 questions (Kokoro) | Public Read / Authenticated Write | `AUD-Q{ID}.mp3` (e.g., `AUD-Q005.mp3`) |
 
 ---
 

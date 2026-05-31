@@ -110,7 +110,7 @@ questionsData.forEach(q => {
     const padId = String(q.id).padStart(3, '0');
     const memId = `MEM-Q${padId}`;
     q.youtubeShortUrl = q.youtubeShortUrl || '';
-    q.audioUrl = q.audioUrl || '';
+    q.audioUrl = q.audioUrl || `https://claudecertstore.blob.core.windows.net/memory-audio/AUD-Q${padId}.mp3`;
 
     // Logic to handle image formats: SVG for new ones, PNG for existing ones
     const ext = (q.id >= 16) ? 'svg' : 'png';
