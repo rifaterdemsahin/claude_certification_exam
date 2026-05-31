@@ -49,24 +49,40 @@
             label: '📊 3. Analyse',
             sublabel: 'Connect',
             items: [
-                { emoji: '🏗️', label: 'BMAD', href: 'bmad.html' },
-                { emoji: '🚀', label: 'AGI Path', href: 'agi-path.html' },
-                { emoji: '🖥️', label: 'Claude CLI', href: 'claude_cli.html' },
-                { emoji: '🏗️', label: 'Architecture', href: 'claude_architecture.html' },
-                { emoji: '🧠', label: 'Mental Model', href: 'llm_mental_model.html' },
-                { emoji: '🗜️', label: 'Compression', href: 'context_compression.html' },
-                { emoji: '📋', label: 'Criteria', href: 'explicit_criteria.html' },
-                { emoji: '📖', label: 'Dictionary', href: 'dictionary.html' },
-                { emoji: '🔗', label: 'Evaluate', href: 'evaluate.html' },
-                { emoji: '🐍', label: 'MCP Python', href: 'mcp_python.html' },
-                { emoji: '🗺️', label: 'Mindmap', href: 'mindmap.html' },
-                { emoji: '💬', label: 'Multi-Turn', href: 'multi_turn.html' },
-                { emoji: '💾', label: 'Prompt Caching', href: 'prompt_caching.html' },
-                { emoji: '🧩', label: 'Reasoning', href: 'structured_reasoning.html' },
-                { emoji: '📚', label: 'Resources', href: 'resources.html' },
-                { emoji: '🧪', label: 'SWE Benchmarks', href: 'swe_bench.html' },
-                { emoji: '🛠️', label: 'Skills', href: 'skills.html' },
-                { emoji: '📊', label: 'Stats', href: 'analyse.html' }
+                // Group 1: Architectures & Loops
+                { isHeader: true, label: '🏗️ Architectures & Loops' },
+                { emoji: '🏗️', label: 'BMAD', href: 'analyse_renderer.html?page=bmad.html' },
+                { emoji: '🚀', label: 'AGI Path', href: 'analyse_renderer.html?page=agi-path.html' },
+                { emoji: '🏗️', label: 'Architecture', href: 'analyse_renderer.html?page=claude_architecture.html' },
+                { emoji: '🧠', label: 'Mental Model', href: 'analyse_renderer.html?page=llm_mental_model.html' },
+
+                // Group 2: Prompt Engineering
+                { isHeader: true, label: '🗜️ Prompt Engineering' },
+                { emoji: '🗜️', label: 'Compression', href: 'analyse_renderer.html?page=context_compression.html' },
+                { emoji: '📋', label: 'Criteria', href: 'analyse_renderer.html?page=explicit_criteria.html' },
+                { emoji: '💬', label: 'Multi-Turn', href: 'analyse_renderer.html?page=multi_turn.html' },
+                { emoji: '🧩', label: 'Reasoning', href: 'analyse_renderer.html?page=structured_reasoning.html' },
+                { emoji: '💾', label: 'Prompt Caching', href: 'analyse_renderer.html?page=prompt_caching.html' },
+
+                // Group 3: Tools & Workflows
+                { isHeader: true, label: '🖥️ Tools & Workflows' },
+                { emoji: '🖥️', label: 'Claude CLI', href: 'analyse_renderer.html?page=claude_cli.html' },
+                { emoji: '🐍', label: 'MCP Python', href: 'analyse_renderer.html?page=mcp_python.html' },
+                { emoji: '🧪', label: 'SWE Benchmarks', href: 'analyse_renderer.html?page=swe_bench.html' },
+                { emoji: '🛠️', label: 'Skills', href: 'analyse_renderer.html?page=skills.html' },
+
+                // Group 4: Reference & Dashboards
+                { isHeader: true, label: '📖 Reference & Dashboards' },
+                { emoji: '📖', label: 'Dictionary', href: 'analyse_renderer.html?page=dictionary.html' },
+                { emoji: '🔗', label: 'Evaluate', href: 'analyse_renderer.html?page=evaluate.html' },
+                { emoji: '🗺️', label: 'Mindmap', href: 'analyse_renderer.html?page=mindmap.html' },
+                { emoji: '📚', label: 'Resources', href: 'analyse_renderer.html?page=resources.html' },
+                { emoji: '📊', label: 'Stats Hub', href: 'analyse.html' },
+
+                // Group 5: Sub Admin Menu
+                { isHeader: true, label: '⚙️ Admin Controls' },
+                { emoji: '➕', label: 'New Analysis Page', href: 'analyse_renderer.html?action=new' },
+                { emoji: '🃏', label: 'Add Memory Card', href: 'add_memory_card.html' }
             ]
         },
         {
@@ -133,7 +149,7 @@
         // Determine active step based on page
         const rememberPages = ['cards.html', 'remember.html', 'mastery.html', 'quiz.html', 'memory_cards.html', 'add_memory_card.html', 'quick_memory.html'];
         const understandPages = ['exam.html', 'practice_exam.html', 'pro-exam.html'];
-        const analysePages = ['bmad.html', 'agi-path.html', 'claude_cli.html', 'claude_architecture.html', 'llm_mental_model.html', 'context_compression.html', 'explicit_criteria.html', 'dictionary.html', 'evaluate.html', 'mcp_python.html', 'mindmap.html', 'multi_turn.html', 'prompt_caching.html', 'structured_reasoning.html', 'resources.html', 'swe_bench.html', 'skills.html', 'analyse.html'];
+        const analysePages = ['bmad.html', 'agi-path.html', 'claude_cli.html', 'claude_architecture.html', 'llm_mental_model.html', 'context_compression.html', 'explicit_criteria.html', 'dictionary.html', 'evaluate.html', 'mcp_python.html', 'mindmap.html', 'multi_turn.html', 'prompt_caching.html', 'structured_reasoning.html', 'resources.html', 'swe_bench.html', 'skills.html', 'analyse.html', 'analyse_renderer.html'];
         const evaluatePages = ['understand.html', 'claude_pricing.html', 'multiplayer.html'];
         const createPages = ['create.html', 'creator.html', 'markdown_renderer.html', 'tactics.html'];
 
@@ -241,10 +257,16 @@
             html += '<button class="nav-dropdown-btn">' + group.label + ' <span class="nav-sublabel">' + group.sublabel + '</span></button>';
             html += '<div class="nav-dropdown-content">';
             group.items.forEach(item => {
-                const active = isActive(item.href) ? ' active' : '';
-                const target = item.external ? ' target="_blank" rel="noopener noreferrer"' : '';
-                const href = item.external ? item.href : prefix + item.href;
-                html += '<a href="' + href + '" class="nav-link' + active + '"' + target + '>' + item.emoji + ' ' + item.label + '</a>';
+                if (item.isHeader) {
+                    html += '<div class="nav-dropdown-group-header">' + item.label + '</div>';
+                } else if (item.isDivider) {
+                    html += '<div class="nav-dropdown-divider"></div>';
+                } else {
+                    const active = isActive(item.href) ? ' active' : '';
+                    const target = item.external ? ' target="_blank" rel="noopener noreferrer"' : '';
+                    const href = item.external ? item.href : prefix + item.href;
+                    html += '<a href="' + href + '" class="nav-link' + active + '"' + target + '>' + (item.emoji ? item.emoji + ' ' : '') + item.label + '</a>';
+                }
             });
             html += '</div></div>';
         });
@@ -473,9 +495,28 @@
             border: 1px solid var(--border, #334155);
             border-radius: 8px;
             padding: 6px;
-            min-width: 160px;
+            min-width: 230px;
+            max-height: 75vh;
+            overflow-y: auto;
             box-shadow: 0 8px 24px rgba(0,0,0,0.4);
             z-index: 1001;
+        }
+        .nav-dropdown-group-header {
+            font-size: 0.7em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-purple, #a855f7);
+            padding: 8px 12px 4px;
+            pointer-events: none;
+            user-select: none;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 4px;
+        }
+        .nav-dropdown-divider {
+            height: 1px;
+            background: var(--border, #334155);
+            margin: 6px 0;
         }
         .nav-dropdown:hover .nav-dropdown-content {
             display: block;

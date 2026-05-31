@@ -37,6 +37,16 @@
                     <h3>📋 Study Recommendations</h3>
                     <div id="recommendations"></div>
                 </div>
+
+                <div class="analyse-card" style="grid-column: 1 / -1; margin-top: 12px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                        <h3 style="margin:0;">🌐 Dynamic Analysis Pages (Azure)</h3>
+                        <a href="analyse_renderer.html?action=new" style="color:var(--accent-blue); text-decoration:none; font-weight:600; font-size:0.9em; background:rgba(56,189,248,0.1); padding:6px 12px; border-radius:6px; transition:all 0.2s;">+ Create New Page</a>
+                    </div>
+                    <div id="dynamic-pages-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:12px;">
+                        <div style="color:var(--text-muted)">Loading pages from Azure...</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -63,6 +73,36 @@
             renderCategoryStats();
             renderConceptStats();
             renderRecommendations();
+            renderDynamicPages();
+        }
+
+        async function renderDynamicPages() {
+            const container = document.getElementById('dynamic-pages-list');
+            try {
+                const API_BASE = 'https://claude-cert-api.azurewebsites.net/api';
+                const resp = await fetch(`${API_BASE}/analyse-pages`);
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                const data = await resp.json();
+                const files = data.files || [];
+                
+                if (files.length === 0) {
+                    container.innerHTML = `<div style="color:var(--text-secondary); grid-column: 1/-1; padding: 12px 0;">No dynamic pages found on Azure yet. Create one!</div>`;
+                    return;
+                }
+                
+                container.innerHTML = files.map(file => {
+                    const title = file.replace('.html', '').replace(/[-_]/g, ' ')
+                        .replace(/\b\w/g, c => c.toUpperCase());
+                    return `
+                        <a href="analyse_renderer.html?page=${file}" style="display:flex; align-items:center; gap:8px; padding:12px; background:var(--bg-primary); border:1px solid var(--border); border-radius:8px; color:var(--text-primary); text-decoration:none; font-size:0.9em; transition:all 0.2s;" onmouseover="this.style.borderColor='var(--accent-blue)'" onmouseout="this.style.borderColor='var(--border)'">
+                            <span>📄</span>
+                            <span style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${title}</span>
+                        </a>
+                    `;
+                }).join('');
+            } catch (e) {
+                container.innerHTML = `<div style="color:var(--accent-red); grid-column: 1/-1; padding: 12px 0;">⚠️ Failed to load pages: ${e.message}</div>`;
+            }
         }
 
         function renderOverallStats() {

@@ -1,0 +1,34 @@
+# 📋 Claude Developer Certification - Kanban Board
+
+## 📥 Backlog
+- [ ] Add AI spend topic to the analysis menu: https://www.youtube.com/watch?v=NLrRDfGsZ5U
+- [ ] Add Debug Menu Dashboard in delivery pilot template
+- [ ] Implement local Kokoro, add audio for all content, and add a play button to play it from Azure
+- [ ] Add AI mental health topic to the analysis menu : https://youtu.be/Ykvf3MunGf8
+- [ ] Add World model as Gemini Omni to the analsis menu : https://www.youtube.com/watch?v=KUyRq7szZsM 
+
+## ⚙️ In Progress
+- [ ] Move the Analyse pages to Azure
+
+## ✅ Done
+- [x] Implement Delivery Pilot Template
+- [x] Update and rewrite bookmarks.md, register in layout trees, sidebar notes, and debug menus (`2c9bd58`)
+- [x] Create sanity check review v2 and document project gaps (`3ab086f`)
+- [x] Copy and upload generated mnemonics for questions 23-29, 33-39, 49-53 and fix security push blocker (`2fb081a`)
+- [x] Update Semblance log with verification check at 13:12 (`558c228`)
+- [x] Add `mnemonic_generation_blockage.md` Semblance document (`1acf6c3`)
+- [x] Generate and upload initial batch of surreal memory palace images (q018-q022, q032, q045-q048) (`c0cfc08`)
+- [x] Generate and upload memory palace diagrams for questions 18 to 58 and verify (`9a43cf5`)
+- [x] Update hint images for questions 7 to 17 to PNG format and verify (`37c7531`)
+- [x] Update hint images for questions 1 to 6 to PNG format and verify (`dde12bb`)
+- [x] Add mastered functionality to pro-exam with cookie persistence and reset (`108737c`)
+- [x] Find and remove duplicates, and create `antigravity.md` guidelines (`24f0b71`)
+- [x] Move duplicate tactics sections from `index.html` to `tactics.html`, classify tactics.html under Category 5 (Create) and update emoji to temple (`e23ba16`)
+- [x] Add Bloom's self-learning progress tracker widget with cookie persistence, self-reporting, and automatic hooks (`b6c4ecf`)
+- [x] Update navigation labels with step numbers and add visual Bloom's self-learning loop guide banner (`41ff98e`)
+- [x] Add `sanity_check_review_v1.md` to document project structure observations and suggestions (`da00e16`)
+- [x] Add `user_experience.md` to debug drawer menu list and update tests (`f62511b`)
+- [x] Create `user_experience.md`, document mockups, update layouts, and pass JSDOM tests (`2b8e59e`)
+- [x] Add `2_Environment/azure.md` and expand environment directory trees (`a3a7402`)
+- [x] Add Stage 1 problem_statement, okrs, questions, hypotheses and expand directory trees (`b01f12a`)
+- [x] Update paths and references to align with the 7-Stage directory layout (5_Symbols and 7_Testing_Known) (`98645d3`)

@@ -232,14 +232,14 @@ const tokenExpiry = Date.now() + (60 * 60 * 1000); // 1 hour
 # Store secret in Azure Key Vault
 az keyvault secret set \
     --vault-name "my-vault" \
-    --name "AdminPassword" \
+    --name "ClaudeCertificateSiteAdminPassword" \
     --value "SecurePassword123!"
 
 # Reference in Function App
 az functionapp config appsettings set \
     --name "my-function-app" \
     --resource-group "my-rg" \
-    --settings "ADMIN_PASSWORD=@Microsoft.KeyVault(VaultName=my-vault;SecretName=AdminPassword)"
+    --settings "ADMIN_PASSWORD=@Microsoft.KeyVault(VaultName=my-vault;SecretName=ClaudeCertificateSiteAdminPassword)"
 ```
 
 ### 7. Implement Rate Limiting

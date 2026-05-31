@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dynamic Analysis Viewer and Editor for Claude Developer Certification. Add or update content on the fly.">
+    <title>Dynamic Analysis — Claude Dev Cert</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --border: #334155;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444;
+            --accent-orange: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 30px 16px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+            border-radius: 12px;
+        }
+        header h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+        header p { color: var(--text-secondary); font-size: 1em; margin-top: 8px; }
+
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 12px 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+        .action-group {
+            display: flex;
+            gap: 8px;
+        }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), #0284c7);
+            color: #fff;
+            border: none;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--accent-red);
+            border: 1px solid var(--accent-red);
+        }
+        .btn-danger:hover {
+            background: var(--accent-red);
+            color: #fff;
+        }
+        .btn-success {
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            color: #fff;
+            border: none;
+        }
+        .btn-success:hover {
+            opacity: 0.9;
+        }
+
+        .content-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            min-height: 300px;
+        }
+
+        /* Editor Styles */
+        .editor-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .form-group label {
+            font-weight: 600;
+            color: var(--accent-blue);
+            font-size: 0.9em;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1em;
+            outline: none;
+        }
+        .form-control:focus {
+            border-color: var(--accent-blue);
+        }
+        .code-textarea {
+            width: 100%;
+            min-height: 500px;
+            font-family: 'SFMono-Regular', Consolas, Monaco, monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+            resize: vertical;
+        }
+
+        /* Loading Spinner */
+        .spinner-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 0;
+            color: var(--text-secondary);
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(56, 189, 248, 0.1);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s infinite linear;
+            margin-bottom: 16px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state .emoji {
+            font-size: 3em;
+            margin-bottom: 16px;
+        }
+
+        /* Standardized styles for dynamic child content to ensure sandbox safety */
+        .dynamic-html-content .section {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .dynamic-html-content h2 {
+            color: var(--accent-blue);
+            font-size: 1.4em;
+            margin-bottom: 16px;
+        }
+        .dynamic-html-content h3 {
+            color: var(--accent-purple);
+            font-size: 1.1em;
+            margin: 16px 0 8px;
+        }
+        .dynamic-html-content p {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+        .dynamic-html-content code {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .dynamic-html-content pre {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+    </style>
+</head>
+<body>
+    <script src="../js/nav.js"></script>
+
+    <div class="container">
+        <div class="action-bar">
+            <a href="analyse.html" class="btn btn-secondary">← Back to Stats</a>
+            <div class="action-group" id="view-actions" style="display: none;">
+                <button class="btn btn-secondary" id="edit-btn">✏️ Edit Page</button>
+                <button class="btn btn-danger" id="delete-btn">🗑️ Delete Page</button>
+            </div>
+            <div class="action-group" id="editor-actions" style="display: none;">
+                <button class="btn btn-success" id="save-btn">💾 Save Changes</button>
+                <button class="btn btn-secondary" id="cancel-btn">✕ Cancel</button>
+            </div>
+        </div>
+
+        <div class="content-card" id="main-content">
+            <div class="spinner-container">
+                <div class="spinner"></div>
+                <p>Loading analysis content...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://claude-cert-api.azurewebsites.net/api';
+        const BLOB_BASE = 'https://claudecertstore.blob.core.windows.net';
+        const CONTAINER = 'analyse-pages';
+
+        let currentPage = '';
+        let pageHTML = '';
+        let isEditing = false;
+
+        // Parse query params
+        const params = new URLSearchParams(window.location.search);
+        currentPage = params.get('page') || '';
+        const actionParam = params.get('action') || '';
+
+        // Authentication state
+        let adminToken = localStorage.getItem('adminToken');
+        let tokenExpiry = localStorage.getItem('tokenExpiry');
+
+        function isTokenValid() {
+            if (!adminToken || !tokenExpiry) return false;
+            return new Date(tokenExpiry) > new Date();
+        }
+
+        async function login() {
+            const password = prompt('Enter admin password to perform this write operation:');
+            if (!password) return false;
+
+            try {
+                const resp = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password }),
+                });
+
+                const data = await resp.json();
+                if (data.ok) {
+                    adminToken = data.token;
+                    tokenExpiry = data.expiresAt;
+                    localStorage.setItem('adminToken', adminToken);
+                    localStorage.setItem('tokenExpiry', tokenExpiry);
+                    return true;
+                } else {
+                    alert('Invalid password');
+                    return false;
+                }
+            } catch (e) {
+                alert('Login failed: ' + e.message);
+                return false;
+            }
+        }
+
+        function getAuthHeaders() {
+            if (!isTokenValid()) {
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('tokenExpiry');
+                adminToken = null;
+                return {};
+            }
+            return { 'Authorization': `Bearer ${adminToken}` };
+        }
+
+        // HTML Templates for creating a new page
+        const templateHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Add a clean description here for search engine optimization.">
+    <title>Analysis Topic — Claude Dev Cert</title>
+</head>
+<body>
+    <header>
+        <h1>✨ Topic Title Here</h1>
+        <p>Short subtitle description of this competency analysis</p>
+    </header>
+
+    <div class="container">
+        <!-- Main Analysis Section -->
+        <div class="section">
+            <h2>🔍 Key Concepts</h2>
+            <p>Write your detailed analysis here. Use standard markup elements.</p>
+            
+            <h3>Code Example</h3>
+            <pre><code>// Example analysis script
+const test = "Claude Certification API";
+console.log(test);</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>💡 Recommendations & Checklists</h2>
+            <p>Add study recommendations and checklists here for study alignment.</p>
+        </div>
+    </div>
+</body>
+</html>`;
+
+        // Load page content
+        async function loadPage() {
+            const mainContent = document.getElementById('main-content');
+            const viewActions = document.getElementById('view-actions');
+            const editorActions = document.getElementById('editor-actions');
+
+            viewActions.style.display = 'none';
+            editorActions.style.display = 'none';
+
+            if (!currentPage) {
+                // Render Page Directory / Empty State with Option to Create
+                mainContent.innerHTML = `
+                    <div class="empty-state">
+                        <div class="emoji">📝</div>
+                        <h2>No Analysis Page Specified</h2>
+                        <p style="margin-top:8px; margin-bottom: 24px;">Please choose a valid analysis topic or create a new custom page below.</p>
+                        <button class="btn btn-primary" onclick="initiateCreateNew()">+ Create New Analysis Page</button>
+                    </div>
+                `;
+                return;
+            }
+
+            if (actionParam === 'new') {
+                initiateCreateNew();
+                return;
+            }
+
+            try {
+                // Try fetching directly from the Blob Container first for speed
+                let text = '';
+                let response = await fetch(`${BLOB_BASE}/${CONTAINER}/${currentPage}`, { cache: 'no-store' });
+                
+                if (response.ok) {
+                    text = await response.text();
+                } else {
+                    // Fall back to Azure Function API
+                    response = await fetch(`${API_BASE}/analyse-pages?filename=${currentPage}`);
+                    if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
+                    text = await response.text();
+                }
+
+                pageHTML = text;
+
+                // Strip down HTML to embed inside our shell, or render as iframe.
+                // An elegant approach: Parse the HTML, extract body contents or styling, and inject.
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(pageHTML, 'text/html');
+                
+                // Set the page title to match the loaded document title
+                if (doc.title) {
+                    document.title = doc.title + " — Claude Dev Cert";
+                }
+
+                // Gather styling and content
+                const styles = Array.from(doc.querySelectorAll('style')).map(s => s.textContent).join('\n');
+                const headLinks = Array.from(doc.querySelectorAll('link[href]')).map(l => l.outerHTML).join('\n');
+                
+                // Look for header and container elements in the loaded HTML
+                const hasHeader = doc.querySelector('header');
+                const hasContainer = doc.querySelector('.container') || doc.body;
+
+                let renderedHTML = '';
+                if (styles) {
+                    renderedHTML += `<style>${styles}</style>`;
+                }
+                if (headLinks) {
+                    renderedHTML += headLinks;
+                }
+                
+                renderedHTML += `<div class="dynamic-html-content">`;
+                if (hasHeader) {
+                    renderedHTML += hasHeader.outerHTML;
+                }
+                if (hasContainer) {
+                    renderedHTML += hasContainer.innerHTML;
+                } else {
+                    renderedHTML += doc.body.innerHTML;
+                }
+                renderedHTML += `</div>`;
+
+                mainContent.innerHTML = renderedHTML;
+                viewActions.style.display = 'flex';
+
+            } catch (e) {
+                mainContent.innerHTML = `
+                    <div style="color:var(--accent-red); text-align:center; padding: 40px 20px;">
+                        <h3>⚠️ Analysis page could not be loaded</h3>
+                        <p style="margin-top:12px; color:var(--text-secondary)">${e.message}</p>
+                        <p style="margin-top:16px; font-size:0.9em; font-family:monospace;">Filename: ${currentPage}</p>
+                        <div style="margin-top:24px; display:flex; gap:12px; justify-content:center;">
+                            <button class="btn btn-secondary" onclick="currentPage=''; loadPage();">Back</button>
+                            <button class="btn btn-primary" onclick="initiateCreateNew('${currentPage}')">Create this page</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Toggle Edit Mode
+        async function enterEditMode() {
+            if (isEditing) return;
+
+            // Check login before showing editor
+            if (!isTokenValid()) {
+                const loggedIn = await login();
+                if (!loggedIn) return;
+            }
+
+            isEditing = true;
+            document.getElementById('view-actions').style.display = 'none';
+            document.getElementById('editor-actions').style.display = 'flex';
+
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="editor-container">
+                    <div class="form-group">
+                        <label>Filename (cannot be changed)</label>
+                        <input type="text" class="form-control" value="${currentPage}" readonly style="opacity:0.6;">
+                    </div>
+                    <div class="form-group">
+                        <label>HTML Code Editor</label>
+                        <textarea id="editHTMLCode" class="form-control code-textarea" placeholder="Paste HTML template here...">${pageHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Leave edit mode
+        function exitEditMode() {
+            isEditing = false;
+            loadPage();
+        }
+
+        // Save page contents
+        async function savePage() {
+            const textarea = document.getElementById('editHTMLCode');
+            const filenameInput = document.getElementById('new-filename');
+            
+            const filename = currentPage || (filenameInput ? filenameInput.value.trim() : '');
+            if (!filename) {
+                alert('Filename is required');
+                return;
+            }
+
+            if (!filename.endsWith('.html')) {
+                alert('Filename must end with .html');
+                return;
+            }
+
+            if (!filename.match(/^[a-z0-9_-]+\.html$/)) {
+                alert('Filename must be lowercase alphanumeric with dashes/underscores only');
+                return;
+            }
+
+            if (!textarea) return;
+            const content = textarea.value;
+
+            // Check authentication
+            if (!isTokenValid()) {
+                const loggedIn = await login();
+                if (!loggedIn) return;
+            }
+
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="spinner-container">
+                    <div class="spinner"></div>
+                    <p>Saving page to Azure...</p>
+                </div>
+            `;
+
+            try {
+                const resp = await fetch(`${API_BASE}/analyse-pages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...getAuthHeaders()
+                    },
+                    body: JSON.stringify({ filename, content }),
+                });
+
+                const data = await resp.json();
+                if (resp.ok && data.ok) {
+                    alert('Page saved successfully!');
+                    isEditing = false;
+                    // Update URL and reload page
+                    window.location.search = `?page=${filename}`;
+                } else if (resp.status === 401) {
+                    localStorage.removeItem('adminToken');
+                    localStorage.removeItem('tokenExpiry');
+                    alert('Session expired. Please try saving again.');
+                    savePage();
+                } else {
+                    alert('Error saving page: ' + (data.error || 'Unknown error'));
+                    isEditing = false;
+                    currentPage = filename;
+                    pageHTML = content;
+                    enterEditMode();
+                }
+            } catch (e) {
+                alert('Failed to save page: ' + e.message);
+                isEditing = false;
+                currentPage = filename;
+                pageHTML = content;
+                enterEditMode();
+            }
+        }
+
+        // Delete page
+        async function deletePage() {
+            if (!currentPage) return;
+            if (!confirm(`Are you sure you want to delete ${currentPage} from Azure? This cannot be undone.`)) return;
+
+            // Check authentication
+            if (!isTokenValid()) {
+                const loggedIn = await login();
+                if (!loggedIn) return;
+            }
+
+            try {
+                const resp = await fetch(`${API_BASE}/analyse-pages?filename=${currentPage}`, {
+                    method: 'DELETE',
+                    headers: getAuthHeaders()
+                });
+
+                const data = await resp.json();
+                if (resp.ok && data.ok) {
+                    alert('Page deleted successfully.');
+                    window.location.href = 'analyse.html';
+                } else if (resp.status === 401) {
+                    localStorage.removeItem('adminToken');
+                    localStorage.removeItem('tokenExpiry');
+                    alert('Session expired. Please try deleting again.');
+                    deletePage();
+                } else {
+                    alert('Error deleting page: ' + (data.error || 'Unknown error'));
+                }
+            } catch (e) {
+                alert('Failed to delete page: ' + e.message);
+            }
+        }
+
+        // Setup UI for Creating New Page
+        function initiateCreateNew(suggestedFilename = '') {
+            isEditing = true;
+            document.getElementById('view-actions').style.display = 'none';
+            document.getElementById('editor-actions').style.display = 'flex';
+
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="editor-container">
+                    <div class="form-group">
+                        <label for="new-filename">Filename (must end in .html, e.g. prompt_compression.html)</label>
+                        <input type="text" id="new-filename" class="form-control" placeholder="e.g. topic_name.html" value="${suggestedFilename}">
+                    </div>
+                    <div class="form-group">
+                        <label>HTML Code Editor</label>
+                        <textarea id="editHTMLCode" class="form-control code-textarea" placeholder="Paste HTML template here...">${templateHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Hook up event listeners
+        document.getElementById('edit-btn').addEventListener('click', enterEditMode);
+        document.getElementById('delete-btn').addEventListener('click', deletePage);
+        document.getElementById('save-btn').addEventListener('click', savePage);
+        document.getElementById('cancel-btn').addEventListener('click', () => {
+            if (currentPage) {
+                exitEditMode();
+            } else {
+                window.location.href = 'analyse.html';
+            }
+        });
+
+        // Initialize on DOM Load
+        document.addEventListener('DOMContentLoaded', loadPage);
+    </script>
+</body>
+</html>
