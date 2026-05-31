@@ -5,7 +5,8 @@
 - [ ] I have this ghcr.io/remsky/kokoro-fastapi-cpu:latest > add to the environments and create the necessary audio on the 
   local and upload them to azure and place it to the cards to be able to listen to them . commit push  
 - [ ] Add alerting for the cost management https://portal.azure.com/#view/Microsoft_Azure_CostManagement/Menu/~/costanalysis/openedBy/AzurePortal > requires manual Azure Portal setup
-
+- [ ] Move these pages to the create menu > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/quick_memory.html > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/add_memory_card.html  > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/analyse_renderer.html?action=new in Admin group and remove from other menus 
+- [ ] included kokoro audio in questions and answers > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/pro-exam.html
 
 -> These backlog tasks are implemented in bulk by Claude and moved to done
 
