@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Multi-Media Learning tactics: Combining text precision, visual anchoring, and audio rhythms with Memory Palace narratives for absolute exam recall.">
+    <title>Multi-Media Learning Tactics — Claude Dev Cert</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --border: #334155;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444;
+            --accent-orange: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        header {
+            text-align: center;
+            padding: 40px 16px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+        header h1 {
+            font-size: clamp(1.6rem, 4vw, 2.5rem);
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+        header p { color: var(--text-secondary); font-size: 1.05em; margin-top: 10px; }
+        .container { max-width: 960px; margin: 0 auto; padding: 0 20px 60px; }
+        
+        .tactic-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 28px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .tactic-card h2 {
+            font-size: 1.4em;
+            margin-bottom: 18px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+        .tactic-card h3 {
+            font-size: 1.1em;
+            color: var(--accent-blue);
+            margin: 20px 0 10px;
+        }
+        .tactic-card p {
+            color: var(--text-secondary);
+            font-size: 0.98em;
+            margin-bottom: 16px;
+        }
+        .tactic-card ul, .tactic-card ol {
+            margin: 12px 0 16px 24px;
+            color: var(--text-secondary);
+        }
+        .tactic-card li { margin-bottom: 8px; font-size: 0.96em; }
+
+        .highlight-box {
+            background: rgba(56, 189, 248, 0.08);
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 4px 8px 8px 4px;
+            padding: 16px;
+            margin: 20px 0;
+        }
+        .highlight-box strong { color: var(--text-primary); }
+
+        /* Sensory Triad Grid */
+        .sensory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 24px 0;
+        }
+        .sensory-item {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .sensory-item:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-purple);
+        }
+        .sensory-icon {
+            font-size: 2.2em;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+        .sensory-title {
+            font-size: 1.15em;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .sensory-desc {
+            font-size: 0.88em;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Palace Integration Steps */
+        .integration-pipeline {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin: 24px 0;
+        }
+        .pipeline-step {
+            display: flex;
+            gap: 18px;
+            padding: 18px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            align-items: flex-start;
+        }
+        .step-badge {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            color: white;
+            font-weight: 700;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            flex-shrink: 0;
+        }
+        .step-content strong {
+            color: var(--text-primary);
+            display: block;
+            font-size: 1em;
+            margin-bottom: 6px;
+        }
+        .step-content p {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        /* Interactive story builder */
+        .story-builder {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--accent-blue);
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.92em;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: var(--accent-blue);
+            outline: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+        .story-output {
+            background: #0f172a;
+            border: 1px dashed var(--accent-purple);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+            display: none;
+        }
+        .story-output h4 {
+            color: var(--accent-purple);
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+        .story-output p {
+            font-size: 0.92em;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        /* Responsive styling tweaks */
+        @media (max-width: 600px) {
+            .tactic-card { padding: 20px; }
+            .pipeline-step { flex-direction: column; gap: 10px; }
+            .step-badge { width: 28px; height: 28px; font-size: 0.8em; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dynamic navigation container injected by nav.js -->
+    <script src="../js/nav.js"></script>
+
+    <header>
+        <h1>🧠 Multi-Media Learning Tactics</h1>
+        <p>Combining the precision of text, spatial energy of visuals, and rhythmic pattern of audio into cohesive Memory Palace narratives.</p>
+    </header>
+
+    <div class="container">
+
+        <!-- CORE CONCEPT -->
+        <div class="tactic-card">
+            <h2><span>🎯</span> The Science of Multi-Sensory Anchoring</h2>
+            <p>For high-stakes examinations like the <strong>Claude Developer Certification</strong>, rote memorization of dry specifications fails. Real-world scenario questions test your ability to synthesize architectures, limits, and behavior models under pressure.</p>
+            
+            <p>According to the <strong>Dual-Coding Theory (Paivio)</strong> and <strong>Cognitive Load Theory (Sweller)</strong>, processing information through multiple independent channels (verbal/visual/auditory) creates richer cognitive pathways. By binding these channels to a spatial landmark—a <strong>Memory Palace</strong>—you shift the retrieval burden from slow semantic memory to fast, effortless spatial memory.</p>
+
+            <div class="highlight-box">
+                <strong>Why this works:</strong> When you read a text specification, your verbal processor is active. When you view a diagram, your visuospatial sketchpad is engaged. When you hear a narrative story or recite it aloud, your phonological loop joins in. Storing all three elements inside a virtual "room" guarantees three separate pathways to retrieve the exact same answer during the exam.
+            </div>
+        </div>
+
+        <!-- THE SENSORY TRIAD -->
+        <div class="tactic-card">
+            <h2><span>🧩</span> The Multi-Sensory Triad</h2>
+            <p>Every complex certification concept (e.g. Prompt Caching boundaries, preflight CORS requests, state machines, context compression ratios) should be parsed through three primary channels:</p>
+
+            <div class="sensory-grid">
+                <!-- TEXT -->
+                <div class="sensory-item">
+                    <span class="sensory-icon">📄</span>
+                    <h3 class="sensory-title">1. Text (Semantic Precision)</h3>
+                    <p class="sensory-desc">The precise technical terminology, exact numbers (e.g., 250k token cache minimum, 8k output limit), and code syntax. Text provides the raw factual criteria that must be output accurately on the exam.</p>
+                </div>
+
+                <!-- VISUALS -->
+                <div class="sensory-item">
+                    <span class="sensory-icon">🎨</span>
+                    <h3 class="sensory-title">2. Visuals (Spatial Mapping)</h3>
+                    <p class="sensory-desc">Mermaid sequence diagrams, architectural flows, or surreal mnemonic images (such as Midjourney AI generations). Visual symbols associate abstract logic with concrete shape, layout, and vibrant colors.</p>
+                </div>
+
+                <!-- AUDIO -->
+                <div class="sensory-item">
+                    <span class="sensory-icon">🔊</span>
+                    <h3 class="sensory-title">3. Audio (Acoustic Rhythm)</h3>
+                    <p class="sensory-desc">Reading mnemonics out loud, reciting code samples, or listening to text-to-speech recordings. The rhythm of spoken words, emotional tone, and acoustic timing create powerful verbal loops that stick.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PALACE STORYLINKING -->
+        <div class="tactic-card">
+            <h2><span>🏛️</span> Weaving the Memory Palace Story</h2>
+            <p>To fuse the Triad together, place them inside a physical location you know intimately (your childhood home, workspace, or a virtual museum). Here is the execution pipeline for binding concepts:</p>
+
+            <div class="integration-pipeline">
+                <div class="pipeline-step">
+                    <div class="step-badge">1</div>
+                    <div class="step-content">
+                        <strong>Establish the Station (The Room)</strong>
+                        <p>Assign your concept to a specific physical location in your palace. For example, your front entrance door is designated for "CORS preflight request headers".</p>
+                    </div>
+                </div>
+
+                <div class="pipeline-step">
+                    <div class="step-badge">2</div>
+                    <div class="step-content">
+                        <strong>Anchor the Visual Symbol (The Object)</strong>
+                        <p>Place a highly unusual, animated, or surreal physical object at the station. For CORS headers, imagine a glowing neon traffic cop standing at the door holding a shield labeled <em>OPTIONS</em>, blocking a standard user from entering.</p>
+                    </div>
+                </div>
+
+                <div class="pipeline-step">
+                    <div class="step-badge">3</div>
+                    <div class="step-content">
+                        <strong>Embed the Text & Numbers (The Inscription)</strong>
+                        <p>Carve or write the precise numbers and constraints onto the visual object itself. The cop's shield has <em>"Access-Control-Allow-Origin: *"</em> painted in red graffiti, and his badge number is <em>204</em> (the HTTP status returned for successful OPTIONS requests).</p>
+                    </div>
+                </div>
+
+                <div class="pipeline-step">
+                    <div class="step-badge">4</div>
+                    <div class="step-content">
+                        <strong>Record the Audio Narrative (The Sound)</strong>
+                        <p>Speak the story aloud to engage your phonological loop: <em>"The OPTIONS cop stands at the entrance. He checks the traveler's passport, approves the preflight, and prints code 204 on his console to let the main cargo through."</em> The rhythm of this voice recording becomes your acoustic shortcut.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRACTICAL EXAMPLE -->
+        <div class="tactic-card">
+            <h2><span>💡</span> A Real Exam Example: Prompt Caching</h2>
+            <p>Let's map a core concept from the **Claude Context Management** competency: <strong>Prompt Caching boundaries and limits</strong>.</p>
+            
+            <ul>
+                <li><strong>Text facts to retain:</strong> Minimum write token size for cache write is <strong>1024 tokens</strong> (or <strong>2048</strong> for Claude 3.5 Sonnet on Anthropic API). Cache stays active for ~5 minutes of inactivity. Max 4 cache breakpoints allowed.</li>
+                <li><strong>Visual Metaphor:</strong> A row of four glowing neon-green gates blocking a long line of cars. Above the first gate is a giant scale weighing exactly 1,024 luggage pieces.</li>
+                <li><strong>Audio Story:</strong> <em>"The cars approach the checkpoint. The guard says, 'You must weigh at least 1,024 bags to lock this cache gate!' Once locked, the gate stays open for 5 minutes without any cars, but after that, it crashes shut."</em></li>
+            </ul>
+
+            <p style="margin-top: 10px;">During the exam, when asked about minimum tokens for cache writes, you don't try to guess or recall lists. You close your eyes, visit the checkpoint gates, look up at the luggage scale, and immediately read the number <strong>1,024</strong>.</p>
+        </div>
+
+        <!-- INTERACTIVE STORY BUILDER -->
+        <div class="tactic-card">
+            <h2><span>🛠️</span> Interactive Mnemonic Builder</h2>
+            <p>Draft your own multi-sensory memory palace link below to practice binding concepts. Your drafted narrative will be compiled into a sticky story prompt.</p>
+
+            <div class="story-builder">
+                <div class="form-group">
+                    <label for="palace-concept">1. Core Technical Concept (Text to retain)</label>
+                    <input type="text" id="palace-concept" placeholder="e.g., Claude 3.5 Sonnet maximum token output is 8192">
+                </div>
+                <div class="form-group">
+                    <label for="palace-location">2. Physical Station / Location (Where in your palace?)</label>
+                    <input type="text" id="palace-location" placeholder="e.g., My kitchen dining table">
+                </div>
+                <div class="form-group">
+                    <label for="palace-visual">3. Surreal Visual Symbol (What object represents it?)</label>
+                    <input type="text" id="palace-visual" placeholder="e.g., A giant eight-legged octopus eating exactly 192 pieces of toast">
+                </div>
+                <div class="form-group">
+                    <label for="palace-audio">4. Audio Story Narrative (Say this out loud as you type)</label>
+                    <textarea id="palace-audio" rows="3" placeholder="e.g., The giant octopus sits on the dining table. It slams its 8 arms down, screaming 'I can only digest 8,192 crumbs at a time!'"></textarea>
+                </div>
+                <button type="button" class="btn-primary" onclick="generateStory()">Compile Sticky Narrative</button>
+
+                <div class="story-output" id="story-output">
+                    <h4>🧠 Sticky Memory Palace Anchor Compiled:</h4>
+                    <p id="compiled-text"></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function generateStory() {
+            const concept = document.getElementById('palace-concept').value.trim();
+            const location = document.getElementById('palace-location').value.trim();
+            const visual = document.getElementById('palace-visual').value.trim();
+            const audio = document.getElementById('palace-audio').value.trim();
+
+            if (!concept || !location || !visual || !audio) {
+                alert('Please fill out all fields to compile your mnemonic story!');
+                return;
+            }
+
+            const outputDiv = document.getElementById('story-output');
+            const compiledText = document.getElementById('compiled-text');
+
+            compiledText.innerHTML = `<strong>Room Location:</strong> ${location}<br>` + 
+                                    `<strong>Concept:</strong> ${concept}<br>` +
+                                    `<strong>Visual Symbol:</strong> ${visual}<br><br>` +
+                                    `<strong>Auditory Walkthrough Link:</strong> <span style="color: var(--accent-yellow); font-style: italic;">"${audio}"</span>`;
+            
+            outputDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

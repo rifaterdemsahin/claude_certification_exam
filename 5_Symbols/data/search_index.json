@@ -39,5 +39,6 @@
   { "title": "AI Weak Links", "desc": "Video exploring failure modes and weak links in AI agent pipelines.", "href": "https://youtu.be/xBpGn3BDcOY?t=1974", "emoji": "🔗" },
   { "title": "Jupiter Labs AI Code", "desc": "Video on managing AI code workflows with Jupiter Labs tooling.", "href": "https://youtu.be/uWXgHi9m-GY?t=395", "emoji": "🪐" },
   { "title": "AI Mental Health", "desc": "Video on the psychological impacts and mental health considerations when working with AI.", "href": "https://youtu.be/Ykvf3MunGf8", "emoji": "🧘" },
-  { "title": "World Model (Gemini Omni)", "desc": "Video on Gemini's world model capabilities and omni-modal AI architecture.", "href": "https://www.youtube.com/watch?v=KUyRq7szZsM", "emoji": "🌍" }
+  { "title": "World Model (Gemini Omni)", "desc": "Video on Gemini's world model capabilities and omni-modal AI architecture.", "href": "https://www.youtube.com/watch?v=KUyRq7szZsM", "emoji": "🌍" },
+  { "title": "Multi-Media Learning", "desc": "Tactics for combining text, visuals, audio, and memory palace stories for deep cognitive anchoring.", "href": "multi_media_learning.html", "emoji": "🎧" }
 ]
