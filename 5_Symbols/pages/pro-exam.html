@@ -264,6 +264,28 @@
             color: var(--accent-blue);
         }
 
+        .audio-btn {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            border-radius: 8px;
+            padding: 6px 14px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .audio-btn:hover {
+            background: rgba(56, 189, 248, 0.2);
+        }
+
+        .audio-btn.playing {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
         .modal-image {
             width: 100%;
             max-height: 500px;
@@ -646,6 +668,39 @@
         let userAnswers = {};
         let masteredQuestions = [];
 
+        // Audio playback state and controls
+        let currentAudio = null;
+        function playAudio(url, btnId) {
+            const btn = document.getElementById(btnId);
+            if (currentAudio && !currentAudio.paused) {
+                currentAudio.pause();
+                currentAudio = null;
+                document.querySelectorAll('.audio-btn').forEach(b => {
+                    b.classList.remove('playing');
+                    b.innerHTML = '🔊 Play Audio';
+                });
+                if (btn && btn.dataset.activeUrl === url) {
+                    return;
+                }
+            }
+            currentAudio = new Audio(url);
+            currentAudio.play().catch(e => {
+                console.error("Audio playback failed:", e);
+            });
+            if (btn) {
+                btn.dataset.activeUrl = url;
+                btn.classList.add('playing');
+                btn.innerHTML = '⏹ Stop Audio';
+            }
+            currentAudio.onended = () => {
+                if (btn) {
+                    btn.classList.remove('playing');
+                    btn.innerHTML = '🔊 Play Audio';
+                    delete btn.dataset.activeUrl;
+                }
+            };
+        }
+
         // Cookie helper functions
         function getCookie(name) {
             const nameEQ = name + "=";
@@ -784,9 +839,17 @@
                 answerState = isCorrect ? 'correct' : 'incorrect';
             }
 
+            // Determine if this question is currently playing audio
+            const isPlaying = currentAudio && !currentAudio.paused && currentAudio.src === question.audioUrl;
+
             card.innerHTML = `
                 <div class="question-header">
                     <span class="question-num">${question.question_number}</span>
+                    ${question.audioUrl ? `
+                        <button class="audio-btn ${isPlaying ? 'playing' : ''}" id="audio-btn-${question.question_number}" onclick="event.stopPropagation(); playAudio('${question.audioUrl}', 'audio-btn-${question.question_number}')">
+                            ${isPlaying ? '⏹ Stop Audio' : '🔊 Play Audio'}
+                        </button>
+                    ` : ''}
                 </div>
                 
                 <span class="question-scenario">${question.scenario}</span>
