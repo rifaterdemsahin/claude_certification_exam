@@ -60,3 +60,17 @@ delivery-pilot-template/
 - **Record every prompt** in `prompts.md` — log date, agent, and purpose for each prompt given.
 - Keep `index.html` at the repo root — GitHub Pages requires it at the root.
 - Implement unified navigation: Project Menu (Bloom's taxonomy aid) + Debug Menu (sliding side drawer toggled via bottom-right button).
+
+---
+
+## 🔁 Maintenance Checklist
+
+Run these checks at each delivery cycle to keep the 7-stage system healthy:
+
+- [ ] Update the environment folder — `1_Real_Unknown` (problem statements, OKRs, open questions, hypotheses)
+- [ ] Update the environment folder — `2_Environment` (setup guides, azure, cloudflare, navigation docs)
+- [ ] Add new features incoming as visuals — `3_Simulation` (UI mockups, design vision, UX documentation)
+- [ ] Add new ways of doing the implementation — `4_Formula` (concepts, exam questions, checklists, research notes)
+- [ ] Update the Symbols and pay technical debt — `5_Symbols` (source code, assets, scripts, data, pages)
+- [ ] Add new errors in Semblance — `6_Semblance` (error logs, workarounds, gap analysis)
+- [ ] Update the tests folder — `7_Testing_Known` (validation checklists, test scripts, outcome confirmation)

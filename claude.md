@@ -142,6 +142,18 @@ Pattern: `CAT{NN}-Q{NNN}` (e.g., `CAT01-Q005`)
 - **Debug Console:** When `debug` cookie is `'true'`, logs page path, sessionStorage keys, and cookies via `console.group`.
 - **Video Resources:** External YouTube links live under `📹 Video Resources` header in the Analyse section of `menu.json` and `nav.js`.
 
+## Maintenance Checklist
+
+Run these checks regularly to keep the project healthy:
+
+- [ ] Update the environment folder — `1_Real_Unknown` (problem statements, OKRs, open questions, hypotheses)
+- [ ] Update the environment folder — `2_Environment` (setup guides, azure, cloudflare, navigation docs)
+- [ ] Add new features incoming as visuals — `3_Simulation` (UI mockups, design vision, UX documentation)
+- [ ] Add new ways of doing the implementation — `4_Formula` (concepts, exam questions, checklists, research notes)
+- [ ] Update the Symbols and pay technical debt — `5_Symbols` (source code, assets, scripts, data, pages)
+- [ ] Add new errors in Semblance — `6_Semblance` (error logs, workarounds, gap analysis)
+- [ ] Update the tests folder — `7_Testing_Known` (validation checklists, test scripts, outcome confirmation)
+
 ## Don'ts
 
 - Don't introduce build tools (npm, webpack, vite)
