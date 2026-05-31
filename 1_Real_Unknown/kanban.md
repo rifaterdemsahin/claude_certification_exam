@@ -3,7 +3,7 @@
 ## 📥 Backlog
 - [ ] Add alerting for the cost management https://portal.azure.com/#view/Microsoft_Azure_CostManagement/Menu/~/costanalysis/openedBy/AzurePortal > requires manual Azure Portal setup
 - [ ] Move these pages to the create menu > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/quick_memory.html > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/add_memory_card.html  > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/analyse_renderer.html?action=new in Admin group and remove from other menus
-- [ ] Add Kokoro audio play button to pro-exam.html > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/pro-exam.html
+
 
 -> These backlog tasks are implemented in bulk by Claude and moved to done
 
@@ -11,7 +11,7 @@
 ### WIP 1 : Real time AI everything else goes to backlog
 
 -> Manually getting implemented by Gemini and hands on implementation
-
+- [ ] Add Generate the audio files upload to azure and add Kokoro audio play button to pro-exam.html > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/pro-exam.html
 
 ## ⚙️ Maintenance
 
@@ -58,6 +58,7 @@
 - [x] Add `sanity_check_review_v1.md` to document project structure observations and suggestions (`da00e16`)
 - [x] Add `user_experience.md` to debug drawer menu list and update tests (`f62511b`)
 - [x] Create `user_experience.md`, document mockups, update layouts, and pass JSDOM tests (`2b8e59e`)
+- [x] Embed 🔊 audio play button in remember.html — always visible below question, auto-stops on nav (`c91def0`+)
 - [x] Add `2_Environment/azure.md` and expand environment directory trees (`a3a7402`)
 - [x] Add Stage 1 problem_statement, okrs, questions, hypotheses and expand directory trees (`b01f12a`)
 - [x] Update paths and references to align with the 7-Stage directory layout (5_Symbols and 7_Testing_Known) (`98645d3`)

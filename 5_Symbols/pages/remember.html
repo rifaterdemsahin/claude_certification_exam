@@ -73,6 +73,8 @@
 
                     <div class="remember-question">${escapeHtml(q.question)}</div>
 
+                    ${audioBtn}
+
                     ${state.showRememberAnswer ? `
                         <div class="remember-answer">${escapeHtml(q.answer)}</div>
                         ${q.imageUrl ? `
@@ -86,7 +88,6 @@
                                 <div style="color:var(--accent-yellow);font-style:italic;">${escapeHtml(hint.memory)}</div>
                             </div>
                         ` : ''}
-                        ${audioBtn}
                     ` : '<p style="color:var(--text-muted);margin-top:20px;">👆 Click to reveal answer</p>'}
 
                     <div class="remember-nav">
@@ -121,7 +122,15 @@
             renderRemember();
         }
 
+        function stopAudio() {
+            if (currentAudio && !currentAudio.paused) {
+                currentAudio.pause();
+                currentAudio = null;
+            }
+        }
+
         function nextRemember() {
+            stopAudio();
             if (state.rememberIndex < questionsData.length - 1) {
                 state.rememberIndex++;
                 state.showRememberAnswer = false;
@@ -133,6 +142,7 @@
         }
 
         function prevRemember() {
+            stopAudio();
             if (state.rememberIndex > 0) {
                 state.rememberIndex--;
                 state.showRememberAnswer = false;
