@@ -37,7 +37,7 @@ All collaborative study data (memory cards, concept diagrams, visual aids) is st
 | `memory-images` | Diagrams, sketches, visual mnemonics | Public Read / Authenticated Write | `MEM-Q{ID}_v{Version}.png` |
 | `exam-images` | Practice and Pro exam diagrams / visual aids | Public Read / Authenticated Write | `q{ID}.png` or `q{ID}.svg` (e.g., `q001.png`, `q007.svg`) |
 | `analyse-pages` | Dynamic HTML competency analysis pages | Public Read / Authenticated Write | `{topic_name}.html` (e.g., `context_compression.html`) |
-| `memory-audio` | TTS MP3 audio for all 100 questions (Kokoro) | Public Read / Authenticated Write | `AUD-Q{ID}.mp3` (e.g., `AUD-Q005.mp3`) — [📂 Open in Portal](https://portal.azure.com/#view/Microsoft_Azure_Storage/BlobContainerMenuBlade/~/overview/storageAccountId/%2Fsubscriptions%2Fb85b029d-9f7c-4c5a-8939-819480780c5d%2FresourceGroups%2Fclaude-certificate-training%2Fproviders%2FMicrosoft.Storage%2FstorageAccounts%2Fclaudecertstore/containerName/memory-audio) |
+| `memory-audio` | TTS MP3 audio for all 100 questions (Kokoro) | Public Read / Authenticated Write | `AUD-Q{ID}.mp3` (e.g., `AUD-Q005.mp3`) — [📂 Open in Portal](https://portal.azure.com/#view/Microsoft_Azure_Storage/ContainerMenuBlade/~/overview/storageAccountId/%2Fsubscriptions%2Fb85b029d-9f7c-4c5a-8939-819480780c5d%2FresourceGroups%2Fclaude-certificate-training%2Fproviders%2FMicrosoft.Storage%2FstorageAccounts%2Fclaudecertstore/path/memory-audio/etag/%220x8DEBF06AC3A85EE%22/defaultId//publicAccessVal/Blob) |
 
 ---
 

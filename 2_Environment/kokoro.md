@@ -106,7 +106,7 @@ python generate_audio.py --dry-run
 | Container | `memory-audio` |
 | Access | Public blob read |
 | URL pattern | `https://claudecertstore.blob.core.windows.net/memory-audio/AUD-Q{padId}.mp3` |
-| Portal link | [📂 memory-audio container](https://portal.azure.com/#view/Microsoft_Azure_Storage/BlobContainerMenuBlade/~/overview/storageAccountId/%2Fsubscriptions%2Fb85b029d-9f7c-4c5a-8939-819480780c5d%2FresourceGroups%2Fclaude-certificate-training%2Fproviders%2FMicrosoft.Storage%2FstorageAccounts%2Fclaudecertstore/containerName/memory-audio) |
+| Portal link | [📂 memory-audio container](https://portal.azure.com/#view/Microsoft_Azure_Storage/ContainerMenuBlade/~/overview/storageAccountId/%2Fsubscriptions%2Fb85b029d-9f7c-4c5a-8939-819480780c5d%2FresourceGroups%2Fclaude-certificate-training%2Fproviders%2FMicrosoft.Storage%2FstorageAccounts%2Fclaudecertstore/path/memory-audio/etag/%220x8DEBF06AC3A85EE%22/defaultId//publicAccessVal/Blob) |
 | Sample file | [▶ AUD-Q001.mp3](https://claudecertstore.blob.core.windows.net/memory-audio/AUD-Q001.mp3) |
 
 Create container (one-time):
