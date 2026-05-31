@@ -84,4 +84,27 @@ The helper automation script `5_Symbols/scripts/copy_and_upload_images.sh` origi
 
 **Linked to:** [5_Symbols/scripts/copy_and_upload_images.sh](file:///Users/rifaterdemsahin/projects/claude_certification_exam/5_Symbols/scripts/copy_and_upload_images.sh)
 
+---
+
+## [2026-05-31] CORS Preflight Block (Response to preflight doesn't pass access control check) for /api/analyse-pages
+
+**Symptom:**
+Calling the `analyse_renderer.html?action=new` page failed with a browser console error:
+`Access to fetch at 'https://claude-cert-api.azurewebsites.net/api/analyse-pages' from origin 'https://rifaterdemsahin.github.io' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.`
+
+**Root cause:**
+1. The new local Azure Function endpoint code (`AnalysePages/`) was not yet deployed/published to the live Azure Function App instance. As a result, requests to `/api/analyse-pages` yielded an HTTP `404 Not Found` on the server before the Node.js function context could run.
+2. The Azure Function App infrastructure did not return the proper CORS headers for platform-level routing blocks or 404s because the allowed origins settings were not set to allow public wildcard/GitHub Pages origins at the Azure portal level.
+
+**Fix applied:**
+1. Ran Azure CLI to add allowed CORS origins (`*`) to the function app at the infrastructure level:
+   `az functionapp cors add --name "claude-cert-api" --resource-group "claude-certificate-training" --allowed-origins "*"`
+2. Staged the instructions for the developer to publish the latest local API endpoints using:
+   `cd 5_Symbols/azure-api && npx func azure functionapp publish claude-cert-api --build remote`
+
+**Workaround active:** Yes (requires deploying the function app codebase to the live instance to register the endpoint).
+
+**Linked to:** [5_Symbols/azure-api/AnalysePages/index.js](file:///Users/rifaterdemsahin/projects/claude_certification_exam/5_Symbols/azure-api/AnalysePages/index.js) and [5_Symbols/pages/analyse_renderer.html](file:///Users/rifaterdemsahin/projects/claude_certification_exam/5_Symbols/pages/analyse_renderer.html)
+
+
 
