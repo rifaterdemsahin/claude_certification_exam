@@ -14,8 +14,10 @@ This document outlines the projected and actual costs associated with building, 
 | **Hosting & Cloud** | Frontend Hosting (GitHub Pages) | Free static pages hosting | $0.00 | $0.00 |
 | **Hosting & Cloud** | Backend API (Azure Function App)| Consumption Tier | $0.00 | ~$0.00 (under free grant) |
 | **Hosting & Cloud** | Assets & Memory Cards Storage | Azure Blob Storage (LRS) | $0.00 | ~$0.50 |
+| **AI Developer Tools** | Gemini CLI / Code | Monthly Subscription (Single-vibe tasks) | $0.00 | $20.00 |
+| **AI Developer Tools** | Claude CLI / Code | Monthly Subscription (Bulk backlog execution) | $0.00 | $20.00 |
 | **Development** | Engineering Time | Architecture, React UI, API | ~70 Hours ($0 - Internal) | $0.00 |
-| **Total Financial Outlay**| | | **~$26.00** | **~$0.50** |
+| **Total Financial Outlay**| | | **~$26.00** | **~$40.50** |
 
 ---
 
@@ -57,6 +59,16 @@ This document outlines the projected and actual costs associated with building, 
 
 ### 3. GitHub Pages
 * **Cost**: **$0.00/month** (free hosting for public repositories).
+
+---
+
+## 💻 AI Development Tool Subscriptions
+
+To maximize development velocity, dual agent-assisted workflows are utilized:
+* **Gemini CLI (Google AI Studio / Advanced Subscription)**: **$20.00/month**
+  * *Role*: Running single ad-hoc tasks, quick code edits, real-time validations, and exploratory "single-vibe" tasks.
+* **Claude CLI / Code (Anthropic Pro Subscription / API / CLI Usage)**: **$20.00/month**
+  * *Role*: Bulk backlog execution, multi-file code editing, and deep context architectural orchestration.
 
 ---
 

@@ -2,6 +2,8 @@
 
 ## 📥 Backlog
 - [ ] Implement local Kokoro indocker , add audio for all content, and add a play button to play it from Azure where it gets streamed. > audio play button scaffold added to remember.html; wire up audioUrl in data.js once Azure audio files exist
+- [ ] I have this ghcr.io/remsky/kokoro-fastapi-cpu:latest > add to the environments and create the necessary audio on the 
+  local and upload them to azure and place it to the cards to be able to listen to them . commit push  
 - [ ] Add alerting for the cost management https://portal.azure.com/#view/Microsoft_Azure_CostManagement/Menu/~/costanalysis/openedBy/AzurePortal > requires manual Azure Portal setup
 
 
