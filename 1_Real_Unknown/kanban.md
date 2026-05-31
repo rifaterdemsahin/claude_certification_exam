@@ -22,8 +22,13 @@
 - [ ] load it from Azure and when pages gets updated implement changes /Users/rifaterdemsahin/projects/claude_certification_exam/5_Symbols/data/menu.json 
 - [ ]
 
+
+-> These backlog tasks are implemented in bulk by Claude and moved to done
+
 ## ⚙️ In Progress
 ### WIP 1 : Real time AI everything else goes to backlog
+
+-> Manually getting implemented by Gemini and hands on implementation
 
 
 ## ⚙️ Maintaince 
