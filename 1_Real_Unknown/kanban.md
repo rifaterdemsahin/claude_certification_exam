@@ -1,26 +1,13 @@
 # 📋 Claude Developer Certification - Kanban Board
 
 ## 📥 Backlog
-- [ ] Add AI spend topic to the analysis menu: https://www.youtube.com/watch?v=NLrRDfGsZ5U
-- [ ] Add AI weak links topic to the analysis menu: https://youtu.be/xBpGn3BDcOY?t=1974
-- [ ] Add Jupiter Labs to manage ai code topic to the analysis menu: https://youtu.be/uWXgHi9m-GY?t=395
-- [ ] Add slash commands  to the analysis menu: https://youtu.be/52KBhQqqHuc?list=PL4cUxeGkcC9g4YJeBqChhFJwKQ9TRiivY
-
 - [ ] Implement local Kokoro indocker , add audio for all content, and add a play button to play it from Azure where it gets streamed.
-- [ ] Add AI mental health topic to the analysis menu : https://youtu.be/Ykvf3MunGf8
-- [ ] Add World model as Gemini Omni to the analsis menu : https://www.youtube.com/watch?v=KUyRq7szZsM 
-- [ ] Add debug on the console to make it easier to debug when there is an issue in the debug mode while developing the website to resolve the issues faster
-- [ ] Make analyse menu multi level open the sub menus when clicked
-- [ ] Auto collapse the Blooms guide in the closed more and interested parties should be able to open it. 
 - [ ] Add Category selection in the analyse menu > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/analyse_renderer.html?action=new
 - [ ] In the analyse page add a content generator button to create content using ai in html that is prompted.
 - [ ] Update the buttons https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/remember.html have better visual images 
 - [ ] Load all the cards https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/remember.html have one source of truth load them to azure there should be more than 125 in may 30 2026.
 - [ ] Load all the cards https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/mastery.html
 - [ ] Add alerting for the cost management https://portal.azure.com/#view/Microsoft_Azure_CostManagement/Menu/~/costanalysis/openedBy/AzurePortal
-- [ ] add this  to analysis menu > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/analyse_renderer.html?page=history_of_ai_from_semi_conductors.html > add to the search as well
-- [ ] load it from Azure and when pages gets updated implement changes /Users/rifaterdemsahin/projects/claude_certification_exam/5_Symbols/data/menu.json 
-- [ ]
 
 
 -> These backlog tasks are implemented in bulk by Claude and moved to done
@@ -43,6 +30,11 @@
 
 
 ## ✅ Done
+- [x] Add AI spend, AI weak links, Jupiter Labs AI code, slash commands, AI mental health, World model (Gemini Omni) to the Analyse menu as 📹 Video Resources section in menu.json and nav.js; also added to search_index.json
+- [x] Add history_of_ai_from_semi_conductors.html to the Analyse menu (Architectures & Loops section) and search_index.json
+- [x] Add debug console logging (page, session keys, cookies) when debug mode is active
+- [x] Make analyse menu dropdowns open on click in addition to hover (click-toggle with .click-open class)
+- [x] Auto-collapse Blooms guide by default (closed unless user explicitly opens it; cookie persists preference)
 - [x] Dynamic Azure-hosted menu.json and search_index.json synced automatically upon page saving/deletion.
 - [x] Move the Analyse pages to Azure
 - [x] Implement Delivery Pilot Template

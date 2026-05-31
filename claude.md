@@ -135,6 +135,13 @@ Pattern: `CAT{NN}-Q{NNN}` (e.g., `CAT01-Q005`)
 2. Cards are stored in Azure Blob Storage (no GitHub deployment triggered)
 3. Use naming pattern: `MEM-Q{ID}.md`
 
+## Nav Behaviour
+
+- **Dropdowns:** Open on hover (desktop) and on click (adds `.click-open` class via JS). Click outside closes all.
+- **Blooms Guide:** Collapsed by default. Cookie `learning_loop_open` persists user preference.
+- **Debug Console:** When `debug` cookie is `'true'`, logs page path, sessionStorage keys, and cookies via `console.group`.
+- **Video Resources:** External YouTube links live under `📹 Video Resources` header in the Analyse section of `menu.json` and `nav.js`.
+
 ## Don'ts
 
 - Don't introduce build tools (npm, webpack, vite)

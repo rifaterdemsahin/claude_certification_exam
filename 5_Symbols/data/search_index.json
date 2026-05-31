@@ -11,6 +11,7 @@
   { "title": "Pro Exam Simulation", "desc": "Advanced simulation featuring De Chirico styled diagrams and tough scenarios.", "href": "pro-exam.html" },
   { "title": "BMAD Analysis", "desc": "Detailed analysis of the Business Model, Architecture, and Delivery loop.", "href": "analyse_renderer.html?page=bmad.html" },
   { "title": "AGI Path", "desc": "Study map exploring competencies and reasoning paths towards general intelligence.", "href": "analyse_renderer.html?page=agi-path.html" },
+  { "title": "History of AI (Semiconductors)", "desc": "AI evolution from semiconductors and transistors through modern LLMs and transformers.", "href": "analyse_renderer.html?page=history_of_ai_from_semi_conductors.html" },
   { "title": "Claude CLI Tool", "desc": "Detailed instructions on setting up, configuring, and executing Claude Code CLI.", "href": "analyse_renderer.html?page=claude_cli.html" },
   { "title": "Agentic Architecture", "desc": "Analysis of orchestrators, subagents, and memory systems in Claude applications.", "href": "analyse_renderer.html?page=claude_architecture.html" },
   { "title": "LLM Mental Model", "desc": "Detailed guide on conceptualizing LLMs as lossy compilers and simulator spaces.", "href": "analyse_renderer.html?page=llm_mental_model.html" },
@@ -26,11 +27,17 @@
   { "title": "Official Resources", "desc": "Compilation of links to official documentation, bookmarked studies, and guides.", "href": "analyse_renderer.html?page=resources.html" },
   { "title": "SWE Benchmarks", "desc": "Detailed analysis of agentic benchmarks, tool calls, and scoring models.", "href": "analyse_renderer.html?page=swe_bench.html" },
   { "title": "AI Skills Guide", "desc": "Detailed guide mapping developer slash commands, tools, and profiles.", "href": "analyse_renderer.html?page=skills.html" },
+  { "title": "Slash Commands", "desc": "Claude Code slash commands tutorial and workflow automation guide.", "href": "https://youtu.be/52KBhQqqHuc?list=PL4cUxeGkcC9g4YJeBqChhFJwKQ9TRiivY", "emoji": "⚡" },
   { "title": "Performance Statistics", "desc": "Review statistics, error metrics, and recommendations based on study progress.", "href": "analyse.html" },
   { "title": "Discussion Board", "desc": "Collaborate and discuss tricky exam scenarios with other developers.", "href": "understand.html" },
   { "title": "Claude Pricing Metrics", "desc": "Detailed cost charts, context budgets, and caching returns.", "href": "claude_pricing.html" },
   { "title": "Multiplayer Mode", "desc": "Cooperative learning dashboard with real-time MQTT message sync.", "href": "multiplayer.html" },
   { "title": "Vote for Videos", "desc": "Community upvoting system for ranking video tutorials and mnemonics.", "href": "create.html" },
   { "title": "Creator Workspace", "desc": "Developer page for recording video scripts, mnemonics, and assets.", "href": "creator.html" },
-  { "title": "Study Tactics", "desc": "Strategic study roadmap, mnemonic architectures, and exam-day guidelines.", "href": "tactics.html" }
+  { "title": "Study Tactics", "desc": "Strategic study roadmap, mnemonic architectures, and exam-day guidelines.", "href": "tactics.html" },
+  { "title": "AI Spend", "desc": "Video resource on AI cost management, token budgets, and spend optimization strategies.", "href": "https://www.youtube.com/watch?v=NLrRDfGsZ5U", "emoji": "💰" },
+  { "title": "AI Weak Links", "desc": "Video exploring failure modes and weak links in AI agent pipelines.", "href": "https://youtu.be/xBpGn3BDcOY?t=1974", "emoji": "🔗" },
+  { "title": "Jupiter Labs AI Code", "desc": "Video on managing AI code workflows with Jupiter Labs tooling.", "href": "https://youtu.be/uWXgHi9m-GY?t=395", "emoji": "🪐" },
+  { "title": "AI Mental Health", "desc": "Video on the psychological impacts and mental health considerations when working with AI.", "href": "https://youtu.be/Ykvf3MunGf8", "emoji": "🧘" },
+  { "title": "World Model (Gemini Omni)", "desc": "Video on Gemini's world model capabilities and omni-modal AI architecture.", "href": "https://www.youtube.com/watch?v=KUyRq7szZsM", "emoji": "🌍" }
 ]

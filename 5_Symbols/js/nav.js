@@ -55,6 +55,7 @@
                 { emoji: '🚀', label: 'AGI Path', href: 'analyse_renderer.html?page=agi-path.html' },
                 { emoji: '🏗️', label: 'Architecture', href: 'analyse_renderer.html?page=claude_architecture.html' },
                 { emoji: '🧠', label: 'Mental Model', href: 'analyse_renderer.html?page=llm_mental_model.html' },
+                { emoji: '💡', label: 'History of AI', href: 'analyse_renderer.html?page=history_of_ai_from_semi_conductors.html' },
 
                 // Group 2: Prompt Engineering
                 { isHeader: true, label: '🗜️ Prompt Engineering' },
@@ -70,6 +71,7 @@
                 { emoji: '🐍', label: 'MCP Python', href: 'analyse_renderer.html?page=mcp_python.html' },
                 { emoji: '🧪', label: 'SWE Benchmarks', href: 'analyse_renderer.html?page=swe_bench.html' },
                 { emoji: '🛠️', label: 'Skills', href: 'analyse_renderer.html?page=skills.html' },
+                { emoji: '⚡', label: 'Slash Commands', href: 'https://youtu.be/52KBhQqqHuc?list=PL4cUxeGkcC9g4YJeBqChhFJwKQ9TRiivY', external: true },
 
                 // Group 4: Reference & Dashboards
                 { isHeader: true, label: '📖 Reference & Dashboards' },
@@ -79,7 +81,15 @@
                 { emoji: '📚', label: 'Resources', href: 'analyse_renderer.html?page=resources.html' },
                 { emoji: '📊', label: 'Stats Hub', href: 'analyse.html' },
 
-                // Group 5: Sub Admin Menu
+                // Group 5: Video Resources
+                { isHeader: true, label: '📹 Video Resources' },
+                { emoji: '💰', label: 'AI Spend', href: 'https://www.youtube.com/watch?v=NLrRDfGsZ5U', external: true },
+                { emoji: '🔗', label: 'AI Weak Links', href: 'https://youtu.be/xBpGn3BDcOY?t=1974', external: true },
+                { emoji: '🪐', label: 'Jupiter Labs AI Code', href: 'https://youtu.be/uWXgHi9m-GY?t=395', external: true },
+                { emoji: '🧘', label: 'AI Mental Health', href: 'https://youtu.be/Ykvf3MunGf8', external: true },
+                { emoji: '🌍', label: 'World Model (Gemini)', href: 'https://www.youtube.com/watch?v=KUyRq7szZsM', external: true },
+
+                // Group 6: Sub Admin Menu
                 { isHeader: true, label: '⚙️ Admin Controls' },
                 { emoji: '➕', label: 'New Analysis Page', href: 'analyse_renderer.html?action=new' },
                 { emoji: '🃏', label: 'Add Memory Card', href: 'add_memory_card.html' }
@@ -160,7 +170,7 @@
         else if (createPages.some(p => currentPage.includes(p))) activeIndex = 4;
 
         const loopOpenCookie = getCookie('learning_loop_open');
-        const isOpen = loopOpenCookie === 'true' || loopOpenCookie === null; // Open by default initially
+        const isOpen = loopOpenCookie === 'true'; // Closed by default; user opens manually
         const showClass = isOpen ? ' show' : '';
         const arrowChar = isOpen ? '▲' : '▼';
 
@@ -544,7 +554,8 @@
             background: var(--border, #334155);
             margin: 6px 0;
         }
-        .nav-dropdown:hover .nav-dropdown-content {
+        .nav-dropdown:hover .nav-dropdown-content,
+        .nav-dropdown.click-open .nav-dropdown-content {
             display: block;
         }
         .nav-link {
@@ -1007,6 +1018,21 @@
         }
     }
 
+    // Click-toggle for nav dropdowns (supplements hover; useful on touch/keyboard)
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.nav-dropdown-btn');
+        if (btn) {
+            const dropdown = btn.closest('.nav-dropdown');
+            const wasOpen = dropdown.classList.contains('click-open');
+            document.querySelectorAll('.nav-dropdown.click-open').forEach(d => d.classList.remove('click-open'));
+            if (!wasOpen) dropdown.classList.add('click-open');
+            return;
+        }
+        if (!e.target.closest('.nav-dropdown')) {
+            document.querySelectorAll('.nav-dropdown.click-open').forEach(d => d.classList.remove('click-open'));
+        }
+    });
+
     // Check debug cookie on load
     const debugCookie = getCookie('debug');
     if (debugCookie === 'true') {
@@ -1016,6 +1042,12 @@
             if (drawer) drawer.classList.add('open');
             if (btn) btn.classList.add('active');
         }, 100);
+        // Debug console output
+        console.group('🛠️ Claude Cert Debug Mode');
+        console.log('Page:', window.location.pathname + window.location.search);
+        console.log('Session keys:', Object.keys(sessionStorage));
+        console.log('Cookies:', document.cookie.split(';').map(c => c.trim()).join(' | '));
+        console.groupEnd();
     }
 
     // Run dynamic navbar loader
