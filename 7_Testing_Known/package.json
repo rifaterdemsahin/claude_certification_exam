@@ -4,7 +4,9 @@
   "description": "Tests for the Claude Developer Certification Study App",
   "main": "test_logic.js",
   "scripts": {
-    "test": "node test_logic.js"
+    "test": "node test_logic.js",
+    "test:links": "node test_links.js",
+    "test:all": "node test_logic.js && node test_links.js"
   },
   "dependencies": {
     "jsdom": "^24.0.0"

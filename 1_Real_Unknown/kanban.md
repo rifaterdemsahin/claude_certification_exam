@@ -21,7 +21,7 @@
 - [ ] Add new ways of doing the implementation  to formula folder > 4_Formula
 - [ ] Update the Symbols and pay technical debt > 5_Symbols
 - [ ] Add new errors in semblance  > 6_Semblance
-- [ ] Update the tests folder > 7_Testing_Known
+- [x] Update the tests folder > 7_Testing_Known — link checker added
 
 
 ## ✅ Done
@@ -58,6 +58,7 @@
 - [x] Add `sanity_check_review_v1.md` to document project structure observations and suggestions (`da00e16`)
 - [x] Add `user_experience.md` to debug drawer menu list and update tests (`f62511b`)
 - [x] Create `user_experience.md`, document mockups, update layouts, and pass JSDOM tests (`2b8e59e`)
+- [x] Link checker test: `7_Testing_Known/test_links.js` — checks 49 GitHub Pages + Azure blob URLs, generates fix prompt for broken links; 49/49 pass (`npm run test:links`)
 - [x] Embed 🔊 audio play button in remember.html — always visible below question, auto-stops on nav (`c91def0`+)
 - [x] Add `2_Environment/azure.md` and expand environment directory trees (`a3a7402`)
 - [x] Add Stage 1 problem_statement, okrs, questions, hypotheses and expand directory trees (`b01f12a`)
