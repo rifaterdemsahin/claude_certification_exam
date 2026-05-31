@@ -599,6 +599,132 @@ console.log(test);</code></pre>
             }
         }
 
+        const CATEGORIES = [
+            { value: '', label: '— Select category —' },
+            { value: 'architectures', label: '🏗️ Architectures & Loops' },
+            { value: 'prompt-engineering', label: '🗜️ Prompt Engineering' },
+            { value: 'tools-workflows', label: '🖥️ Tools & Workflows' },
+            { value: 'reference', label: '📖 Reference & Dashboards' },
+            { value: 'video', label: '📹 Video Resources' },
+        ];
+
+        function buildCategorySelect() {
+            return CATEGORIES.map(c =>
+                `<option value="${c.value}">${c.label}</option>`
+            ).join('');
+        }
+
+        function generateSmartTemplate(filename, category) {
+            const topic = filename.replace('.html', '').replace(/[-_]/g, ' ')
+                .replace(/\b\w/g, c => c.toUpperCase());
+
+            const catEmojis = {
+                'architectures': '🏗️', 'prompt-engineering': '🗜️',
+                'tools-workflows': '🖥️', 'reference': '📖', 'video': '📹', '': '📊'
+            };
+            const emoji = catEmojis[category] || '📊';
+
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Analysis of ${topic} for Claude Developer Certification.">
+    <title>${topic} — Claude Dev Cert</title>
+</head>
+<body>
+    <header>
+        <h1>${emoji} ${topic}</h1>
+        <p>Deep-dive analysis for Claude Developer Certification exam preparation</p>
+    </header>
+
+    <div class="container">
+        <div class="section">
+            <h2>🔍 What is ${topic}?</h2>
+            <p>Provide a concise definition and context for this topic as it relates to the Claude Developer Certification.</p>
+        </div>
+
+        <div class="section">
+            <h2>💡 Key Concepts</h2>
+            <p>List the core ideas, principles, and terminology you need to know.</p>
+            <ul>
+                <li><strong>Concept 1:</strong> Explanation</li>
+                <li><strong>Concept 2:</strong> Explanation</li>
+                <li><strong>Concept 3:</strong> Explanation</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🧪 Code / Practical Example</h2>
+            <pre><code>// Example for ${topic}
+const example = {
+    topic: "${topic}",
+    keyTakeaway: "replace with your insight"
+};
+console.log(example);</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>📋 Exam Checklist</h2>
+            <p>Verify you can answer these before the exam:</p>
+            <ul>
+                <li>☐ Can you define ${topic} in one sentence?</li>
+                <li>☐ Can you give a real-world use case?</li>
+                <li>☐ Do you know the edge cases and failure modes?</li>
+                <li>☐ How does this relate to other CAT competency areas?</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🔗 Related Topics</h2>
+            <p>Connect this concept to other areas in the certification syllabus.</p>
+        </div>
+    </div>
+</body>
+</html>`;
+        }
+
+        function copyAIPrompt() {
+            const filenameInput = document.getElementById('new-filename');
+            const catSelect = document.getElementById('new-category');
+            const filename = filenameInput ? filenameInput.value.trim() : 'topic';
+            const topic = filename.replace('.html', '').replace(/[-_]/g, ' ')
+                .replace(/\b\w/g, c => c.toUpperCase());
+            const cat = catSelect ? catSelect.options[catSelect.selectedIndex].text : '';
+
+            const prompt = `You are creating an HTML analysis page for the Claude Developer Certification study app.
+
+Topic: ${topic}
+Category: ${cat}
+
+Generate a complete, self-contained HTML page (no external dependencies, no <html>/<head>/<body> wrapper needed beyond the content) that:
+1. Has a <header> with an emoji title and subtitle
+2. Has several <div class="section"> blocks covering: definition, key concepts, code examples, exam checklist, related topics
+3. Uses inline styles sparingly — the parent app injects dark-theme CSS variables (--bg-primary, --accent-blue, --accent-green, --text-secondary, etc.)
+4. Is educational, dense with insights, and exam-focused
+5. Has a meta description tag for SEO
+
+Return ONLY the HTML — no markdown fences, no explanation.`;
+
+            navigator.clipboard.writeText(prompt).then(() => {
+                const btn = document.getElementById('copy-prompt-btn');
+                if (btn) { btn.textContent = '✅ Copied!'; setTimeout(() => { btn.textContent = '📋 Copy AI Prompt'; }, 2000); }
+            }).catch(() => alert('Copy failed — please copy manually:\n\n' + prompt));
+        }
+
+        function applyGeneratedTemplate() {
+            const filenameInput = document.getElementById('new-filename');
+            const catSelect = document.getElementById('new-category');
+            const textarea = document.getElementById('editHTMLCode');
+            if (!filenameInput || !textarea) return;
+            const filename = filenameInput.value.trim() || 'topic.html';
+            const category = catSelect ? catSelect.value : '';
+            const html = generateSmartTemplate(filename, category);
+            textarea.value = html;
+            textarea.style.borderColor = 'var(--accent-green)';
+            setTimeout(() => { textarea.style.borderColor = ''; }, 1500);
+        }
+
         // Setup UI for Creating New Page
         function initiateCreateNew(suggestedFilename = '') {
             isEditing = true;
@@ -610,14 +736,26 @@ console.log(test);</code></pre>
                 <div class="editor-container">
                     <div class="form-group">
                         <label for="new-filename">Filename (must end in .html, e.g. prompt_compression.html)</label>
-                        <input type="text" id="new-filename" class="form-control" placeholder="e.g. topic_name.html" value="${suggestedFilename}">
+                        <input type="text" id="new-filename" class="form-control" placeholder="e.g. topic_name.html" value="${suggestedFilename}" oninput="syncFilenameToTitle(this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-category">Category</label>
+                        <select id="new-category" class="form-control">${buildCategorySelect()}</select>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-bottom:4px;">
+                        <button type="button" class="btn btn-secondary" id="copy-prompt-btn" onclick="copyAIPrompt()">📋 Copy AI Prompt</button>
+                        <button type="button" class="btn btn-primary" onclick="applyGeneratedTemplate()">🤖 Generate Template</button>
                     </div>
                     <div class="form-group">
                         <label>HTML Code Editor</label>
-                        <textarea id="editHTMLCode" class="form-control code-textarea" placeholder="Paste HTML template here...">${templateHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+                        <textarea id="editHTMLCode" class="form-control code-textarea" placeholder="Paste HTML here or click Generate Template...">${templateHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
                     </div>
                 </div>
             `;
+        }
+
+        function syncFilenameToTitle(val) {
+            // Visual feedback only — no side effects needed
         }
 
         // Hook up event listeners

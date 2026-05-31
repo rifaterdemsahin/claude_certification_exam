@@ -1,13 +1,8 @@
 # 📋 Claude Developer Certification - Kanban Board
 
 ## 📥 Backlog
-- [ ] Implement local Kokoro indocker , add audio for all content, and add a play button to play it from Azure where it gets streamed.
-- [ ] Add Category selection in the analyse menu > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/analyse_renderer.html?action=new
-- [ ] In the analyse page add a content generator button to create content using ai in html that is prompted.
-- [ ] Update the buttons https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/remember.html have better visual images 
-- [ ] Load all the cards https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/remember.html have one source of truth load them to azure there should be more than 125 in may 30 2026.
-- [ ] Load all the cards https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/mastery.html
-- [ ] Add alerting for the cost management https://portal.azure.com/#view/Microsoft_Azure_CostManagement/Menu/~/costanalysis/openedBy/AzurePortal
+- [ ] Implement local Kokoro indocker , add audio for all content, and add a play button to play it from Azure where it gets streamed. > audio play button scaffold added to remember.html; wire up audioUrl in data.js once Azure audio files exist
+- [ ] Add alerting for the cost management https://portal.azure.com/#view/Microsoft_Azure_CostManagement/Menu/~/costanalysis/openedBy/AzurePortal > requires manual Azure Portal setup
 
 
 -> These backlog tasks are implemented in bulk by Claude and moved to done
@@ -30,6 +25,9 @@
 
 
 ## ✅ Done
+- [x] Add Category selection + 🤖 Generate Template button + 📋 Copy AI Prompt button to analyse_renderer.html new-page creation form
+- [x] Update remember.html: show Azure memory palace images when answer revealed, improved ⬅️/👁️/➡️ nav buttons with icons, 🔊 audio play button scaffold
+- [x] Azure data loading: created data_loader.js (fetches questions.json from Azure, falls back to data.js); generated questions.json; remember.html and mastery.html now load via dataReady promise; loading state shown while fetching
 - [x] Add AI spend, AI weak links, Jupiter Labs AI code, slash commands, AI mental health, World model (Gemini Omni) to the Analyse menu as 📹 Video Resources section in menu.json and nav.js; also added to search_index.json
 - [x] Add history_of_ai_from_semi_conductors.html to the Analyse menu (Architectures & Loops section) and search_index.json
 - [x] Add debug console logging (page, session keys, cookies) when debug mode is active

@@ -35,6 +35,7 @@
     </footer>
 
     <script src="../js/data.js"></script>
+    <script src="../js/data_loader.js"></script>
     <script src="../js/state.js"></script>
     <script src="../js/utils.js"></script>
     <script>
@@ -48,6 +49,13 @@
             const container = document.getElementById('remember-content');
             const q = questionsData[state.rememberIndex];
             const hint = questionHints[q.id];
+            const isLast = state.rememberIndex >= questionsData.length - 1;
+
+            const audioUrl = q.audioUrl || '';
+            const audioBtn = audioUrl ? `
+                <button class="remember-audio-btn" id="audio-btn-${q.id}" onclick="event.stopPropagation(); playAudio('${audioUrl}', ${q.id})">
+                    🔊 Play Audio
+                </button>` : '';
 
             container.innerHTML = `
                 <div class="remember-card fade-in" onclick="toggleAnswer()">
@@ -67,21 +75,45 @@
 
                     ${state.showRememberAnswer ? `
                         <div class="remember-answer">${escapeHtml(q.answer)}</div>
+                        ${q.imageUrl ? `
+                            <div class="remember-image">
+                                <img src="${q.imageUrl}" alt="Memory visual for ${escapeHtml(q.question)}" loading="lazy" onerror="this.parentElement.style.display='none'">
+                            </div>
+                        ` : ''}
                         ${hint ? `
                             <div class="remember-hint">
                                 <div style="font-size:2em;margin-bottom:8px;">${hint.emoji}</div>
                                 <div style="color:var(--accent-yellow);font-style:italic;">${escapeHtml(hint.memory)}</div>
                             </div>
                         ` : ''}
-                    ` : '<p style="color:var(--text-muted);margin-top:20px;">Click to reveal answer</p>'}
+                        ${audioBtn}
+                    ` : '<p style="color:var(--text-muted);margin-top:20px;">👆 Click to reveal answer</p>'}
 
                     <div class="remember-nav">
-                        <button onclick="event.stopPropagation(); prevRemember()" ${state.rememberIndex === 0 ? 'disabled' : ''}>Previous</button>
-                        <button onclick="event.stopPropagation(); toggleAnswer()">${state.showRememberAnswer ? 'Hide' : 'Show'} Answer</button>
-                        <button onclick="event.stopPropagation(); nextRemember()">${state.rememberIndex < questionsData.length - 1 ? 'Next' : 'Restart'}</button>
+                        <button onclick="event.stopPropagation(); prevRemember()" ${state.rememberIndex === 0 ? 'disabled' : ''}>⬅️ Prev</button>
+                        <button class="btn-reveal" onclick="event.stopPropagation(); toggleAnswer()">${state.showRememberAnswer ? '🙈 Hide' : '👁️ Show'}</button>
+                        <button onclick="event.stopPropagation(); nextRemember()">${isLast ? '🔁 Restart' : 'Next ➡️'}</button>
                     </div>
                 </div>
             `;
+        }
+
+        let currentAudio = null;
+        function playAudio(url, id) {
+            const btn = document.getElementById(`audio-btn-${id}`);
+            if (currentAudio && !currentAudio.paused) {
+                currentAudio.pause();
+                currentAudio = null;
+                document.querySelectorAll('.remember-audio-btn').forEach(b => b.classList.remove('playing'));
+                if (btn) btn.textContent = '🔊 Play Audio';
+                return;
+            }
+            currentAudio = new Audio(url);
+            currentAudio.play().catch(() => {});
+            if (btn) { btn.classList.add('playing'); btn.textContent = '⏹ Stop'; }
+            currentAudio.onended = () => {
+                if (btn) { btn.classList.remove('playing'); btn.textContent = '🔊 Play Audio'; }
+            };
         }
 
         function toggleAnswer() {
@@ -108,8 +140,8 @@
             }
         }
 
-        // Initialize
-        initRemember();
+        // Initialize after Azure data is ready
+        window.dataReady.then(() => initRemember());
     </script>
 </body>
 </html>

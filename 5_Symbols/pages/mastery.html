@@ -67,7 +67,7 @@
             </div>
         </div>
 
-        <div id="mastery-list" class="mastery-container"></div>
+        <div id="mastery-list" class="mastery-container"><div style="padding:40px;text-align:center;color:var(--text-secondary);">⏳ Loading questions from Azure…</div></div>
     </div>
 
      <footer class="app-footer">
@@ -86,6 +86,7 @@
      </footer>
 
     <script src="../js/data.js"></script>
+    <script src="../js/data_loader.js"></script>
     <script src="../js/state.js"></script>
     <script src="../js/utils.js"></script>
     <script>
@@ -177,8 +178,8 @@
             renderMastery();
         }
 
-        // Initialize
-        renderMastery();
+        // Initialize after Azure data is ready
+        window.dataReady.then(() => renderMastery());
     </script>
 </body>
 </html>
