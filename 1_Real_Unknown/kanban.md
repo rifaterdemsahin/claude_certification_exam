@@ -5,7 +5,7 @@
 - [ ] Add AI weak links topic to the analysis menu: https://youtu.be/xBpGn3BDcOY?t=1974
 - [ ] Add Jupiter Labs to manage ai code topic to the analysis menu: https://youtu.be/uWXgHi9m-GY?t=395
 - [ ] Add slash commands  to the analysis menu: https://youtu.be/52KBhQqqHuc?list=PL4cUxeGkcC9g4YJeBqChhFJwKQ9TRiivY
-- [ ] Add Debug Menu Dashboard in delivery pilot template
+
 - [ ] Implement local Kokoro indocker , add audio for all content, and add a play button to play it from Azure where it gets streamed.
 - [ ] Add AI mental health topic to the analysis menu : https://youtu.be/Ykvf3MunGf8
 - [ ] Add World model as Gemini Omni to the analsis menu : https://www.youtube.com/watch?v=KUyRq7szZsM 
@@ -18,10 +18,24 @@
 - [ ] Load all the cards https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/remember.html have one source of truth load them to azure there should be more than 125 in may 30 2026.
 - [ ] Load all the cards https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/mastery.html
 - [ ] Add alerting for the cost management https://portal.azure.com/#view/Microsoft_Azure_CostManagement/Menu/~/costanalysis/openedBy/AzurePortal
-
+- [ ] add this  to analysis menu > https://rifaterdemsahin.github.io/claude_certification_exam/5_Symbols/pages/analyse_renderer.html?page=history_of_ai_from_semi_conductors.html > add to the search as well
+- [ ] load it from Azure and when pages gets updated implement changes /Users/rifaterdemsahin/projects/claude_certification_exam/5_Symbols/data/menu.json 
+- [ ]
 
 ## ⚙️ In Progress
 ### WIP 1 : Real time AI everything else goes to backlog
+
+
+## ⚙️ Maintaince 
+
+- [ ] Update the environment folder > 1_Real_Unknown
+- [ ] Update the environment folder > 2_Environment
+- [ ] Add new features incoming as visuals folder > 3_Simulation
+- [ ] Add new ways of doing the implementation  to formula folder > 4_Formula
+- [ ] Update the Symbols and pay technical debt > 5_Symbols
+- [ ] Add new errors in semblance  > 6_Semblance
+- [ ] Update the tests folder > 7_Testing_Known
+
 
 ## ✅ Done
 - [x] Dynamic Azure-hosted menu.json and search_index.json synced automatically upon page saving/deletion.
@@ -47,3 +61,4 @@
 - [x] Add `2_Environment/azure.md` and expand environment directory trees (`a3a7402`)
 - [x] Add Stage 1 problem_statement, okrs, questions, hypotheses and expand directory trees (`b01f12a`)
 - [x] Update paths and references to align with the 7-Stage directory layout (5_Symbols and 7_Testing_Known) (`98645d3`)
+- [x] Add Debug Menu Dashboard in delivery pilot template
