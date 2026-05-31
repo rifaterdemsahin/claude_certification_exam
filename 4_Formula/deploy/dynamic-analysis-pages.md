@@ -49,6 +49,12 @@ Created the function logic at `5_Symbols/azure-api/AnalysePages/index.js`:
 - Ensures the `analyse-pages` container exists.
 - Performs Bearer token validation for write/delete requests using the in-memory shared admin state.
 
+#### CORS Preflight Infrastructure Config:
+To ensure that the Azure platform does not block preflight `OPTIONS` requests (which results in browser CORS blocks, particularly if the endpoint is not deployed yet and returns a 404), allow wildcard origins (`*`) at the Azure Portal/infrastructure level:
+```bash
+az functionapp cors add --name "claude-cert-api" --resource-group "claude-certificate-training" --allowed-origins "*"
+```
+
 ### Step 2: Analysis Page Renderer & Editor
 
 Created `5_Symbols/pages/analyse_renderer.html` which acts as:
@@ -111,3 +117,7 @@ ADMIN_PASSWORD=your_admin_password node 7_Testing_Known/test_analyse_pages.js
    ```
 2. **Upload existing pages:**
    Use the edit portal or Azure Storage Explorer to upload existing HTML files to the `analyse-pages` container.
+3. **Configure allowed CORS origins on Azure:**
+   ```bash
+   az functionapp cors add --name "claude-cert-api" --resource-group "claude-certificate-training" --allowed-origins "*"
+   ```

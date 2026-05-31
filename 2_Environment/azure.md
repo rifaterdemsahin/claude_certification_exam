@@ -18,6 +18,7 @@ graph TD
     
     AzBlob -->|Container 1| BlobCards[memory-cards/*.md]
     AzBlob -->|Container 2| BlobImages[memory-images/*.png]
+    AzBlob -->|Container 3| BlobAnalyse[analyse-pages/*.html]
     
     AzAPI -->|Retrieve Connection Strings| AzKV[Azure Key Vault]
 ```
@@ -34,6 +35,7 @@ All collaborative study data (memory cards, concept diagrams, visual aids) is st
 | `memory-cards` | Detailed markdown flashcard study guides | Public Read / Authenticated Write | `MEM-Q{ID}.md` (e.g., `MEM-Q005.md`) |
 | `memory-images` | Diagrams, sketches, visual mnemonics | Public Read / Authenticated Write | `MEM-Q{ID}_v{Version}.png` |
 | `exam-images` | Practice and Pro exam diagrams / visual aids | Public Read / Authenticated Write | `q{ID}.png` or `q{ID}.svg` (e.g., `q001.png`, `q007.svg`) |
+| `analyse-pages` | Dynamic HTML competency analysis pages | Public Read / Authenticated Write | `{topic_name}.html` (e.g., `context_compression.html`) |
 
 ---
 
@@ -50,6 +52,10 @@ A serverless Node.js API that manages CRUD operations for files stored in Blob S
    * *DELETE:* Removes a card from the container.
 3. **`UploadImage`** (`POST`)
    * *Purpose:* Accepts multipart form data to upload visual mnemonics into the `memory-images` container.
+4. **`AnalysePages`** (`GET`, `POST`, `DELETE`)
+   * *GET:* Lists dynamic analysis pages or retrieves the raw HTML of a specific page.
+   * *POST:* Writes or updates an HTML analysis page in the `analyse-pages` container.
+   * *DELETE:* Removes an analysis page from the container.
 
 ---
 
